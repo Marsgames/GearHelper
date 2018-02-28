@@ -1,0 +1,88 @@
+==What it does==
+Lib About Panel is a small library which will add an about panel to your Blizzard interface options. You can specify whether or not to have the panel linked to a main panel, or just have it created separately. It will populate the fields of the about panel from the fields located in your ToC.
+
+==Where to get it==
+*[http://wow.curseforge.com/projects/libaboutpanel/files/ CurseForge] - Often Beta quality
+*[http://wow.curse.com/downloads/wow-addons/details/libaboutpanel.aspx Curse] - Most updated stable version
+
+==Donations==
+I have setup a donation site via [http://www.pledgie.com/campaigns/3462 Pledgie].  Feel free to donate if you like this mod.  I have put countless hours of time and effort into it along with many people who have helped me.  I did not write this mod with the intent to make any money from it, I wrote it to help me with some needs that I saw in-game.
+
+==How to get it to work==
+To create the about panel, just add the following line of code into your mod:
+
+ LibStub("LibAboutPanel").new(parentframe, addonname)
+
+It will also return the frame so you can call it like:
+
+ frame = LibStub("LibAboutPanel").new(parentframe, addonname)
+
+The parentframe option may be nil, in which case it will not anchor the about panel to any frame. Otherwise, it will anchor the about frame to that frame.
+
+The second option is the name of your add-on. This is mandatory as the about panel will pull all information from this add-ons ToC.
+
+The ToC fields which the add-on reads are:
+
+<code>
+"Notes"
+"Version"
+"Author"
+"X-Author-Faction"
+"X-Author-Server"
+"X-Category"
+"X-License"
+"X-Email"
+"X-Website"
+"X-Credits"
+"X-Localizations"
+"X-Donate"
+</code>
+
+It will only read fields when they exist, and skip them if they do not exist. 
+
+== Example Code ==
+'''ToC File:'''
+<code>
+ ## Title: Alt-Tabber
+ 
+ ## Notes: Plays a noise when you're alt-tabbed for a ready check (even when sound is turned off)
+ 
+ ## Author: Ackis
+ ## X-Author-Server: Azgalor US
+ ## X-Author-Faction: Horde
+ ## eMail: ackis AT shaw DOT ca
+ ## X-License: MIT modified with notification clause
+ ## X-Donate: Send me UDE Point codes, a Murky Code, or donate a few bucks/hours at your local animal shelter.
+ 
+ ## Interface: 20400
+ ## Version: 1.2
+ ## X-Revision: Rev: 431
+ ## X-Date: $Date: 2008-07-20 14:41:47 -0600 (Sun, 20 Jul 2008) $
+ 
+ ## X-credits: 
+ 
+ ## X-Category: Raid
+ ## X-Localizations: enUS
+ ## X-Website: http://www.wowwiki.com/AltTabber/
+ ## X-Feedback: http://www.curse.com/downloads/details/12774/
+</code>
+
+'''Load the panel in LUA code not attached to anything:'''
+ LibStub("LibAboutPanel").new(nil, "AltTabber")
+
+'''Load the panel in LUA code attached to other panels:'''
+ self.optionsFrame[L["About"]] = LibStub("LibAboutPanel").new("Ackis Recipe List", "Ackis Recipe List")
+
+== Known Issues ==
+All known issues will be kept at the [http://wow.curseforge.com/projects/libaboutpanel/tickets/ CurseForge] tracker.
+
+Please use the [http://wow.curseforge.com/projects/libaboutpanel/tickets/ CurseForge] tracker to file bug reports.
+
+== Wish List ==
+Please use the [http://wow.curseforge.com/projects/libaboutpanel/tickets/ CurseForge] tracker to add suggestions and feature requests.
+
+== Bug Reporting ==
+Please use the [http://wow.curseforge.com/projects/libaboutpanel/tickets/ CurseForge] tracker to file bug reports.
+
+== Wiki ==
+[http://www.wowwiki.com/LibAboutPanel WoW Wiki]

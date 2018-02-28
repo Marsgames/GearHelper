@@ -1,0 +1,878 @@
+ui = {}
+frameInterface = nil
+
+local L = GHVar.localization
+
+local decallageX = -120
+local decallageY = 120
+local openInterface = 0
+
+local premierAffichage = true
+local premierAffichageCW = true
+
+local waitEquipFrame1 = CreateFrame("Frame")
+local waitEquipTimer1 = nil
+waitEquipFrame1:Hide()
+waitEquipFrame1:SetScript("OnUpdate", function ( self, elapsed )
+	if time() > waitEquipTimer1 + 0.5 then
+		equipItem()
+		self:Hide()
+	end
+end)
+
+--local specialisationID = GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player"))
+
+
+
+
+local function pairsByKey (t, f)
+   local a = {}
+   for n in pairs(t) do table.insert(a, n) end
+   table.sort(a, f)
+   local i = #a      -- iterator variable
+   local iter = function ()   -- iterator function
+      i = i - 1
+      if a[i] == nil then return nil
+      else return a[i], t[a[i]]
+      end
+   end
+   return iter
+end
+
+
+local function createCheckbox( nomCheckbox, frameParent, posX, posY, text )
+	local nomCheckbox = CreateFrame("CheckButton", tostring( nomCheckbox ), frameParent, "UICheckButtonTemplate")
+	nomCheckbox:SetPoint("CENTER", posX + decallageX, posY + decallageY)
+	nomCheckbox.text:SetText(text)
+	nomCheckbox:SetFrameStrata("HIGH")
+	--nomCheckbox:SetScale(1.25)
+
+	return nomCheckbox
+end
+local function createRadio( nomRatio, frameParent, posX, posY, text )
+	local nomRatio = CreateFrame("CheckButton", tostring( nomRatio ), frameParent, "UIRadioButtonTemplate")
+	nomRatio:SetPoint("CENTER", posX + decallageX, posY + decallageY)
+	nomRatio.text:SetText(text)
+	nomRatio:SetFrameStrata("HIGH")
+
+	return nomRatio
+end
+local function createEditBox( nomEditBox, frameParent, posX, posY, text, longueur, empLabel, xLabel, yLabel, v)
+	local nomEditBox = CreateFrame("EditBox", tostring( nomEditBox ), frameParent, "InputBoxTemplate")
+	nomEditBox:SetPoint("CENTER", posX + decallageX, posY + 30 + decallageY)
+	nomEditBox:SetText(v)
+	nomEditBox:SetFrameStrata("HIGH")
+	nomEditBox:SetSize(longueur, 1)
+	nomEditBox:SetScript("OnEscapePressed", function(self)
+		local frame = frameParent:GetParent()
+		local parent = frame:GetParent()
+		parent:Hide()
+	end)
+	nomEditBox.Label = nomEditBox:CreateFontString(nil , "BORDER", "GameFontNormal")
+    nomEditBox.Label:SetJustifyH("CENTER")
+    nomEditBox.Label:SetPoint("LEFT", nomEditBox, empLabel, xLabel, yLabel)
+	nomEditBox.Label:SetText(text)
+
+	return nomEditBox
+end
+local function createButton( nomButton, frameParent, posX, posY, text )
+	local nomButton = CreateFrame("Button", tostring( nomButton ), frameParent, "UIPanelButtonTemplate")
+	nomButton:SetPoint("CENTER", posX + decallageX, posY + decallageY)
+	nomButton:SetText(text)
+	nomButton:SetSize(120, 20)
+	nomButton:SetFrameStrata("HIGH")
+
+	return nomButton
+end
+
+local function customWeightPanel()
+	customWeightPanel = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer, frameInterface)
+	customWeightPanel.name = "Custom Weights"
+	customWeightPanel.parent = frameInterface.name
+	customWeightPanel:Hide()
+	customWeightPanel:SetScript("OnShow", function(frame)
+
+		--editBoxCW = editBoxCW
+		boutonModifier = boutonModifier
+
+		Intellect = Intellect
+		Agility = Agility
+		Strength = Strength
+		Stamina = Stamina
+		Mastery = Mastery
+		Haste = Haste
+		CriticalStrike = CriticalStrike
+		Versatility = Versatility
+		Armor = Armor
+		Leech = Leech
+		Avoidance = Avoidance
+		MainHandDps = MainHandDps
+		MovementSpeed = MovementSpeed
+		OffHandDps = OffHandDps
+
+		--local dic = { "Intellect", "Agility", "Strength", "Stamina", "Mastery", "Haste", "CriticalStrike", "Versatility", "Armor", "Leech", "Avoidance", "MainHandDps", "MovementSpeed", "OffHandDps"}
+		local tabVS = {}
+		local specID = GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player"))
+		if GHVarChar.AMR == 10000 and GHVar.customWeights[specID] ~= nil then
+			for stat, val in pairs(GHVar.customWeights[specID]) do
+			   if type(tabVS[val]) ~= "table" then
+			      tabVS[val] = {}
+			   end
+			   table.insert(tabVS[val], stat)
+			end
+		elseif GHVarChar.AMR ~= 10000 then
+			for stat, val in pairs(GH_Globals[specID + 1000]) do
+			   if type(tabVS[val]) ~= "table" then
+			      tabVS[val] = {}
+			   end
+			   table.insert(tabVS[val], stat)
+			end
+		elseif GHVarChar.AMR == 10000 and GHVar.customWeights[specID] == nil then
+			GHVar.customWeights[specID] = GH_Globals[specID + 1000]
+
+			for stat, val in pairs(GHVar.customWeights[specID]) do
+			   if type(tabVS[val]) ~= "table" then
+			      tabVS[val] = {}
+			   end
+			   table.insert(tabVS[val], stat)
+			end
+		end
+
+
+
+
+
+		local tabEditBox = {}
+		local stats = {}
+
+		if premierAffichageCW then
+			--editBoxCW = createEditBox(self, customWeightPanel, 95, 90, "Custom weights : stat value > stat value > ... ...", 500, "TOP", -125, 20, "")
+			--editBoxCW:SetMultiLine(true)
+			--editBoxCW.Label:SetPoint("TOP", editBoxCW, "TOP", -5, 20)
+			--editBoxCW:SetScript("OnEnterPressed", function(self) end)
+
+			boutonModifier = createButton(self, customWeightPanel, 180, 120 - 7*30, "Custom Weights")
+
+			-- pos y = 90 + (30 * i)
+			local i = 1
+			for k, v in pairsByKey(tabVS) do
+			   for kk, vv in pairs(tabVS[k]) do
+			   		if vv ~= "Max" then
+			   			i = i + 1
+			   			--print(vv)
+			   			if vv == "Intellect" then
+			   				Intellect = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Agility" then
+			   				Agility = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Strength" then
+			   				Strength = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Stamina" then
+			   				Stamina = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Mastery" then
+			   				Mastery = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Haste" then
+			   				Haste = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "CriticalStrike" then
+			   				CriticalStrike = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Versatility" then
+			   				Versatility = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Armor" then
+			   				Armor = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Leech" then
+			   				Leech = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "Avoidance" then
+			   				Avoidance = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "MainHandDps" then
+			   				MainHandDps = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "MovementSpeed" then
+			   				MovementSpeed = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			if vv == "OffHandDps" then
+			   				OffHandDps = createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k)
+			   			end
+			   			--table.insert(tabEditBox, createEditBox(self, customWeightPanel, -50, 120 - (30 * i), vv, 50, "RIGHT", 20, 0, k))
+			   			stats[vv] = k
+			   		end
+			      --print("tab("..k..") = "..vv)
+			   end
+			end
+			premierAffichageCW = false
+		else
+			Intellect:Show()
+			Agility:Show()
+			Strength:Show()
+			Stamina:Show()
+			Mastery:Show()
+			Haste:Show()
+			CriticalStrike:Show()
+			Versatility:Show()
+			Armor:Show()
+			Leech:Show()
+			Avoidance:Show()
+			MainHandDps:Show()
+			MovementSpeed:Show()
+			OffHandDps:Show()
+		end
+
+		--[[Intellect:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+				stats["Intellect"] = Intellect:GetText()
+			end
+		end)
+		Agility:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Agility"] = Agility:GetText()
+			end
+		end)
+		Strength:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Strength"] = Strength:GetText()
+			end
+		end)
+		Stamina:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Stamina"] = Stamina:GetText()
+			end
+		end)
+		Mastery:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Mastery"] = Mastery:GetText()
+			end
+		end)
+		Haste:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Haste"] = Haste:GetText()
+			end
+		end)
+		CriticalStrike:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["CriticalStrike"] = CriticalStrike:GetText()
+			end
+		end)
+		Versatility:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Versatility"] = Versatility:GetText()
+			end
+		end)
+		Armor:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Armor"] = Armor:GetText()
+			end
+		end)
+		Leech:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Leech"] = Leech:GetText()
+			end
+		end)
+		Avoidance:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["Avoidance"] = Avoidance:GetText()
+			end
+		end)
+		MainHandDps:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["MainHandDps"] = MainHandDps:GetText()
+			end
+		end)
+		MovementSpeed:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["MovementSpeed"] = MovementSpeed:GetText()
+			end
+		end)
+		OffHandDps:SetScript("OnTextChanged", function(self, userInput)
+			if userInput then
+			stats["OffHandDps"] = OffHandDps:GetText()
+		end
+		end)]]--
+
+		boutonModifier:SetScript("OnClick", function (self, event, arg1)
+			GHVarChar.AMR = 10000
+
+			stats["Intellect"] = Intellect:GetText()
+			stats["Agility"] = Agility:GetText()
+			stats["Strength"] = Strength:GetText()
+			stats["Stamina"] = Stamina:GetText()
+			stats["Mastery"] = Mastery:GetText()
+			stats["Haste"] = Haste:GetText()
+			stats["CriticalStrike"] = CriticalStrike:GetText()
+			stats["Versatility"] = Versatility:GetText()
+			stats["Armor"] = Armor:GetText()
+			stats["Leech"] = Leech:GetText()
+			stats["Avoidance"] = Avoidance:GetText()
+			stats["MainHandDps"] = MainHandDps:GetText()
+			stats["MovementSpeed"] = MovementSpeed:GetText()
+			stats["OffHandDps"] = OffHandDps:GetText()
+
+			local str = ""
+			for stat, value in pairs(stats) do
+				str = str..stat.." "..tostring(value).." > "
+			end
+			str = str:sub(1, -2)
+			str = str:sub(1, -2)
+			initTab(str, specID, true)
+
+			print(str)
+
+		end)
+
+		--[[customWeightPanel.refresh = function()
+
+			customWeightPanel:Hide()
+			--customWeightPanel = nil
+			--customWeightPanel = customWeightPanel
+			premierAffichageCW = true
+			customWeightPanel()
+
+		end]]--
+
+	end)
+
+
+	--local boutonTest = createCheckbox( boutonTest, customWeightPanel, -150, 90, "salut")
+end
+
+local function GHOptionPanel()
+
+	--print(string.find("table", tostring( frameInterface )))
+	if (string.find("table", tostring( frameInterface ))) then
+		frameInterface:Show()
+	else
+		frameInterface = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
+		frameInterface.name = "GearHelper"
+		frameInterface:Hide()
+		--frameInterface:SetScript("OnEscapePressed", function(self) self:Hide() end)
+		frameInterface:SetScript("OnShow", function(frame)
+
+			checkGHActivated = checkGHActivated
+			checkGHSellGreyActivated = checkGHSellGreyActivated
+			checkGHAutoGreed = checkGHAutoGreed
+			checkGHAutoAcceptQuestReward = checkGHAutoAcceptQuestReward
+			checkGHAutoNeed = checkGHAutoNeed
+			checkGHAutoEquipLootStuff = checkGHAutoEquipLootStuff
+			checkGHAutoEquipWhenChangeSpe = checkGHAutoEquipWhenChangeSpe
+			checkGHAutoInvite = checkGHAutoInvite
+			checkGHAutoTell = checkGHAutoTell
+			checkGHAskLootRaid = checkGHAskLootRaid
+			checkGHPrintWhenEquip = checkGHPrintWhenEquip
+
+			equipButton = equipButton
+
+			---------------------------------------   ENLEVER COMMENT QUAND ON REMET BOUTON MINIMAP ---------------------------------------
+			--hideMinimapButton = hideMinimapButton
+			---------------------------------------   ENLEVER COMMENT QUAND ON REMET BOUTON MINIMAP ---------------------------------------
+
+			radioDoNotRepairButton = radioDoNotRepairButton
+			radioAutoRepairButton = radioAutoRepairButton
+			radioAutoRepairGuildButton = radioAutoRepairGuildButton
+			radioAMRButton = radioAMRButton
+			radioNoxxicButton = radioNoxxicButton
+
+
+
+			if premierAffichage then
+
+				checkGHActivated = createCheckbox(self, frameInterface, -150, 90, L["checkGHActivated"])
+				checkGHSellGreyActivated = createCheckbox(self, frameInterface, -150, 60, L["checkGHSellGreyActivated"])
+				checkGHAutoGreed = createCheckbox(self, frameInterface, -150, 30, L["checkGHAutoGreed"])
+				checkGHAutoAcceptQuestReward = createCheckbox(self, frameInterface, -150, 0, L["checkGHAutoAcceptQuestReward"])
+				checkGHAutoNeed = createCheckbox(self, frameInterface, -150, -30, L["checkGHAutoNeed"])
+				checkGHAutoEquipLootStuff = createCheckbox(self, frameInterface, -150, -60, L["checkGHAutoEquipLootStuff"])
+				checkGHAutoEquipWhenChangeSpe = createCheckbox(self, frameInterface, -150, -90, L["checkGHAutoEquipWhenChangeSpe"])
+				--hideMinimapButton = createCheckbox(self, frameInterface, -150, -120, L["mmButton"])
+				checkGHAutoInvite = createCheckbox(self, frameInterface, -150, -180, L["checkAutoInvite"]..tostring( GHInviteMessage ))
+				--checkGHAutoTell = createCheckbox(self, frameInterface, -150, -210, L["checkGHAutoTell"])
+				checkGHAskLootRaid = createCheckbox(self, frameInterface, -150, -240, L["checkGHAskLootRaid"])
+				checkGHPrintWhenEquip = createCheckbox(self, frameInterface, -150, -270, "Enable / Disable option to print out in chat when something is equiped by addon")
+
+
+				radioDoNotRepairButton = createRadio(self, frameInterface, -150, -150, L["DNR"])
+				radioAutoRepairButton = createRadio(self, frameInterface, 70, -150, L["AutoRepair"])
+				radioAutoRepairGuildButton = createRadio(self, frameInterface, 250, -150, L["GuildAutoRepair"])
+
+				radioAMRButton = createRadio(self, frameInterface, -150, 120, L["radioAMRButton"])
+				radioNoxxicButton = createRadio(self, frameInterface, 70, 120, L["radioNoxxicButton"])
+				--radioIcyVeinsButton = createRadio(self, frameInterface, 250, 120, L["radioIcyVeinsButton"]) -------------------------------------------- REACTIVER QUAND ON A LES CUSTOM WEIGHTS
+				---------------------- aller voir GearHelper.lua allEvents:PLAYER_ENTERING_WORLD ------------
+
+				equipButton = createButton( self, frameInterface, 0, -430, "Equip" )
+
+				if GHVarChar.addonActivated then
+					checkGHActivated:SetChecked(true)
+				else
+					checkGHActivated:SetChecked(false)
+				end
+				if GHVarChar.sellGrey then
+					checkGHSellGreyActivated:SetChecked(true)
+				else
+					checkGHSellGreyActivated:SetChecked(false)
+				end
+				if GHVarChar.autoGreed then
+					checkGHAutoGreed:SetChecked(true)
+				else
+					checkGHAutoGreed:SetChecked(false)
+				end
+				if GHVarChar.autoAcceptQuestReward then
+					checkGHAutoAcceptQuestReward:SetChecked(true)
+				else
+					checkGHAutoAcceptQuestReward:SetChecked(false)
+				end
+				if GHVarChar.autoNeed then
+					checkGHAutoNeed:SetChecked(true)
+				else
+					checkGHAutoNeed:SetChecked(false)
+				end
+				if GHVarChar.autoEquipLootedStuff then
+					checkGHAutoEquipLootStuff:SetChecked(true)
+				else
+					checkGHAutoEquipLootStuff:SetChecked(false)
+				end
+				if GHVarChar.autoEquipWhenChangeSpe then
+					checkGHAutoEquipWhenChangeSpe:SetChecked(true)
+				else
+					checkGHAutoEquipWhenChangeSpe:SetChecked(false)
+				end
+
+				if GHVarChar.autoRepair == 0 then
+					radioDoNotRepairButton:SetChecked(true)
+					radioAutoRepairButton:SetChecked(false)
+					radioAutoRepairGuildButton:SetChecked(false)
+				end
+				if GHVarChar.autoRepair == 1 then
+					radioDoNotRepairButton:SetChecked(false)
+					radioAutoRepairButton:SetChecked(true)
+					radioAutoRepairGuildButton:SetChecked(false)
+				end
+				if GHVarChar.autoRepair == 2 then
+					radioDoNotRepairButton:SetChecked(false)
+					radioAutoRepairButton:SetChecked(false)
+					radioAutoRepairGuildButton:SetChecked(true)
+				end
+
+				if GHVarChar.AMR == 1000 then
+					radioAMRButton:SetChecked(true)
+					radioNoxxicButton:SetChecked(false)
+					--radioIcyVeinsButton:SetChecked(false)
+				elseif GHVarChar.AMR == 0 then
+					radioNoxxicButton:SetChecked(true)
+					radioAMRButton:SetChecked(false)
+					--radioIcyVeinsButton:SetChecked(false)
+				elseif GHVarChar.AMR == 10000 then
+					-- radioIcyVeinsButton:SetChecked(true)
+					radioAMRButton:SetChecked(false)
+					radioNoxxicButton:SetChecked(false)
+				end
+
+				if GHVarChar.autoInvite == true then
+					checkGHAutoInvite:SetChecked(true)
+				else
+					checkGHAutoInvite:SetChecked(false)
+				end
+
+				--if GHAutoTell then
+				--	checkGHAutoTell:SetChecked(true)
+				--else
+				--	checkGHAutoTell:SetChecked(false)
+				--end
+
+				if GHVarChar.askLootRaid then
+					checkGHAskLootRaid:SetChecked(true)
+				else
+					checkGHAskLootRaid:SetChecked(false)
+				end
+				if GHVarChar.printWhenEquip then
+					checkGHPrintWhenEquip:SetChecked(true)
+				else
+					checkGHPrintWhenEquip:SetChecked(false)
+				end
+
+				--if GHMinimapButton then
+				--	hideMinimapButton:SetChecked(true)
+				--else
+				--	hideMinimapButton:SetChecked(false)
+				--end
+
+
+
+				premierAffichage = false
+			end
+
+
+
+			radioNoxxicButton:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					GHVarChar.AMR = 0
+					radioNoxxicButton:SetChecked(true)
+					radioAMRButton:SetChecked(false)
+					--radioIcyVeinsButton:SetChecked(false)
+					scanCharacter()
+					scanBag()
+				else
+					GHVarChar.AMR = 0
+					radioNoxxicButton:SetChecked(true)
+					radioAMRButton:SetChecked(false)
+					--radioIcyVeinsButton:SetChecked(false)
+					scanCharacter()
+					scanBag()
+				end
+				if GHVarChar.AMR == 10000 then
+					templateWeight = GHVar.customWeights[GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player"))]
+				else
+					templateWeight = GH_Globals[GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player")) + GHVarChar.AMR]
+				end
+			end)
+
+			radioAMRButton:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+						GHVarChar.AMR = 1000 ---------------------------------------------- METTRE à 1000 QUAND AMR EST UPDATE
+						radioAMRButton:SetChecked(true)
+						radioNoxxicButton:SetChecked(false)
+						--radioIcyVeinsButton:SetChecked(false)
+						scanCharacter()
+						scanBag()
+					else
+						GHVarChar.AMR = 1000 ---------------------------------------------- METTRE à 1000 QUAND AMR EST UPDATE
+						radioAMRButton:SetChecked(true)
+						radioNoxxicButton:SetChecked(false)
+						--radioIcyVeinsButton:SetChecked(false)
+						scanCharacter()
+						scanBag()
+					end
+					if GHVarChar.AMR == 10000 then
+					templateWeight = GHVar.customWeights[GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player"))]
+				else
+					templateWeight = GH_Globals[GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player")) + GHVarChar.AMR]
+				end
+				end)
+
+			-- radioIcyVeinsButton:SetScript("OnClick", function(self,event,arg1)
+			-- 	if self:GetChecked() then
+			-- 			GHVarChar.AMR = 10000
+			-- 			radioIcyVeinsButton:SetChecked(true)
+			-- 			radioAMRButton:SetChecked(false)
+			-- 			radioNoxxicButton:SetChecked(false)
+			-- 			scanCharacter()
+			-- 			scanBag()
+			-- 			message(L["ivIndisponible"])
+			-- 		else
+			-- 			GHVarChar.AMR = 10000
+			-- 			radioIcyVeinsButton:SetChecked(true)
+			-- 			radioAMRButton:SetChecked(false)
+			-- 			radioNoxxicButton:SetChecked(false)
+			-- 			scanCharacter()
+			-- 			scanBag()
+			-- 			message(L["ivIndisponible"])
+			-- 		end
+			-- 		if GHVarChar.AMR == 10000 then
+			-- 		templateWeight = GHVar.customWeights[GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player"))]
+			-- 	else
+			-- 		templateWeight = GH_Globals[GetSpecializationInfo(GetSpecialization(), false, false, UnitName("player"), UnitSex("player")) + GHVarChar.AMR]
+			-- 	end
+			-- 	end)
+
+			radioDoNotRepairButton:SetScript("OnClick", function ( self,event, arg1 )
+				radioDoNotRepairButton:SetChecked(true)
+				if self:GetChecked() then
+					radioDoNotRepairButton:SetChecked(true)
+					radioAutoRepairButton:SetChecked(false)
+					radioAutoRepairGuildButton:SetChecked(false)
+					setAutoRepair(0)
+				end
+			end)
+			radioAutoRepairButton:SetScript("OnClick", function ( self,event, arg1 )
+				radioAutoRepairButton:SetChecked(true)
+				if self:GetChecked() then
+					radioDoNotRepairButton:SetChecked(false)
+					radioAutoRepairButton:SetChecked(true)
+					radioAutoRepairGuildButton:SetChecked(false)
+					setAutoRepair(1)
+				end
+			end)
+			radioAutoRepairGuildButton:SetScript("OnClick", function ( self,event, arg1 )
+				radioAutoRepairGuildButton:SetChecked(true)
+				if self:GetChecked() then
+					radioDoNotRepairButton:SetChecked(false)
+					radioAutoRepairButton:SetChecked(false)
+					radioAutoRepairGuildButton:SetChecked(true)
+					setAutoRepair(2)
+				end
+			end)
+
+
+			checkGHActivated:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					setActivated(true)
+				else
+					setActivated(false)
+				end
+			end)
+
+			checkGHSellGreyActivated:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					setSellGrey(true)
+				else
+					setSellGrey(false)
+				end
+			end)
+
+			checkGHAutoGreed:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					setAutoGreed(true)
+				else
+					setAutoGreed(false)
+				end
+			end)
+
+			checkGHAutoAcceptQuestReward:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					setAutoAcceptQuestReward(true)
+				else
+					setAutoAcceptQuestReward(false)
+				end
+			end)
+
+			checkGHAutoNeed:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					setAutoNeed(true)
+				else
+					setAutoNeed(false)
+				end
+			end)
+
+			checkGHAutoEquipLootStuff:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					setAutoEquipLootedStuff(true)
+				else
+					setAutoEquipLootedStuff(false)
+				end
+			end)
+
+			checkGHAutoInvite:SetScript("OnClick", function(self,event,arg1)
+				if self:GetChecked() then
+					setAutoInvite(true)
+				else
+					setAutoInvite(false)
+				end
+			end)
+
+			--[[
+			checkGHAutoTell:SetScript("OnClick", function ( self, event, arg1 )
+				if self:GetChecked() then
+					setGHAutoTell(true)
+				else
+					setGHAutoTell(false)
+				end
+			end)
+			]]--
+
+			checkGHPrintWhenEquip:SetScript("OnClick", function (self, event, arg1)
+				if self:GetChecked() then
+					setPrintWhenEquip(true)
+				else
+					setPrintWhenEquip(false)
+				end
+			end)
+
+			---------------------------------------   ENLEVER COMMENT QUAND ON REMET BOUTON MINIMAP ---------------------------------------
+			--hideMinimapButton:SetScript("OnClick", function(self,event,arg1)
+			--	if self:GetChecked() then
+			--		GHMinimapButton = true
+			--		MyMod_MinimapButton:Show()
+			--	else
+			--		MyMod_MinimapButton:Hide()
+			--		GHMinimapButton = false
+			--	end
+			--end)
+			---------------------------------------   ENLEVER COMMENT QUAND ON REMET BOUTON MINIMAP ---------------------------------------
+
+			checkGHAutoEquipWhenChangeSpe:SetScript("OnClick", function(self,event,arg1)
+			  	if self:GetChecked() then
+			  		setAutoEquipWhenChangeSpe(true)
+			  	else
+			  		setAutoEquipWhenChangeSpe(false)
+			  	end
+			end)
+
+			checkGHAskLootRaid:SetScript("OnClick", function(self,event,arg1)
+			  	if self:GetChecked() then
+			  		setAskLootRaid(true)
+			  	else
+			  		setAskLootRaid(false)
+			  	end
+			end)
+
+			equipButton:SetScript("OnClick", function(self, event, arg1)
+				waitEquipTimer1 = time()
+				waitEquipFrame1:Show()
+			end)
+
+		end)
+	end
+
+
+
+	frameInterface.refresh = function()
+
+		updateGHMenu()
+
+	end
+
+	frameInterface.default = function()
+		setDefault()
+	end
+
+
+	frameInterface.okay = function (self)
+		openInterface = 0
+	end
+	frameInterface.cancel = function (self)
+		openInterface = 0
+	end
+end
+
+
+local function updateGHMenu()
+
+	checkGHAutoInvite.text:SetText(L["checkAutoInvite"]..tostring( GHVar.inviteMessage ))
+
+	if checkGHActivated ~= nil then
+		if GHVarChar.addonActivatedtivated then
+			checkGHActivated:SetChecked(true)
+		else
+			checkGHActivated:SetChecked(false)
+		end
+	end
+
+	if checkGHSellGreyActivated ~= nil then
+		if GHVarChar.sellGrey then
+			checkGHSellGreyActivated:SetChecked(true)
+		else
+			checkGHSellGreyActivated:SetChecked(false)
+		end
+	end
+
+	if checkGHAutoGreed ~= nil then
+		if GHVarChar.autoGreed then
+			checkGHAutoGreed:SetChecked(true)
+		else
+			checkGHAutoGreed:SetChecked(false)
+		end
+	end
+
+	if checkGHAutoAcceptQuestReward ~= nil then
+		if GHVarChar.autoAcceptQuestReward then
+			checkGHAutoAcceptQuestReward:SetChecked(true)
+		else
+			checkGHAutoAcceptQuestReward:SetChecked(false)
+		end
+	end
+
+	if checkGHAutoNeed ~= nil then
+		if GHVarChar.autoNeed then
+			checkGHAutoNeed:SetChecked(true)
+		else
+			checkGHAutoNeed:SetChecked(false)
+		end
+	end
+
+	if checkGHAutoEquipLootStuff ~= nil then
+		if GHVarChar.autoEquipLootedStuff then
+			checkGHAutoEquipLootStuff:SetChecked(true)
+		else
+			checkGHAutoEquipLootStuff:SetChecked(false)
+		end
+	end
+
+	if checkGHAutoEquipWhenChangeSpe ~= nil then
+		if GHVarChar.autoEquipWhenChangeSpe then
+			checkGHAutoEquipWhenChangeSpe:SetChecked(true)
+		else
+			checkGHAutoEquipWhenChangeSpe:SetChecked(false)
+		end
+	end
+
+	if checkGHAutoInvite ~= nil then
+		if GHVarChar.autoInvite then
+			checkGHAutoInvite:SetChecked(true)
+		else
+			checkGHAutoInvite:SetChecked(false)
+		end
+	end
+
+	if checkGHAutoTell ~= nil then
+		if GHVarChar.autoTell then
+			checkGHAutoTell:SetChecked(true)
+		else
+			checkGHAutoTell:SetChecked(false)
+		end
+	end
+
+
+	if radioDoNotRepairButton ~= nil and radioAutoRepairButton ~= nil and radioAutoRepairGuildButton ~= nil then
+		if GHVarChar.autoRepair == 0 then
+			radioDoNotRepairButton:SetChecked(true)
+			radioAutoRepairButton:SetChecked(false)
+			radioAutoRepairGuildButton:SetChecked(false)
+		end
+		if GHVarChar.autoRepair == 1 then
+			radioDoNotRepairButton:SetChecked(false)
+			radioAutoRepairButton:SetChecked(true)
+			radioAutoRepairGuildButton:SetChecked(false)
+		end
+		if GHVarChar.autoRepair == 2 then
+			radioDoNotRepairButton:SetChecked(false)
+			radioAutoRepairButton:SetChecked(false)
+			radioAutoRepairGuildButton:SetChecked(true)
+		end
+	end
+
+
+	if radioAMRButton ~= nil and radioNoxxicButton ~= nil then
+		if GHVarChar.AMR == 1000 then
+			-- radioIcyVeinsButton:SetChecked(false)
+			radioAMRButton:SetChecked(true)
+			radioNoxxicButton:SetChecked(false)
+		elseif GHVarChar.AMR == 0 then
+			-- radioIcyVeinsButton:SetChecked(false)
+			radioAMRButton:SetChecked(false)
+			radioNoxxicButton:SetChecked(true)
+		elseif GHVarChar.AMR == 10000 then
+			-- radioIcyVeinsButton:SetChecked(true)
+			radioAMRButton:SetChecked(false)
+			radioNoxxicButton:SetChecked(false)
+		end
+	end
+end
+
+
+
+
+
+
+
+function ui.UIGearHelper()
+
+	GHOptionPanel()
+	if type(customWeightPanel) ~= "table" then
+		customWeightPanel()
+	end
+	--if premierAffichage then
+		if frameInterface ~= nil then
+			InterfaceOptions_AddCategory(frameInterface)
+		else
+			frameInterface:Hide()
+		end
+	--end
+	InterfaceOptions_AddCategory(customWeightPanel) ------------------------- A RÉACTIVER QUAND ON METTRA LES CUSTOMS WEIGHTS
+end

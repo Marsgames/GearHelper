@@ -1,0 +1,41 @@
+## Interface: 70300
+## Title: |cFF00FF00GearHelper|r
+## Notes: Un addon qui permet de choisir pour vous le stuff le plus approprié à votre classe / spé
+## Notes-enUS: Manage your gear during your level up and after
+## Notes-deDE: Manage your gear during your level up and after
+## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
+## Author: Marsgames - Temple Noir | Tempaxe - Temple Noir
+## Version: 1.6.6.3
+
+## X-Category: Inventory
+
+## SavedVariables: GHVar, GearHelperDB
+## SavedVariablesPerCharacter: GHVarChar
+
+# Libraries
+embeds.xml
+#
+
+--GH_Init.lua
+
+Localizations/enUS.lua
+Localizations/frFR.lua
+Localizations/ptBR.lua
+Localizations/deDE.lua
+Localizations/itIT.lua
+Localizations/koKR.lua
+Localizations/esMX.lua
+Localizations/ruRU.lua
+Localizations/zhCN.lua
+Localizations/esES.lua
+Localizations/zhTW.lua
+
+GH_Tests.lua
+GH_UI.lua
+GearHelper.lua
+WeightValues.lua
+GH_Events.lua
+GH.xml
+GH_Options.lua
+—GearHelper_UI.lua
+—GearHelper.xml

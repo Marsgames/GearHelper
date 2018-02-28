@@ -1,0 +1,683 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
+--[[
+Function : GetInvMsg
+Scope : local
+Description : Return the invite message set by the user
+Input :
+Output : the invite message
+Author : Raphaël Daumas
+]]
+
+local function GetInvMsg()
+	return GearHelper.db.profile.inviteMessage
+end
+
+--[[
+Function : GetStatCW
+Scope : local
+Description : Return a particular stat from a template
+Input : info = name of the template, stat = stat name in template
+Output : the value associated to the stat
+Author : Raphaël Saget
+]]
+
+local function GetStatCW(info, stat)
+	return tostring(GearHelper.db.profile.CW[info[1]][stat])
+end
+--[[
+Function : SetStatCW
+Scope : local
+Description : Set a particular stat in a template
+Input : info = name of the template, val = value of the stat, stat = stat name in template
+Output : the value associated to the stat
+Author : Raphaël Saget
+]]
+
+local function SetStatCW(info, val, stat)
+	GearHelper.db.profile.CW[info[1]][stat] = val
+	return tostring(GearHelper.db.profile.CW[info[1]][stat])
+end
+--[[
+Function : ValidateInputPattern
+Scope : local
+Description : Validate if input is only composed of number or alphabetic character
+Input : val = the string to check, stat = type to validate
+Output : true if the string is compliant or a string with the error message if not
+Author : Raphaël Saget
+]]
+
+local function ValidateInputPattern(val, type)
+	if type == "number" then
+		if string.match(val, "(%D+)") then
+			return "Please use numbers only"
+		else
+			return true
+		end
+	elseif type == "alpha" then
+		if string.match(val, "(%A+)") then
+			return "Please use characters only"
+		else
+			return true
+		end
+	end
+end
+
+--[[
+Function :
+Scope : local
+Description : Template of setting for the addon main GUI
+Input :
+Output :
+Author : Raphaël Saget
+]]
+
+local ghOptionsTable = {
+	name = "GearHelper",
+	type = "group",
+	childGroups  = "select",
+	args = {
+		group1 = {
+			order = 0,
+			name = " ",
+			type = "group",
+			inline = true,
+			args = {
+				enable = {
+					order = 0,
+					name = "Enable GearHelper",
+					desc = L["UIGHCheckBoxAddon"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.addonEnabled = val; if val == false then PlaySoundFile("sound\\Creature\\Malfurion_Stormrage\\VO_703_Malfurion_Stormrage_37.ogg", "MASTER") end end,
+					get = function() return GearHelper.db.profile.addonEnabled end
+				},
+				debug = {
+					order = 1,
+					name = "Debug",
+					desc = L["UIGHCheckBoxAddon"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.debug = val end,
+					get = function() return GearHelper.db.profile.debug end
+				}
+			}
+		},
+		spacer1  = {
+			order = 1,
+			name = "Gear Options",
+			type = "header",
+		},
+		group2 = {
+			order = 2,
+			name = " ",
+			type = "group",
+			inline = true,
+			args = {
+				autoGreed = {
+					order = 2,
+					name = "Greed",
+					desc = L["UIGHCheckBoxAutoGreed"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.autoGreed = val end,
+					get = function() return GearHelper.db.profile.autoGreed end
+				},
+				autoNeed = {
+					order = 3,
+					name = "Need",
+					desc = L["UIGHCheckBoxAutoNeed"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.autoNeed = val end,
+					get = function() return GearHelper.db.profile.autoNeed end
+				},
+				autoEquipLootedStuff = {
+					order = 4,
+					name = "Auto equip looted stuff",
+					desc = L["UIGHCheckBoxAutoEquipLootedStuff"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.autoEquipLooted.actual = val end,
+					get = function() return GearHelper.db.profile.autoEquipLooted.actual end
+				},
+				autoEquipWhenSwitchSpe = {
+					order = 7,
+					name = "Spec Switch",
+					desc = L["UIGHCheckBoxAutoEquipWhenSwitchSpe"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.autoEquipWhenSwitchSpe = val end,
+					get = function() return GearHelper.db.profile.autoEquipWhenSwitchSpe end
+				},
+				askLootRaid = {
+					order = 6,
+					name = "Loot in raid",
+					desc = "Enables / disables ask for loot in raid",
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.askLootRaid = val end,
+					get = function() return GearHelper.db.profile.askLootRaid end
+				},
+				printWhenEquip = {
+					order = 5,
+					name = "Print When Equip",
+					desc = "Enables / disables print when equip",
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.printWhenEquip = val end,
+					get = function() return GearHelper.db.profile.printWhenEquip end
+				}
+			}
+		},
+		spacer2 = {
+			order = 3,
+			name = "Misc Options",
+			type = "header",
+		},
+		group3 = {
+			order = 4,
+			name = " ",
+			type = "group",
+			inline = true,
+			args = {
+				autoSell = {
+					order = 0,
+					name = "Sell Grey Items",
+					desc = L["UIGHCheckBoxSellGrey"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.sellGreyItems = val end,
+					get = function() return GearHelper.db.profile.sellGreyItems end
+				},
+				autoAcceptQuestReward = {
+					order = 1,
+					name = "Quests Rewards",
+					desc = L["UIGHCheckBoxAutoAcceptQuestReward"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.autoAcceptQuestReward = val end,
+					get = function() return GearHelper.db.profile.autoAcceptQuestReward end
+				},
+				autoRepair = {
+					order = 2,
+					name = "Auto-Repair",
+					desc = "Enables / disables automatic reparation",
+					type = "select",
+					values = {
+						[0] = "Do Not Repair",
+						[1] = "Repair with own gold",
+						[2] = "Repair with guild gold",
+					},
+					set = function(_,val) GearHelper.db.profile.autoRepair = val end,
+					get = function() return GearHelper.db.profile.autoRepair end,
+					style = "dropdown",
+				},
+				autoTell = {
+					order = 3,
+					name = "Loot Announcement",
+					desc = L["checkGHAutoTell"],
+					type = "toggle",
+					width = "full",
+					set = function(_,val) GearHelper.db.profile.autoTell = val end,
+					get = function() return GearHelper.db.profile.autoTell end
+				},
+				autoInvite = {
+					order = 4,
+					name = "Invite On Whisper",
+					desc = function() return L["UIGHCheckBoxAutoInvite"]..GetInvMsg() end,
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.autoInvite = val end,
+					get = function() return GearHelper.db.profile.autoInvite end
+				},
+				inviteMessage = {
+					order = 5,
+					name = "Invite Message",
+					desc = "Invite message to tell you to be invited",
+					type = "input",
+					set = function(_,val) GearHelper:setInviteMessage(val) end,
+					get = function() return GearHelper.db.profile.inviteMessage end
+				},
+			}
+		},
+	}
+}
+
+--[[
+Function : DeleteTemplate
+Scope : local
+Description : Delete a template from database and from GUI
+Input : info = the name of the template
+Output :
+Author : Raphaël Saget
+]]
+
+local function DeleteTemplate(info)
+	local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable("Custom Weights", "dialog", "GearHelper-1.0")
+
+	configTable.args.TemplateSelection.values[info[1]] = nil
+	configTable.args.TemplateSelection.values = configTable.args.TemplateSelection.values
+	configTable.args[info[1]] = nil
+	GearHelper.db.profile.CW[info[1]] = nil
+
+	LibStub("AceConfig-3.0"):RegisterOptionsTable("Custom Weights", configTable)
+	LibStub("AceConfigRegistry-3.0"):NotifyChange("Custom Weights")
+end
+
+--[[
+Function : CreateNewTemplate
+Scope : local
+Description : Called when user add a new template of stat, it create a new stat template in DB and add new GUI elements for the new template
+Input : templateName = the name of the template
+Output :
+Author : Raphaël Saget
+]]
+
+local function CreateNewTemplate(templateName)
+	for _,v in pairs(GearHelper.db.profile.CW) do
+		if (v.Name == templateName) then
+			return
+		end
+	end
+	local tmpTemplate = {
+		["Intellect"] = 0,
+		["Haste"] = 0,
+		["CriticalStrike"] = 0,
+		["Versatility"] = 0,
+		["Mastery"] = 0,
+		["Agility"] = 0,
+		["Stamina"] = 0,
+		["Strength"] = 0,
+		["Armor"] = 0,
+		["Leech"] = 0,
+		["Avoidance"] = 0,
+		["MainHandDps"] = 0,
+		["MovementSpeed"] = 0,
+		["OffHandDps"] = 0,
+		["Max"] = 0,
+		["Name"] = templateName
+	}
+	GearHelper.db.profile.CW[templateName] = tmpTemplate
+	local newGroup  = {
+		name = templateName,
+		type = "group",
+		hidden = function() if GearHelper.db.profile.weightTemplate == "NOX" then return true end end,
+		args =  {
+			Intell = {
+				order = 1,
+				name = "Intell",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Intellect") end,
+				set = function(info, val) return SetStatCW(info, val, "Intellect") end,
+			},
+			Strength = {
+				order = 2,
+				name = "Force",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Strength") end,
+				set = function(info, val) return SetStatCW(info, val, "Strength") end,
+			},
+			Agility = {
+				order = 3,
+				name = "Agi",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Agility") end,
+				set = function(info, val) return SetStatCW(info, val, "Agility") end,
+			},
+			Stamina = {
+				order = 4,
+				name = "Endu",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Stamina") end,
+				set = function(info, val) return SetStatCW(info, val, "Stamina") end,
+			},
+			Haste = {
+				order = 5,
+				name = "Hate",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Haste") end,
+				set = function(info, val) return SetStatCW(info, val, "Haster") end,
+			},
+			Mastery = {
+				order = 6,
+				name = "Maitrise",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Mastery") end,
+				set = function(info, val) return SetStatCW(info, val, "Mastery") end,
+			},
+			Critic = {
+				order = 7,
+				name = "Crit",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "CriticalStrike") end,
+				set = function(info, val) return SetStatCW(info, val, "CriticalStrike") end,
+			},
+			Armor = {
+				order = 8,
+				name = "Armure",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Armor") end,
+				set = function(info, val) return SetStatCW(info, val, "Armor") end,
+			},
+			Versatility = {
+				order = 9,
+				name = "Polyvalence",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Versatility") end,
+				set = function(info, val) return SetStatCW(info, val, "Versatility") end,
+			},
+			Leech = {
+				order = 10,
+				name = "Ponction",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Leech") end,
+				set = function(info, val) return SetStatCW(info, val, "Leech") end,
+			},
+			Avoidance = {
+				order = 11,
+				name = "Evitement",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "Avoidance") end,
+				set = function(info, val) return SetStatCW(info, val, "Avoidance") end,
+			},
+			MainHandDamage = {
+				order = 12,
+				name = "Dégats main droite",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "MainHandDps") end,
+				set = function(info, val) return SetStatCW(info, val, "MainHandDps") end,
+			},
+			OffHandDamage = {
+				order = 13,
+				name = "Dégats main gauche",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "OffHandDps") end,
+				set = function(info, val) return SetStatCW(info, val, "OffHandDps") end,
+			},
+			MovementSpeed = {
+				order = 14,
+				name = "Vitesse",
+				validate = function(_, val) return ValidateInputPattern(val, "number") end,
+				type = "input",
+				get = function(info) return GetStatCW(info, "MovementSpeed") end,
+				set = function(info, val) return SetStatCW(info, val, "MovementSpeed") end,
+			},
+			ButtonDelete = {
+				order = 15,
+				name = "Supprimer",
+				func = function(info) DeleteTemplate(info) end,
+				type = "execute"
+			}
+		}
+	}
+	local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable("Custom Weights", "dialog", "GearHelper-1.0")
+	configTable.args[templateName] = newGroup
+	configTable.args.TemplateSelection.values[templateName] = templateName
+	LibStub("AceConfig-3.0"):RegisterOptionsTable("Custom Weights", configTable)
+	LibStub("AceConfigRegistry-3.0"):NotifyChange("Custom Weights")
+end
+
+--[[
+Function :
+Scope : local
+Description : Template of setting for the addon custom weight GUI
+Input :
+Output :
+Author : Raphaël Saget
+]]
+
+local cwTable = {
+	name = "Custom Weights",
+	type = "group",
+	childGroups = "tree",
+	args  = {
+		templateName = {
+			order =  0,
+			name = "Template Name",
+			type = "input",
+			validate = function(_, val) return ValidateInputPattern(val, "alpha") end,
+			get = function() end,
+			set = function(_,val) CreateNewTemplate(val) end,
+		},
+		Select = {
+			order = 1,
+			name = "Stats Template",
+			type = "select",
+			style = "radio",
+			values = {
+				[1] = "Custom Weights",
+				[0] = "Noxxic Weights"
+			},
+			get = function()
+				if GearHelper.db.profile.weightTemplate == "NOX" then
+					return 0
+				else
+					return 1
+				end
+			end,
+			set = function(_, val)
+				if val == 1 then
+					GearHelper.db.profile.weightTemplate = GearHelper.db.profile.lastWeightTemplate
+					LibStub("AceConfigDialog-3.0"):SelectGroup("Custom Weights", GearHelper.db.profile.weightTemplate)
+				elseif val == 0 then
+					GearHelper.db.profile.lastWeightTemplate = GearHelper.db.profile.weightTemplate
+					GearHelper.db.profile.weightTemplate = "NOX"
+				end
+			end,
+		},
+		TemplateSelection = {
+			name = "Template to use",
+			type = "select",
+			style = "dropdown",
+			disabled = function() if GearHelper.db.profile.weightTemplate == "NOX" then return true end end,
+			get = function() return GearHelper.db.profile.weightTemplate end,
+			set = function(_, val)
+				GearHelper.db.profile.weightTemplate = val
+				LibStub("AceConfigDialog-3.0"):SelectGroup("Custom Weights", val)
+			end,
+			values = {}
+		}
+	}
+}
+
+--[[
+Function : BuildCWTable
+Scope : GearHelper
+Description : Dynamically build custom weight GUI based on registered template in DB
+Input :
+Output :
+Author : Raphaël Saget
+]]
+
+function GearHelper:BuildCWTable()
+	for _,v in pairs(self.db.profile.CW) do
+		if(v.Name ~= nil) then
+			local newGroup = {
+				name = "GHDefaultName",
+				type = "group",
+				disabled = function() if GearHelper.db.profile.weightTemplate == "NOX" then return true end end,
+				args =  {
+					Intell = {
+						order = 1,
+						name = "Intell",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Intellect") end,
+						set = function(info, val) return SetStatCW(info, val, "Intellect") end,
+					},
+					Strength = {
+						order = 2,
+						name = "Force",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Strength") end,
+						set = function(info, val) return SetStatCW(info, val, "Strength") end,
+					},
+					Agility = {
+						order = 3,
+						name = "Agi",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Agility") end,
+						set = function(info, val) return SetStatCW(info, val, "Agility") end,
+					},
+					Stamina = {
+						order = 4,
+						name = "Endu",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Stamina") end,
+						set = function(info, val) return SetStatCW(info, val, "Stamina") end,
+					},
+					Haste = {
+						order = 5,
+						name = "Hate",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Haste") end,
+						set = function(info, val) return SetStatCW(info, val, "Haster") end,
+					},
+					Mastery = {
+						order = 6,
+						name = "Maitrise",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Mastery") end,
+						set = function(info, val) return SetStatCW(info, val, "Mastery") end,
+					},
+					Critic = {
+						order = 7,
+						name = "Crit",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "CriticalStrike") end,
+						set = function(info, val) return SetStatCW(info, val, "CriticalStrike") end,
+					},
+					Armor = {
+						order = 8,
+						name = "Armure",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Armor") end,
+						set = function(info, val) return SetStatCW(info, val, "Armor") end,
+					},
+					Versatility = {
+						order = 9,
+						name = "Polyvalence",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Versatility") end,
+						set = function(info, val) return SetStatCW(info, val, "Versatility") end,
+					},
+					Leech = {
+						order = 10,
+						name = "Ponction",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Leech") end,
+						set = function(info, val) return SetStatCW(info, val, "Leech") end,
+					},
+					Avoidance = {
+						order = 11,
+						name = "Evitement",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "Avoidance") end,
+						set = function(info, val) return SetStatCW(info, val, "Avoidance") end,
+					},
+					MainHandDamage = {
+						order = 12,
+						name = "Dégats main droite",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "MainHandDps") end,
+						set = function(info, val) return SetStatCW(info, val, "MainHandDps") end,
+					},
+					OffHandDamage = {
+						order = 13,
+						name = "Dégats main gauche",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "OffHandDps") end,
+						set = function(info, val) return SetStatCW(info, val, "OffHandDps") end,
+					},
+					MovementSpeed = {
+						order = 14,
+						name = "Vitesse",
+						validate = function(_, val) return ValidateInputPattern(val, "number") end,
+						type = "input",
+						get = function(info) return GetStatCW(info, "MovementSpeed") end,
+						set = function(info, val) return SetStatCW(info, val, "MovementSpeed") end,
+					},
+					ButtonDelete = {
+						order = 15,
+						name = "Supprimer",
+						func = function(info) DeleteTemplate(info) end,
+						type = "execute"
+					}
+				}
+			}
+			newGroup.name = v.Name
+			cwTable.args[v.Name] = newGroup
+			cwTable.args.TemplateSelection.values[v.Name] = v.Name
+		end
+	end
+	LibStub("AceConfig-3.0"):RegisterOptionsTable("Custom Weights", cwTable)
+	LibStub("AceConfigRegistry-3.0"):NotifyChange("Custom Weights")
+end
+
+--[[
+Function :
+Scope : local
+Description : Template setting for the addon about GUI
+Input :
+Output :
+Author : Raphaël Saget
+]]
+
+local aboutTable = {
+	name = "About",
+	type = "group",
+	args  = {
+		version = {
+			order = 0,
+			fontSize = "medium",
+			name = "\n\n\n\n\n                |cFFFFFF00Version :|r "..version..--[[4124.27.0.2.0.31]]"\n",
+			type = "description",
+		},
+		author = {
+			order =  1,
+			fontSize = "medium",
+			name = "                |cFFFFFF00Author :|r Marsgames - Temple Noir\n                               Tempaxe - Temple Noir"..--[[Ta mère]]" \n",
+			type = "description",
+		},
+		email = {
+			order =  2,
+			fontSize = "medium",
+			name = "                |cFFFFFF00E-Mail :|r marsgames@gmail.com"..--[[fdp@fdp.land]]" \n",
+			type = "description",
+		},
+		bug = {
+			order =  3,
+			fontSize = "medium",
+			name = "                |cFFFFFF00BugReport :|r https://wow.curseforge.com/projects/gearhelper/issues \n",
+			type = "description",
+		},
+		credits = {
+			order =  4,
+			fontSize = "medium",
+			name = "                |cFFFFFF00Credits :|r Big up\n",
+			type = "description",
+		},
+	}
+}
+
+LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
+LibStub("AceConfig-3.0"):RegisterOptionsTable("Custom Weights", cwTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable("About", aboutTable)
+GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
+GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Custom Weights", "Custom Weights", "GearHelper")
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions("About", "About", "GearHelper")

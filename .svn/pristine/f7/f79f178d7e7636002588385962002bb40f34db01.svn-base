@@ -1,0 +1,18 @@
+function DropdownTemplate()
+    for i=1,5 do
+        local info = UIDropDownMenu_CreateInfo();
+        info.text = _G["KEY_BUTTON"..i];
+        info.value = i;
+        info.func = DropdownTemplateOnSelect;
+        UIDropDownMenu_AddButton(info);
+    end
+end
+
+function DropdownTemplateOnSelect(self, arg1, arg2, checked)
+    --print(self.value)
+    --print(self, arg1, arg2, checked);
+    --print(DropdownTemplate)
+    if (not checked) then
+        UIDropDownMenu_SetSelectedValue(DropdownTemplateBtn, self.value);
+    end
+end

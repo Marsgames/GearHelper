@@ -1,0 +1,5 @@
+GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "AceEvent-3.0")
+
+--GHVar.localization.isEquipable = {}
+--local L = GHVar.localization.isEquipable
+GHisEquipable = {}

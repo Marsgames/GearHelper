@@ -1,0 +1,120 @@
+-----------UI--------------------
+function onMinimapButtonClick(button)
+    --GH_MainFrame:Show()
+    if openInterface == 0 then
+        InterfaceOptionsFrame_OpenToCategory(frameInterface)
+        InterfaceOptionsFrame_OpenToCategory(frameInterface)
+        openInterface = 1
+    else
+        -- fonction pour close InterfaceOptionFrame !
+        --RemoveInterfaceOptions(frameInterface)
+    end
+
+end
+ 
+local mmdp = 60 -- MyMod minimap button default position
+ 
+function MyMod_MinimapButton_Reposition()
+    MyMod_MinimapButton:ClearAllPoints()
+    MyMod_MinimapButton:SetPoint("TOPLEFT","Minimap","TOPLEFT",52-(80*cos(mmdp)),(80*sin(mmdp))-52)
+end
+ 
+function onMinimapButtonUpdate()
+ 
+    local xpos,ypos = GetCursorPosition()
+    local xmin,ymin = Minimap:GetLeft(), Minimap:GetBottom()
+ 
+    xpos = xmin-xpos/UIParent:GetScale()+70 -- get coordinates as differences from the center of the minimap
+    ypos = ypos/UIParent:GetScale()-ymin-70
+ 
+    mmdp = math.deg(math.atan2(ypos,xpos)) -- save the degrees we are relative to the minimap center
+    MyMod_MinimapButton_Reposition() -- move the button
+end
+
+local function GHUI_MakeMovable(frame)
+    frame:SetMovable(true)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnDragStart", frame.StartMoving)
+    frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+    frame:EnableMouse(true)
+end
+
+--[[
+function GHUI_SetText(self)
+    getglobal(self:GetName().."CBOnText"):SetText("Active / Désactive l'addon");
+    getglobal(self:GetName().."CBCupiText"):SetText("Effectuer un jet de cupidité automatiquement en instance");
+    getglobal(self:GetName().."CBQuestText"):SetText("Choisir le meilleur équipement en récompense de quete");
+    getglobal(self:GetName().."CBGreyText"):SetText("Vente automatique des objets gris");
+    getglobal(self:GetName().."CBEquipPickText"):SetText("Equipe un objet meilleur lors de son ramassage");
+    getglobal(self:GetName().."CBEquipSpeText"):SetText("Equipe le meilleur set d'objet au changement de spécialisation");
+    getglobal(self:GetName().."CBNeedText"):SetText("Effectuer un jet de besoin automatiquement en instance");
+end
+]]
+local function GHUI_Interface_Close()
+    open = 0
+end
+
+local function GHUI_Interface_CancelOrLoad()
+    open = 0
+end
+
+--[[
+local function GHUI_AddToInterface(self)
+        self.name = "GearHelper " .. GetAddOnMetadata("GearHelper", "Version");
+        self.okay = function (self) GHUI_Interface_Close(); end;
+        self.cancel = function (self)  GHUI_Interface_CancelOrLoad();  end;
+        InterfaceOptions_AddCategory(self);
+end
+]]--
+function GHUI_OnLoad(self)
+    GHUI_MakeMovable(self)
+    --GHUI_SetText(self)
+    --GHUI_AddToInterface(self)
+
+    --print("GHActivated : "..GHActivated)
+   	--[[if GHActivated then
+    	getglobal(self:GetName().."CBOn"):SetChecked(true)
+	end
+	if GHAutoGreed then
+    	getglobal(self:GetName().."CBCupi"):SetChecked(true)
+    end
+    if GHAutoAcceptQuestReward then
+    	getglobal(self:GetName().."CBQuest"):SetChecked(true)
+    end
+    if GHSellGreyActivated then
+    	getglobal(self:GetName().."CBGrey"):SetChecked(true)
+    end
+    if GHAutoEquipLootStuff then
+    	getglobal(self:GetName().."CBEquipPick"):SetChecked(true)
+    end
+    if GHAutoEquipWhenChangeSpe then
+    	getglobal(self:GetName().."CBEquipSpe"):SetChecked(true)
+    end
+    if GHAutoGreed then
+    	getglobal(self:GetName().."CBNeed"):SetChecked(true)
+    end]]--
+end
+
+--[[
+function createGHActivated(  )
+	local checkGHActivated = CreateFrame("CheckButton", "GHActivatedButton", background, "UICheckButtonTemplate")	
+	checkGHActivated:SetPoint("CENTER", -150 + decallageX, 90)
+	checkGHActivated.text:SetText(L["checkGHActivated"])
+	checkGHActivated:SetFrameStrata("HIGH")
+	checkGHActivated:SetScale(1.25)
+	if GHActivated then
+		checkGHActivated:SetChecked(true)
+	else
+		checkGHActivated:SetChecked(false)
+	end
+end
+
+function GHactivatedXML(  )
+	if getglobal(self:GetName().."CBOnText"):GetChecked(true) then
+		GHActivated = true
+		print("GH true")
+	else
+		GHActivated = false
+		print("GHActivated false")
+	end
+end ]]--

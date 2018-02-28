@@ -1,0 +1,230 @@
+if GetLocale() == "esES" then
+
+	local cJaune = "|cFFFFFF00"
+	local cVert = "|cFF00FF00"
+	local cRouge = "|cFFFF0000"
+
+	if not GearHelperLocalization then
+		GearHelperLocalization = {}
+	end
+
+	local L = GearHelperLocalization
+
+	-- Artifact weapon
+	--GHArmes = {}
+	--local Z = GHArmes
+
+	GHNeed = {}
+	local ilFautNeed = GHNeed
+
+	GHDontNeed = {}
+	local nePasNeed = GHDontNeed
+
+
+	L["merci"] = 									"|cFF00FF00"
+
+	L["local"] = 									"ES"
+
+	L["maLangue"] = 								"spanish"
+
+--[[
+	L["setOn"] = 									"|cFF00FF00GearHelper|r|cFF00FF00 activated|r"
+	L["setOff"] = 									"|cFF00FF00GearHelper|r|cFFFF0000 deactivated|r"
+	L["errorSetActivatedValue"] = 					"Please contact me @ marsgamess@gmail.com"
+	L["helpHelpInfo"] = 							"|cFFFFFF00Type |cFF00FF00/gh help|r|cFFFFFF00 to show help|r"
+	L["stateHelpInfo"] = 							"|cFFFFFF00/gh state to show |cFF00FF00GearHelper|r's help"
+	L["configHelpInfo"] = 							"|cFFFFFF00/gh or /gh config to configure |cFF00FF00GearHelper"
+	L["setSGOn"] = 									"Auto sell grey items|cFF00FF00 activated|r"
+	L["setSGOff"] = 								"Auto sell grey items|cFFFF0000 deactivated|r"
+	L["errorSetSGActivatedValue"] = 				L["errorSetActivatedValue"]
+	L["armor"] = 									"Armor"    -- ATTENTION TO UPPERCASE
+	L["weapon"] = 									"Weapon"   -- SAME
+	L["divers"] = 									"Miscellaneous"	-- NEED CONFIRMATION
+	L["cannapeche"] = 								"Fishing rod"  -- NEED CONFIRMATION
+	L["activeeVert"] = 								"|cFF00FF00activated|r"
+	L["desactiveeRouge"] = 							"|cFFFF0000deactivated|r"
+	L["addonActivated"] = 							"|cFF00FF00GearHelper |cFFFFFF00is|r activated|r"
+	L["sellGreyActivated"] = 						"Auto sell grey items|cFF00FF00 activated|r"
+	L["autoGreedActivated"] = 						"Auto greed for items of your spec |cFF00FF00activated"
+	L["autoGreedDeactivated"] = 					"Auto greed for items of your spec |cFFFF0000deactivated|r"
+	L["autoAcceptQuestRewardActivated"] = 			"Auto accept quest reward |cFF00FF00activated|r"
+	L["autoAcceptQuestRewardDeactivated"] = 		"Auto accept quest reward |cFFFF0000deactivated|r"
+	L["autoNeedInstanceLootActivated"] = 			"Auto need instance loot if it's better than yours |cFF00FF00activated|r"
+	L["autoNeedInstanceLootDeactivated"] = 			"Auto need instance loot if it's better than yours |cFFFF0000deactivated|r"
+	L["autoEquipLootStuffActivated"] = 				"Auto equip loot |cFF00FF00activated|r"
+	L["autoEquipLootStuffDeactivated"] = 			"Auto equip loot |cFFFF0000deactivated|r"
+	L["autoEquipWhenChangeSpeActivated"] = 			"Auto change stuff when change specialization |cFF00FF00activated|r"
+	L["autoEquipWhenChangeSpeDeactivated"] = 		"Auto change stuff when change specialization |cFFFF0000deactivated|r"
+	L["itemLessThan"] = 							"|cFFFF0066This item is less than your"
+	L["itemLessThanGeneral"] = 						"|cFFFF0066This item is less than yours"
+	L["itemBetterThan"] = 							"|cFF7FFFD4This item is better than your "
+	L["itemBetterThan2"] = 							"with a value of +"
+	L["itemBetterThanGeneral"] = 					"|cFF7FFFD4This item is better than yours with a value of +"
+	L["slashCmdInfo"] = 							"|cFFFFFF00Type |cFF00FF00/gh|r|cFFFFFF00 or |cFF00FF00/gh help|r|cFFFFFF00 to show help|r"
+	L["iNeededOn"] = 								"I needed on  "
+	L["checkGHActivated"] = 						"|cFF000000Enable / disable GearHelper"
+	L["checkGHSellGreyActivated"] = 				"|cFF000000Enable / disable auto sell grey items"
+	L["checkGHAutoGreed"] = 						"|cFF000000Enable / disable auto greed in instance"
+	L["checkGHAutoAcceptQuestReward"] = 			"|cFF000000Enable / disable auto accept quest reward"
+	L["checkGHAutoNeed"] = 							"|cFF000000Enable / disable auto need in instance"
+	L["checkGHAutoEquipLootStuff"] = 				"|cFF000000Enable / disable auto equip stuff when looted"
+	L["checkGHAutoEquipWhenChangeSpe"] = 			"|cFF000000Enable / disable auto equip stuff when change specialization"
+	L["radioAMRButton"] = 							"|cFF000000Use Ask Mr Robot's template"
+	L["radioNoxxicButton"] = 						"|cFF000000Use Noxxic's template"
+	L["reliqueAP"] = 								"Artifact Relic"
+	L["version1"] = 								"You are using version |cFFFF0000"
+	L["version2"] = 								"|r of GearHelper. Version |cFF00FF00"
+	L["version3"] = 								"|r was find from "
+	L["version4"] = 								" (Curse)"
+	L["state1"] = 									"|cFFFFFF00GearHelper is "
+	L["state2"] = 									"|cFFFFFF00, auto sell grey items option is "
+	L["state3"] = 									"|cFFFFFF00, auto greed in instance option is "
+	L["state4"] = 									"|cFFFFFF00, auto accept quest reward option is  "
+	L["state5"] = 									"|cFFFFFF00, auto need in instance option is "
+	L["state6"] = 									"|cFFFFFF00, auto equip when loot option is "
+	L["state7"] = 									"|cFFFFFF00 auto equip when change specialization option is "
+	L["stateError"] = 								"Error with /gh state. Please contact me @ marsgames@gmail.com"
+	L["mmButton"] = 								"Enable / disable minimap button"
+	L["GHAutoRepair0"] = 							"Auto repair gear |cFFFF0000deactivated|r"
+	L["GHAutoRepair1"] = 							"Auto repair gear |cFF00FF00activated"
+	L["GHAutoRepair2"] = 							"Auto repair gear with guild founds |cFF00FF00activated"
+	L["CantRepair"] = 								"You can't repair"
+	L["repairCost"] = 								"Repair cost : "
+	L["guildRepairCost"] = 							"Guild repair cost : "
+	L["gold"] =										"g"			-- g for gold (in english)  / po for piece d'or (in french)...
+	L["dot"] = 										"."
+	L["DNR"] =										"Do not repair automatically"
+	L["AutoRepair"] = 								"Repair automatically"
+	L["GuildAutoRepair"] = 							"Repair with guild if possible"
+	L["itemEgal"] =									"This item is equal as yours"
+	L["itemEgala"] = 								"This item is equal as "
+	L["itemEgalMainD"] =							"This item is equal as your Right Hand"
+	L["itemEgalMainG"] = 							"This item is equal as your Left Hand"
+	L["mainD"] = 									" Right Hand "
+	L["mainG"] = 									" Left Hand "
+
+	L["checkAutoInvite"] =							"Automatically invite the person who /w you the text        |cFF00FF00 "
+	L["autoInviteActivated"] = 						"Auto invite when whisper |cFF00FF00activated|r"
+	L["autoInviteDeactivated"] = 					"Auto invite when whisper |cFFFF0000deactivated|r"
+	L["state8"] = 									"|cFFFFFF00 auto invite when whisper option is "
+	L["state9"] = 									"|cFFFFFF00, auto tell loots option is "
+	L["checkGHAutoTell"] = 							"Enable / disable auto tell loot in raid"
+	L["radioIcyVeinsButton"] = 						"Icy Veins"
+	L["ivIndisponible"] =							"Icy Veins isn't available for all classes (available for warlock, rogue and mage)"
+
+
+
+
+
+
+	-- DK  --> Blood, frost, unholy
+	L["250"] = "Maw of the Damned"
+	L["251"] = "Icebringer"
+	L["251a"] = "Frostreaper"
+	L["252"] = "Apocalypse"
+
+	-- Druid --> Balance, feral, guardian, resto
+	L["102"] = "Scythe of Elune"
+	L["103"] = "Fangs of Ashamane"
+	L["104"] = "Claws of Ursoc"
+	L["105"] = "G’Hanir, the Mother Tree"
+
+	-- Hunter --> Beast M, Marksmanship, Survival
+	L["253"] = "Titanstrike"
+	L["254"] = "Thas'dorah, Legacy of the Windrunners"
+	L["255"] = "Talonclaw, Spear of the Wild Gods"
+
+	-- Mage --> Arcane, fire, frost
+	L["62"] = "Aluneth, Greatstaff of the Magna"
+	L["63"] = "Felo'melorn"
+	L["64"] = "Ebonchill"
+
+	-- Monk --> Brewmaster, windwalker, mistweaver
+	L["268"] = "Fu Zan, the Wanderer's Companion"
+	L["269"] = "Fists of the Heavens"
+	L["270"] = "Sheilun, Staff of Mists"
+
+	-- Paladin --> Holy, protec, retri
+	L["65"] = "The Silver Hand"
+	L["66"] = "Truthguard"
+	L["67"] = "Ashbringer"
+
+	-- Priest --> Disci, holy, shadow
+	L["256"] = "Light's Wrath"
+	L["257"] = "Tuure, Beacon of the Naaru"
+	L["258"] = "Xal'atath, Blade of the Black Empire"
+
+	-- Rogue --> Assassin, combat, subtlety
+	L["259"] = "Anguish"
+	L["259a"] = "Sorrow"
+	L["260"] = "Fate"
+	L["260a"] = "Fortune"
+	L["261"] = "Fangs of the Devourer"
+
+	-- Shaman --> Elem, enhancement, resto
+	L["262"] = "The Fist of Ra-Den"
+	L["263"] = "Doomhammer"
+	L["264"] = "Scepter of Azshara"
+
+	-- Warlock --> Affli, demo, destru
+	L["265"] = "Ulthalesh, The Deadwind Harvester"
+	L["266"] = "Skull of the Man’ari"
+	L["267"] = "Scepter of Sargeras"
+
+	-- War --> Arms, fury, protec
+	L["71"] = "Stromkar, the Warbreaker"
+	L["72"] = "Warswords of Valajar"
+	L["73"] = "Scale of the Earth-Warder"
+
+	-- DH --> Havoc, vengeance
+	L["577"] = "Twinblades of the Deceiver"
+	L["581"] = "Aldrachi Warblades"
+
+
+
+
+
+
+
+
+-- GetItemInfo --> Type & SubType
+	ilFautNeed = {
+
+		"Mount",
+		"Pet",
+		"Toy Box",
+
+	}
+-- GetItemInfo --> Type & SubType
+	nePasNeed = {
+
+
+		"Container",
+		"Consumable",
+		"Glyph",
+		"Profession",
+		"Recipe",
+		"Gem",
+		"Miscellaneous",
+		"Currency",
+		"Quest",
+		"Key",
+		"Other",
+		"Trade Good",
+		"Artifact Relic",
+
+	}
+
+
+
+
+
+	--L["sgonHelpInfo"] = 							"|cFFFFFF00/gh sgon / sgoff --> Active / désactive la vente automatique des objets gris"
+	--L["stateFuncOff"] = 							"|cFF00FF00GearHelper|r |cFFFFFF00est|r|cFFFF0000 désactivé"
+	--L["stateFuncOn"] = 							"|cFF00FF00GearHelper|r |cFFFFFF00est|r|cFF00FF00 activé"
+	--L["onHelpInfo"] = 							"|cFFFFFF00/gh on / off --> Active / désactive l'addon"
+	--L["receiveAnswerText"] = 						"Vous utilisez la version |cFFFF0000 %s|r de GearHelper. La version |cFF00FF00 %s|r a été trouvée chez %s"
+
+
+	]]--
+end

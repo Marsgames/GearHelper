@@ -1,0 +1,7 @@
+files['*.rockspec'].global = false
+files['.luacheckrc'].global = false
+exclude_files  = {"Libs", ".svn", "Problèmes"}
+std = {
+   globals = {"table", "strmatch", "select", "strsplit", "strfind", "foreach", "GetCombatRating", "IsEquippableItem", "UnitLevel", "UnitClass", "type", "GetSpecialization", "GetSpecializationInfo", "C_MountJournal", "GetItemInfo", "C_PetJournal", "PlaySoundFile", "GetContainerItemID", "GetContainerItemInfo", "GetContainerNumSlots", "pairs", "print", "tostring", "string", "LibStub", "GearHelper", "tonumber"}
+}
+max_line_length = 1000

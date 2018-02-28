@@ -1,0 +1,402 @@
+GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "AceEvent-3.0")
+local L = LibStub("AceLocale-3.0"):NewLocale("GearHelper", "enUS", true)
+-- local BT = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+
+
+cJaune =    "|cFFFFFF00"
+cVert =     "|cFF00FF00"
+cRouge =    "|cFFFF0000"
+cRose =     "|cFFFF1493"
+cMoinsB =   "|cFFFF0066"
+cMieux =    "|cFF7FFFD4"
+
+L["merci"] = 								    cVert.."Author Marsgames - TempleNoir & Tempaxe - TempleNoir. Thank you to Nirek for his amazing work."
+
+L["local"] = 									"EN"
+-------------------------- CE QUI EST EN DDESSOUS DE CETTE LIGNE EST DISPO SUR CURSE --------------------------
+L["Addon"] = 									"|cFF00FF00GearHelper is : "
+L["ActivatedGreen"] = 							"|cFF00FF00Activated|r"
+L["DeactivatedRed"] = 							"|cFFFF0000Deactivated|r"
+L["itemLessThan"] = 							"|cFFFF0066This item is less than your"
+L["itemLessThanGeneral"] = 						"|cFFFF0066This item is less than yours"
+L["itemBetterThan"] = 							"|cFF7FFFD4This item is better than your "
+L["itemBetterThan2"] = 							"with a value of +"
+L["itemBetterThanGeneral"] = 					"|cFF7FFFD4This item is better than yours with a value of +"
+L["iNeededOn"] = 								"I needed on  "
+L["UIGHCheckBoxAddon"] = 						" Enable / disable GearHelper"
+L["UIGHCheckBoxSellGrey"] = 				    "Enable / disable auto sell grey items"
+L["UIGHCheckBoxAutoGreed"] = 					"Enable / disable auto greed in instance"
+L["UIGHCheckBoxAutoAcceptQuestReward"] = 		"Enable / disable auto accept quest reward"
+L["UIGHCheckBoxAutoNeed"] = 					"Enable / disable auto need in instance"
+L["UIGHCheckBoxAutoEquipLootedStuff"] =			"Enable / disable auto equip stuff when looted"
+L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] =		"Enable / disable auto equip stuff when change specialization"
+L["CantRepair"] = 								"You can't repair"
+L["repairCost"] = 								"Repair cost : "
+L["guildRepairCost"] = 							"Guild repair cost : "
+L["gold"] =										"g"			-- g for gold (in english)  / po for piece d'or (in french)...
+L["dot"] = 										"."
+L["DNR"] =										"Do not repair automatically"
+L["AutoRepair"] = 								"Repair with own founds"
+L["GuildAutoRepair"] = 							"Repair with guild founds"
+L["itemEgal"] =									"This item is equal as yours"
+L["itemEgala"] = 								"This item is equal as "
+L["itemEgalMainD"] =							"This item is equal as your Right Hand"
+L["itemEgalMainG"] = 							"This item is equal as your Left Hand"
+L["mainD"] = 									" Right Hand "
+L["mainG"] = 									" Left Hand "
+L["UIGHCheckBoxAutoInvite"] =					"Automatically invite the person who /w you the text        |cFF00FF00 "
+L["checkGHAutoTell"] = 							"Enable / disable auto tell loot in raid"
+L["InviteMessage"] = 							"The message to whisper you for you to send an automatic invitation is : "
+L["radioIcyVeinsButton"] = 						"Custom Weights"
+L["moneyEarned"] = 								"Money earned by selling : "
+L["ask1"] = 									"|cFFFFFF00You can ask ["
+L["ask2"] =										"|cFFFFFF00] if he needs "
+L["demande1"] = 								"Do you want to ask to "
+L["demande2"] = 								" if he needs "
+L["yes"] = 										"Yes"
+L["no"] = 										"No"
+L["demande4frFR"] =	--[[don't translate this]]	"[GearHelper] - Salut, je voulais savoir si tu avais besoin de "
+L["demande4frFR2"] = --[[don't translate this]]	" que tu viens juste de gagner "
+L["demande4deDE"] = --[[don't translate this]]	"[GearHelper] - Hey, ich würde gerne wissen, ob du dein "
+L["demande4deDE2"] = --[[don't translate this]]	" brauchst"
+L["demande4enUS"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4enUS2"] = 							" that you just won "
+L["demande4ruRU"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4ruRU2"] = 							" that you just won "
+L["demande4itIT"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4itIT2"] = 							" that you just won "
+L["demande4esES"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4esES2"] = 							" that you just won "
+L["demande4esMX"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4esMX2"] = 							" that you just won "
+L["demande4koKR"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4koKR2"] = 							" that you just won "
+L["demande4ptBR"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4ptBR2"] = 							" that you just won "
+L["demande4zhCN"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4zhCN2"] = 							" that you just won "
+L["demande4zhTW"] = 							"[GearHelper] - Hey, I would like to know if you need your "
+L["demande4zhTW2"] = 							" that you just won "
+L["repfrFR"] =	--[[don't translate this]]      "S'il te plait, réponds en "
+L["repfrFR2"] =	--[[don't translate this]]      " ou en anglais."
+L["repenUS"] =	--[[don't translate this]]      "Please, answer in "
+L["repenUS2"] =	--[[don't translate this]]      ""
+L["repdeDE"] =	      "Please, answer in "
+L["repdeDE2"] =	     "or in english."
+L["repitIT"] =	      "Please, answer in "
+L["repitIT2"] =	     "or in english."
+L["repruRU"] =	      "Please, answer in "
+L["repruRU2"] =	     "or in english."
+L["repesES"] =	      "Please, answer in "
+L["repesES2"] =	     "or in english."
+L["represMX"] =	      "Please, answer in "
+L["repesMX2"] =	     "or in english."
+L["repkoKR"] =	      "Please, answer in "
+L["repkoKR2"] =	     "or in english."
+L["repptBR"] =	      "Please, answer in "
+L["repptBR2"] =	     "or in english."
+L["repzhCN"] =	      "Please, answer in "
+L["repzhCN2"] =	     "or in english."
+L["repzhTW"] =	      "Please, answer in "
+L["repzhTW2"] =	     "or in english."
+L["maLangue"] = 								"english."
+L["maj1"] =										"You are using version |cFFFF0000"
+L["maj2"] =										"|r of GearHelper. Version |cFF00FF00"
+L["maj3"] =										"|r was find from "
+L["equipVerbose"] = 							" has just been equipped by GearHelper"
+L["enable"] = "Enable"
+L["disable"] = "Disable"
+L["gearOptions"] = "Gear Options"
+L["autoGreed"] = "Auto greed"
+L["autoNeed"] = "Auto need"
+L["autoEquipLootedStuff"] = "Auto equip looted stuff"
+L["autoEquipSpecChangedStuff"] = "Auto equip when spec is changed"
+L["lootInRaidAlert"] = "Alert if something better is loot"
+L["UIGHCheckBoxlootInRaidAlert"] = "Enable / disable option to be informed if someone loot something better than what you have equipped"
+L["UIprintWhenEquip"] = "Print when auto equip"
+L["miscOptions"] = "Misc Options"
+L["sellGrey"] = "Sell Grey Items"
+L["questRewars"] = "Auto accept quest reward"
+L["auto-repair"] = "Auto-Repair"
+L["auto-repairDesc"] = "Enables / disables automatic reparation"
+L["UIautoInvite"] = "Invite On Whisper"
+L["UIinviteMessage"] = "Invite Message"
+L["UIinviteMessageDesc"] = "Invite message to tell you to be invited"
+L["remove"] = "Remove"
+L["UIcwTemplateToUse"] = "Template to use"
+L["UIstatsTemplateToUse"] = "Stats template to use"
+L["UItemplateName"] = "Template name"
+L["customWeights"] = "Custom Weights"
+L["noxxicWeights"] = "Noxxic Weights"
+L["UIcwIlvlWeight"] = "iLvl Weight"
+L["UIcwIlvlOption"] = "Consider iLvl into calculation"
+-------------------------- CE QUI EST EN DDESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
+------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
+-----
+
+
+L["Tooltip"] = {
+	Stat = {
+		["Intellect"] = ITEM_MOD_INTELLECT_SHORT,
+		["Haste"] = ITEM_MOD_HASTE_RATING_SHORT,
+		["CriticalStrike"] = ITEM_MOD_CRIT_RATING_SHORT,
+		["Versatility"] = ITEM_MOD_VERSATILITY,
+		["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT,
+		["Agility"] = ITEM_MOD_AGILITY_SHORT,
+		["Stamina"] = ITEM_MOD_STAMINA_SHORT,
+		["Strength"] = ITEM_MOD_STRENGTH_SHORT,
+		["Armor"] = RESISTANCE0_NAME,
+		["Leech"] = "Leech",
+		["Avoidance"] = "Avoidance",
+		["MovementSpeed"] = "Speed",
+		["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
+		["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
+	},
+	["ItemLevel"] = "^Item Level",
+	["LevelRequired"] = "^Requires Level",
+	["GemSocketEmpty"] = "^Sockets",
+	["BonusGem"] = "^Socket bonus",
+}
+
+L["Artifact"] = {
+	["251"] = {
+		"128293",
+		"128292",
+	},
+	["259"] = {
+		"128869",
+		"128870"
+	},
+	["260"] = {
+		"128872",
+		"134552",
+	},
+	["103"] = {
+		"128859",
+		"128860",
+	},
+	["104"] = {
+		"128821",
+		"128822",
+	},
+	["269"] = {
+		"128940",
+		"133948",
+	},
+	["66"] = {
+		"128866",
+		"128867",
+	},
+	["258"] = {
+		"128827",
+		"133958",
+	},
+	["262"] = {
+		"128935",
+		"128936",
+	},
+	["263"] = {
+		"128819",
+		"128873",
+	},
+	["264"] = {
+		"128911",
+		"128934",
+	},
+	["266"] = {
+		"128943",
+		"137246",
+	},
+	["72"] = {
+		"128908",
+		"134553",
+	},
+	["73"] = {
+		"128289",
+		"128288",
+	},
+	["577"] = {
+		"127829",
+		"127830",
+	},
+	["581"] = {
+		"128832",
+		"128831",
+	},
+	["250"] = "128402",
+	["252"] = "128403",
+	["102"] = "128858",
+	["105"] = "128306",
+	["253"] = "128861",
+	["254"] = "128826",
+	["255"] = "128808",
+	["62"] = "127857",
+	["63"] = "128820",
+	["64"] = "128862",
+	["268"] = "128938",
+	["270"] = "128937",
+	["65"] = "128823",
+	["70"] = "120978",
+	["256"] = "128868",
+	["257"] = "128825",
+	["261"] = "128476",
+	["265"] = "128942",
+	["267"] = "128941",
+	["71"] = "128910",
+}
+
+local BabbleI = LibStub("LibBabble-Inventory-3.0")
+local BT = BabbleI:GetLookupTable()
+
+L["armor"] = 								BT["Armor"]
+L["weapon"] = 								BT["Weapon"]
+L["divers"] = 								BT["Miscellaneous"]
+L["cannapeche"] = 							BT["Fishing Poles"]
+L["monture"] =                              BT["Mount"]
+L["mascotte"] =                             BT["Companion Pets"]
+L["TypeToNotNeed"] = {
+	["sac"] = BT["Bag"],
+	["conteneur"] = BT["Container"],
+	["consommable"] = BT["Consumable"],
+	["autre"] = BT["Other"],
+	["glyphe"] = BT["Glyph"],
+	["artisanat"] = BT["Trade Goods"],
+	["element"] = BT["Parts"],
+	["recette"] = BT["Recipe"],
+	["gemme"] = BT["Gem"],
+	["relique"] = BT["Relic"],
+	["divers"] = BT["Miscellaneous"],
+	["camelote"] = BT["Junk"],
+	["quete"] = BT["Quest"],
+	["cle"] = BT["Key"],
+	["monture"] = BT["Mount"],
+	["mascotte"] = BT["Companion Pets"];
+}
+
+L["IsEquipable"] = {
+	-- War
+	["WARRIOR"] = {
+		["Plaque"] = BT["Plate"],
+		["Bouclier"] = BT["Shield"],
+		["Dague"] = BT["Dagger"],
+		["Pugilat"] = BT["Fist Weapons"],
+		["Hache1H"] = BT["One-Handed Axes"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Epee1H"] = BT["One-Handed Swords"],
+		["Hast"] = BT["Polearms"],
+		["Baton"] = BT["Staves"],
+		["Hache2H"] = BT["Two-Handed Axes"],
+		["Epee2H"] = BT["Two-Handed Swords"]
+	},
+	-- Pala
+	["PALADIN"] = {
+		["Plaque"] = BT["Plate"],
+		["Bouclier"] = BT["Shield"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Masse2H"] = BT["Two-Handed Maces"],
+		["Hache1H"] = BT["One-Handed Axes"],
+		["Hache2H"] = BT["Two-Handed Axes"],
+		["Epee1H"] = BT["One-Handed Swords"],
+		["Epee2H"] = BT["Two-Handed Swords"],
+		["Hast"] = BT["Polearms"],
+		["Holdable"] = BT["Miscellaneous"]
+	},
+	-- Chassou
+	["HUNTER"] = {
+		["Maille"] = BT["Mail"],
+		["Arc"] = BT["Bows"],
+		["Arbalete"] = BT["Crossbows"],
+		["ArmeAFeu"] = BT["Guns"],
+		["Hast"] = BT["Polearms"]
+	},
+	-- Fufu
+	["ROGUE"] = {
+		["Cuir"] = BT["Leather"],
+		["Dague"] = BT["Dagger"],
+		["Pugilat"] = BT["Fist Weapons"],
+		["Hache1H"] = BT["One-Handed Axes"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Epee1H"] = BT["One-Handed Swords"]
+	},
+	-- Priest
+	["PRIEST"] = {
+		["Tissu"] = BT["Cloth"],
+		["Baguette"] = BT["Wands"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Baton"] = BT["Staves"],
+		["Holdable"] = BT["Miscellaneous"]
+	},
+	-- DK
+	["DEATHKNIGHT"] = {
+		["Plaque"] = BT["Plate"],
+		["Hache1H"] = BT["One-Handed Axes"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Epee1H"] = BT["One-Handed Swords"],
+		["Hast"] = BT["Polearms"],
+		["Hache2H"] = BT["Two-Handed Axes"],
+		["Masse2H"] = BT["Two-Handed Maces"],
+		["Epee2H"] = BT["Two-Handed Swords"]
+	},
+	-- Sham
+	["SHAMAN"] = {
+		["Maille"] = BT["Mail"],
+		["Bouclier"] = BT["Shield"],
+		["Dague"] = BT["Dagger"],
+		["Pugilat"] = BT["Fist Weapons"],
+		["Hache1H"] = BT["One-Handed Axes"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Baton"] = BT["Staves"],
+		["Hache2H"] = BT["Two-Handed Axes"],
+		["Masse2H"] = BT["Two-Handed Maces"],
+		["Holdable"] = BT["Miscellaneous"]
+	},
+	-- Mage
+	["MAGE"] = {
+		["Tissu"] = BT["Cloth"],
+		["Baguette"] = BT["Wands"],
+		["Dague"] = BT["Dagger"],
+		["Epee1H"] = BT["One-Handed Swords"],
+		["Baton"] = BT["Staves"],
+		["Holdable"] = BT["Miscellaneous"],
+	},
+	-- Démo
+	["WARLOCK"] = {
+		["Tissu"] = BT["Cloth"],
+		["Dague"] = BT["Dagger"],
+		["Epee1H"] = BT["One-Handed Swords"],
+		["Baton"] = BT["Staves"],
+		["Baguette"] = BT["Wands"],
+		["Holdable"] = BT["Miscellaneous"],
+	},
+	-- Monk
+	["MONK"] = {
+		["Cuir"] = BT["Leather"],
+		["Pugilat"] = BT["Fist Weapons"],
+		["Hache1H"] = BT["One-Handed Axes"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Epee1H"] = BT["One-Handed Swords"],
+		["Hast"] = BT["Polearms"],
+		["Baton"] = BT["Staves"],
+		["Holdable"] = BT["Miscellaneous"]
+	},
+	-- Druide de la tribue de Dana
+	["DRUID"] = {
+		["Cuir"] = BT["Leather"],
+		["Dague"] = BT["Dagger"],
+		["Pugilat"] = BT["Fist Weapons"],
+		["Masse1H"] = BT["One-Handed Maces"],
+		["Hast"] = BT["Polearms"],
+		["Baton"] = BT["Staves"],
+		["Masse2H"] = BT["Two-Handed Maces"],
+		["Holdable"] = BT["Miscellaneous"]
+	},
+	-- DH
+	["DEMONHUNTER"] = {
+		["Cuir"] = BT["Leather"],
+		["Glaives"] = BT["Warglaives"],
+		["Dague"] = BT["Dagger"],
+		["Pugilat"] = BT["Fist Weapons"],
+		["Hache1H"] = BT["One-Handed Axes"],
+		["Epee1H"] = BT["One-Handed Swords"]
+	}
+}

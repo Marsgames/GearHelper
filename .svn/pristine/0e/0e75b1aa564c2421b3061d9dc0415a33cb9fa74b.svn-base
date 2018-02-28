@@ -1,0 +1,365 @@
+testTab = {}
+
+--local L = GHVar.localization
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
+isProdigiousEquippable = true
+function testTab.getStat(nomStat)
+
+    local statTable = {}
+    statTable["crit"] = 10
+    statTable["ponction"] = 17
+    statTable["haste"] = 20
+    statTable["avoid"] = 21
+    statTable["mastery"] = 26
+    statTable["vers"] = 30
+
+    statTable["versatility"] = statTable["vers"]
+    statTable["poly"] = statTable["vers"]
+    statTable["polyvalence"] = statTable["vers"]
+    statTable["maitrise"] = statTable["mastery"]
+    statTable["avoidance"] = statTable["avoid"]
+    statTable["evitement"] = statTable["avoid"]
+    statTable["hate"] = statTable["haste"]
+    statTable["lifesteal"] = statTable["ponction"]
+    statTable["critique"] = statTable["crit"]
+    statTable["critic"] = statTable["crit"]
+
+    if statTable[nomStat] == nil then
+        return -1
+    else
+        return GetCombatRating(statTable[string.lower(nomStat)])
+    end
+    --[[
+    print("defense "..GetCombatRating(2))
+    print("dodge "..GetCombatRating(3))
+    print("pary "..GetCombatRating(4))
+    print("block "..GetCombatRating(5))
+    print("hitMele "..GetCombatRating(6))
+    print("hitRanged "..GetCombatRating(7))
+    print("hitSpell "..GetCombatRating(8))
+    print("critMele "..GetCombatRating(9))
+    print("critRanged "..GetCombatRating(10))
+    print("critSpell "..GetCombatRating(11))
+    print("multiStrike "..GetCombatRating(12))
+    print("readiness "..GetCombatRating(13))
+    print("speed "..GetCombatRating(14))
+
+
+
+    print("hasteMele "..GetCombatRating(18))
+    print("hasteRanged "..GetCombatRating(19))
+    print("hasteSpell "..GetCombatRating(20))
+
+
+    print("weaponSkill "..GetCombatRating(23))
+    print("expertise "..GetCombatRating(24))
+    print("penetration "..GetCombatRating(25))
+
+
+
+    print("versDone "..GetCombatRating(29))
+    print("versTaken "..GetCombatRating(31))
+    ]]--
+end
+
+
+-- desc :
+-- entrée :
+-- sortie :
+-- commentaire : creatureName, spellID, icon, active, isUsable, sourceType, isFavorite, isFactionSpecific, faction, hideOnChar, isCollected, mountID  = C_MountJournal.GetDisplayedMountInfo(i)
+-- commentaire : petID, speciesID, owned, customName, level, favorite, isRevoked, speciesName, icon, petType, companionID, tooltip, description, isWild, canBattle, isTradeable, isUnique, obtainable = C_PetJournal.GetPetInfoByIndex(i)
+function testTab.isMonture( lootName )
+
+    -- test si monture
+    local i = 1
+    local creatureName  = C_MountJournal.GetDisplayedMountInfo(i)
+    while creatureName ~= nil do
+        if creatureName == lootName then
+            return true
+        end
+        i = i + 1
+        creatureName  = C_MountJournal.GetDisplayedMountInfo(i)
+    end
+
+    -- test mascotte
+    i = 1
+    local _, _, owned, _, _, _, _, speciesName, _, _, _, _, _, _, _, isTradeable = C_PetJournal.GetPetInfoByIndex(i)
+    while speciesName ~= nil do
+        if creatureName == speciesName then
+            if not owned then
+                return true
+            elseif owned and isTradeable then
+                return true
+            end
+        end
+        i = i+1
+        _, _, owned, _, _, _, _, speciesName, _, _, _, _, _, _, _, isTradeable = C_PetJournal.GetPetInfoByIndex(i)
+    end
+
+
+    -- test jouet
+
+    --test légendaire
+    local _, _, itemRarity = GetItemInfo(lootName)
+    if itemRarity ~= nil and itemRarity > 4 then
+        return true
+    end
+
+
+    return false
+end
+
+-- desc :
+-- entrée :
+-- sortie :
+-- commentaire : itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
+function testTab.SiObjetGris( itemID ) -- itemID ou itemLink ou itemName ou itemString
+    local _, _, itemRarity, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(itemID)
+    local result = {}
+    if itemRarity == 0 then
+        table.insert(result, true)
+        table.insert(result, itemSellPrice)
+        return result
+    else
+        table.insert(result, false)
+        table.insert(result, 0)
+        return result
+    end
+    if itemRarity == nil then
+        table.insert(result, false)
+        table.insert(result, 0)
+        return result
+    end
+end
+
+function testTab.getSubTypeStuff( idItem )
+    local _, _, _, _, _, _, itemSubType = GetItemInfo(idItem)
+    return itemSubType
+end
+
+-- desc : Cette fonction permet de récupérer le nombre de slots dans l'inventaire du joueur
+-- entrée : ø
+-- sortie : ø
+-- commentaire :
+function testTab.nbSlotsTotal()
+    local nbSlots = 0
+    local i = 0
+    while i <= 23 do
+        if GetContainerNumSlots(i)  then
+            nbSlots = nbSlots + GetContainerNumSlots(i)
+        end
+        i = i + 1
+    end
+    return nbSlots
+end
+
+function testTab.isEquiped(itemLink)
+    local _, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(itemLink)
+    if itemEquipLoc == "INVTYPE_TRINKET" then
+        if GearHelper.charInventory["Trinket0"] == itemLink or GearHelper.charInventory["Trinket1"] == itemLink then
+            return true
+        end
+    elseif itemEquipLoc == "INVTYPE_FINGER" then
+        if GearHelper.charInventory["Finger0"] == itemLink or GearHelper.charInventory["Finger1"] == itemLink then
+            return true
+        end
+    elseif itemEquipLoc== "INVTYPE_WEAPON" then
+        if GearHelper.charInventory["MainHand"] == itemLink or GearHelper.charInventory["SecondaryHand"] == itemLink then
+            return true
+        end
+    else
+        if GearHelper.charInventory[GearHelper.itemSlot[itemEquipLoc]] == itemLink then
+            return true
+        end
+    end
+    return false
+end
+
+function testTab.isPossibleEquip(itemLink)
+    -- Pourquoi ne pas utiliser IsEquippableItem() ? (fonction api)
+    local _, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(itemLink)
+
+    if itemEquipLoc == "" then
+        if UnitName("player") == "Marsgames nil" then
+            print("isPossibleEquip = false (result : \"\") --> "..itemLootLink)
+        end
+        return false
+    elseif itemEquipLoc == "INVTYPE_SHIELD" or itemEquipLoc == "INVTYPE_WEAPONOFFHAND" or itemEquipLoc == "INVTYPE_HOLDABLE" or itemEquipLoc == "INVTYPE_WEAPON" then
+        if GearHelper.charInventory["SecondaryHand"] == -1 then
+            return false
+        else
+            return true
+        end
+    else
+        return true
+    end
+end
+
+function testTab.isEquipableByMe(itemLink)
+    if IsEquippableItem(itemLink) then
+        local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(itemLink)
+        local myLevel = UnitLevel("player")
+        local _, myClass = UnitClass("player")
+        local isItMadeForMe = false
+        local currentSpec = GetSpecialization()
+        local playerSpec = GetSpecializationInfo(currentSpec)
+        local _, _, _, _, itemID = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+
+        --Is it an item that i can equip with my character ?
+        table.foreach(L.IsEquipable[tostring(myClass)], function(k, v)
+            if subclass == v then
+                isItMadeForMe = true
+            end
+        end)
+
+        if isItMadeForMe == false then
+          return false
+        --Is the required level not too high ?
+        elseif reqLevel ~= nil and reqLevel > myLevel then
+            return false
+        --Is it a common item shared by all classes ?
+        elseif equipSlot == "INVTYPE_FINGER" or equipSlot == "INVTYPE_NECK" or equipSlot == "INVTYPE_TRINKET" or equipSlot == "INVTYPE_BODY" or equipSlot == "INVTYPE_TABARD" or equipSlot == "INVTYPE_CLOAK" and subType == L["divers"] and equipSlot ~= "INVTYPE_BAG" then
+          return true
+        --Is it an artifact weapon ?
+        elseif quality == 6 then
+          if type(L.Artifact[tostring(playerSpec)]) == "string" then
+            if tostring(itemID) == L.Artifact[tostring(playerSpec)] then
+              return true
+            end
+          else
+            table.foreach(L.Artifact[tostring(playerSpec)], function(_, v)
+              if tostring(itemID) == v then
+                return true
+              end
+            end)
+          end
+        --If this is an equipable item by me but not an item that require a specific return, just return true
+        else
+          return true
+        end
+
+    else
+        return false
+    end
+end
+
+function testTab.isSlotEmpty(equipLoc)
+    local result = {}
+    if equipLoc == "INVTYPE_TRINKET" then
+        if GearHelper.charInventory["Trinket0"] == 0 then
+            table.insert(result, true)
+        else
+            table.insert(result, false)
+        end
+
+        if GearHelper.charInventory["Trinket1"] == 0 then
+            table.insert(result, true)
+        else
+            table.insert(result, false)
+        end
+    elseif equipLoc == "INVTYPE_FINGER" then
+        if GearHelper.charInventory["Finger0"] == 0 then
+            table.insert(result,true)
+        else
+            table.insert(result,false)
+        end
+
+        if GearHelper.charInventory["Finger1"] == 0 then
+            table.insert(result, true)
+        else
+            table.insert(result, false)
+        end
+    elseif equipLoc == "INVTYPE_WEAPON" or equipLoc == "INVTYPE_2HWEAPON" or equipLoc == "INVTYPE_RANGEDRIGHT" then
+        if GearHelper.charInventory["MainHand"] == 0 then
+            table.insert(result,true)
+        else
+            table.insert(result,false)
+        end
+
+        if GearHelper.charInventory["SecondaryHand"] == 0 or GearHelper.charInventory["SecondaryHand"] == -1 then
+            table.insert(result, true)
+        else
+            table.insert(result, false)
+        end
+    else
+        if GearHelper.charInventory[GearHelper.itemSlot[equipLoc]] == 0 then
+            table.insert(result, true)
+        else
+            table.insert(result, false)
+        end
+    end
+    return result
+end
+
+function testTab.isInTable(array, data)
+    local result = false
+    table.foreach(array, function(k, v)
+        local ret = strmatch(array[k], data)
+        if ret ~= nil then
+            result = true
+        end
+    end)
+    return result
+end
+
+function testTab.returnGoodLink( itemLink, target, tar )
+
+    local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
+    local _, itemId, enchantId, jewelId1, jewelId2, jewelId3, jewelId4, suffixId, uniqueId, linkLevel, specializationID, reforgeId, unknown1, unknown2 = strsplit(":", itemString)
+
+    if tar == nil then
+        tar = ""
+    end
+
+    return "|HGHWhispWhenClick:askIfHeNeed_"..target.."_"..itemId.."_|h"..tar.."|h"
+
+end
+
+function testTab.couleurClasse( classID )
+    if classID == 1 then -- war
+        return "|cFFC79C6E"
+    elseif classID == 2 then -- pala
+        return "|cFFF58CBA"
+    elseif classID == 3 then -- hunter
+        return "|cFFABD473"
+    elseif classID == 4 then -- rogue
+        return "|cFFFFF569"
+    elseif classID == 5 then -- Pretre
+        return "|cFFFFFFFF"
+    elseif classID == 6 then -- dk
+        return "|cFF41F3B"
+    elseif classID == 7 then -- chamy
+        return "|cFF0070DE"
+    elseif classID == 8 then -- mage
+        return "|cFF69CCF0"
+    elseif classID == 9 then -- démo
+        return "|cFF9482C9"
+    elseif classID == 10 then -- moine
+        return "|cFF00FF96"
+    elseif classID == 11 then -- druid
+        return "|cFFFF7D0A"
+    elseif classID == 12 then -- DH
+        return "|cFFA330C9"
+    end
+end
+
+function table.isEmpty (self)
+    for _, _ in pairs(self) do
+        return false
+    end
+    return true
+end
+
+
+
+--function test.SiUtilisable( idObjet )
+--	local _, _, _, _, _, itemType, _, _, itemEquipLoc, _, itemSellPrice = GetItemInfo(idObjet)
+--	if itemType == L["armor"] or itemType == L["weapon"] then
+--		if not IsDressableItem(idObjet) then
+--			if (itemSellPrice / 100 / 100) >= 1 then
+--				return false
+--			end
+--		end
+--	end
+--end
