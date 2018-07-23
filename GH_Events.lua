@@ -8,12 +8,11 @@ waitingIDTable = waitingIDTable
 --[[
 Function : AddonLoaded
 Scope : local
-Description :
-Input :
-Output :
+Description : Initialise l'addon au moment de son chargement
+Input : string (le nom de l'addono chargé)
 Author : Raphaël Daumas
 ]]
-local function AddonLoaded(addonName, fonction, name)
+local function AddonLoaded(_, _, name)
 	if GearHelper.db.global.templates == nil then
 		GearHelper.db.global.templates = {}
 	end
@@ -21,7 +20,7 @@ local function AddonLoaded(addonName, fonction, name)
 	GearHelper:InitTemplates()
 
 	if name == addonName then
-		RegisterAddonMessagePrefix(prefixAddon)
+		--RegisterAddonMessagePrefix(prefixAddon)
 		print(GearHelper:ColorizeString(L["merci"], "Vert"))
 	end
 end
@@ -29,16 +28,14 @@ end
 --[[
 Function : OnMerchantShow
 Scope : local
-Description :
-Input :
-Output :
+Description : Vend / répare automatiquement quand la fenetre d'un marchant s'ouvre
 Author : Raphaël Daumas
 ]]
 local function OnMerchantShow()
 	gagne = 0
 	if GearHelper.db.profile.sellGreyItems then
 		for bag = 0, 4 do
-			for slot = 1,GetContainerNumSlots(bag) do
+			for slot = 1, GetContainerNumSlots(bag) do
 				if GetContainerItemID(bag, slot) ~= nil then
 					local id = GetContainerItemID(bag, slot)
 					if id then
@@ -64,21 +61,29 @@ local function OnMerchantShow()
 			argentGuilde = GetGuildBankMoney()
 		end
 		if prix > 0 then
-			if  GearHelper.db.profile.autoRepair == 1 then
+			if GearHelper.db.profile.autoRepair == 1 then
 				if argentPossedee >= prix then
 					RepairAllItems(false)
-					print(GearHelper:ColorizeString(L["repairCost"], "Rose")..math.floor(prix/10000)..L["dot"]..math.floor((prix % 10000) / 100)..L["gold"])
+					print(
+						GearHelper:ColorizeString(L["repairCost"], "Rose") ..
+							math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"]
+					)
 				else
 					print(L["CantRepair"])
 				end
 			elseif GearHelper.db.profile.autoRepair == 2 then
 				if droitGuilde ~= nil and (droitGuilde == -1 or (droitGuilde > argentGuilde and argentGuilde > prix)) then
 					RepairAllItems(true)
-					print(cRose..L["guildRepairCost"]..math.floor(prix/10000)..L["dot"]..math.floor((prix % 10000) / 100)..L["gold"])
+					print(
+						cRose ..
+							L["guildRepairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"]
+					)
 				else
 					if argentPossedee >= prix then
 						RepairAllItems(false)
-						print(cRose..L["repairCost"]..math.floor(prix/10000)..L["dot"]..math.floor((prix % 10000) / 100)..L["gold"])
+						print(
+							cRose .. L["repairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"]
+						)
 					else
 						print(L["CantRepair"])
 					end
@@ -87,8 +92,8 @@ local function OnMerchantShow()
 		end
 	end
 
-	for bag = 0,4 do
-		for slot = 1,GetContainerNumSlots(bag) do
+	for bag = 0, 4 do
+		for slot = 1, GetContainerNumSlots(bag) do
 			if GetContainerItemID(bag, slot) ~= nil then
 				local _, itemCount = GetContainerItemInfo(bag, slot)
 				local id = GetContainerItemID(bag, slot)
@@ -106,9 +111,7 @@ end
 --[[
 Function : PlayerEnteringWorld
 Scope : local
-Description :
-Input :
-Output :
+Description : Quand le joueur se connecte : - crée les cw - check si l'addon est à jour - scan l'équipement du joueur - fixe les greens dots ?
 Author : Raphaël Daumas
 ]]
 local function PlayerEnteringWorld()
@@ -117,6 +120,9 @@ local function PlayerEnteringWorld()
 		GearHelper:sendAskVersion()
 		GearHelper:ScanCharacter()
 		GearHelper:poseDot()
+		if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
+			GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
+		end
 	end
 end
 
@@ -124,24 +130,23 @@ end
 --[[
 Function : ChatMsgAddon
 Scope : local
-Description :
-Input :
-Output :
+Description : Envoi une demande de version ou sa réponse (pour vérifier si l'addon est up to date)
+Input : string (le prefixe du message), string (le message envoyé par / reçu par l'addon), string (le nom du joueur qui à envoyé le msg (peut être soit même))
 Author : Raphaël Daumas
 ]]
-local function ChatMsgAddon(addonName, fonction, prefixMessage, message, channel, sender)
+local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
 	if prefixMessage == prefixAddon then
 		local emetteur = ""
-		if sender:find("-")then
+		if sender:find("-") then
 			emetteur = sender:sub(0, (sender:find("-") - 1))
 		else
 			emetteur = sender
 		end
-		if GearHelper.db.profile.addonEnabled== true then
+		if GearHelper.db.profile.addonEnabled == true then
 			if emetteur ~= GetUnitName("player") then
 				local prefVersion = message:sub(0, (message:find(";") - 1))
 				if prefVersion == "answerVersion" then
-					local vVersion = message:sub(message:find(";")+1, #message)
+					local vVersion = message:sub(message:find(";") + 1, #message)
 					versionCible = vVersion
 					GearHelper:receiveAnswer(vVersion, sender)
 				end
@@ -156,13 +161,11 @@ end
 --[[
 Function : ItemPush
 Scope : local
-Description :
-Input :
-Output :
+Description : Appelé quand un item est envoyé dans un sac. Equipe les items de ce sac qui seraient mieux que ceux équipés.
+Input : number (le numéro du sac ddans lequel l'item à été envoyé)
 Author : Raphaël Daumas
 ]]
-local function ItemPush(addonName, fonction, bag)
-
+local function ItemPush(_, _, bag)
 	if GearHelper.db.profile.autoEquipLooted.actual then
 		local theBag = bag
 		if bag == 23 then
@@ -181,47 +184,48 @@ end
 --[[
 Function : QuestComplete
 Scope : local
-Description :
-Input :
-Output :
+Description : Accepte la récompensee de quête automatiquement si l'option est activée.
 Author : Raphaël Daumas
 ]]
 local function QuestComplete()
-
-	GearHelper.GetQuestRewardCoroutine = coroutine.create(function() GearHelper:GetQuestReward() end)
+	GearHelper.GetQuestRewardCoroutine =
+		coroutine.create(
+		function()
+			GearHelper:GetQuestReward()
+		end
+	)
 	coroutine.resume(GearHelper.GetQuestRewardCoroutine)
-
 end
 
 --[[
 Function : StartLootRoll
 Scope : local
-Description :
-Input :
-Output :
+Description : Auto need ou auto greed un item en instance si l'option est activée
+Input : number (index du jet (si 3 items tombent en même temps :  0, 1, 2))
 Author : Raphaël Daumas
 ]]
-local function StartLootRoll(addonName, fonction, number)
-
-	GearHelper.AutoGreedAndNeedCoroutine = coroutine.create(function() GearHelper:AutoGreedAndNeed(number) end)
+local function StartLootRoll(_, _, number)
+	GearHelper.AutoGreedAndNeedCoroutine =
+		coroutine.create(
+		function()
+			GearHelper:AutoGreedAndNeed(number)
+		end
+	)
 	coroutine.resume(GearHelper.AutoGreedAndNeedCoroutine)
 	-- GearHelper:AutoGreedAndNeed(number)
-
 end
 
 --[[
 Function : MerchantClosed
 Scope : local
-Description :
-Input :
-Output :
+Description : Appelé quand la fenetre d'un marchant se ferme. calcul l'argent gagné pour l'afficher
 Author : Raphaël Daumas
 ]]
 local function MerchantClosed()
 	if GearHelper.db.profile.sellGreyItems then
 		local argentFin = 0
-		for bag = 0,4 do
-			for slot = 1,GetContainerNumSlots(bag) do
+		for bag = 0, 4 do
+			for slot = 1, GetContainerNumSlots(bag) do
 				if GetContainerItemID(bag, slot) ~= nil then
 					local _, itemCount = GetContainerItemInfo(bag, slot)
 					local id = GetContainerItemID(bag, slot)
@@ -232,8 +236,11 @@ local function MerchantClosed()
 				end
 			end
 		end
-		if(gagne - argentFin > 0) then
-			print(GearHelper:ColorizeString(L["moneyEarned"], "Vert")..math.floor((gagne - argentFin)/10000)..L["dot"]..math.floor(((gagne - argentFin) % 10000) / 100)..L["gold"])
+		if (gagne - argentFin > 0) then
+			print(
+				GearHelper:ColorizeString(L["moneyEarned"], "Vert") ..
+					math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"]
+			)
 			gagne = 0
 		end
 	end
@@ -242,13 +249,11 @@ end
 --[[
 Function : BagUpdate
 Scope : local
-Description :
-Input :
-Output :
+Description : ... Bonne question ... fired un peu n'importe quand ?
 Author : Raphaël Daumas
 ]]
 local function BagUpdate()
-	--Random check to verify that charInventory is initialized because BagUpdate is fired before PlayerEnteringWorld
+	-- Random check to verify that charInventory is initialized because BagUpdate is fired before PlayerEnteringWorld
 	if GearHelper.charInventory["MainHand"] ~= "" and GearHelper.charInventory["MainHand"] ~= nil then
 		GearHelper:ScanCharacter()
 		GearHelper:poseDot()
@@ -258,9 +263,7 @@ end
 --[[
 Function : ActiveTalentGroupChanged
 Scope : local
-Description :
-Input :
-Output :
+Description : Appelé quand l'utilisateur change de spé. Utilisé pour équiper les bons items et changer le nom ded la spé dans les CW
 Author : Raphaël Daumas
 ]]
 local function ActiveTalentGroupChanged()
@@ -272,18 +275,19 @@ local function ActiveTalentGroupChanged()
 		GearHelper:equipItem(3)
 		GearHelper:equipItem(4)
 	end
-	GearHelper.cwTable.args["NoxGroup"].name = "Noxxic "..(GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+	GearHelper.cwTable.args["NoxGroup"].name =
+		"Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 end
 
 --[[
 Function : ChatMsgChannel
 Scope : local
-Description :
-Input :
-Output :
+Description : Invite le joueur qui envoit le bon msg dans un groupe
+Description : Affiche une alerte si votre nom est cité
+Input : string (le message reçu), string (le joueur qui l'a envoyé)
 Author : Raphaël Daumas
 ]]
-local function ChatMsgChannel(_, _, msg, sender)
+local function ChatMsgChannel(_, _, msg, sender, lang, channel)
 	if GearHelper.db.profile.autoInvite and msg ~= nil then
 		local playerIsNotMe = not string.find(sender, GetUnitName("player"))
 		if msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe and GetNumGroupMembers() == 5 then
@@ -293,14 +297,15 @@ local function ChatMsgChannel(_, _, msg, sender)
 			InviteUnit(sender)
 		end
 	end
+
+	GearHelper:ShowMessageSMN(channel, sender, msg)
 end
 
 --[[
 Function : ChatMsgWhisper
 Scope : local
-Description :
-Input :
-Output :
+Description : Invite le joueur qui vous chuchote le bon msg dans un groupe
+Input : string (le message reçu), string (le joueur qui l'a envoyé)
 Author : Raphaël Daumas
 ]]
 local function ChatMsgWhisper(_, _, msg, sender)
@@ -313,23 +318,51 @@ local function ChatMsgWhisper(_, _, msg, sender)
 			InviteUnit(sender)
 		end
 	end
+	if (GearHelper.db.profile.whisperAlert) then
+		PlaySoundFile("Interface\\AddOns\\GearHelper\\Textures\\whisper.ogg", "Master")
+	end
 end
 
 --[[
 Function : ChatMsgLoot
 Scope : local
-Description :
-Input :
-Output :
+Description : Si quelqu'un loot quelque chose de mieux que ce qu'on a en instance, crée un lien pour lui demander facilement s'il en a besoin
+Input : Trop d'infos envoyées par la fonction de Blizzard
 Author : Raphaël Daumas
 ]]
-local function ChatMsgLoot(_, _, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
-	GearHelper:createLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
+local function ChatMsgLoot(
+	_,
+	_,
+	message,
+	sender,
+	language,
+	channelString,
+	target,
+	flags,
+	unknown1,
+	channelNumber,
+	channelName,
+	unknown2,
+	counter)
+	GearHelper:createLinkAskIfHeNeeds(
+		0,
+		message,
+		sender,
+		language,
+		channelString,
+		target,
+		flags,
+		unknown1,
+		channelNumber,
+		channelName,
+		unknown2,
+		counter
+	)
 
 	local used = false
 	for i = 1, NUM_CHAT_WINDOWS do
-		local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i);
-		if(uninteractable) then
+		local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
+		if (uninteractable) then
 			SetChatWindowUninteractable(i, false)
 			used = true
 		end
@@ -339,19 +372,66 @@ local function ChatMsgLoot(_, _, message, sender, language, channelString, targe
 	end
 end
 
+local function ChatMsgBattleground(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("BG", sender, msg)
+end
+
+local function ChatMsgBattlegroundLeader(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("BG", sender, msg)
+end
+
+local function ChatMsgEmote(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Emote", sender, msg)
+end
+
+local function ChatMsgGuild(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Guild", sender, msg)
+end
+
+local function ChatMsgOfficer(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Officer", sender, msg)
+end
+
+local function ChatMsgParty(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Party", sender, msg)
+end
+
+local function ChatMsgPartyLeader(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Party", sender, msg)
+end
+
+local function ChatMsgRaid(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Raid", sender, msg)
+end
+
+local function ChatMsgRaidLeader(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Raid", sender, msg)
+end
+
+local function ChatMsgRaidWarning(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Raid_warning", sender, msg)
+end
+
+local function ChatMsgSay(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Say", sender, msg)
+end
+
+local function ChatMsgYell(_, _, msg, sender, lang, channel)
+	GearHelper:ShowMessageSMN("Yell", sender, msg)
+end
+
 --[[
 Function : UnitInventoryChanged
 Scope : local
-Description :
-Input :
-Output :
+Description : Évite d'équiper la meilleur arme si le joueur est en train ed pêcher
+Input : string (le joueur qui à changé de stuff ?)
 Author : Raphaël Daumas
 ]]
 local function UnitInventoryChanged(_, _, joueur)
 	if GearHelper.db.profile.addonEnabled and joueur == "player" then
 		GearHelper:ScanCharacter()
-		if GetInventoryItemLink("player",GetInventorySlotInfo("MainHandSlot")) ~= nil then
-			local _, _, _, _, _, _, subclass  = GetItemInfo(GetInventoryItemLink("player",GetInventorySlotInfo("MainHandSlot")))
+		if GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")) ~= nil then
+			local _, _, _, _, _, _, subclass = GetItemInfo(GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")))
 			if subclass == L["cannapeche"] then
 				GearHelper.db.profile.autoEquipLooted.previous = GearHelper.db.profile.autoEquipLooted.actual
 				GearHelper.db.profile.autoEquipLooted.actual = false
@@ -365,9 +445,7 @@ end
 --[[
 Function : QuestTurnedIn
 Scope : local
-Description :
-Input :
-Output :
+Description : Bonne question ? Equipe les bons items quand on accepte une quête ?
 Author : Raphaël Daumas
 ]]
 local function QuestTurnedIn()
@@ -380,30 +458,46 @@ end
 --[[
 Function : GetItemInfoReceived
 Scope : local
-Description :
-Input :
-Output :
+Description : Appelé quand un item arrivee en cache
+Input : number (id de l'item)
 Author : Raphaël Daumas
 ]]
 local function GetItemInfoReceived(_, _, item)
 	if GearHelper.db.global.itemWaitList[item] then
 		local slotName = GearHelper.db.global.itemWaitList[item]
 		GearHelper.db.global.itemWaitList[item] = nil
-		GearHelper.charInventory[string.sub(slotName, 1, -5)] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo(slotName), slotName)
+		GearHelper.charInventory[string.sub(slotName, 1, -5)] =
+			GearHelper:GetEquippedItemLink(GetInventorySlotInfo(slotName), slotName)
 	end
 	if item ~= nil then
 		if GearHelper.idNilGetQuestReward ~= nil then
 			if item == GearHelper.idNilGetQuestReward then
-				GearHelper:Print(tostring(item).." était nil")
+				GearHelper:Print(tostring(item) .. " était nil")
 				coroutine.resume(GearHelper.GetQuestRewardCoroutine)
 			end
 		end
-		if 	GearHelper.idNilAutoGreedAndNeed ~= nil then
-			if item == 	GearHelper.idNilAutoGreedAndNeed then
+		if GearHelper.idNilAutoGreedAndNeed ~= nil then
+			if item == GearHelper.idNilAutoGreedAndNeed then
 				coroutine.resume(GearHelper.AutoGreedAndNeedCoroutine)
 			end
 		end
 	end
+end
+
+local function PlayerFlagsChanged(_, _)
+	-- GearHelper:Print("test")
+	if (GearHelper.db.profile.debug) then
+		-- local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit("player")
+		-- if(unitLocale == "frFR") then
+		PlaySound(5804, "Master")
+	-- else
+	-- 	PlaySound(14414, "Master")
+	-- end
+	end
+end
+
+local function ReadyCheck(_, _)
+	local players = GetHomePartyInfo()
 end
 
 -- local function QuestFiniched()
@@ -423,7 +517,21 @@ GearHelper:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", ActiveTalentGroupChanged
 GearHelper:RegisterEvent("CHAT_MSG_CHANNEL", ChatMsgChannel, ...)
 GearHelper:RegisterEvent("CHAT_MSG_WHISPER", ChatMsgWhisper, ...)
 GearHelper:RegisterEvent("CHAT_MSG_LOOT", ChatMsgLoot, ...)
+--GearHelper:RegisterEvent("CHAT_MSG_BATTLEGROUND", ChatMsgBattleground, ...)
+--GearHelper:RegisterEvent("CHAT_MSG_BATTLEGROUND_LEADER", ChatMsgBattlegroundLeader, ...)
+GearHelper:RegisterEvent("CHAT_MSG_EMOTE", ChatMsgEmote, ...)
+GearHelper:RegisterEvent("CHAT_MSG_GUILD", ChatMsgGuild, ...)
+GearHelper:RegisterEvent("CHAT_MSG_OFFICER", ChatMsgOfficer, ...)
+GearHelper:RegisterEvent("CHAT_MSG_PARTY", ChatMsgParty, ...)
+GearHelper:RegisterEvent("CHAT_MSG_PARTY_LEADER", ChatMsgPartyLeader, ...)
+GearHelper:RegisterEvent("CHAT_MSG_RAID", ChatMsgRaid, ...)
+GearHelper:RegisterEvent("CHAT_MSG_RAID_LEADER", ChatMsgRaidLeader, ...)
+GearHelper:RegisterEvent("CHAT_MSG_RAID_WARNING", ChatMsgRaidWarning, ...)
+GearHelper:RegisterEvent("CHAT_MSG_SAY", ChatMsgSay, ...)
+GearHelper:RegisterEvent("CHAT_MSG_YELL", ChatMsgYell, ...)
 GearHelper:RegisterEvent("UNIT_INVENTORY_CHANGED", UnitInventoryChanged, ...)
 GearHelper:RegisterEvent("QUEST_TURNED_IN", QuestTurnedIn)
 GearHelper:RegisterEvent("GET_ITEM_INFO_RECEIVED", GetItemInfoReceived, ...)
+GearHelper:RegisterEvent("PLAYER_FLAGS_CHANGED", PlayerFlagsChanged, ...)
+--GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
 -- GearHelper:RegisterEvent("QUEST_FINISHED", QuestFiniched, ...)

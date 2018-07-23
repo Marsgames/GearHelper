@@ -8,7 +8,6 @@ Input : object = object to print
 Output :
 Author : Raphaël Saget
 ]]
-
 function GearHelper:Print(object)
 	if object ~= nil then
 		if GearHelper.db.profile.debug and type(object) == "table" then
@@ -24,12 +23,11 @@ end
 --[[
 Function : SiObjetGris
 Scope : GearHelper
-Description :
-Input :
-Output :
+Description : Retourne si un item passé en paramètre est un objet gris ou non
+Input : number (id de l'item)
+Output : bool (objet gris ? true / false)
 Author : Raphaël Daumas
 ]]
-
 function GearHelper:SiObjetGris( itemID )
 	local _, _, itemRarity, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(itemID)
 	local result = {}
@@ -48,13 +46,12 @@ end
 --[[
 Function : IsEquippableByMe
 Scope : GearHelper
-Description :
-Input :
-Output :
+Description : Retourne si l'item passé en paramètre est équipable par mon perso ou non
+Input : number ? (id ded l'item)
+Output : bool (est équipable par moi ? true / false)
 Author : Raphaël Daumas
 Last Modified : Raphaël Saget
 ]]
-
 function GearHelper:IsEquippableByMe(item)
 	local isItMadeForMe = false
 
@@ -105,7 +102,6 @@ Output : nil = if item is not in cache / result = array containing true or false
 Author : Raphaël Daumas & Raphaël Saget
 Last Modified By : Raphaël Saget
 ]]
-
 function GearHelper:IsSlotEmpty(equipLoc)
 	local result = {}
 	if equipLoc == "INVTYPE_TRINKET" then
@@ -192,9 +188,9 @@ end
 --[[
 Function : IsInTable
 Scope : GearHelper
-Description :
-Input :
-Output :
+Description : Retourne si un élément est présent dans un tableau
+Input : array (le tableau dans lequel on doit chercher), - (l'élément qu'on recherche)
+Output : bool (présent ? true / false)
 Author : Raphaël Daumas
 ]]
 function GearHelper:IsInTable(array, data)
@@ -206,6 +202,24 @@ function GearHelper:IsInTable(array, data)
 		end
 	end)
 	return result
+end
+
+function GearHelper:IsTableEmpty(maTable)
+	return (next(maTable) == nil)
+end
+
+
+-- Récupéré sur internet - tranqforme string en array
+function GearHelper:MySplit(inputString, separator)
+	if separator == nil then
+		separator = "%s"
+	end
+	local t={} ; i=1
+	for str in string.gmatch(inputString, "([^"..separator.."]+)") do
+			t[i] = str
+			i = i + 1
+	end
+	return t
 end
 
 --[[
@@ -273,9 +287,9 @@ end
 --[[
 Function : ReturnGoodLink
 Scope : GearHelper
-Description :
-Input :
-Output :
+Description : Créer un item link spécial qui permet d'envoyer automatiquement un message à un joueur
+Input : itemLink (le lien ded l'item qu'on veut demander au joueur), string (nom du joueur), string (nom du joueur avec la couleur)
+Output : itemLink
 Author : Raphaël Daumas
 ]]
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
@@ -295,9 +309,9 @@ end
 --[[
 Function : CouleurClasse
 Scope : GearHelper
-Description :
-Input :
-Output :
+Description : Renvoi la couleur de la classe d'un joueur
+Input : string (nom anglais ded la classe)
+Output : string (couleur de la classe)
 Author : Raphaël Daumas
 ]]
 function GearHelper:CouleurClasse( classFileName )
@@ -400,6 +414,14 @@ function GearHelper:ColorizeString(text, color)
 	end
 end
 
+--[[
+Function :
+Scope : GearHelper
+Description :
+Input :
+Output :
+Author : Raphaël Saget
+]]
 function GearHelper:NormalizeWeightResult(result)
 	-- -10 not adapted (no stat in template)
 	-- -20 not equippable
@@ -412,6 +434,7 @@ function GearHelper:NormalizeWeightResult(result)
 	resultList["notAdapted"] = -10
 	resultList["notEquippable"] = -20
 	resultList["betterThanNothing"] = -50
+	resultList["alreadyEquipped"] = -60
 	if result == nil then
 		return {-40}
 	end
@@ -430,6 +453,14 @@ function GearHelper:NormalizeWeightResult(result)
 	return result
 end
 
+--[[
+Function :
+Scope : GearHelper
+Description :
+Input :
+Output :
+Author : Raphaël Saget
+]]
 function GearHelper:DoDisplayOverlay(result)
   local doDisplay = {-50}
   local displayOverlay = false
@@ -452,4 +483,32 @@ function GearHelper:parseID(link)
 	local b = string.sub(a, 5, 12)
 	local c = string.gsub(b, ":", "")
 	return c
+end
+
+--[[
+Function : CountingSort
+Scope : GearHelper
+Description : Algo de tri d'entier qui n'a pas le temps
+Input : table d'entiers
+Author : Raphaël Daumas
+]]
+function GearHelper:CountingSort( f )
+    local min, max = math.min( unpack(f) ), math.max( unpack(f) )
+    local count = {}
+    for i = min, max do
+        count[i] = 0
+    end
+
+    for i = 1, #f do
+        count[ f[i] ] = count[ f[i] ] + 1
+    end
+
+    local z = 1
+    for i = min, max do
+        while count[i] > 0 do
+            f[z] = i
+            z = z + 1
+            count[i] = count[i] - 1
+        end
+    end
 end

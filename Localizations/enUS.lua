@@ -25,8 +25,8 @@ L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] =		"Enable / disable auto equip stuff wh
 L["CantRepair"] = 								"You can't repair"
 L["repairCost"] = 								"Repair cost : "
 L["guildRepairCost"] = 							"Guild repair cost : "
-L["gold"] =										"g"			-- g for gold (in english)  / po for piece d'or (in french)...
-L["dot"] = 										"."
+L["gold"] =										"g"			-- g for Gold (in english)  / po for Piece d'Or (in french)...
+L["dot"] = 										"."			-- ex : 3.24 golds (3 gold and 24 silver)
 L["DNR"] =										"Do not repair automatically"
 L["AutoRepair"] = 								"Repair with own founds"
 L["GuildAutoRepair"] = 							"Repair with guild founds"
@@ -126,7 +126,17 @@ L["UIGlobalComputeNotEquippable"] = "Show non equippable items"
 L["UIGlobalComputeNotEquippableDescription"] = "Show \"This item is worst than yours\" on non equippable items"
 L["UICWasPercentage"] = "Value in percentage"
 L["UICWasPercentageDescription"] = "Describe the importance of each statistic by a number representing a percentage, the sum of the values ​​must be 100"
+L["UIWhisperAlert"] = "Whisper Alert"
+L["UIWhisperAlertDesc"] = "PLay a sound when you're whispered"
+L["UISayMyName"] = "Say my name"
+L["UISayMyNameDesc"] = "Show an alert with sound when someone call your name"
+L["UIMyNames"] = "Names"
+L["UIMyNamesDesc"] = "Names list for the alert. Separates by comma (no spaces)"
+L["itemEquipped"] = "This item is equipped"
+L["UIMinimapIcon"] = "Minimap icon"
+L["UIMinimapIconDesc"] = "Show the minimap icon"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
+
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
@@ -148,11 +158,11 @@ L["Tooltip"] = {
 		["Stamina"] = ITEM_MOD_STAMINA_SHORT,
 		["Strength"] = ITEM_MOD_STRENGTH_SHORT,
 		["Armor"] = RESISTANCE0_NAME,
+		["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
+		["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
 		["Leech"] = "Leech",
 		["Avoidance"] = "Avoidance",
 		["MovementSpeed"] = "Speed",
-		["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
-		["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
 	},
 	["ItemLevel"] = "^Item Level",
 	["LevelRequired"] = "^Requires Level",

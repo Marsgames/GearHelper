@@ -166,6 +166,9 @@ local slashCmd = {
 		end
 	end,
 	dot = function()
+		GearHelper:BuildCWTable()
+		GearHelper:sendAskVersion()
+		GearHelper:ScanCharacter()
 		GearHelper:poseDot()
 	end,
 	suppdot = function()
@@ -241,7 +244,7 @@ GearHelper:RegisterChatCommand("GH", "MySlashCommand")
 --[[
 Function : MySlashCommand
 Scope : GearHelper
-Description :
+Description : Enregistre les slash cmd
 Input :
 Output :
 Author : Raphaël Daumas

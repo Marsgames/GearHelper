@@ -5,10 +5,8 @@ Function : ParseDefaultValues
 Scope : local
 Description : Parse template strings to get each stat and store them in database
 Input : rawValues = stat string, specID = specialization associated to the template, templateID = name of the template
-Output :
 Author : Raphaël Saget
 ]]
-
 local function ParseDefaultValues(rawValues, specID, templateID)
     local rawCopy = rawValues
     local tmpTemplate = {
@@ -233,7 +231,6 @@ Input :
 Output :
 Author : Raphaël Saget
 ]]
-
 function GearHelper:InitTemplates()
     for spec, templates in pairs(rawValues) do
         for templateID, stats in pairs(templates) do

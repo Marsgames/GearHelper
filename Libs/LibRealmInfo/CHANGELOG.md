@@ -1,14 +1,8 @@
 # Lib: Realm Info
 
-## [11](https://github.com/phanx-wow/LibRealmInfo/tree/11) (2017-05-20) [](#top)
-[Full Changelog](https://github.com/phanx-wow/LibRealmInfo/compare/10...11)
+## [12](https://github.com/phanx-wow/LibRealmInfo/tree/12) (2018-02-08)
+[Full Changelog](https://github.com/phanx-wow/LibRealmInfo/compare/11...12)
 
-- Improve error handling  
-- Update metadata for Curse  
-- Add Korean realm data (closes #8)  
-- Merge pull request #7 from wow-sweetlie/patch-1  
-    Update Archimonde-EU GUID  
-- Update Archimonde-EU GUID  
-- API names don't include dashes either  
-    eg. Azjol-Nerub --> AzjolNerub  
-- Make it LoD  
+- Fix capitalization of EU Aman'thul (closes #11)  
+- Update metadata  
+- Update LibStub embed path  

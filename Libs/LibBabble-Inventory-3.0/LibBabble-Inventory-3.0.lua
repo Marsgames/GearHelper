@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Inventory-3.0
-Revision: $Rev: 201 $
+Revision: $Rev: 206 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-inventory-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Inventory-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 201 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 206 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -912,8 +912,8 @@ elseif GAME_LOCALE == "esES" then
 	["Waist"] = "Cintura",
 	["Wand"] = "Varita",
 	["Wands"] = "Varitas",
-	--Translation missing 
-	-- ["Warglaives"] = "Warglaives",
+	--[[Translation missing --]]
+	--[[ ["Warglaives"] = "Warglaives",--]] 
 	["Warlock"] = "Brujo",
 	["Warrior"] = "Guerrero",
 	["Weapon"] = "Arma",
@@ -1213,8 +1213,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["Monk"] = "Monge",
 	["Mount"] = "Montaria",
 	["Mounts"] = "Montarias",
-	--Translation missing 
-	-- ["Naval Equipment"] = "Naval Equipment",
+	--[[Translation missing --]]
+	--[[ ["Naval Equipment"] = "Naval Equipment",--]] 
 	["Neck"] = "Pescoço",
 	["Off Hand"] = "Mão Secundária",
 	["One-Hand"] = "Uma Mão",
@@ -1274,8 +1274,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["Waist"] = "Cintura",
 	["Wand"] = "Varinha",
 	["Wands"] = "Varinhas",
-	--Translation missing 
-	-- ["Warglaives"] = "Warglaives",
+	--[[Translation missing --]]
+	--[[ ["Warglaives"] = "Warglaives",--]] 
 	["Warlock"] = "Bruxo",
 	["Warrior"] = "Guerreiro",
 	["Weapon"] = "Arma",
@@ -1815,8 +1815,8 @@ elseif GAME_LOCALE == "zhCN" then
 	["Waist"] = "腰部",
 	["Wand"] = "魔杖",
 	["Wands"] = "魔杖",
-	--Translation missing 
-	-- ["Warglaives"] = "Warglaives",
+	--[[Translation missing --]]
+	--[[ ["Warglaives"] = "Warglaives",--]] 
 	["Warlock"] = "术士",
 	["Warrior"] = "战士",
 	["Weapon"] = "武器",

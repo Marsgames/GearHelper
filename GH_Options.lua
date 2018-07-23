@@ -4,12 +4,26 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 Function : GetInvMsg
 Scope : local
 Description : Return the invite message set by the user
-Input :
 Output : the invite message
 Author : Raphaël Daumas
 ]]
 local function GetInvMsg()
 	return GearHelper.db.profile.inviteMessage
+end
+
+--[[
+Function : GetMyNames
+Scope : local
+Description : Return names 
+Output : names
+Author : Raphaël Daumas
+]]
+local function GetMyNames()
+	if(GearHelper.db.global.myNames == {}) then
+		table.insert(GearHelper.db.global.myNames, GetUnitName("player")..",")
+	end
+
+	return GearHelper.db.global.myNames
 end
 
 --[[
@@ -121,7 +135,18 @@ local ghOptionsTable = {
 					name = L["enable"].." GearHelper",
 					desc = L["UIGHCheckBoxAddon"],
 					type = "toggle",
-					set = function(_, val) GearHelper.db.profile.addonEnabled = val; if val == false then PlaySoundFile("sound\\Creature\\Malfurion_Stormrage\\VO_703_Malfurion_Stormrage_37.ogg", "MASTER") end end,
+					set = function(_, val) 
+						GearHelper.db.profile.addonEnabled = val; 
+						if val == false then 
+							PlaySoundFile("sound\\Creature\\Malfurion_Stormrage\\VO_703_Malfurion_Stormrage_37.ogg", "MASTER") 
+						end 
+						---------- A ETUDIER --------
+							local icon = LibStub("LibDBIcon-1.0")
+							local ghIcon = icon:GetMinimapButton("GHIcon")
+							ghIcon.icon = GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
+							icon:Refresh("GHIcon")
+						-----------------------------
+					end,
 					get = function() return GearHelper.db.profile.addonEnabled end
 				},
 				debug = {
@@ -132,6 +157,23 @@ local ghOptionsTable = {
 					type = "toggle",
 					set = function(_,val) GearHelper.db.profile.debug = val end,
 					get = function() return GearHelper.db.profile.debug end
+				},
+				minimapButton = {
+					order = 2,
+					name = L["UIMinimapIcon"],
+					--hidden = function() if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then return true end end,
+					desc = L["UIMinimapIconDesc"],
+					type = "toggle",
+					set = function(_,val) 
+						GearHelper.db.profile.minimap = {hide = not val} 
+						local icon = LibStub("LibDBIcon-1.0")
+						if (val) then
+							icon:Show("GHIcon")
+						else
+							icon:Hide("GHIcon")
+						end		
+					end,
+					get = function() return not GearHelper.db.profile.minimap.hide end
 				}
 			}
 		},
@@ -276,6 +318,31 @@ local ghOptionsTable = {
 					type = "input",
 					set = function(_,val) GearHelper:setInviteMessage(val) end,
 					get = function() return GearHelper.db.profile.inviteMessage end
+				},
+				whisperAlert = {
+					order = 6,
+					name = L["UIWhisperAlert"],
+					desc = L["UIWhisperAlertDesc"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.whisperAlert = val end,
+					get = function() return GearHelper.db.profile.whisperAlert end
+				},
+				sayMyName = {
+					order = 7,
+					name = L["UISayMyName"],
+					desc = L["UISayMyNameDesc"],
+					type = "toggle",
+					set = function(_,val) GearHelper.db.profile.sayMyName = val end,
+					get = function() return GearHelper.db.profile.sayMyName end
+				},
+				myNames = {
+					order = 8,
+					name = L["UIMyNames"],
+					desc = L["UIMyNamesDesc"],
+					type = "input",
+					width = "full",
+					set = function(_,val) GearHelper:setMyNames(val) end,
+					get = function() return GearHelper.db.global.myNames end
 				},
 			}
 		},

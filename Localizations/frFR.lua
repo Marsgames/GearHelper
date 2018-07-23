@@ -7,8 +7,8 @@ L["local"] = 									"FR"
 -------------------------- CE QUI EST EN DDESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 L["Addon"] = 									"GearHelper est : |r"
 L["SellGrey"] = 								"La vente d'objets commun est : "
-L["ActivatedGreen"] = 							"activée|r"
-L["DeactivatedRed"] = 							"désactivée|r"
+L["ActivatedGreen"] = 							"activé|r"
+L["DeactivatedRed"] = 							"désactivé|r"
 L["itemLessThanGeneral"] = 						"Cet item est moins bien"
 L["itemBetterThan"] = 							"Cet item est mieux que votre"
 L["itemBetterThan2"] = 							"avec une valeur de +"
@@ -24,8 +24,8 @@ L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] =		"Active / désactive l'option pour é
 L["CantRepair"] = 								"Vous ne pouvez pas réparer"
 L["repairCost"] = 								"Coût des réparations : "
 L["guildRepairCost"] = 							"Coût des réparations pour la guilde : "
-L["gold"] =										"po"			-- g for gold (in english)  / po for piece d'or (in french)...
-L["dot"] = 										","
+L["gold"] =										"po"			-- g for Gold (in english)  / po for Piece d'Or (in french)...
+L["dot"] = 										","				-- ex : 3.24 golds (3 gold and 24 silver)
 L["DNR"] =										"Ne pas réparer automatiquement"
 L["AutoRepair"] = 								"Réparer automatiquement"
 L["GuildAutoRepair"] = 							"Réparer avec guilde si possible"
@@ -82,9 +82,22 @@ L["UIGlobalComputeNotEquippable"] = "Afficher item non equippable"
 L["UIGlobalComputeNotEquippableDescription"] = "Afficher si un item est meilleur meme si il n'est pas équipable"
 L["UICWasPercentage"] = "Valeur en pourcentage"
 L["UICWasPercentageDescription"] = "Decrire l'importance de chaque statistique par un chiffre représentant un pourcentage, la somme des valeurs doit faire 100"
--------------------------- CE QUI EST EN DDESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
-
-
+L["UIWhisperAlert"] = "Alerte chuchotement"
+L["UIWhisperAlertDesc"] = "Joue un son quand un joueur vous /w"
+L["UISayMyName"] = "Dis mon nom"
+L["UISayMyNameDesc"] = "Alerte visuelle et sonore quand votre pseudo est cité"
+L["UIMyNames"] = "Noms"
+L["UIMyNamesDesc"] = "Liste des noms, séparés par une virgule. (Pas d'espace)"
+L["itemEquipped"] = "Cet item est équippé"
+L["UIMinimapIcon"] = "Bouton minimap"
+L["UIMinimapIconDesc"] = "Afficher le bouton sur la minimap"
+-------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
+L["MmTtLClick"] = "Clique gauche pour ouvrir le menu"
+L["MmTtRClickActivate"] = "Clique droit pour activer GearHelper"
+L["MmTtRClickDeactivate"] = "Clique droit pour désactiver GearHelper"
+L["MmTtClickUnlock"] = "Shift + clique pour |cFF00FF00dévérouiller|cFFFFFF00 le bouton"
+L["MmTtClickLock"] = "Shift + clique pour |cFFFF0000vérouiller|cFFFFFF00 le bouton"
+L["MmTtCtrlClick"] = "Ctrl + clique pour |cFF00FF00cacher|cFFFFFF00 le bouton"
 
 
 
