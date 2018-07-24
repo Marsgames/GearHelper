@@ -204,7 +204,7 @@ function GearHelper:IsInTable(array, data)
 	return result
 end
 
-function GearHelper:IsTableEmpty(maTable)
+function GearHelper:IsEmptyTable(maTable)
 	return (next(maTable) == nil)
 end
 

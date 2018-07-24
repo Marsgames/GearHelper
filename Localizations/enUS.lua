@@ -135,6 +135,12 @@ L["UIMyNamesDesc"] = "Names list for the alert. Separates by comma (no spaces)"
 L["itemEquipped"] = "This item is equipped"
 L["UIMinimapIcon"] = "Minimap icon"
 L["UIMinimapIconDesc"] = "Show the minimap icon"
+L["MmTtLClick"] = "Left click to open options"
+L["MmTtRClickActivate"] = "Right click to activate GearHelper"
+L["MmTtRClickDeactivate"] = "Right click to deactivate GearHelper"
+L["MmTtClickUnlock"] = "Shift + click to |cFF00FF00unlock|cFFFFFF00 minimap icon"
+L["MmTtClickLock"] = "Shift + click to |cFFFF0000lock|cFFFFFF00 minimap icon"
+L["MmTtCtrlClick"] = "Ctrl + click to |cFF00FF00hide|cFFFFFF00 minimap icon"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------

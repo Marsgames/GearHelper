@@ -32,7 +32,7 @@ local defaultsOptions = {
 		computeNotEquippable = true,
 		whisperAlert = true,
 		sayMyName = true,
-		minimap = {hide = false, isLock = false, tooltip = nil},
+		minimap = {hide = false, isLock = false},
 	},
 	global = {
 		ItemCache = {},
@@ -186,6 +186,8 @@ function GearHelper:OnInitialize()
 	--GameTooltip:SetPoint("TOPLEFT", tip, "BOTTOMLEFT")
 	--GameTooltip:ClearLines()
 
+	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
+
 	local icon = LibStub("LibDBIcon-1.0")
 	local GHIcon = LibStub("LibDataBroker-1.1"):NewDataObject("GHIcon", {
 		type = "data source",
@@ -193,17 +195,16 @@ function GearHelper:OnInitialize()
 		icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
 		label = "GearHelper",
 		OnClick = function(_, button) 
-			GearHelper:OnMinimapTooltipClick(button)
+			GearHelper:OnMinimapTooltipClick(button, tooltip)
 		end,
-		-- OnEnter = function(self)
-		-- 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
-		-- 	GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
-		-- 	GameTooltip:ClearLines()
-		-- 	GHIcon.OnTooltipShow(GameTooltip)
-		-- 	GameTooltip:Show()
-		-- end,
-		OnTooltipShow = function(tooltip)
+		OnTooltipShow = function()--tooltip)
+			--print("salut toi")
+			--tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
+			--tooltip:Show()
 			GearHelper:OnMinimapTooltipShow(tooltip)
+		end,
+		OnLeave = function()
+			tooltip:Hide()
 		end,
 	})
 	--GHIcon.OnTooltipShow(tip)
@@ -286,6 +287,16 @@ function GearHelper:OnEnable()
 end
 
 function GearHelper:OnMinimapTooltipShow(tooltip)
+	-- local p=tooltip:CreateFontString("myFirstPanel","OVERLAY")
+ 	-- p:SetFont('Fonts\\ARIALN.ttf', 15, 'outline')
+ 	-- p:SetTextColor(1, 0.82, 0)
+ 	-- p:SetPoint("TOPLEFT")
+ 	-- p:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge")) 
+
+	-- tooltip:SetFont
+
+
+	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
 	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
 	if (not self.db.profile.addonEnabled) then tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"), 1, 1, 1) end
 	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Jaune"), 1, 1, 1)
@@ -304,7 +315,7 @@ function GearHelper:OnMinimapTooltipShow(tooltip)
 	tooltip:Show()
 end
 
-function GearHelper:OnMinimapTooltipClick(button)
+function GearHelper:OnMinimapTooltipClick(button, tooltip)
 	if (InterfaceOptionsFrame:IsShown()) then
 		InterfaceOptionsFrame:Hide() 
 	else
@@ -316,7 +327,10 @@ function GearHelper:OnMinimapTooltipClick(button)
 				icon:Lock("GHIcon")
 			end
 			self.db.profile.minimap.isLock = not self.db.profile.minimap.isLock
+
 			-- trouver un moyen de reset tooltip
+			tooltip:Hide()
+			GearHelper:OnMinimapTooltipShow(tooltip)
 		elseif IsControlKeyDown() then
 			icon:Hide("GHIcon")
 			self.db.profile.minimap.hide = true
@@ -325,9 +339,12 @@ function GearHelper:OnMinimapTooltipClick(button)
 				InterfaceOptionsFrame:Show(); InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame) 
 			else
 				self.db.profile.addonEnabled = not self.db.profile.addonEnabled
+
 				-- trouver un moyen de reset tooltip
+				tooltip:Hide()
+				GearHelper:OnMinimapTooltipShow(tooltip)
+
 				-- trouver un moyen de reset icon
-				--LibDBIcon10_GHIcon.icon = self.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
 			end
 			--GameTooltip:Show()
 		end
