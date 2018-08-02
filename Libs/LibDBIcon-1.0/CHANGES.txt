@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
-r63 | funkydude | 2018-07-17 17:08:45 +0000 (Tue, 17 Jul 2018) | 1 line
+r65 | funkydude | 2018-07-21 16:34:00 +0000 (Sat, 21 Jul 2018) | 1 line
 Changed paths:
-   M /trunk/LibDBIcon-1.0.toc
+   M /trunk/CallbackHandler-1.0/CallbackHandler-1.0.lua
 
-bump toc
+Update CallbackHandler embed.
 ------------------------------------------------------------------------
 

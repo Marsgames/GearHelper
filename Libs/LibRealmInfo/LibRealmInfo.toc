@@ -1,5 +1,5 @@
-## Interface: 70300
-## Version: 12
+## Interface: 80000
+## Version: 13
 
 ## Title: Lib: Realm Info
 ## Notes: Library to provide information about realms.
@@ -14,7 +14,6 @@
 ## X-Curse-Project-ID: 83224
 ## X-WoWI-ID: 22987
 
-## LoadOnDemand: 1
 ## OptionalDeps: LibStub
 LibStub\LibStub.lua
 

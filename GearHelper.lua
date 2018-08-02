@@ -103,7 +103,7 @@ local defaultsOptions = {
 	"1.6.6.2",
 	"1.7",
 	"1.7.1",
-	"1.7.2",
+	"1.7.2", "1.7.3",
 }
 
 addonName = ... --, GH_Globals = ...
