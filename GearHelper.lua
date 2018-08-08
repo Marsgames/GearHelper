@@ -32,7 +32,7 @@ local defaultsOptions = {
 		computeNotEquippable = true,
 		whisperAlert = true,
 		sayMyName = true,
-		minimap = {hide = false, isLock = false},
+		minimap = {hide = false, isLock = false}
 	},
 	global = {
 		ItemCache = {},
@@ -103,7 +103,8 @@ local defaultsOptions = {
 	"1.6.6.2",
 	"1.7",
 	"1.7.1",
-	"1.7.2", "1.7.3",
+	"1.7.2",
+	"1.7.3"
 }
 
 addonName = ... --, GH_Globals = ...
@@ -189,24 +190,29 @@ function GearHelper:OnInitialize()
 	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
 
 	local icon = LibStub("LibDBIcon-1.0")
-	local GHIcon = LibStub("LibDataBroker-1.1"):NewDataObject("GHIcon", {
-		type = "data source",
-		text = "GearHelper",
-		icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
-		label = "GearHelper",
-		OnClick = function(_, button) 
-			GearHelper:OnMinimapTooltipClick(button, tooltip)
-		end,
-		OnTooltipShow = function()--tooltip)
-			--print("salut toi")
-			--tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
-			--tooltip:Show()
-			GearHelper:OnMinimapTooltipShow(tooltip)
-		end,
-		OnLeave = function()
-			tooltip:Hide()
-		end,
-	})
+	local GHIcon =
+		LibStub("LibDataBroker-1.1"):NewDataObject(
+		"GHIcon",
+		{
+			type = "data source",
+			text = "GearHelper",
+			icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
+			label = "GearHelper",
+			OnClick = function(_, button)
+				GearHelper:OnMinimapTooltipClick(button, tooltip)
+			end,
+			OnTooltipShow = function()
+				--tooltip)
+				--print("salut toi")
+				--tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
+				--tooltip:Show()
+				GearHelper:OnMinimapTooltipShow(tooltip)
+			end,
+			OnLeave = function()
+				tooltip:Hide()
+			end
+		}
+	)
 	--GHIcon.OnTooltipShow(tip)
 	icon:Register("GHIcon", GHIcon, self.db.profile.minimap)
 end
@@ -261,7 +267,7 @@ function GearHelper:ResetConfig()
 
 	GearHelper.db.global.ItemCache = {}
 	GearHelper.db.global.itemWaitList = {}
-	GearHelper.db.global.myNames =  ""
+	GearHelper.db.global.myNames = ""
 
 	InterfaceOptionsFrame:Hide()
 	InterfaceOptionsFrame:Show()
@@ -288,17 +294,23 @@ end
 
 function GearHelper:OnMinimapTooltipShow(tooltip)
 	-- local p=tooltip:CreateFontString("myFirstPanel","OVERLAY")
- 	-- p:SetFont('Fonts\\ARIALN.ttf', 15, 'outline')
- 	-- p:SetTextColor(1, 0.82, 0)
- 	-- p:SetPoint("TOPLEFT")
- 	-- p:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge")) 
+	-- p:SetFont('Fonts\\ARIALN.ttf', 15, 'outline')
+	-- p:SetTextColor(1, 0.82, 0)
+	-- p:SetPoint("TOPLEFT")
+	-- p:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
 
 	-- tooltip:SetFont
 
-
 	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
 	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
-	if (not self.db.profile.addonEnabled) then tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"), 1, 1, 1) end
+	if (not self.db.profile.addonEnabled) then
+		tooltip:AddLine(
+			GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"),
+			1,
+			1,
+			1
+		)
+	end
 	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Jaune"), 1, 1, 1)
 	if (self.db.profile.addonEnabled) then
 		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
@@ -317,7 +329,7 @@ end
 
 function GearHelper:OnMinimapTooltipClick(button, tooltip)
 	if (InterfaceOptionsFrame:IsShown()) then
-		InterfaceOptionsFrame:Hide() 
+		InterfaceOptionsFrame:Hide()
 	else
 		local icon = LibStub("LibDBIcon-1.0")
 		if IsShiftKeyDown() then
@@ -335,18 +347,18 @@ function GearHelper:OnMinimapTooltipClick(button, tooltip)
 			icon:Hide("GHIcon")
 			self.db.profile.minimap.hide = true
 		else
+			--GameTooltip:Show()
 			if (button == "LeftButton") then
-				InterfaceOptionsFrame:Show(); InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame) 
+				InterfaceOptionsFrame:Show()
+				InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 			else
+				-- trouver un moyen de reset icon
 				self.db.profile.addonEnabled = not self.db.profile.addonEnabled
 
 				-- trouver un moyen de reset tooltip
 				tooltip:Hide()
 				GearHelper:OnMinimapTooltipShow(tooltip)
-
-				-- trouver un moyen de reset icon
 			end
-			--GameTooltip:Show()
 		end
 	end
 end
@@ -423,7 +435,9 @@ function GearHelper:ShowMessageSMN(channel, sender, msg)
 					UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0, 5.0, 4)
 					PlaySound(5275, "Master")
 					stop = true
-					do	return	end
+					do
+						return
+					end
 				end
 				i = i + 1
 			end
@@ -432,7 +446,7 @@ function GearHelper:ShowMessageSMN(channel, sender, msg)
 end
 
 -- desc : Add a string to the "array" of names
--- entrée : 
+-- entrée :
 -- sortie : ø
 -- commentaire :
 -- @author : Raphaël Daumas
@@ -573,7 +587,8 @@ Author : Raphaël Saget
 function GearHelper:ScanCharacter()
 	GearHelper.charInventory["Head"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
 	GearHelper.charInventory["Neck"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
-	GearHelper.charInventory["Shoulder"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
+	GearHelper.charInventory["Shoulder"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
 	GearHelper.charInventory["Back"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("BackSlot"), "BackSlot")
 	GearHelper.charInventory["Chest"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ChestSlot"), "ChestSlot")
 	GearHelper.charInventory["Wrist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WristSlot"), "WristSlot")
@@ -581,12 +596,18 @@ function GearHelper:ScanCharacter()
 	GearHelper.charInventory["Waist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WaistSlot"), "WaistSlot")
 	GearHelper.charInventory["Legs"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("LegsSlot"), "LegsSlot")
 	GearHelper.charInventory["Feet"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("FeetSlot"), "FeetSlot")
-	GearHelper.charInventory["Finger0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
-	GearHelper.charInventory["Finger1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
-	GearHelper.charInventory["Trinket0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
-	GearHelper.charInventory["Trinket1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
-	GearHelper.charInventory["MainHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
-	GearHelper.charInventory["SecondaryHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
+	GearHelper.charInventory["Finger0"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
+	GearHelper.charInventory["Finger1"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
+	GearHelper.charInventory["Trinket0"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
+	GearHelper.charInventory["Trinket1"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
+	GearHelper.charInventory["MainHand"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
+	GearHelper.charInventory["SecondaryHand"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
 	if GearHelper.charInventory["MainHand"] ~= -2 and GearHelper.charInventory["MainHand"] ~= 0 then
 		local _, _, _, _, _, _, _, _, itemEquipLocWeapon = GetItemInfo(GearHelper.charInventory["MainHand"])
@@ -718,7 +739,7 @@ function GearHelper:IsItemBetter(object, type)
 	local item = {}
 	local itemLink = ""
 
-	if(IsEquippedItem(object)) then
+	if (IsEquippedItem(object)) then
 		return {-60}
 	end
 
@@ -1137,7 +1158,19 @@ end
 -- Create a clickable link to ask a player if he needs his loot --
 -- @author Raphaël Daumas                                       --
 ------------------------------------------------------------------
-function GearHelper:createLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
+function GearHelper:createLinkAskIfHeNeeds(
+	debug,
+	message,
+	sender,
+	language,
+	channelString,
+	target,
+	flags,
+	unknown1,
+	channelNumber,
+	channelName,
+	unknown2,
+	counter)
 	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
 	local sender = sender or "sender"
 	local language = language or "language"
@@ -1385,7 +1418,10 @@ local ModifyTooltip = function(self, ...)
 			local linesToAdd = GearHelper:LinesToAddToTooltip(result, item)
 
 			if linesToAdd then
-				if (result[1] == -30 or result[1] == -10 or GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id))	 then
+				if
+					(result[1] == -30 or result[1] == -10 or
+						GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id))
+				 then
 					self:SetBackdropBorderColor(255, 0, 0) -- Rouge
 				elseif result[1] == 0 or result[1] == -60 then
 					self:SetBackdropBorderColor(255, 255, 0) -- Jaune
@@ -1610,7 +1646,7 @@ function GearHelper:GetQuestReward()
 				if not button.overlay then
 					button.overlay = button:CreateTexture(nil, "OVERLAY")
 					button.overlay:SetSize(18, 18)
-					button.overlay:SetPoint("TOPLEFT")
+					button.overlay:SetPoint("TOPLEFT", -9, 9)
 					button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
 					button.overlay:SetShown(true)
 				end
@@ -1628,7 +1664,7 @@ function GearHelper:GetQuestReward()
 				if not button.overlay then
 					button.overlay = button:CreateTexture(nil, "OVERLAY")
 					button.overlay:SetSize(18, 18)
-					button.overlay:SetPoint("TOPLEFT")
+					button.overlay:SetPoint("TOPLEFT", -9, 9)
 					button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
 					button.overlay:SetShown(true)
 				end
