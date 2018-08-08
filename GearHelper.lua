@@ -262,7 +262,7 @@ function GearHelper:ResetConfig()
 	GearHelper.db.global.ItemCache = {}
 	GearHelper.db.global.itemWaitList = {}
 	GearHelper.db.global.myNames =  ""
-
+	GearHelper.db.global.buildVersion = 0
 	InterfaceOptionsFrame:Hide()
 	InterfaceOptionsFrame:Show()
 	InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)

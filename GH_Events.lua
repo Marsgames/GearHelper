@@ -22,6 +22,11 @@ local function AddonLoaded(_, _, name)
 	if name == addonName then
 		--RegisterAddonMessagePrefix(prefixAddon)
 		print(GearHelper:ColorizeString(L["merci"], "Vert"))
+		local runningBuild = select(4, GetBuildInfo())
+		if GearHelper.db.global.buildVersion ~= runningBuild then
+			GearHelper.db.global.buildVersion = runningBuild
+			GearHelper:ResetCache()
+		end
 	end
 end
 
@@ -124,7 +129,6 @@ local function PlayerEnteringWorld()
 			GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
 		end
 	end
-	GearHelper:ResetCache()
 end
 
 -- GearHelper:Print("")
