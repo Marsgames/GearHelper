@@ -1694,6 +1694,10 @@ function GearHelper:AutoGreedAndNeed(number)
 	end
 end
 
+function GearHelper:ResetCache()
+	GearHelper.db.global.ItemCache = {}
+end
+
 --[[
 -- Se déclenche quand on rentre en combat
 function allEvents:PLAYER_REGEN_DISABLED( ... )

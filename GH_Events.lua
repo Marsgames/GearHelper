@@ -124,6 +124,7 @@ local function PlayerEnteringWorld()
 			GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
 		end
 	end
+	GearHelper:ResetCache()
 end
 
 -- GearHelper:Print("")

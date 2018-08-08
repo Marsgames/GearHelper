@@ -236,6 +236,9 @@ local slashCmd = {
 		foreach(waitingIDTable, print)
 		print("---")
 	end,
+	resetCache = function()
+		GearHelper:ResetCache()
+	end
 }
 
 GearHelper:RegisterChatCommand("GearHelper", "MySlashCommand")
