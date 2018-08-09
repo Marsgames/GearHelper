@@ -179,13 +179,7 @@ function GearHelper:OnInitialize()
 	self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
 	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
 	self.db.RegisterCallback(self, "OnProfileReset", "ResetConfig")
-	-- InterfaceOptionsFrame:Show()
-	-- InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
-
-	--local tip = GHButtonTt or CreateFrame("GAMETOOLTIP", "GHButtonTt")
-	--GameTooltip:SetOwner(tip, "ANCHOR_NONE")
-	--GameTooltip:SetPoint("TOPLEFT", tip, "BOTTOMLEFT")
-	--GameTooltip:ClearLines()
+	self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 
 	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
 
@@ -202,10 +196,6 @@ function GearHelper:OnInitialize()
 				GearHelper:OnMinimapTooltipClick(button, tooltip)
 			end,
 			OnTooltipShow = function()
-				--tooltip)
-				--print("salut toi")
-				--tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
-				--tooltip:Show()
 				GearHelper:OnMinimapTooltipShow(tooltip)
 			end,
 			OnLeave = function()
@@ -213,7 +203,6 @@ function GearHelper:OnInitialize()
 			end
 		}
 	)
-	--GHIcon.OnTooltipShow(tip)
 	icon:Register("GHIcon", GHIcon, self.db.profile.minimap)
 end
 
@@ -1726,6 +1715,196 @@ function GearHelper:AutoGreedAndNeed(number)
 				end
 				ConfirmLootRoll(number, 2)
 			end
+		end
+	end
+end
+
+function GearHelper:CreateLfrButtons(frameParent)
+	local nbInstance =  GetNumRFDungeons()
+	--local width = (nbInstance <= 8 and 55) or (nbInstance > 8 and 25)
+	--local height = (nbInstance <= 8 and 50) or (nbInstance > 8 and 20)
+	--local margin =(nbInstance <= 4 and 50) or (nbInstance > 4 and nbInstance <= 8 and 10) or (nbInstance > 8 and nbInstance <= 12 and 25) or (nbInstance > 12 and 10)
+	--local margin =(nbInstance <= 4 and 18) or (nbInstance > 4 and nbInstance <= 8 and 16) or (nbInstance > 8 and nbInstance <= 12 and 14) or (nbInstance > 12 and 12)
+	local scale = min(480 / ((nbInstance - 6) * 24), 1)
+
+	if not frameParent.GHLfrButtons then
+		frameParent.GHLfrButtons = {}
+	end
+	local buttons = frameParent.GHLfrButtons
+
+	for i = 1, nbInstance do
+		local id, name = GetRFDungeonInfo(i)
+		local dispo, dispoPourJoueur = IsLFGDungeonJoinable(id)
+		local nbBoss = GetLFGDungeonNumEncounters(id)
+
+		-- Only make a button if there's data for it, and it hasn't been already made. This gets called multiple times so it updates correctly when you open up more raids
+		if dispo and dispoPourJoueur and not buttons[id] and nbBoss then
+			--local button = self:CreateButton(parentFrame, scale)
+			-------------------------------
+
+			local button =
+				CreateFrame(
+				"CheckButton",
+				frameParent:GetName() .. "GHLfrButtons" .. tostring(id),
+				frameParent,
+				"SpellBookSkillLineTabTemplate"
+			)
+			button:Show()
+
+			if frameParent.lastButton then
+				button:SetPoint("TOPLEFT", frameParent.lastButton, "BOTTOMLEFT", 0, -15)
+			else
+				local x = 3
+				-- SocialTabs compatibility
+				if IsAddOnLoaded("SocialTabs") then
+					x = x + ceil(32 / scale)
+				end
+
+				button:SetPoint("TOPLEFT", frameParent, "TOPRIGHT", x, -50)
+			end
+
+			button:SetScale(scale)
+			button:SetWidth(32 + 16) -- Originally 32
+
+			-- Need to find the button's texture in the regions so we can resize it. I don't like this part, but I can't think of a better way in case it's not the first region returned. (Is it ever not?)
+			for _, region in ipairs({button:GetRegions()}) do
+				if
+					type(region) ~= "userdata" and region.GetTexture and
+						region:GetTexture() == "Interface\\SpellBook\\SpellBook-SkillLineTab"
+				 then
+					region:SetWidth(64 + 24) -- Originally 64
+					break
+				end
+			end
+			------------------------------
+
+			buttons[id] = button
+
+			button.dungeonID = id
+			button.dungeonName = name
+
+			frameParent.lastButton = button
+
+			-- I just realised a CheckButton might already have it's own FontString, but uh... whatever.
+			local number = button:CreateFontString(button:GetName().."Number", "OVERLAY", "SystemFont_Shadow_Huge3")
+	number:SetPoint("TOPLEFT", -4, 4)
+	number:SetPoint("BOTTOMRIGHT", 5, -5)
+			button.number = number
+			--self:CreateNumberFontstring(button)
+
+			button:SetScript(
+				"OnEnter",
+				function(this)
+					if this.tooltip then
+						GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+						for i = 1, #button.tooltip do
+							tooltip = button.tooltip[i]
+							--if tooltip.color then
+							--	GameTooltip:AddLine(tooltip.text, unpack(tooltip.color))
+							--else
+								GameTooltip:AddLine(tooltip.text)
+								GameTooltip:AddLine(tooltip)
+							--end
+						end
+						GameTooltip:Show()
+					end
+				end
+			)
+
+			button:SetScript(
+				"OnClick",
+				function(this)
+					RaidFinderQueueFrame_SetRaid(this.dungeonID)
+					--self.UpdateArrow()
+
+					-- This is to override the automatic highlighting when you click the button, while we want to use that to show queue status instead.
+					-- I've no idea why simply overriding this OnClick and not doing a SetChecked doesn't disable the behavior.
+					-- I probably shouldn't be using a CheckButton at all, but the SpellBookSkillLineTabTemplate looks pretty nice for the job.
+					this:SetChecked(this.checked)
+				end
+			)
+			button.checked = false
+		end
+	end
+end
+
+function GearHelper:UpdateButtonsAndTooltips(frameParent)
+	local buttons = frameParent.GHLfrButtons
+
+	for id, button in pairs(buttons) do
+		local bossTues = 0
+		local index = 0
+		local nbBoss = GetLFGDungeonNumEncounters(id)
+
+		local tooltip = {{text = button.dungeonName}} -- Set up tooltip data with the dungeon name
+		for i = index, nbBoss do
+
+			local textBoss = ""
+			local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
+
+			if isDead and bossName ~= nil then
+				textBoss = GearHelper:ColorizeString(bossName, "rougefonce") .. GearHelper:ColorizeString(" est mort !", "Rouge")
+				bossTues = bossName and bossTues + 1
+			elseif not isDead and bossName then
+				textBoss = GearHelper:ColorizeString(bossName, "vertfonce") .. GearHelper:ColorizeString(" est vivant !", "Vert")
+			end
+			--print("textBoss : "..textBoss)
+			table.insert(tooltip, textBoss)
+		end
+		
+		button.tooltip = tooltip
+		local result = bossTues .. "/" .. nbBoss
+		if (bossTues == nbBoss) then
+			result = GearHelper:ColorizeString(result, "Rouge")
+		elseif (bossTues == 0) then
+			result = GearHelper:ColorizeString(result, "Vert")
+		else
+			result = GearHelper:ColorizeString(result, "Jaune")
+		end
+		--button.number:SetFormattedText(self.textColorTable[result], result)
+		if(button.number.SetFormattedText) then
+		button.number:SetFormattedText(result)
+		end
+
+		button.number = result --SetFormattedText("|c00ffffff%s|r", result)
+	end
+end
+
+function GearHelper:UpdateArrow()
+	if not GearHelper.arrow then
+		local arrow = GroupFinderFrame:CreateTexture("GHLfrArrow", "ARTWORK")
+		arrow:SetTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
+		arrow:SetTexCoord(1, 0, 0, 1) -- This somehow turns the arrow other way around. Magic. /shrug
+		arrow:SetSize(32, 32) -- Originally 16, 16
+		arrow:Hide()
+		GearHelper.arrow = arrow
+	end
+
+	local parent
+	if RaidFinderQueueFrame and RaidFinderQueueFrame:IsVisible() then
+		parent = RaidFinderQueueFrame
+	else
+		GearHelper.arrow:Hide()
+		return
+	end
+
+	if parent.raid and parent.GHLfrButtons[parent.raid] then
+		local button = parent.GHLfrButtons[parent.raid]
+		GearHelper.arrow:SetParent(button) -- Re-set the parent so we inherit the scale, so our smaller LFR buttons get a smaller arrow
+		GearHelper.arrow:SetPoint("LEFT", button, "RIGHT")
+		GearHelper.arrow:Show()
+	end
+end
+
+function GearHelper:UpdateGHLfrButton()
+	for id, button in pairs(RaidFinderQueueFrame.GHLfrButtons) do
+		local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id);
+		if mode == "queued" or mode == "listed" or mode == "rolecheck" or mode == "suspended" then
+			button:SetChecked(true)
+			button.checked = true -- This is for the PostClick script earlier
+		else
+			button:SetChecked(false)
+			button.checked = false
 		end
 	end
 end

@@ -334,8 +334,8 @@ local function ChatMsgLoot(
 	_,
 	_,
 	message,
-	sender,
 	language,
+	sender,
 	channelString,
 	target,
 	flags,
@@ -504,6 +504,45 @@ end
 -- 	button.overlay = nil
 -- end
 
+local function LfgUpdate(_, _)
+	GearHelper:UpdateGHLfrButton()
+end
+
+local function PlayerLogin(_, _)
+	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
+	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
+		local function LfrFrameShow(frame)
+			GearHelper:CreateLfrButtons(frame)
+			GearHelper:UpdateButtonsAndTooltips(frame)
+			GearHelper:UpdateGHLfrButton()
+			GearHelper:UpdateArrow()
+			GearHelper:RegisterEvent("LFG_UPDATE")
+			GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+		end
+		local function LfrFrameHide()
+			GearHelper:UnregisterEvent("LFG_UPDATE")
+		end
+
+		RaidFinderQueueFrame:HookScript("OnShow", LfrFrameShow)
+		RaidFinderQueueFrame:HookScript("OnHide", LfrFrameHide)
+		hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateArrow)
+	end
+
+	if HeirloomsJournal then
+		local function HjFrameShow(frame)
+			print("Bonjour HeirloomsJournal")
+		end
+		local function HjFrameHide()
+			print("Au revoir HeirloomsJournal")
+		end
+		HeirloomsJournal:HookScript("OnShow", HjFrameShow)
+		HeirloomsJournal:HookScript("OnHide", HjFrameHide)
+	else
+		print("impossible de register HeirloomsJournal")
+	end
+
+end
+
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
@@ -535,3 +574,5 @@ GearHelper:RegisterEvent("GET_ITEM_INFO_RECEIVED", GetItemInfoReceived, ...)
 GearHelper:RegisterEvent("PLAYER_FLAGS_CHANGED", PlayerFlagsChanged, ...)
 --GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
 -- GearHelper:RegisterEvent("QUEST_FINISHED", QuestFiniched, ...)
+GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
+GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)

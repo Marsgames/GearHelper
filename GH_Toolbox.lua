@@ -401,14 +401,18 @@ Author : Raphaël Saget
 ]]
 function GearHelper:ColorizeString(text, color)
 	local colorList = {}
-	colorList.Jaune = "|cFFFFFF00"
-	colorList.Vert = "|cFF00FF00"
-	colorList.Rouge = "|cFFFF0000"
-	colorList.Rose = "|cFFFF1493"
-	colorList.Mieux = "|cFF00FF96"
+	colorList.jaune = "|cFFFFFF00"
+	colorList.vert = "|cFF00FF00"
+	colorList.vertfonce = "|cFF1bad1b"
+	colorList.rouge = "|cFFFF0000"
+	colorList.rougefonce = "|cFFb51b1b"
+	colorList.rose = "|cFFFF1493"
+	colorList.mieux = "|cFF00FF96"
+	colorList.blanc = "|cFFFFFFFF"
+	colorList.noir = "|cFF000000"
 
-	if colorList[color] ~= nil then
-		return colorList[color]..text
+	if colorList[color:lower()] ~= nil then
+		return colorList[color:lower()]..text
 	else
 		return text
 	end
