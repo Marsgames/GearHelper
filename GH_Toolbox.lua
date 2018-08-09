@@ -437,16 +437,18 @@ function GearHelper:NormalizeWeightResult(result)
 	local resultList = {}
 	resultList["notAdapted"] = -10
 	resultList["notEquippable"] = -20
+	resultList["worstThanEquipped"] = -30
+	resultList["nil"] = -40
 	resultList["betterThanNothing"] = -50
 	resultList["alreadyEquipped"] = -60
 	if result == nil then
-		return {-40}
+		return {resultList["nil"]}
 	end
 
 	for k, v in pairs(result) do
 		if type(v) == "number" then
 			if v < 0 then
-				result[k] = -30
+				result[k] = resultList["worstThanEquipped"]
 			end
 		elseif type(v) == "string" then
 			if resultList[v] ~= nil then

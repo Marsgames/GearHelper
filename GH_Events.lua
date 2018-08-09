@@ -528,19 +528,52 @@ local function PlayerLogin(_, _)
 		hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateArrow)
 	end
 
-	if HeirloomsJournal then
-		local function HjFrameShow(frame)
-			print("Bonjour HeirloomsJournal")
-		end
-		local function HjFrameHide()
-			print("Au revoir HeirloomsJournal")
-		end
-		HeirloomsJournal:HookScript("OnShow", HjFrameShow)
-		HeirloomsJournal:HookScript("OnHide", HjFrameHide)
-	else
-		print("impossible de register HeirloomsJournal")
-	end
+end
 
+-- last loading event fired
+local function PlayerAlive()
+	-- if HeirloomsJournal then
+	-- 	local function HjFrameShow(frame)
+	-- 		print("Bonjour HeirloomsJournal")
+	-- 		table.foreach(HeirloomsJournal.heirloomLayoutData, function(pageIndex, pageValeur)
+	-- 			table.foreach(HeirloomsJournal.heirloomLayoutData[pageIndex], function(heirloomIndex, heirloomId)
+	-- 				if (heirloomId ~= -1) then
+	-- 					local name, id = GetItemInfo(heirloomId)
+	-- 					table.foreach(GearHelper:IsItemBetter(id, "itemlink"), function(item, stats)
+	-- 						if (stats > 0 or stats == -50) then -- item mieux, cadre mieux + icon
+	-- 							if (heirloomIndex <= 18) then
+	-- 								local f = _G["HJIcon"..id] or CreateFrame("Frame", "HJIcon"..id, HeirloomsJournal)
+	-- 								f:SetFrameStrata("TOOLTIP")
+	-- 								f:SetWidth(18) -- Set these to whatever height/width is needed 
+	-- 								f:SetHeight(18) -- for your Texture
+	
+	-- 								local t = f:CreateTexture(nil, "TOOLTIP")
+	-- 								local xCompte = (heirloomIndex % 3 == 1 and 0) or (heirloomIndex % 3 == 2 and 1) or (heirloomIndex % 3 == 0 and 2)
+	-- 								t:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+	-- 								t:SetAllPoints(f)
+	-- 								f.texture = t
+	-- 								f:SetPoint("CENTER", HeirloomsJournal, "CENTER", (-305 + (xCompte * 210)), (190 - (((math.ceil(heirloomIndex / 3)) - 1) * 65)))
+	-- 								f:Show()
+	-- 								end
+	-- 						elseif (stats == -30) then -- moins bien, cadre rouge
+								
+	-- 						elseif (stats == -60 or stats == 0) then -- déjà équippé ou équivalent, cadre jaune
+
+	-- 						end
+	-- 					end)
+	-- 				end
+	-- 			end)
+	-- 		end)
+	-- 	end
+	-- 	local function HjFrameHide()
+	-- 		print("Au revoir HeirloomsJournal")
+	-- 	end
+	-- 	HeirloomsJournal:HookScript("OnShow", HjFrameShow)
+	-- 	HeirloomsJournal:HookScript("OnHide", HjFrameHide)
+	-- 	print("Heirlooms registered")
+	-- else
+	-- 	print("impossible de register HeirloomsJournal")
+	-- end
 end
 
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
@@ -576,3 +609,4 @@ GearHelper:RegisterEvent("PLAYER_FLAGS_CHANGED", PlayerFlagsChanged, ...)
 -- GearHelper:RegisterEvent("QUEST_FINISHED", QuestFiniched, ...)
 GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
+GearHelper:RegisterEvent("PLAYER_ALIVE", PlayerAlive, ...)
