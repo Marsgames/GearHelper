@@ -37,7 +37,8 @@ local defaultsOptions = {
 	global = {
 		ItemCache = {},
 		itemWaitList = {},
-		myNames = ""
+		myNames = "",
+		buildVersion = 0
 	}
 } -- NE PAS OUBLIER DE RAJOUTER LA VERSION PRÉCÉDENTE ICI APRÈS CHAQUE MISE A JOUR !!!!
 --
@@ -257,6 +258,7 @@ function GearHelper:ResetConfig()
 	GearHelper.db.global.ItemCache = {}
 	GearHelper.db.global.itemWaitList = {}
 	GearHelper.db.global.myNames = ""
+	GearHelper.db.global.buildVersion = 0
 
 	InterfaceOptionsFrame:Hide()
 	InterfaceOptionsFrame:Show()
@@ -1719,13 +1721,11 @@ function GearHelper:AutoGreedAndNeed(number)
 	end
 end
 
+-- Créer les boutons le long du panel LFR
+-- Adaptation de l'addon BossesKilled
 function GearHelper:CreateLfrButtons(frameParent)
-	local nbInstance =  GetNumRFDungeons()
-	--local width = (nbInstance <= 8 and 55) or (nbInstance > 8 and 25)
-	--local height = (nbInstance <= 8 and 50) or (nbInstance > 8 and 20)
-	--local margin =(nbInstance <= 4 and 50) or (nbInstance > 4 and nbInstance <= 8 and 10) or (nbInstance > 8 and nbInstance <= 12 and 25) or (nbInstance > 12 and 10)
-	--local margin =(nbInstance <= 4 and 18) or (nbInstance > 4 and nbInstance <= 8 and 16) or (nbInstance > 8 and nbInstance <= 12 and 14) or (nbInstance > 12 and 12)
-	local scale = min(480 / ((nbInstance - 6) * 24), 1)
+	local nbInstance = GetNumRFDungeons()
+	local scale = min(480 / ((nbInstance - 6) * 24), 1) --> Ajuste la taille des boutons en fonction de leur nombre
 
 	if not frameParent.GHLfrButtons then
 		frameParent.GHLfrButtons = {}
@@ -1739,8 +1739,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 
 		-- Only make a button if there's data for it, and it hasn't been already made. This gets called multiple times so it updates correctly when you open up more raids
 		if dispo and dispoPourJoueur and not buttons[id] and nbBoss then
-			--local button = self:CreateButton(parentFrame, scale)
-			-------------------------------
 
 			local button =
 				CreateFrame(
@@ -1776,7 +1774,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 					break
 				end
 			end
-			------------------------------
 
 			buttons[id] = button
 
@@ -1786,11 +1783,10 @@ function GearHelper:CreateLfrButtons(frameParent)
 			frameParent.lastButton = button
 
 			-- I just realised a CheckButton might already have it's own FontString, but uh... whatever.
-			local number = button:CreateFontString(button:GetName().."Number", "OVERLAY", "SystemFont_Shadow_Huge3")
-	number:SetPoint("TOPLEFT", -4, 4)
-	number:SetPoint("BOTTOMRIGHT", 5, -5)
+			local number = button:CreateFontString(button:GetName() .. "Number", "OVERLAY", "SystemFont_Shadow_Huge3")
+			number:SetPoint("TOPLEFT", -4, 4)
+			number:SetPoint("BOTTOMRIGHT", 5, -5)
 			button.number = number
-			--self:CreateNumberFontstring(button)
 
 			button:SetScript(
 				"OnEnter",
@@ -1799,12 +1795,8 @@ function GearHelper:CreateLfrButtons(frameParent)
 						GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
 						for i = 1, #button.tooltip do
 							tooltip = button.tooltip[i]
-							--if tooltip.color then
-							--	GameTooltip:AddLine(tooltip.text, unpack(tooltip.color))
-							--else
-								GameTooltip:AddLine(tooltip.text)
-								GameTooltip:AddLine(tooltip)
-							--end
+							GameTooltip:AddLine(tooltip.text)
+							GameTooltip:AddLine(tooltip)
 						end
 						GameTooltip:Show()
 					end
@@ -1815,7 +1807,7 @@ function GearHelper:CreateLfrButtons(frameParent)
 				"OnClick",
 				function(this)
 					RaidFinderQueueFrame_SetRaid(this.dungeonID)
-					--self.UpdateArrow()
+					--self.UpdateSelecCursor()
 
 					-- This is to override the automatic highlighting when you click the button, while we want to use that to show queue status instead.
 					-- I've no idea why simply overriding this OnClick and not doing a SetChecked doesn't disable the behavior.
@@ -1828,6 +1820,8 @@ function GearHelper:CreateLfrButtons(frameParent)
 	end
 end
 
+-- Reset les textes des tooltips et des boutons
+-- Adaptation de l'addon BossesKilled
 function GearHelper:UpdateButtonsAndTooltips(frameParent)
 	local buttons = frameParent.GHLfrButtons
 
@@ -1836,9 +1830,9 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 		local index = 0
 		local nbBoss = GetLFGDungeonNumEncounters(id)
 
-		local tooltip = {{text = button.dungeonName}} -- Set up tooltip data with the dungeon name
+		-- Pour chaque raid on récupère le nombre de boss tués, et on ajoute le text "boss mort" ou "boss vivant"
+		local tooltip = {{text = button.dungeonName}}
 		for i = index, nbBoss do
-
 			local textBoss = ""
 			local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
 
@@ -1848,10 +1842,10 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 			elseif not isDead and bossName then
 				textBoss = GearHelper:ColorizeString(bossName, "vertfonce") .. GearHelper:ColorizeString(" est vivant !", "Vert")
 			end
-			--print("textBoss : "..textBoss)
 			table.insert(tooltip, textBoss)
 		end
-		
+
+		-- Implémente le couleur + le text des boutons
 		button.tooltip = tooltip
 		local result = bossTues .. "/" .. nbBoss
 		if (bossTues == nbBoss) then
@@ -1861,52 +1855,62 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 		else
 			result = GearHelper:ColorizeString(result, "Jaune")
 		end
-		--button.number:SetFormattedText(self.textColorTable[result], result)
-		if(button.number.SetFormattedText) then
-		button.number:SetFormattedText(result)
+
+		-- Utilise cette fonction pour ajouter du text si elle est dispo (évite des erreurs)
+		if (button.number.SetFormattedText) then
+			button.number:SetFormattedText(result)
 		end
 
-		button.number = result --SetFormattedText("|c00ffffff%s|r", result)
+		button.number = result
 	end
 end
 
-function GearHelper:UpdateArrow()
-	if not GearHelper.arrow then
-		local arrow = GroupFinderFrame:CreateTexture("GHLfrArrow", "ARTWORK")
-		arrow:SetTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
-		arrow:SetTexCoord(1, 0, 0, 1) -- This somehow turns the arrow other way around. Magic. /shrug
-		arrow:SetSize(32, 32) -- Originally 16, 16
-		arrow:Hide()
-		GearHelper.arrow = arrow
+-- Crée / modifie le curseur des boutons LFR
+-- Adaptation de l'addon BossesKilled
+function GearHelper:UpdateSelecCursor()
+	-- Création du curseur s'il n'existe pas
+	if not GearHelper.cursor then
+		local cursor = GroupFinderFrame:CreateTexture("GHLfrCursor", "ARTWORK")
+		cursor:SetTexture("Interface\\Minimap\\MinimapArrow")
+		cursor:SetRotation(1.65)
+		cursor:SetSize(80, 80)
+		cursor:Hide()
+		GearHelper.cursor = cursor
 	end
 
-	local parent
-	if RaidFinderQueueFrame and RaidFinderQueueFrame:IsVisible() then
-		parent = RaidFinderQueueFrame
-	else
-		GearHelper.arrow:Hide()
+	-- Si on ferme la fenêtre LFR on cache le curseur
+	local parentFrame = (RaidFinderQueueFrame ~= nil and RaidFinderQueueFrame:IsVisible() and RaidFinderQueueFrame or nil)
+	if (not parentFrame) then
+		GearHelper.cursor:Hide()
 		return
 	end
 
-	if parent.raid and parent.GHLfrButtons[parent.raid] then
-		local button = parent.GHLfrButtons[parent.raid]
-		GearHelper.arrow:SetParent(button) -- Re-set the parent so we inherit the scale, so our smaller LFR buttons get a smaller arrow
-		GearHelper.arrow:SetPoint("LEFT", button, "RIGHT")
-		GearHelper.arrow:Show()
+	-- Si on change de raid dans la fenêtre LFR, on modifie la position du curseur
+	if parentFrame.raid and parentFrame.GHLfrButtons[parentFrame.raid] then
+		local button = parentFrame.GHLfrButtons[parentFrame.raid]
+		GearHelper.cursor:SetParent(button)
+		GearHelper.cursor:SetPoint("LEFT", button, "RIGHT")
+		GearHelper.cursor:Show()
 	end
 end
 
+-- "check" le bouton si on est en attente d'un raid (crée le contour doré)
+-- Adaptation de l'addon BossesKilled
 function GearHelper:UpdateGHLfrButton()
 	for id, button in pairs(RaidFinderQueueFrame.GHLfrButtons) do
-		local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id);
+		local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id)
 		if mode == "queued" or mode == "listed" or mode == "rolecheck" or mode == "suspended" then
 			button:SetChecked(true)
-			button.checked = true -- This is for the PostClick script earlier
+			button.checked = true
 		else
 			button:SetChecked(false)
 			button.checked = false
 		end
 	end
+end
+
+function GearHelper:ResetCache()
+	GearHelper.db.global.ItemCache = {}
 end
 
 --[[

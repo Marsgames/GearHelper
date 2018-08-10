@@ -28,7 +28,7 @@ Input : number (id de l'item)
 Output : bool (objet gris ? true / false)
 Author : Raphaël Daumas
 ]]
-function GearHelper:SiObjetGris( itemID )
+function GearHelper:SiObjetGris(itemID)
 	local _, _, itemRarity, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(itemID)
 	local result = {}
 
@@ -62,35 +62,45 @@ function GearHelper:IsEquippableByMe(item)
 		local playerSpec = GetSpecializationInfo(currentSpec)
 
 		if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" then
-			isItMadeForMe = false
 			--Is it a common item shared by all classes ?
-		elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or item.subType == L.IsEquipable.PRIEST.Tissu then
-			isItMadeForMe = true
+			isItMadeForMe = false
+		elseif
+			item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or
+				item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or
+				item.subType == L.IsEquipable.PRIEST.Tissu
+		 then
 			--Is it an artifact weapon ?
+			isItMadeForMe = true
 		elseif item.rarity == "e6cc80" then
 			if type(L.Artifact[tostring(playerSpec)]) == "string" then
 				if tostring(item.id) == L.Artifact[tostring(playerSpec)] then
 					isItMadeForMe = true
 				end
 			else
-				table.foreach(L.Artifact[tostring(playerSpec)], function(_, v)
-					if tostring(item.id) == v then
-						isItMadeForMe = true
+				table.foreach(
+					L.Artifact[tostring(playerSpec)],
+					function(_, v)
+						if tostring(item.id) == v then
+							isItMadeForMe = true
+						end
 					end
-				end)
+				)
 			end
 		elseif item.equipLoc == "INVTYPE_TABARD" or item.equipLoc == "INVTYPE_BODY" then -- Do not consider as equippable because they have no stats and we dont store them in charInventory
 			isItMadeForMe = false
 		else
 			--Is it an item that i can equip with my character ?
-			table.foreach(L.IsEquipable[tostring(myClass)], function(_, v)
-				if item.subType == v then
-					isItMadeForMe = true
+			table.foreach(
+				L.IsEquipable[tostring(myClass)],
+				function(_, v)
+					if item.subType == v then
+						isItMadeForMe = true
+					end
 				end
-			end)
-    end
-  end
-  return isItMadeForMe
+			)
+		end
+	end
+	return isItMadeForMe
 end
 
 --[[
@@ -127,9 +137,9 @@ function GearHelper:IsSlotEmpty(equipLoc)
 			return nil
 		end
 		if GearHelper.charInventory["Finger0"] == 0 then
-			table.insert(result,true)
+			table.insert(result, true)
 		else
-			table.insert(result,false)
+			table.insert(result, false)
 		end
 
 		if GearHelper.charInventory["Finger1"] == 0 then
@@ -160,9 +170,9 @@ function GearHelper:IsSlotEmpty(equipLoc)
 		end
 		--If MainHand is empty
 		if GearHelper.charInventory["MainHand"] == 0 then
-			table.insert(result,true)
+			table.insert(result, true)
 		else
-			table.insert(result,false)
+			table.insert(result, false)
 		end
 
 		if GearHelper.charInventory["SecondaryHand"] == 0 then
@@ -195,12 +205,15 @@ Author : Raphaël Daumas
 ]]
 function GearHelper:IsInTable(array, data)
 	local result = false
-	table.foreach(array, function(k, _)
-		local ret = strmatch(array[k], data)
-		if ret ~= nil then
-			result = true
+	table.foreach(
+		array,
+		function(k, _)
+			local ret = strmatch(array[k], data)
+			if ret ~= nil then
+				result = true
+			end
 		end
-	end)
+	)
 	return result
 end
 
@@ -208,16 +221,16 @@ function GearHelper:IsEmptyTable(maTable)
 	return (next(maTable) == nil)
 end
 
-
 -- Récupéré sur internet - tranqforme string en array
 function GearHelper:MySplit(inputString, separator)
 	if separator == nil then
 		separator = "%s"
 	end
-	local t={} ; i=1
-	for str in string.gmatch(inputString, "([^"..separator.."]+)") do
-			t[i] = str
-			i = i + 1
+	local t = {}
+	i = 1
+	for str in string.gmatch(inputString, "([^" .. separator .. "]+)") do
+		t[i] = str
+		i = i + 1
 	end
 	return t
 end
@@ -247,7 +260,7 @@ function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 	for k, v in pairs(equipped) do
 		if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
 			if looted[k] == nil then
-				delta[k] = tonumber(v)*(-1)
+				delta[k] = tonumber(v) * (-1)
 			end
 		end
 	end
@@ -264,16 +277,16 @@ Author : Raphaël Saget
 ]]
 function GearHelper:GetGemValue()
 	local _, gemItemLink = GetItemInfo("151585")
-	if  gemItemLink == nil then
+	if gemItemLink == nil then
 		return 0
 	end
 	local tip = ""
 
-	tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate",nil,"GameTooltipTemplate")
+	tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
 	tip:SetOwner(WorldFrame, "ANCHOR_NONE")
 	tip:SetHyperlink(gemItemLink)
 
-	for i=1,tip:NumLines() do
+	for i = 1, tip:NumLines() do
 		local line = _G["myTooltipFromTemplateTextLeft" .. i]
 		local text = line:GetText()
 		if text then
@@ -293,7 +306,6 @@ Output : itemLink
 Author : Raphaël Daumas
 ]]
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
-
 	local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
 	local _, itemId = strsplit(":", itemString)
 
@@ -301,9 +313,8 @@ function GearHelper:ReturnGoodLink(itemLink, target, tar)
 		tar = ""
 	end
 
-	return "|HGHWhispWhenClick:askIfHeNeed_"..target.."_"..itemId.."_|h"..tar.."|h"
+	return "|HGHWhispWhenClick:askIfHeNeed_" .. target .. "_" .. itemId .. "_|h" .. tar .. "|h"
 	-- return "|HGHWhispWhenClick:askIfHeNeed_"..target.."_"..itemLink.."_|h"..tar.."|h"
-
 end
 
 --[[
@@ -314,10 +325,10 @@ Input : string (nom anglais ded la classe)
 Output : string (couleur de la classe)
 Author : Raphaël Daumas
 ]]
-function GearHelper:CouleurClasse( classFileName )
-	local color = RAID_CLASS_COLORS[classFileName];
+function GearHelper:CouleurClasse(classFileName)
+	local color = RAID_CLASS_COLORS[classFileName]
 
-	return "|c"..color.colorStr
+	return "|c" .. color.colorStr
 
 	-- if classID == 1 then -- war
 	--     return "|cFFC79C6E"
@@ -360,7 +371,7 @@ function GearHelper:FindHighestStatInTemplate()
 		if GearHelper.db.global.templates[currentSpec]["NOX"] ~= nil then
 			local maxV = 0
 			local maxK = "Nothing"
-			for k,v in pairs(GearHelper.db.global.templates[currentSpec]["NOX"]) do
+			for k, v in pairs(GearHelper.db.global.templates[currentSpec]["NOX"]) do
 				if tonumber(v) > maxV then
 					maxV = v
 					maxK = k
@@ -375,7 +386,7 @@ function GearHelper:FindHighestStatInTemplate()
 		if GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate] ~= nil then
 			local maxV = 0
 			local maxK = "Nothing"
-			for k,v in pairs(GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]) do
+			for k, v in pairs(GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]) do
 				if tonumber(v) then
 					if v > maxV then
 						maxV = v
@@ -412,7 +423,7 @@ function GearHelper:ColorizeString(text, color)
 	colorList.noir = "|cFF000000"
 
 	if colorList[color:lower()] ~= nil then
-		return colorList[color:lower()]..text
+		return colorList[color:lower()] .. text
 	else
 		return text
 	end
@@ -468,16 +479,16 @@ Output :
 Author : Raphaël Saget
 ]]
 function GearHelper:DoDisplayOverlay(result)
-  local doDisplay = {-50}
-  local displayOverlay = false
-  for _, v in pairs(result) do
-    for _, y in pairs(doDisplay) do
-      if v == y or v >= 0 then
-        displayOverlay = true
-      end
-    end
-  end
-  return displayOverlay
+	local doDisplay = {-50}
+	local displayOverlay = false
+	for _, v in pairs(result) do
+		for _, y in pairs(doDisplay) do
+			if v == y or v >= 0 then
+				displayOverlay = true
+			end
+		end
+	end
+	return displayOverlay
 end
 
 -- desc : Fonction qui parse un link en ID
@@ -498,23 +509,23 @@ Description : Algo de tri d'entier qui n'a pas le temps
 Input : table d'entiers
 Author : Raphaël Daumas
 ]]
-function GearHelper:CountingSort( f )
-    local min, max = math.min( unpack(f) ), math.max( unpack(f) )
-    local count = {}
-    for i = min, max do
-        count[i] = 0
-    end
+function GearHelper:CountingSort(f)
+	local min, max = math.min(unpack(f)), math.max(unpack(f))
+	local count = {}
+	for i = min, max do
+		count[i] = 0
+	end
 
-    for i = 1, #f do
-        count[ f[i] ] = count[ f[i] ] + 1
-    end
+	for i = 1, #f do
+		count[f[i]] = count[f[i]] + 1
+	end
 
-    local z = 1
-    for i = min, max do
-        while count[i] > 0 do
-            f[z] = i
-            z = z + 1
-            count[i] = count[i] - 1
-        end
-    end
+	local z = 1
+	for i = min, max do
+		while count[i] > 0 do
+			f[z] = i
+			z = z + 1
+			count[i] = count[i] - 1
+		end
+	end
 end

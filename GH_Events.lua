@@ -22,6 +22,11 @@ local function AddonLoaded(_, _, name)
 	if name == addonName then
 		--RegisterAddonMessagePrefix(prefixAddon)
 		print(GearHelper:ColorizeString(L["merci"], "Vert"))
+		local runningBuild = select(4, GetBuildInfo())
+		if GearHelper.db.global.buildVersion ~= runningBuild then
+			GearHelper.db.global.buildVersion = runningBuild
+			GearHelper:ResetCache()
+		end
 	end
 end
 
@@ -510,12 +515,12 @@ end
 
 local function PlayerLogin(_, _)
 	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
-	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
+	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid and GearHelper.db.profile then
 		local function LfrFrameShow(frame)
 			GearHelper:CreateLfrButtons(frame)
 			GearHelper:UpdateButtonsAndTooltips(frame)
 			GearHelper:UpdateGHLfrButton()
-			GearHelper:UpdateArrow()
+			GearHelper:UpdateSelecCursor()
 			GearHelper:RegisterEvent("LFG_UPDATE")
 			GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 		end
@@ -525,9 +530,76 @@ local function PlayerLogin(_, _)
 
 		RaidFinderQueueFrame:HookScript("OnShow", LfrFrameShow)
 		RaidFinderQueueFrame:HookScript("OnHide", LfrFrameHide)
-		hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateArrow)
+		hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelecCursor)
 	end
 
+	if (PaperDollItemsFrame) then
+		local function CharFrameShow(frame)
+			print("charFrame opened")
+			table.foreach(
+				GearHelper.charInventory,
+				function(slotName, item)
+					local arrayPos = {
+						xHead = -204,
+						xNeck = -204,
+						xShoulder = -204,
+						xBack = -204,
+						xChest = -204,
+						xWrist = -204,
+						xMainHand = -125,
+						xHands = -3,
+						xWaist = -3,
+						xLegs = -3,
+						xFeet = -3,
+						xFinger0 = -3,
+						xFinger1 = -3,
+						xTrinket0 = -3,
+						xTrinket1 = -3,
+						xSecondaryHand = -77,
+						yHead = 140,
+						yNeck = 99,
+						yShoulder = 58,
+						yBack = 17,
+						yChest = -24,
+						yWrist = -147,
+						yMainHand = -140,
+						yHands = 140,
+						yWaist = 99,
+						yLegs = 58,
+						yFeet = 17,
+						yFinger0 = -24,
+						yFinger1 = -65,
+						yTrinket0 = -106,
+						yTrinket1 = -147,
+						ySecondaryHand = -140
+					}
+
+					local button =
+						_G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
+					button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
+					button:SetSize(1, 1)
+
+					local _, _, iR, itemLevel = GetItemInfo(item)
+
+					button:SetText(itemLevel)
+					button:SetNormalFontObject("GameFontNormalSmall")
+
+					local font = button:GetNormalFontObject()
+					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+					font:SetTextColor(r, g, b, 1)
+					button:SetNormalFontObject(font)
+				end
+			)
+		end
+		local function CharFrameHide()
+			print("charFrame closed")
+		end
+
+		PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
+		PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
+	else
+		print("PaperDollItemsFrame not registered")
+	end
 end
 
 -- last loading event fired
@@ -542,23 +614,20 @@ local function PlayerAlive()
 	-- 					table.foreach(GearHelper:IsItemBetter(id, "itemlink"), function(item, stats)
 	-- 						if (stats > 0 or stats == -50) then -- item mieux, cadre mieux + icon
 	-- 							if (heirloomIndex <= 18) then
-	-- 								local f = _G["HJIcon"..id] or CreateFrame("Frame", "HJIcon"..id, HeirloomsJournal)
-	-- 								f:SetFrameStrata("TOOLTIP")
-	-- 								f:SetWidth(18) -- Set these to whatever height/width is needed 
-	-- 								f:SetHeight(18) -- for your Texture
-	
-	-- 								local t = f:CreateTexture(nil, "TOOLTIP")
-	-- 								local xCompte = (heirloomIndex % 3 == 1 and 0) or (heirloomIndex % 3 == 2 and 1) or (heirloomIndex % 3 == 0 and 2)
-	-- 								t:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
-	-- 								t:SetAllPoints(f)
-	-- 								f.texture = t
-	-- 								f:SetPoint("CENTER", HeirloomsJournal, "CENTER", (-305 + (xCompte * 210)), (190 - (((math.ceil(heirloomIndex / 3)) - 1) * 65)))
-	-- 								f:Show()
+	-- local f = _G["HJIcon"..id] or CreateFrame("Frame", "HJIcon"..id, HeirloomsJournal)
+	-- f:SetFrameStrata("TOOLTIP")
+	-- f:SetWidth(18) -- Set these to whatever height/width is needed
+	-- f:SetHeight(18) -- for your Texture
+	-- local t = f:CreateTexture(nil, "TOOLTIP")
+	-- local xCompte = (heirloomIndex % 3 == 1 and 0) or (heirloomIndex % 3 == 2 and 1) or (heirloomIndex % 3 == 0 and 2)
+	-- t:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+	-- t:SetAllPoints(f)
+	-- f.texture = t
+	-- f:SetPoint("CENTER", HeirloomsJournal, "CENTER", (-305 + (xCompte * 210)), (190 - (((math.ceil(heirloomIndex / 3)) - 1) * 65)))
+	-- f:Show()
 	-- 								end
 	-- 						elseif (stats == -30) then -- moins bien, cadre rouge
-								
 	-- 						elseif (stats == -60 or stats == 0) then -- déjà équippé ou équivalent, cadre jaune
-
 	-- 						end
 	-- 					end)
 	-- 				end
