@@ -533,6 +533,7 @@ local function PlayerLogin(_, _)
 		hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelecCursor)
 	end
 
+	-- Si la page du personnage s'affiche, on affiche l'ilvl
 	if (PaperDollItemsFrame) then
 		local function CharFrameShow(frame)
 			print("charFrame opened")
@@ -592,13 +593,10 @@ local function PlayerLogin(_, _)
 			)
 		end
 		local function CharFrameHide()
-			print("charFrame closed")
 		end
 
 		PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
 		PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
-	else
-		print("PaperDollItemsFrame not registered")
 	end
 end
 
@@ -645,6 +643,12 @@ local function PlayerAlive()
 	-- end
 end
 
+local function InspectReady(_, _, target)
+	if (InspectPaperDollItemsFrame) then
+		GearHelper:AddIlvlOnInspect(target)
+	end
+end
+
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
@@ -679,3 +683,4 @@ GearHelper:RegisterEvent("PLAYER_FLAGS_CHANGED", PlayerFlagsChanged, ...)
 GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("PLAYER_ALIVE", PlayerAlive, ...)
+GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)

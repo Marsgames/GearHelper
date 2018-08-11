@@ -1739,7 +1739,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 
 		-- Only make a button if there's data for it, and it hasn't been already made. This gets called multiple times so it updates correctly when you open up more raids
 		if dispo and dispoPourJoueur and not buttons[id] and nbBoss then
-
 			local button =
 				CreateFrame(
 				"CheckButton",
@@ -1911,6 +1910,187 @@ end
 
 function GearHelper:ResetCache()
 	GearHelper.db.global.ItemCache = {}
+end
+
+function GearHelper:AddIlvlOnInspect(target)
+	local function InspectFrameShow(frame)
+		-- local slotArray = {
+		-- 	InspectHeadSlot,
+		-- 	InspectNeckSlot,
+		-- 	InspectShoulderSlot,
+		-- 	InspectBackSlot,
+		-- 	InspectChestSlot,
+		-- 	InspectWristSlot,
+		-- 	InspectMainHandSlot,
+		-- 	InspectHandsSlot,
+		-- 	InspectWaistSlot,
+		-- 	InspectLegsSlot,
+		-- 	InspectFeetSlot,
+		-- 	InspectFinger0Slot,
+		-- 	InspectFinger1Slot,
+		-- 	InspectTrinket0Slot,
+		-- 	InspectTrinket1Slot,
+		-- 	InspectSecondaryHand
+		-- }
+
+		local arrayPos = {
+			xINVTYPE_HEAD = -100,
+			xINVTYPE_NECK = -100,
+			xINVTYPE_SHOULDER = -100,
+			xINVTYPE_BACK = -100,
+			xINVTYPE_CLOAK = -100,
+			xINVTYPE_ROBE = -100,
+			xINVTYPE_CHEST = -100,
+			xINVTYPE_BODY = -100,
+			xINVTYPE_TABARD = -100,
+			xINVTYPE_WRIST = -100,
+			xINVTYPE_MAINHAND = -20,
+			xINVTYPE_RANGED = -20,
+			xINVTYPE_WEAPONMAINHAND = -20,
+			xINVTYPE_2HWEAPON = -20,
+			xINVTYPE_HAND = 95,
+			xINVTYPE_WAIST = 95,
+			xINVTYPE_LEGS = 95,
+			xINVTYPE_FEET = 95,
+			xINVTYPE_FINGER = 95,
+			xINVTYPE_TRINKET = 95,
+			xINVTYPE_SECONDARYHAND = 20,
+			xINVTYPE_WEAPONOFFHAND = 20,
+			yINVTYPE_HEAD = 140,
+			yINVTYPE_NECK = 99,
+			yINVTYPE_SHOULDER = 58,
+			yINVTYPE_BACK = 17,
+			yINVTYPE_ROBE = 17,
+			yINVTYPE_CLOAK = 17,
+			yINVTYPE_CHEST = -24,
+			yINVTYPE_BODY = -65,
+			yINVTYPE_TABARD = -147,
+			yINVTYPE_WRIST = -147,
+			yINVTYPE_MAINHAND = -140,
+			yINVTYPE_RANGED = -140,
+			yINVTYPE_WEAPONMAINHAND = -140,
+			yINVTYPE_2HWEAPON = -140,
+			yINVTYPE_HAND = 140,
+			yINVTYPE_WAIST = 99,
+			yINVTYPE_LEGS = 58,
+			yINVTYPE_FEET = 17,
+			yINVTYPE_FINGER0 = -24,
+			yINVTYPE_FINGER1 = -65,
+			yINVTYPE_TRINKET0 = -106,
+			yINVTYPE_TRINKET1 = -147,
+			yINVTYPE_SECONDARYHAND = -140,
+			yINVTYPE_WEAPONOFFHAND = -140
+		}
+
+		local trinketAlreadyDone = false
+		local fingerAlreadyDone = false
+		local weaponAlreadyDone = false
+
+		for i = 1, 19 do
+			local itemID = GetInventoryItemID("target", i)
+			if (itemID ~= nil) then
+				local _, itemLink, iR, itemLevel, _, _, _, _, itemEquipLoc = GetItemInfo(itemID)
+
+				if (itemEquipLoc ~= nil) then
+					print("----------")
+					print("itemID : " .. itemID)
+					print("itemLink : " .. itemLink)
+					print("itemEquipLoc : " .. itemEquipLoc)
+					print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+					print("yPos : " .. tostring(arrayPos["y" .. itemEquipLoc]))
+
+					local button =
+						_G["charIlvlButton" .. itemEquipLoc] or
+						CreateFrame("Button", "charIlvlButton" .. itemEquipLoc, InspectPaperDollItemsFrame)
+					if (itemEquipLoc == "INVTYPE_FINGER" and not fingerAlreadyDone) then
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_FINGER0"]
+						)
+						fingerAlreadyDone = true
+						print("Finger0")
+					elseif (itemEquipLoc == "INVTYPE_FINGER" and fingerAlreadyDone) then
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_FINGER1"]
+						)
+						print("Finger1")
+					elseif (itemEquipLoc == "INVTYPE_TRINKET" and not trinketAlreadyDone) then
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_TRINKET0"]
+						)
+						trinketAlreadyDone = true
+						print("Trinket0")
+					elseif (itemEquipLoc == "INVTYPE_TRINKET" and trinketAlreadyDone) then
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_TRINKET1"]
+						)
+						print("Trinket1")
+					elseif (itemEquipLoc == "INVTYPE_WEAPON" and not weaponAlreadyDone) then
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["xINVTYPE_WEAPONMAINHAND"],
+							arrayPos["yINVTYPE_WEAPONMAINHAND"]
+						)
+						weaponAlreadyDone = true
+						print("Trinket0")
+					elseif (itemEquipLoc == "INVTYPE_WEAPON" and weaponAlreadyDone) then
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["xINVTYPE_WEAPONOFFHAND"],
+							arrayPos["yINVTYPE_WEAPONMAINHAND"]
+						)
+						print("Trinket1")
+					else
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["y" .. itemEquipLoc]
+						)
+					end
+					button:SetSize(1, 1)
+					button:SetText(itemLevel)
+					button:SetNormalFontObject("GameFontNormalSmall")
+
+					local font = button:GetNormalFontObject()
+					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+					font:SetTextColor(r, g, b, 1)
+					button:SetNormalFontObject(font)
+				else
+					-- print("itemID : " .. itemID)
+					print("Item pas en cache, relancer inspecter")
+				end
+			end
+		end
+
+		print("target : " .. target)
+	end
+
+	local function InspectFrameHide()
+	end
+
+	InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
+	InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
 end
 
 --[[
