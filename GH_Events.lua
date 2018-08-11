@@ -598,7 +598,7 @@ local function PlayerLogin(_, _)
 						button:SetText(itemLevel)
 						button:SetNormalFontObject("GameFontNormalSmall")
 
-						local font = button:GetNormalFontObject()
+						local font = _G["charIlvlFont" .. slotName] or CreateFont("charIlvlFont" .. slotName)
 						local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
 						font:SetTextColor(r, g, b, 1)
 						button:SetNormalFontObject(font)
