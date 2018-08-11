@@ -468,6 +468,8 @@ Input : number (id de l'item)
 Author : Raphaël Daumas
 ]]
 local function GetItemInfoReceived(_, _, item)
+	-- print("GetItemInfoReceived fired")
+
 	if GearHelper.db.global.itemWaitList[item] then
 		local slotName = GearHelper.db.global.itemWaitList[item]
 		GearHelper.db.global.itemWaitList[item] = nil
@@ -486,6 +488,16 @@ local function GetItemInfoReceived(_, _, item)
 				coroutine.resume(GearHelper.AutoGreedAndNeedCoroutine)
 			end
 		end
+	end
+
+	if (InspectPaperDollItemsFrame) then
+		-- print("------------")
+		-- print("item : " .. item)
+		-- print("AddIlvlOnInspect appelé depuis GetItemInfoReceived")
+		-- print("target : " .. UnitGUID("target"))
+		GearHelper:AddIlvlOnInspect(UnitGUID("target"))
+	else
+		print("pas de InspectPaperDollItemsFrame dans GetItemInfoReceived")
 	end
 end
 
@@ -540,55 +552,57 @@ local function PlayerLogin(_, _)
 			table.foreach(
 				GearHelper.charInventory,
 				function(slotName, item)
-					local arrayPos = {
-						xHead = -204,
-						xNeck = -204,
-						xShoulder = -204,
-						xBack = -204,
-						xChest = -204,
-						xWrist = -204,
-						xMainHand = -125,
-						xHands = -3,
-						xWaist = -3,
-						xLegs = -3,
-						xFeet = -3,
-						xFinger0 = -3,
-						xFinger1 = -3,
-						xTrinket0 = -3,
-						xTrinket1 = -3,
-						xSecondaryHand = -77,
-						yHead = 140,
-						yNeck = 99,
-						yShoulder = 58,
-						yBack = 17,
-						yChest = -24,
-						yWrist = -147,
-						yMainHand = -140,
-						yHands = 140,
-						yWaist = 99,
-						yLegs = 58,
-						yFeet = 17,
-						yFinger0 = -24,
-						yFinger1 = -65,
-						yTrinket0 = -106,
-						yTrinket1 = -147,
-						ySecondaryHand = -140
-					}
+					if (item ~= -1) then
+						local arrayPos = {
+							xHead = -204,
+							xNeck = -204,
+							xShoulder = -204,
+							xBack = -204,
+							xChest = -204,
+							xWrist = -204,
+							xMainHand = -125,
+							xHands = -3,
+							xWaist = -3,
+							xLegs = -3,
+							xFeet = -3,
+							xFinger0 = -3,
+							xFinger1 = -3,
+							xTrinket0 = -3,
+							xTrinket1 = -3,
+							xSecondaryHand = -77,
+							yHead = 140,
+							yNeck = 99,
+							yShoulder = 58,
+							yBack = 17,
+							yChest = -24,
+							yWrist = -147,
+							yMainHand = -140,
+							yHands = 140,
+							yWaist = 99,
+							yLegs = 58,
+							yFeet = 17,
+							yFinger0 = -24,
+							yFinger1 = -65,
+							yTrinket0 = -106,
+							yTrinket1 = -147,
+							ySecondaryHand = -140
+						}
 
-					local button =
-						_G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
-					button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
-					button:SetSize(1, 1)
+						local button =
+							_G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
+						button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
+						button:SetSize(1, 1)
 
-					local _, _, iR, itemLevel = GetItemInfo(item)
+						local _, _, iR, itemLevel = GetItemInfo(item)
 
-					button:SetText(itemLevel)
-					button:SetNormalFontObject("GameFontNormalSmall")
+						button:SetText(itemLevel)
+						button:SetNormalFontObject("GameFontNormalSmall")
 
-					local font = button:GetNormalFontObject()
-					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
-					font:SetTextColor(r, g, b, 1)
-					button:SetNormalFontObject(font)
+						local font = button:GetNormalFontObject()
+						local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+						font:SetTextColor(r, g, b, 1)
+						button:SetNormalFontObject(font)
+					end
 				end
 			)
 		end
