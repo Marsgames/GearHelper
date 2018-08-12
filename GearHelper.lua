@@ -1383,7 +1383,15 @@ local ModifyTooltip = function(self, ...)
 			local result = GearHelper:IsItemBetter(itemLink, "ItemLink")
 			local item = GearHelper:GetItemByLink(itemLink)
 			local linesToAdd = GearHelper:LinesToAddToTooltip(result, item)
+			_, _, _, _, itemId = string.find(item.itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 
+			if GearHelper.itemsDropRate[itemId] ~= nil then
+				table.insert(linesToAdd, L["DropRate"]..GearHelper.itemsDropRate[itemId]["Rate"].."%" )
+				if GearHelper.itemsDropRate[itemId]["Zone"] ~= "" then
+					table.insert(linesToAdd, L["DropZone"]..GearHelper.itemsDropRate[itemId]["Zone"])
+				end
+				table.insert(linesToAdd, L["DropBy"]..GearHelper.itemsDropRate[itemId]["Drop"])
+			end
 			if linesToAdd then
 				if (result[1] == -30 or result[1] == -10 or GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id))	 then
 					self:SetBackdropBorderColor(255, 0, 0) -- Rouge

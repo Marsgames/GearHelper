@@ -97,6 +97,10 @@ L["MmTtRClickDeactivate"] = 					"Clique droit pour désactiver GearHelper"
 L["MmTtClickUnlock"] = 							"Shift + clique pour |cFF00FF00dévérouiller|cFFFFFF00 le bouton"
 L["MmTtClickLock"] = 							"Shift + clique pour |cFFFF0000vérouiller|cFFFFFF00 le bouton"
 L["MmTtCtrlClick"] = 							"Ctrl + clique pour |cFF00FF00cacher|cFFFFFF00 le bouton"
+L["DropRate"] = 								"Taux d'obtention : "
+L["DropZone"] = 								"Zone : "
+L["DropBy"] = 									"Obtenu sur : "
+
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 
 

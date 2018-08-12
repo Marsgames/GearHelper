@@ -141,6 +141,9 @@ L["MmTtRClickDeactivate"] = "Right click to deactivate GearHelper"
 L["MmTtClickUnlock"] = "Shift + click to |cFF00FF00unlock|cFFFFFF00 minimap icon"
 L["MmTtClickLock"] = "Shift + click to |cFFFF0000lock|cFFFFFF00 minimap icon"
 L["MmTtCtrlClick"] = "Ctrl + click to |cFF00FF00hide|cFFFFFF00 minimap icon"
+L["DropRate"] = 								"Drop rate : "
+L["DropZone"] = 								"Location : "
+L["DropBy"] = 									"Dropped by : "
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
