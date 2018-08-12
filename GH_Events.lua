@@ -339,8 +339,8 @@ local function ChatMsgLoot(
 	_,
 	_,
 	message,
-	sender,
 	language,
+	sender,
 	channelString,
 	target,
 	flags,
@@ -468,6 +468,8 @@ Input : number (id de l'item)
 Author : Raphaël Daumas
 ]]
 local function GetItemInfoReceived(_, _, item)
+	-- print("GetItemInfoReceived fired")
+
 	if GearHelper.db.global.itemWaitList[item] then
 		local slotName = GearHelper.db.global.itemWaitList[item]
 		GearHelper.db.global.itemWaitList[item] = nil
@@ -486,6 +488,15 @@ local function GetItemInfoReceived(_, _, item)
 				coroutine.resume(GearHelper.AutoGreedAndNeedCoroutine)
 			end
 		end
+	end
+
+	if (InspectPaperDollItemsFrame) then
+		-- print("------------")
+		-- print("item : " .. item)
+		-- print("AddIlvlOnInspect appelé depuis GetItemInfoReceived")
+		-- print("target : " .. UnitGUID("target"))
+		--GearHelper:AddIlvlOnInspect(UnitGUID("target"))
+		NotifyInspect("target")
 	end
 end
 
@@ -508,6 +519,134 @@ end
 -- local function QuestFiniched()
 -- 	button.overlay = nil
 -- end
+
+local function LfgUpdate(_, _)
+	GearHelper:UpdateGHLfrButton()
+end
+
+local function PlayerLogin(_, _)
+	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
+	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid and GearHelper.db.profile then
+		local function LfrFrameShow(frame)
+			GearHelper:CreateLfrButtons(frame)
+			GearHelper:UpdateButtonsAndTooltips(frame)
+			GearHelper:UpdateGHLfrButton()
+			GearHelper:UpdateSelecCursor()
+			GearHelper:RegisterEvent("LFG_UPDATE")
+			GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+		end
+		local function LfrFrameHide()
+			GearHelper:UnregisterEvent("LFG_UPDATE")
+		end
+
+		RaidFinderQueueFrame:HookScript("OnShow", LfrFrameShow)
+		RaidFinderQueueFrame:HookScript("OnHide", LfrFrameHide)
+		hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelecCursor)
+	end
+
+	-- Si la page du personnage s'affiche, on affiche l'ilvl
+	if (PaperDollItemsFrame) then
+		GearHelper:AddIlvlOnCharFrame()
+	end
+
+	if (TargetFrame) then
+		print("TargetFrame registered")
+		local function TargetFrameShow(frame)
+			if (UnitIsPlayer("target")) then
+				NotifyInspect("target")
+			else
+				print("unit is not a player")
+			end
+			print("target affiché")
+		end
+		local function TargetFrameHide()
+			print("target caché")
+		end
+
+		TargetFrame:HookScript("OnShow", TargetFrameShow)
+		TargetFrame:HookScript("OnHide", TargetFrameHide)
+	else
+		print("impossible de register TargetFrame")
+	end
+end
+
+-- last loading event fired
+local function PlayerAlive()
+	-- if HeirloomsJournal then
+	-- 	local function HjFrameShow(frame)
+	-- 		print("Bonjour HeirloomsJournal")
+	-- 		table.foreach(HeirloomsJournal.heirloomLayoutData, function(pageIndex, pageValeur)
+	-- 			table.foreach(HeirloomsJournal.heirloomLayoutData[pageIndex], function(heirloomIndex, heirloomId)
+	-- 				if (heirloomId ~= -1) then
+	-- 					local name, id = GetItemInfo(heirloomId)
+	-- 					table.foreach(GearHelper:IsItemBetter(id, "itemlink"), function(item, stats)
+	-- 						if (stats > 0 or stats == -50) then -- item mieux, cadre mieux + icon
+	-- 							if (heirloomIndex <= 18) then
+	-- local f = _G["HJIcon"..id] or CreateFrame("Frame", "HJIcon"..id, HeirloomsJournal)
+	-- f:SetFrameStrata("TOOLTIP")
+	-- f:SetWidth(18) -- Set these to whatever height/width is needed
+	-- f:SetHeight(18) -- for your Texture
+	-- local t = f:CreateTexture(nil, "TOOLTIP")
+	-- local xCompte = (heirloomIndex % 3 == 1 and 0) or (heirloomIndex % 3 == 2 and 1) or (heirloomIndex % 3 == 0 and 2)
+	-- t:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+	-- t:SetAllPoints(f)
+	-- f.texture = t
+	-- f:SetPoint("CENTER", HeirloomsJournal, "CENTER", (-305 + (xCompte * 210)), (190 - (((math.ceil(heirloomIndex / 3)) - 1) * 65)))
+	-- f:Show()
+	-- 								end
+	-- 						elseif (stats == -30) then -- moins bien, cadre rouge
+	-- 						elseif (stats == -60 or stats == 0) then -- déjà équippé ou équivalent, cadre jaune
+	-- 						end
+	-- 					end)
+	-- 				end
+	-- 			end)
+	-- 		end)
+	-- 	end
+	-- 	local function HjFrameHide()
+	-- 		print("Au revoir HeirloomsJournal")
+	-- 	end
+	-- 	HeirloomsJournal:HookScript("OnShow", HjFrameShow)
+	-- 	HeirloomsJournal:HookScript("OnHide", HjFrameHide)
+	-- 	print("Heirlooms registered")
+	-- else
+	-- 	print("impossible de register HeirloomsJournal")
+	-- end
+end
+
+local function InspectReady(_, _, target)
+	if (InspectPaperDollItemsFrame) then
+		GearHelper:AddIlvlOnInspect(target)
+	else
+		if (GameTooltip:IsVisible()) then
+			local arrayIlvl = {}
+			for i = 1, 19 do
+				local itemLink = GetInventoryItemLink("target", i)
+				if (itemLink) then
+					local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
+					local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
+					arrayIlvl[equipLoc] = itemLvl
+					table.insert(arrayIlvl, itemLvl)
+				end
+			end
+			local ilvlAverage = 0
+			local itemCount = 0
+			table.foreach(
+				arrayIlvl,
+				function(equipLoc, ilvl)
+					if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+						ilvlAverage = ilvlAverage + ilvl
+						itemCount = itemCount + 1
+					end
+				end
+			)
+			if (itemCount ~= 0) then
+				-- GameTooltip:AddLine("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+				print("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+			end
+		end
+	end
+	--ClearInspectPlayer("target")
+end
 
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
@@ -540,3 +679,7 @@ GearHelper:RegisterEvent("GET_ITEM_INFO_RECEIVED", GetItemInfoReceived, ...)
 GearHelper:RegisterEvent("PLAYER_FLAGS_CHANGED", PlayerFlagsChanged, ...)
 --GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
 -- GearHelper:RegisterEvent("QUEST_FINISHED", QuestFiniched, ...)
+GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
+GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
+GearHelper:RegisterEvent("PLAYER_ALIVE", PlayerAlive, ...)
+GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)

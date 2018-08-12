@@ -14,17 +14,17 @@ local slashCmd = {
 		GearHelper:Print("equip --> équipe l'equipementSet précédement crée")
 		GearHelper:Print("remove --> supprime l'equipmentSet précédement crée")
 		GearHelper:Print("askloot --> active / désactive l'option pour annoncer les loots mieux que les notres en instance")
-		GearHelper:Print("dot --> affiche les icones des \"meilleurs items\" sur les icones des stuffs")
-		GearHelper:Print("suppdot --> supprime les icones de \"meilleurs item\" sur les icones des stuffs")
+		GearHelper:Print('dot --> affiche les icones des "meilleurs items" sur les icones des stuffs')
+		GearHelper:Print('suppdot --> supprime les icones de "meilleurs item" sur les icones des stuffs')
 		print("cw --> Ouvre le panneau des Customs Weights")
 		GearHelper:Print("eccip --> equip le meilleur stuff des sacs")
 		GearHelper:Print("ain --> test la fonction Ask If He Needs")
 		GearHelper:Print("reset --> reset GearHelper")
 	end,
 	printCache = function()
-		for k,v in pairs(GearHelper.db.global.ItemCache) do
+		for k, v in pairs(GearHelper.db.global.ItemCache) do
 			print(k)
-			foreach(v,print)
+			foreach(v, print)
 		end
 	end,
 	clearCache = function()
@@ -33,25 +33,25 @@ local slashCmd = {
 	list = function()
 		-- GearHelper:ScanBag()
 		-- GearHelper:scanCharacter()
-		for bag = 0,4 do
+		for bag = 0, 4 do
 			for slot = 1, GetContainerNumSlots(bag) do
 				local _, _, _, _, _, _, link = GetContainerItemInfo(bag, slot)
 				if link ~= nil then
-					if(strfind(link, "|H(.+)|h") ~= nil) then
-						link = "|cff9d9d9d"..link.."|h|h|r"
+					if (strfind(link, "|H(.+)|h") ~= nil) then
+						link = "|cff9d9d9d" .. link .. "|h|h|r"
 					end
-					print(bag.." "..slot)
+					print(bag .. " " .. slot)
 					print(link)
-					------------------- GetItemStats return nil de temps en temps
-					-- local aze = GetItemStats(link)
-					-- if(aze ~= nil and not table.isEmpty(aze)) then
-					-- 	print("----------")
-					-- 	print(link)
-					-- 	foreach(aze, print)
-					-- end
-					-------------------------------------------------------------
-					--statTable = GetItemStatDelta("|cff9d9d9ditem:147019::::::::110:265::3:3:3561:1492:3528:::[]|h|h|r", link)
-					--foreach(statTable, print)
+				------------------- GetItemStats return nil de temps en temps
+				-- local aze = GetItemStats(link)
+				-- if(aze ~= nil and not table.isEmpty(aze)) then
+				-- 	print("----------")
+				-- 	print(link)
+				-- 	foreach(aze, print)
+				-- end
+				-------------------------------------------------------------
+				--statTable = GetItemStatDelta("|cff9d9d9ditem:147019::::::::110:265::3:3:3561:1492:3528:::[]|h|h|r", link)
+				--foreach(statTable, print)
 				end
 			end
 		end
@@ -61,21 +61,21 @@ local slashCmd = {
 		InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 	end,
 	version = function()
-		print("|cFF00FF00GearHelper|r|cFFFFFF00 version : "..version)
+		print("|cFF00FF00GearHelper|r|cFFFFFF00 version : " .. version)
 	end,
 	im = function(msg)
-		GearHelper:setInviteMessage(tostring( msg:sub(4) ))
+		GearHelper:setInviteMessage(tostring(msg:sub(4)))
 	end,
 	ram = function()
 		local ramExact = tonumber(GetAddOnMemoryUsage("GearHelper"))
 		local ramUse = tonumber(string.format("%.0f", ramExact))
-		print("RAM used by GearHelper : "..ramUse.."ko")
+		print("RAM used by GearHelper : " .. ramUse .. "ko")
 	end,
 	createitemlink = function()
 		--GearHelper:askIfHeNeed("Marsgames", "[Pierre de soin]", "Marsgames")
 		local aze = "|cff1eff00|Hitem:128942::::::::100:105::::::|h[/gh createItemLink]|h|r"
 		print(aze)
-		print("GearHelper:IsEquipped = "..tostring(GearHelper:IsEquipped(aze)))
+		print("GearHelper:IsEquipped = " .. tostring(GearHelper:IsEquipped(aze)))
 		table.foreach(GearHelper:weightCalculation(aze), print)
 	end,
 	il = function()
@@ -107,15 +107,15 @@ local slashCmd = {
 				table.insert(tabItemMeta, itemEquipLoc)
 				table.insert(tabItemMeta, tabItem)
 			else
-				tabEquipLoc[idItemTypeExist+1] = tabEquipLoc[idItemTypeExist+1] + 1
-				local tmpTab = tabItemMeta[idItemTypeExist+1]
+				tabEquipLoc[idItemTypeExist + 1] = tabEquipLoc[idItemTypeExist + 1] + 1
+				local tmpTab = tabItemMeta[idItemTypeExist + 1]
 				table.insert(tmpTab, itemLink)
-				tabItemMeta[idItemTypeExist+1] = tmpTab
+				tabItemMeta[idItemTypeExist + 1] = tmpTab
 			end
 		end
 
 		for a = 1, #tabItemMeta do
-			if a%2 == 0 then
+			if a % 2 == 0 then
 				local v = tabItemMeta[a]
 				for b = 1, #v do
 					print(v[b])
@@ -130,20 +130,29 @@ local slashCmd = {
 
 		for a = 1, #bagInventory do
 			local _, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(bagInventory[a])
-			if itemEquipLoc ~= "INVTYPE_WEAPON" and itemEquipLoc ~= "INVTYPE_2HWEAPON" and itemEquipLoc ~= "INVTYPE_FINGER" and itemEquipLoc ~= "INVTYPE_TRINKET" then
-				print("On test "..bagInventory[a])
+			if
+				itemEquipLoc ~= "INVTYPE_WEAPON" and itemEquipLoc ~= "INVTYPE_2HWEAPON" and itemEquipLoc ~= "INVTYPE_FINGER" and
+					itemEquipLoc ~= "INVTYPE_TRINKET"
+			 then
+				print("On test " .. bagInventory[a])
 
 				local exItem = stuffBefore[GearHelper.itemSlot[itemEquipLoc]]
-				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name = string.find(exItem,"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name =
+					string.find(
+					exItem,
+					"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?"
+				)
+				--
 				--EquipItemByName(bagInventory[a])
 				--[[print(GetCombatRating(11)) --Critique
 				print(GetCombatRating(17)) --Ponction
 				print(GetCombatRating(20)) --Hate
 				print(GetCombatRating(26)) --Maitrise
 				print(GetCombatRating(29)) --Polyvalence
-				print(GetCombatRating(21)) --Evitement]]--
-				print("On replace "..exItem)
-				--EquipItemByName(Id)
+				print(GetCombatRating(21)) --Evitement]] print(
+					"On replace " .. exItem
+				)
+			--EquipItemByName(Id)
 			end
 		end
 		waitEquipTimer = time()
@@ -196,8 +205,8 @@ local slashCmd = {
 
 		local used = false
 		for i = 1, NUM_CHAT_WINDOWS do
-			local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i);
-			if(uninteractable) then
+			local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
+			if (uninteractable) then
 				SetChatWindowUninteractable(i, false)
 				used = true
 			end
@@ -238,6 +247,22 @@ local slashCmd = {
 	end,
 	resetCache = function()
 		GearHelper:ResetCache()
+	end,
+	inspect = function()
+		--local target = UnitGUID("focus")
+		if (CheckInteractDistance("target", 1)) then
+			if CanInspect("target", true) then
+				NotifyInspect("target")
+				print("------ NotifyInspect() ------")
+			else
+				print("impossible d'inspecter ce personnage")
+				InspectUnit("target")
+			end
+		else
+			print("trop loin")
+		end
+
+		-- print("-----------")
 	end
 }
 
@@ -256,7 +281,9 @@ function GearHelper:MySlashCommand(input)
 	for cmd, action in pairs(slashCmd) do
 		if input == cmd then
 			action()
-			do return end
+			do
+				return
+			end
 		end
 	end
 
@@ -266,5 +293,4 @@ function GearHelper:MySlashCommand(input)
 	else
 		slashCmd["help"]()
 	end
-
 end

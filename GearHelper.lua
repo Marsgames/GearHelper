@@ -32,12 +32,14 @@ local defaultsOptions = {
 		computeNotEquippable = true,
 		whisperAlert = true,
 		sayMyName = true,
-		minimap = {hide = false, isLock = false},
+		minimap = {hide = false, isLock = false}
 	},
 	global = {
 		ItemCache = {},
 		itemWaitList = {},
-		myNames = ""
+		myNames = "",
+		buildVersion = 0,
+		equipLocInspect = {}
 	}
 } -- NE PAS OUBLIER DE RAJOUTER LA VERSION PRÉCÉDENTE ICI APRÈS CHAQUE MISE A JOUR !!!!
 --
@@ -103,7 +105,8 @@ local defaultsOptions = {
 	"1.6.6.2",
 	"1.7",
 	"1.7.1",
-	"1.7.2", "1.7.3",
+	"1.7.2",
+	"1.7.3"
 }
 
 addonName = ... --, GH_Globals = ...
@@ -178,36 +181,31 @@ function GearHelper:OnInitialize()
 	self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
 	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
 	self.db.RegisterCallback(self, "OnProfileReset", "ResetConfig")
-	-- InterfaceOptionsFrame:Show()
-	-- InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
-
-	--local tip = GHButtonTt or CreateFrame("GAMETOOLTIP", "GHButtonTt")
-	--GameTooltip:SetOwner(tip, "ANCHOR_NONE")
-	--GameTooltip:SetPoint("TOPLEFT", tip, "BOTTOMLEFT")
-	--GameTooltip:ClearLines()
+	self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+	
 
 	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
 
 	local icon = LibStub("LibDBIcon-1.0")
-	local GHIcon = LibStub("LibDataBroker-1.1"):NewDataObject("GHIcon", {
-		type = "data source",
-		text = "GearHelper",
-		icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
-		label = "GearHelper",
-		OnClick = function(_, button) 
-			GearHelper:OnMinimapTooltipClick(button, tooltip)
-		end,
-		OnTooltipShow = function()--tooltip)
-			--print("salut toi")
-			--tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
-			--tooltip:Show()
-			GearHelper:OnMinimapTooltipShow(tooltip)
-		end,
-		OnLeave = function()
-			tooltip:Hide()
-		end,
-	})
-	--GHIcon.OnTooltipShow(tip)
+	local GHIcon =
+		LibStub("LibDataBroker-1.1"):NewDataObject(
+		"GHIcon",
+		{
+			type = "data source",
+			text = "GearHelper",
+			icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
+			label = "GearHelper",
+			OnClick = function(_, button)
+				GearHelper:OnMinimapTooltipClick(button, tooltip)
+			end,
+			OnTooltipShow = function()
+				GearHelper:OnMinimapTooltipShow(tooltip)
+			end,
+			OnLeave = function()
+				tooltip:Hide()
+			end
+		}
+	)
 	icon:Register("GHIcon", GHIcon, self.db.profile.minimap)
 end
 
@@ -261,8 +259,10 @@ function GearHelper:ResetConfig()
 
 	GearHelper.db.global.ItemCache = {}
 	GearHelper.db.global.itemWaitList = {}
-	GearHelper.db.global.myNames =  ""
+	GearHelper.db.global.myNames = ""
 	GearHelper.db.global.buildVersion = 0
+	GearHelper.db.global.equipLocInspect = {}
+
 	InterfaceOptionsFrame:Hide()
 	InterfaceOptionsFrame:Show()
 	InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
@@ -281,6 +281,9 @@ function GearHelper:OnEnable()
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["ActivatedGreen"], "Vert"))
 		GearHelper.cwTable.args["NoxGroup"].name =
 			"Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+		if (GearHelper.db.global.equipLocInspect == {}) then
+			InitEquipLocInspect()
+		end
 	else
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"))
 	end
@@ -288,17 +291,23 @@ end
 
 function GearHelper:OnMinimapTooltipShow(tooltip)
 	-- local p=tooltip:CreateFontString("myFirstPanel","OVERLAY")
- 	-- p:SetFont('Fonts\\ARIALN.ttf', 15, 'outline')
- 	-- p:SetTextColor(1, 0.82, 0)
- 	-- p:SetPoint("TOPLEFT")
- 	-- p:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge")) 
+	-- p:SetFont('Fonts\\ARIALN.ttf', 15, 'outline')
+	-- p:SetTextColor(1, 0.82, 0)
+	-- p:SetPoint("TOPLEFT")
+	-- p:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
 
 	-- tooltip:SetFont
 
-
 	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
 	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
-	if (not self.db.profile.addonEnabled) then tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"), 1, 1, 1) end
+	if (not self.db.profile.addonEnabled) then
+		tooltip:AddLine(
+			GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"),
+			1,
+			1,
+			1
+		)
+	end
 	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Jaune"), 1, 1, 1)
 	if (self.db.profile.addonEnabled) then
 		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
@@ -317,7 +326,7 @@ end
 
 function GearHelper:OnMinimapTooltipClick(button, tooltip)
 	if (InterfaceOptionsFrame:IsShown()) then
-		InterfaceOptionsFrame:Hide() 
+		InterfaceOptionsFrame:Hide()
 	else
 		local icon = LibStub("LibDBIcon-1.0")
 		if IsShiftKeyDown() then
@@ -335,18 +344,18 @@ function GearHelper:OnMinimapTooltipClick(button, tooltip)
 			icon:Hide("GHIcon")
 			self.db.profile.minimap.hide = true
 		else
+			--GameTooltip:Show()
 			if (button == "LeftButton") then
-				InterfaceOptionsFrame:Show(); InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame) 
+				InterfaceOptionsFrame:Show()
+				InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 			else
+				-- trouver un moyen de reset icon
 				self.db.profile.addonEnabled = not self.db.profile.addonEnabled
 
 				-- trouver un moyen de reset tooltip
 				tooltip:Hide()
 				GearHelper:OnMinimapTooltipShow(tooltip)
-
-				-- trouver un moyen de reset icon
 			end
-			--GameTooltip:Show()
 		end
 	end
 end
@@ -423,7 +432,9 @@ function GearHelper:ShowMessageSMN(channel, sender, msg)
 					UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0, 5.0, 4)
 					PlaySound(5275, "Master")
 					stop = true
-					do	return	end
+					do
+						return
+					end
 				end
 				i = i + 1
 			end
@@ -432,7 +443,7 @@ function GearHelper:ShowMessageSMN(channel, sender, msg)
 end
 
 -- desc : Add a string to the "array" of names
--- entrée : 
+-- entrée :
 -- sortie : ø
 -- commentaire :
 -- @author : Raphaël Daumas
@@ -573,7 +584,8 @@ Author : Raphaël Saget
 function GearHelper:ScanCharacter()
 	GearHelper.charInventory["Head"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
 	GearHelper.charInventory["Neck"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
-	GearHelper.charInventory["Shoulder"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
+	GearHelper.charInventory["Shoulder"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
 	GearHelper.charInventory["Back"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("BackSlot"), "BackSlot")
 	GearHelper.charInventory["Chest"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ChestSlot"), "ChestSlot")
 	GearHelper.charInventory["Wrist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WristSlot"), "WristSlot")
@@ -581,12 +593,18 @@ function GearHelper:ScanCharacter()
 	GearHelper.charInventory["Waist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WaistSlot"), "WaistSlot")
 	GearHelper.charInventory["Legs"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("LegsSlot"), "LegsSlot")
 	GearHelper.charInventory["Feet"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("FeetSlot"), "FeetSlot")
-	GearHelper.charInventory["Finger0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
-	GearHelper.charInventory["Finger1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
-	GearHelper.charInventory["Trinket0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
-	GearHelper.charInventory["Trinket1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
-	GearHelper.charInventory["MainHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
-	GearHelper.charInventory["SecondaryHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
+	GearHelper.charInventory["Finger0"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
+	GearHelper.charInventory["Finger1"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
+	GearHelper.charInventory["Trinket0"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
+	GearHelper.charInventory["Trinket1"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
+	GearHelper.charInventory["MainHand"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
+	GearHelper.charInventory["SecondaryHand"] =
+		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
 	if GearHelper.charInventory["MainHand"] ~= -2 and GearHelper.charInventory["MainHand"] ~= 0 then
 		local _, _, _, _, _, _, _, _, itemEquipLocWeapon = GetItemInfo(GearHelper.charInventory["MainHand"])
@@ -718,7 +736,7 @@ function GearHelper:IsItemBetter(object, type)
 	local item = {}
 	local itemLink = ""
 
-	if(IsEquippedItem(object)) then
+	if (IsEquippedItem(object)) then
 		return {-60}
 	end
 
@@ -779,7 +797,6 @@ function GearHelper:BuildItemFromTooltip(object, type)
 		item.itemLink,
 		"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?"
 	)
-
 	item.id, item.type, item.subType, item.equipLoc = GetItemInfoInstant(item.itemLink)
 	item.name = _G["GameTooltipTextLeft1"]:GetText()
 	if GetItemInfo(item.itemLink) then
@@ -1137,7 +1154,19 @@ end
 -- Create a clickable link to ask a player if he needs his loot --
 -- @author Raphaël Daumas                                       --
 ------------------------------------------------------------------
-function GearHelper:createLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
+function GearHelper:createLinkAskIfHeNeeds(
+	debug,
+	message,
+	sender,
+	language,
+	channelString,
+	target,
+	flags,
+	unknown1,
+	channelNumber,
+	channelName,
+	unknown2,
+	counter)
 	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
 	local sender = sender or "sender"
 	local language = language or "language"
@@ -1393,7 +1422,10 @@ local ModifyTooltip = function(self, ...)
 				table.insert(linesToAdd, L["DropBy"]..GearHelper.itemsDropRate[itemId]["Drop"])
 			end
 			if linesToAdd then
-				if (result[1] == -30 or result[1] == -10 or GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id))	 then
+				if
+					(result[1] == -30 or result[1] == -10 or
+						GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id))
+				 then
 					self:SetBackdropBorderColor(255, 0, 0) -- Rouge
 				elseif result[1] == 0 or result[1] == -60 then
 					self:SetBackdropBorderColor(255, 255, 0) -- Jaune
@@ -1618,7 +1650,7 @@ function GearHelper:GetQuestReward()
 				if not button.overlay then
 					button.overlay = button:CreateTexture(nil, "OVERLAY")
 					button.overlay:SetSize(18, 18)
-					button.overlay:SetPoint("TOPLEFT")
+					button.overlay:SetPoint("TOPLEFT", -9, 9)
 					button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
 					button.overlay:SetShown(true)
 				end
@@ -1636,7 +1668,7 @@ function GearHelper:GetQuestReward()
 				if not button.overlay then
 					button.overlay = button:CreateTexture(nil, "OVERLAY")
 					button.overlay:SetSize(18, 18)
-					button.overlay:SetPoint("TOPLEFT")
+					button.overlay:SetPoint("TOPLEFT", -9, 9)
 					button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
 					button.overlay:SetShown(true)
 				end
@@ -1702,8 +1734,566 @@ function GearHelper:AutoGreedAndNeed(number)
 	end
 end
 
+-- Créer les boutons le long du panel LFR
+-- Adaptation de l'addon BossesKilled
+function GearHelper:CreateLfrButtons(frameParent)
+	local nbInstance = GetNumRFDungeons()
+	local scale = min(480 / ((nbInstance - 6) * 24), 1) --> Ajuste la taille des boutons en fonction de leur nombre
+
+	if not frameParent.GHLfrButtons then
+		frameParent.GHLfrButtons = {}
+	end
+	local buttons = frameParent.GHLfrButtons
+
+	for i = 1, nbInstance do
+		local id, name = GetRFDungeonInfo(i)
+		local dispo, dispoPourJoueur = IsLFGDungeonJoinable(id)
+		local nbBoss = GetLFGDungeonNumEncounters(id)
+
+		-- Only make a button if there's data for it, and it hasn't been already made. This gets called multiple times so it updates correctly when you open up more raids
+		if dispo and dispoPourJoueur and not buttons[id] and nbBoss then
+			local button =
+				CreateFrame(
+				"CheckButton",
+				frameParent:GetName() .. "GHLfrButtons" .. tostring(id),
+				frameParent,
+				"SpellBookSkillLineTabTemplate"
+			)
+			button:Show()
+
+			if frameParent.lastButton then
+				button:SetPoint("TOPLEFT", frameParent.lastButton, "BOTTOMLEFT", 0, -15)
+			else
+				local x = 3
+				-- SocialTabs compatibility
+				if IsAddOnLoaded("SocialTabs") then
+					x = x + ceil(32 / scale)
+				end
+
+				button:SetPoint("TOPLEFT", frameParent, "TOPRIGHT", x, -50)
+			end
+
+			button:SetScale(scale)
+			button:SetWidth(32 + 16) -- Originally 32
+
+			-- Need to find the button's texture in the regions so we can resize it. I don't like this part, but I can't think of a better way in case it's not the first region returned. (Is it ever not?)
+			for _, region in ipairs({button:GetRegions()}) do
+				if
+					type(region) ~= "userdata" and region.GetTexture and
+						region:GetTexture() == "Interface\\SpellBook\\SpellBook-SkillLineTab"
+				 then
+					region:SetWidth(64 + 24) -- Originally 64
+					break
+				end
+			end
+
+			buttons[id] = button
+
+			button.dungeonID = id
+			button.dungeonName = name
+
+			frameParent.lastButton = button
+
+			-- I just realised a CheckButton might already have it's own FontString, but uh... whatever.
+			local number = button:CreateFontString(button:GetName() .. "Number", "OVERLAY", "SystemFont_Shadow_Huge3")
+			number:SetPoint("TOPLEFT", -4, 4)
+			number:SetPoint("BOTTOMRIGHT", 5, -5)
+			button.number = number
+
+			button:SetScript(
+				"OnEnter",
+				function(this)
+					if this.tooltip then
+						GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+						for i = 1, #button.tooltip do
+							tooltip = button.tooltip[i]
+							GameTooltip:AddLine(tooltip.text)
+							GameTooltip:AddLine(tooltip)
+						end
+						GameTooltip:Show()
+					end
+				end
+			)
+
+			button:SetScript(
+				"OnClick",
+				function(this)
+					RaidFinderQueueFrame_SetRaid(this.dungeonID)
+					--self.UpdateSelecCursor()
+
+					-- This is to override the automatic highlighting when you click the button, while we want to use that to show queue status instead.
+					-- I've no idea why simply overriding this OnClick and not doing a SetChecked doesn't disable the behavior.
+					-- I probably shouldn't be using a CheckButton at all, but the SpellBookSkillLineTabTemplate looks pretty nice for the job.
+					this:SetChecked(this.checked)
+				end
+			)
+			button.checked = false
+		end
+	end
+end
+
+-- Reset les textes des tooltips et des boutons
+-- Adaptation de l'addon BossesKilled
+function GearHelper:UpdateButtonsAndTooltips(frameParent)
+	local buttons = frameParent.GHLfrButtons
+
+	for id, button in pairs(buttons) do
+		local bossTues = 0
+		local index = 0
+		local nbBoss = GetLFGDungeonNumEncounters(id)
+
+		-- Pour chaque raid on récupère le nombre de boss tués, et on ajoute le text "boss mort" ou "boss vivant"
+		local tooltip = {{text = button.dungeonName}}
+		for i = index, nbBoss do
+			local textBoss = ""
+			local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
+
+			if isDead and bossName ~= nil then
+				textBoss = GearHelper:ColorizeString(bossName, "rougefonce") .. GearHelper:ColorizeString(" est mort !", "Rouge")
+				bossTues = bossName and bossTues + 1
+			elseif not isDead and bossName then
+				textBoss = GearHelper:ColorizeString(bossName, "vertfonce") .. GearHelper:ColorizeString(" est vivant !", "Vert")
+			end
+			table.insert(tooltip, textBoss)
+		end
+
+		-- Implémente le couleur + le text des boutons
+		button.tooltip = tooltip
+		local result = bossTues .. "/" .. nbBoss
+		if (bossTues == nbBoss) then
+			result = GearHelper:ColorizeString(result, "Rouge")
+		elseif (bossTues == 0) then
+			result = GearHelper:ColorizeString(result, "Vert")
+		else
+			result = GearHelper:ColorizeString(result, "Jaune")
+		end
+
+		-- Utilise cette fonction pour ajouter du text si elle est dispo (évite des erreurs)
+		if (button.number.SetFormattedText) then
+			button.number:SetFormattedText(result)
+		end
+
+		button.number = result
+	end
+end
+
+-- Crée / modifie le curseur des boutons LFR
+-- Adaptation de l'addon BossesKilled
+function GearHelper:UpdateSelecCursor()
+	-- Création du curseur s'il n'existe pas
+	if not GearHelper.cursor then
+		local cursor = GroupFinderFrame:CreateTexture("GHLfrCursor", "ARTWORK")
+		cursor:SetTexture("Interface\\Minimap\\MinimapArrow")
+		cursor:SetRotation(1.65)
+		cursor:SetSize(80, 80)
+		cursor:Hide()
+		GearHelper.cursor = cursor
+	end
+
+	-- Si on ferme la fenêtre LFR on cache le curseur
+	local parentFrame = (RaidFinderQueueFrame ~= nil and RaidFinderQueueFrame:IsVisible() and RaidFinderQueueFrame or nil)
+	if (not parentFrame) then
+		GearHelper.cursor:Hide()
+		return
+	end
+
+	-- Si on change de raid dans la fenêtre LFR, on modifie la position du curseur
+	if parentFrame.raid and parentFrame.GHLfrButtons[parentFrame.raid] then
+		local button = parentFrame.GHLfrButtons[parentFrame.raid]
+		GearHelper.cursor:SetParent(button)
+		GearHelper.cursor:SetPoint("LEFT", button, "RIGHT")
+		GearHelper.cursor:Show()
+	end
+end
+
+-- "check" le bouton si on est en attente d'un raid (crée le contour doré)
+-- Adaptation de l'addon BossesKilled
+function GearHelper:UpdateGHLfrButton()
+	for id, button in pairs(RaidFinderQueueFrame.GHLfrButtons) do
+		local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id)
+		if mode == "queued" or mode == "listed" or mode == "rolecheck" or mode == "suspended" then
+			button:SetChecked(true)
+			button.checked = true
+		else
+			button:SetChecked(false)
+			button.checked = false
+		end
+	end
+end
+
 function GearHelper:ResetCache()
+	print("Cache reseted")
 	GearHelper.db.global.ItemCache = {}
+end
+
+function GearHelper:AddIlvlOnCharFrame()
+	local function CharFrameShow(frame)
+		table.foreach(
+			GearHelper.charInventory,
+			function(slotName, item)
+				if (item ~= -1) then
+					local arrayPos = {
+						xHead = -204,
+						xNeck = -204,
+						xShoulder = -204,
+						xBack = -204,
+						xChest = -204,
+						xWrist = -204,
+						xMainHand = -125,
+						xHands = -3,
+						xWaist = -3,
+						xLegs = -3,
+						xFeet = -3,
+						xFinger0 = -3,
+						xFinger1 = -3,
+						xTrinket0 = -3,
+						xTrinket1 = -3,
+						xSecondaryHand = -77,
+						yHead = 140,
+						yNeck = 99,
+						yShoulder = 58,
+						yBack = 17,
+						yChest = -24,
+						yWrist = -147,
+						yMainHand = -140,
+						yHands = 140,
+						yWaist = 99,
+						yLegs = 58,
+						yFeet = 17,
+						yFinger0 = -24,
+						yFinger1 = -65,
+						yTrinket0 = -106,
+						yTrinket1 = -147,
+						ySecondaryHand = -140
+					}
+
+					local button =
+						_G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
+					button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
+					button:SetSize(1, 1)
+
+					local _, _, iR, itemLevel = GetItemInfo(item)
+
+					button:SetText(itemLevel)
+					button:SetNormalFontObject("GameFontNormalSmall")
+
+					local font = _G["charIlvlFont" .. slotName] or CreateFont("charIlvlFont" .. slotName)
+					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+					font:SetTextColor(r, g, b, 1)
+					button:SetNormalFontObject(font)
+				end
+			end
+		)
+	end
+	local function CharFrameHide()
+	end
+
+	PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
+	PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
+end
+
+function GearHelper:AddIlvlOnInspect(target)
+	local function InspectFrameShow(frame)
+		-- local slotArray = {
+		-- 	InspectHeadSlot,
+		-- 	InspectNeckSlot,
+		-- 	InspectShoulderSlot,
+		-- 	InspectBackSlot,
+		-- 	InspectChestSlot,
+		-- 	InspectWristSlot,
+		-- 	InspectMainHandSlot,
+		-- 	InspectHandsSlot,
+		-- 	InspectWaistSlot,
+		-- 	InspectLegsSlot,
+		-- 	InspectFeetSlot,
+		-- 	InspectFinger0Slot,
+		-- 	InspectFinger1Slot,
+		-- 	InspectTrinket0Slot,
+		-- 	InspectTrinket1Slot,
+		-- 	InspectSecondaryHand
+		-- }
+
+		local arrayPos = {
+			xINVTYPE_HEAD = -100,
+			xINVTYPE_NECK = -100,
+			xINVTYPE_SHOULDER = -100,
+			xINVTYPE_BACK = -100,
+			xINVTYPE_ROBE = -100,
+			xINVTYPE_CLOAK = -100,
+			xINVTYPE_CHEST = -100,
+			xINVTYPE_BODY = -100,
+			xINVTYPE_TABARD = -100,
+			xINVTYPE_WRIST = -100,
+			xINVTYPE_MAINHAND = -20,
+			xINVTYPE_RANGED = -20,
+			xINVTYPE_WEAPONMAINHAND = -20,
+			xINVTYPE_2HWEAPON = -20,
+			xINVTYPE_WEAPON = -20,
+			xINVTYPE_RANGEDRIGHT = -20,
+			xINVTYPE_HAND = 95,
+			xINVTYPE_WAIST = 95,
+			xINVTYPE_LEGS = 95,
+			xINVTYPE_FEET = 95,
+			xINVTYPE_FINGER = 95,
+			xINVTYPE_TRINKET = 95,
+			xINVTYPE_SECONDARYHAND = 20,
+			xINVTYPE_WEAPONOFFHAND = 20,
+			yINVTYPE_HEAD = 140,
+			yINVTYPE_NECK = 99,
+			yINVTYPE_SHOULDER = 58,
+			yINVTYPE_BACK = 17,
+			yINVTYPE_CLOAK = 17,
+			yINVTYPE_CHEST = -24,
+			yINVTYPE_ROBE = -24,
+			yINVTYPE_BODY = -65,
+			yINVTYPE_TABARD = -106,
+			yINVTYPE_WRIST = -147,
+			yINVTYPE_MAINHAND = -140,
+			yINVTYPE_RANGED = -140,
+			yINVTYPE_WEAPONMAINHAND = -140,
+			yINVTYPE_2HWEAPON = -140,
+			yINVTYPE_WEAPON = -140,
+			yINVTYPE_RANGEDRIGHT = -140,
+			yINVTYPE_HAND = 140,
+			yINVTYPE_WAIST = 99,
+			yINVTYPE_LEGS = 58,
+			yINVTYPE_FEET = 17,
+			yINVTYPE_FINGER = -24,
+			yINVTYPE_FINGER1 = -65,
+			yINVTYPE_TRINKET = -106,
+			yINVTYPE_TRINKET1 = -147,
+			yINVTYPE_SECONDARYHAND = -140,
+			yINVTYPE_WEAPONOFFHAND = -140
+		}
+
+		table.foreach(GearHelper.db.global.equipLocInspect, function(_, equipLoc)
+			if (_G["charIlvlInspectButton"..equipLoc]) then
+				_G["charIlvlInspectButton"..equipLoc]:Hide()
+				_G["charIlvlInspectButton"..equipLoc] = nil
+			end
+		end)
+		
+
+		local trinketAlreadyDone = false
+		local fingerAlreadyDone = false
+		local weaponAlreadyDone = false
+
+		local arrayIlvl = {}
+
+		for i = 1, 18 do
+			local itemID = GetInventoryItemLink("target", i)
+			if (itemID ~= nil and itemID ~= -1) then
+				local itemScan = GearHelper:BuildItemFromTooltip(itemID, "itemlink")
+				local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
+
+				--table.insert(arrayIlvl, itemLevel)
+				iR =
+					((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or
+					(iR == "a335ee" and 4) or
+					(iR == "ff8000" and 5) or
+					(iR == "e6cc80" and 6) or
+					(iR == "00ccff" and 7))
+				--local poor, uncommon, common, rare, epic, legendary, artifact, heirloom = 128824, 146976, 132930, 153256, 96707, 147297, 127830, 133597
+
+				if (itemEquipLoc ~= nil) then
+					arrayIlvl[itemEquipLoc] = itemLevel
+					print("----------")
+					print("itemID : " .. itemID)
+					print("itemLink : " .. itemLink)
+					print("itemLevel : " .. itemLevel)
+					print("itemEquipLoc : " .. itemEquipLoc)
+					print("iR : " .. iR)
+
+					local button
+					if (itemEquipLoc == "INVTYPE_FINGER" and not fingerAlreadyDone) then
+						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER"]))
+						-- print("Finger0")
+						button =
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or
+							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_FINGER"]
+						)
+						fingerAlreadyDone = true
+					elseif (itemEquipLoc == "INVTYPE_FINGER" and fingerAlreadyDone) then
+						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER1"]))
+						-- print("Finger1")
+						button =
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
+							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_FINGER1"]
+						)
+					elseif (itemEquipLoc == "INVTYPE_TRINKET" and not trinketAlreadyDone) then
+						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET"]))
+						-- print("Trinket0")
+						button =
+							_G["charIlvlButton" .. itemEquipLoc .. "0"] or
+							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_TRINKET"]
+						)
+						trinketAlreadyDone = true
+					elseif (itemEquipLoc == "INVTYPE_TRINKET" and trinketAlreadyDone) then
+						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET1"]))
+						-- print("Trinket1")
+						button =
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
+							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["yINVTYPE_TRINKET1"]
+						)
+					elseif (itemEquipLoc == "INVTYPE_WEAPON" and not weaponAlreadyDone) then
+						-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONMAINHAND"]))
+						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONMAINHAND"]))
+						-- print("Arme0")
+						button =
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or
+							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["xINVTYPE_WEAPONMAINHAND"],
+							arrayPos["yINVTYPE_WEAPONMAINHAND"]
+						)
+						weaponAlreadyDone = true
+					elseif (itemEquipLoc == "INVTYPE_WEAPON" and weaponAlreadyDone) then
+						-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONOFFHAND"]))
+						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONOFFHAND"]))
+						-- print("Arme1")
+						button =
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
+							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["xINVTYPE_WEAPONOFFHAND"],
+							arrayPos["yINVTYPE_WEAPONOFFHAND"]
+						)
+					else
+						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+						-- print("yPos : " .. tostring(arrayPos["y" .. itemEquipLoc]))
+						button =
+							_G["charIlvlInspectButton" .. itemEquipLoc] or
+							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc, InspectPaperDollItemsFrame)
+						button:SetPoint(
+							"CENTER",
+							InspectPaperDollItemsFrame,
+							"CENTER",
+							arrayPos["x" .. itemEquipLoc],
+							arrayPos["y" .. itemEquipLoc]
+						)
+					end
+					button:SetSize(1, 1)
+					button:SetText(itemLevel)
+					button:SetNormalFontObject("GameFontNormalSmall")
+
+					local font =
+						_G["charIlvlInspectButton" .. itemEquipLoc .. itemID] or
+						CreateFont("charIlvlInspectButton" .. itemEquipLoc .. itemID)
+					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+					font:SetTextColor(r, g, b, 1)
+					button:SetNormalFontObject(font)
+					button:Show()
+				else
+					-- print("itemID : " .. itemID)
+					--print("Item pas en cache, relancer inspecter")
+					-- do
+					-- 	return
+					-- end
+				end
+			end
+		end
+
+		local ilvlAverage = 0
+		local itemCount = 0
+		table.foreach(
+			arrayIlvl,
+			function(equipLoc, ilvl)
+				-- print("equipLoc : " .. equipLoc)
+				if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+					ilvlAverage = ilvlAverage + ilvl
+					itemCount = itemCount + 1
+				end
+			end
+		)
+		-- print("itemCount : "..itemCount)
+		if (itemCount > 0) then
+			local button = _G["ilvlAverageInspect"] or CreateFrame("Button", "ilvlAverageInspect", InspectPaperDollItemsFrame)
+			button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", 0, -110)
+
+			button:SetSize(1, 1)
+			button:SetText("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+			button:SetNormalFontObject("GameFontNormalSmall")
+
+			local font = ilvlAverageInspectFont or CreateFont("ilvlAverageInspectFont")
+			local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+			font:SetTextColor(1, 0.9, 0, 1)
+			button:SetNormalFontObject(font)
+		end
+	end
+
+	local function InspectFrameHide()
+	end
+
+	InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
+	InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
+end
+
+local function InitEquipLocInspect()
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_HEAD")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_NECK")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_SHOULDER")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_BACK")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_ROBE")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_CLOAK")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_CHEST")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_BODY")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TABARD")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WRIST")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_MAINHAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_RANGED")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPONMAINHAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_2HWEAPON")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON0")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON1")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_RANGEDRIGHT")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_HAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WAIST")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_LEGS")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FEET")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER0")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER1")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE0")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE1")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_SECONDARYHAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPONOFFHAND")
+
 end
 
 --[[
