@@ -38,7 +38,8 @@ local defaultsOptions = {
 		ItemCache = {},
 		itemWaitList = {},
 		myNames = "",
-		buildVersion = 0
+		buildVersion = 0,
+		equipLocInspect = {}
 	}
 } -- NE PAS OUBLIER DE RAJOUTER LA VERSION PRÉCÉDENTE ICI APRÈS CHAQUE MISE A JOUR !!!!
 --
@@ -181,6 +182,7 @@ function GearHelper:OnInitialize()
 	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
 	self.db.RegisterCallback(self, "OnProfileReset", "ResetConfig")
 	self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+	
 
 	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
 
@@ -259,6 +261,7 @@ function GearHelper:ResetConfig()
 	GearHelper.db.global.itemWaitList = {}
 	GearHelper.db.global.myNames = ""
 	GearHelper.db.global.buildVersion = 0
+	GearHelper.db.global.equipLocInspect = {}
 
 	InterfaceOptionsFrame:Hide()
 	InterfaceOptionsFrame:Show()
@@ -278,6 +281,9 @@ function GearHelper:OnEnable()
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["ActivatedGreen"], "Vert"))
 		GearHelper.cwTable.args["NoxGroup"].name =
 			"Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+		if (GearHelper.db.global.equipLocInspect == {}) then
+			InitEquipLocInspect()
+		end
 	else
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"))
 	end
@@ -1912,6 +1918,72 @@ function GearHelper:ResetCache()
 	GearHelper.db.global.ItemCache = {}
 end
 
+function GearHelper:AddIlvlOnCharFrame()
+	local function CharFrameShow(frame)
+		table.foreach(
+			GearHelper.charInventory,
+			function(slotName, item)
+				if (item ~= -1) then
+					local arrayPos = {
+						xHead = -204,
+						xNeck = -204,
+						xShoulder = -204,
+						xBack = -204,
+						xChest = -204,
+						xWrist = -204,
+						xMainHand = -125,
+						xHands = -3,
+						xWaist = -3,
+						xLegs = -3,
+						xFeet = -3,
+						xFinger0 = -3,
+						xFinger1 = -3,
+						xTrinket0 = -3,
+						xTrinket1 = -3,
+						xSecondaryHand = -77,
+						yHead = 140,
+						yNeck = 99,
+						yShoulder = 58,
+						yBack = 17,
+						yChest = -24,
+						yWrist = -147,
+						yMainHand = -140,
+						yHands = 140,
+						yWaist = 99,
+						yLegs = 58,
+						yFeet = 17,
+						yFinger0 = -24,
+						yFinger1 = -65,
+						yTrinket0 = -106,
+						yTrinket1 = -147,
+						ySecondaryHand = -140
+					}
+
+					local button =
+						_G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
+					button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
+					button:SetSize(1, 1)
+
+					local _, _, iR, itemLevel = GetItemInfo(item)
+
+					button:SetText(itemLevel)
+					button:SetNormalFontObject("GameFontNormalSmall")
+
+					local font = _G["charIlvlFont" .. slotName] or CreateFont("charIlvlFont" .. slotName)
+					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+					font:SetTextColor(r, g, b, 1)
+					button:SetNormalFontObject(font)
+				end
+			end
+		)
+	end
+	local function CharFrameHide()
+	end
+
+	PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
+	PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
+end
+
 function GearHelper:AddIlvlOnInspect(target)
 	local function InspectFrameShow(frame)
 		-- local slotArray = {
@@ -1986,19 +2058,27 @@ function GearHelper:AddIlvlOnInspect(target)
 			yINVTYPE_WEAPONOFFHAND = -140
 		}
 
+		table.foreach(GearHelper.db.global.equipLocInspect, function(_, equipLoc)
+			if (_G["charIlvlInspectButton"..equipLoc]) then
+				_G["charIlvlInspectButton"..equipLoc]:Hide()
+				_G["charIlvlInspectButton"..equipLoc] = nil
+			end
+		end)
+		
+
 		local trinketAlreadyDone = false
 		local fingerAlreadyDone = false
 		local weaponAlreadyDone = false
 
 		local arrayIlvl = {}
 
-		for i = 1, 19 do
+		for i = 1, 18 do
 			local itemID = GetInventoryItemLink("target", i)
 			if (itemID ~= nil and itemID ~= -1) then
 				local itemScan = GearHelper:BuildItemFromTooltip(itemID, "itemlink")
 				local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
 
-				table.insert(arrayIlvl, itemLevel)
+				--table.insert(arrayIlvl, itemLevel)
 				iR =
 					((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or
 					(iR == "a335ee" and 4) or
@@ -2008,12 +2088,13 @@ function GearHelper:AddIlvlOnInspect(target)
 				--local poor, uncommon, common, rare, epic, legendary, artifact, heirloom = 128824, 146976, 132930, 153256, 96707, 147297, 127830, 133597
 
 				if (itemEquipLoc ~= nil) then
-					-- print("----------")
-					-- print("itemID : " .. itemID)
-					-- print("itemLink : " .. itemLink)
-					-- print("itemLevel : " .. itemLevel)
-					-- print("itemEquipLoc : " .. itemEquipLoc)
-					-- print("iR : " .. iR)
+					arrayIlvl[itemEquipLoc] = itemLevel
+					print("----------")
+					print("itemID : " .. itemID)
+					print("itemLink : " .. itemLink)
+					print("itemLevel : " .. itemLevel)
+					print("itemEquipLoc : " .. itemEquipLoc)
+					print("iR : " .. iR)
 
 					local button
 					if (itemEquipLoc == "INVTYPE_FINGER" and not fingerAlreadyDone) then
@@ -2021,7 +2102,7 @@ function GearHelper:AddIlvlOnInspect(target)
 						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER"]))
 						-- print("Finger0")
 						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc] or
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or
 							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
 						button:SetPoint(
 							"CENTER",
@@ -2036,7 +2117,7 @@ function GearHelper:AddIlvlOnInspect(target)
 						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER1"]))
 						-- print("Finger1")
 						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc] or
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
 							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
 						button:SetPoint(
 							"CENTER",
@@ -2050,7 +2131,7 @@ function GearHelper:AddIlvlOnInspect(target)
 						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET"]))
 						-- print("Trinket0")
 						button =
-							_G["charIlvlButton" .. itemEquipLoc] or
+							_G["charIlvlButton" .. itemEquipLoc .. "0"] or
 							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
 						button:SetPoint(
 							"CENTER",
@@ -2065,7 +2146,7 @@ function GearHelper:AddIlvlOnInspect(target)
 						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET1"]))
 						-- print("Trinket1")
 						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc] or
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
 							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
 						button:SetPoint(
 							"CENTER",
@@ -2079,7 +2160,7 @@ function GearHelper:AddIlvlOnInspect(target)
 						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONMAINHAND"]))
 						-- print("Arme0")
 						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc] or
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or
 							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
 						button:SetPoint(
 							"CENTER",
@@ -2094,7 +2175,7 @@ function GearHelper:AddIlvlOnInspect(target)
 						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONOFFHAND"]))
 						-- print("Arme1")
 						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc] or
+							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
 							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
 						button:SetPoint(
 							"CENTER",
@@ -2121,13 +2202,19 @@ function GearHelper:AddIlvlOnInspect(target)
 					button:SetText(itemLevel)
 					button:SetNormalFontObject("GameFontNormalSmall")
 
-					local font = _G["charIlvlInspectButton"..itemEquipLoc..itemID] or CreateFont("charIlvlInspectButton"..itemEquipLoc..itemID)
+					local font =
+						_G["charIlvlInspectButton" .. itemEquipLoc .. itemID] or
+						CreateFont("charIlvlInspectButton" .. itemEquipLoc .. itemID)
 					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
 					font:SetTextColor(r, g, b, 1)
 					button:SetNormalFontObject(font)
+					button:Show()
 				else
 					-- print("itemID : " .. itemID)
 					--print("Item pas en cache, relancer inspecter")
+					-- do
+					-- 	return
+					-- end
 				end
 			end
 		end
@@ -2136,25 +2223,28 @@ function GearHelper:AddIlvlOnInspect(target)
 		local itemCount = 0
 		table.foreach(
 			arrayIlvl,
-			function(index, ilvl)
-				if (ilvl > 1) then
+			function(equipLoc, ilvl)
+				-- print("equipLoc : " .. equipLoc)
+				if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
 					ilvlAverage = ilvlAverage + ilvl
 					itemCount = itemCount + 1
 				end
 			end
 		)
+		-- print("itemCount : "..itemCount)
+		if (itemCount > 0) then
+			local button = _G["ilvlAverageInspect"] or CreateFrame("Button", "ilvlAverageInspect", InspectPaperDollItemsFrame)
+			button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", 0, -110)
 
-		local button = _G["ilvlAverageInspect"] or CreateFrame("Button", "ilvlAverageInspect", InspectPaperDollItemsFrame)
-		button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", 0, -110)
+			button:SetSize(1, 1)
+			button:SetText("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+			button:SetNormalFontObject("GameFontNormalSmall")
 
-		button:SetSize(1, 1)
-		button:SetText("ilvl moyen : "..tostring(math.floor((ilvlAverage / itemCount) + .5)))
-		button:SetNormalFontObject("GameFontNormalSmall")
-
-		local font = ilvlAverageInspectFont or CreateFont("ilvlAverageInspectFont")
-		local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
-		font:SetTextColor(1, 0.9, 0, 1)
-		button:SetNormalFontObject(font)
+			local font = ilvlAverageInspectFont or CreateFont("ilvlAverageInspectFont")
+			local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+			font:SetTextColor(1, 0.9, 0, 1)
+			button:SetNormalFontObject(font)
+		end
 	end
 
 	local function InspectFrameHide()
@@ -2162,6 +2252,40 @@ function GearHelper:AddIlvlOnInspect(target)
 
 	InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
 	InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
+end
+
+local function InitEquipLocInspect()
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_HEAD")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_NECK")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_SHOULDER")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_BACK")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_ROBE")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_CLOAK")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_CHEST")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_BODY")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TABARD")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WRIST")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_MAINHAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_RANGED")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPONMAINHAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_2HWEAPON")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON0")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON1")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_RANGEDRIGHT")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_HAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WAIST")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_LEGS")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FEET")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER0")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER1")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE0")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE1")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_SECONDARYHAND")
+	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPONOFFHAND")
+
 end
 
 --[[

@@ -495,9 +495,8 @@ local function GetItemInfoReceived(_, _, item)
 		-- print("item : " .. item)
 		-- print("AddIlvlOnInspect appelé depuis GetItemInfoReceived")
 		-- print("target : " .. UnitGUID("target"))
-		GearHelper:AddIlvlOnInspect(UnitGUID("target"))
-	else
-		print("pas de InspectPaperDollItemsFrame dans GetItemInfoReceived")
+		--GearHelper:AddIlvlOnInspect(UnitGUID("target"))
+		NotifyInspect("target")
 	end
 end
 
@@ -547,70 +546,27 @@ local function PlayerLogin(_, _)
 
 	-- Si la page du personnage s'affiche, on affiche l'ilvl
 	if (PaperDollItemsFrame) then
-		local function CharFrameShow(frame)
-			print("charFrame opened")
-			table.foreach(
-				GearHelper.charInventory,
-				function(slotName, item)
-					if (item ~= -1) then
-						local arrayPos = {
-							xHead = -204,
-							xNeck = -204,
-							xShoulder = -204,
-							xBack = -204,
-							xChest = -204,
-							xWrist = -204,
-							xMainHand = -125,
-							xHands = -3,
-							xWaist = -3,
-							xLegs = -3,
-							xFeet = -3,
-							xFinger0 = -3,
-							xFinger1 = -3,
-							xTrinket0 = -3,
-							xTrinket1 = -3,
-							xSecondaryHand = -77,
-							yHead = 140,
-							yNeck = 99,
-							yShoulder = 58,
-							yBack = 17,
-							yChest = -24,
-							yWrist = -147,
-							yMainHand = -140,
-							yHands = 140,
-							yWaist = 99,
-							yLegs = 58,
-							yFeet = 17,
-							yFinger0 = -24,
-							yFinger1 = -65,
-							yTrinket0 = -106,
-							yTrinket1 = -147,
-							ySecondaryHand = -140
-						}
+		GearHelper:AddIlvlOnCharFrame()
+	end
 
-						local button =
-							_G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
-						button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
-						button:SetSize(1, 1)
-
-						local _, _, iR, itemLevel = GetItemInfo(item)
-
-						button:SetText(itemLevel)
-						button:SetNormalFontObject("GameFontNormalSmall")
-
-						local font = _G["charIlvlFont" .. slotName] or CreateFont("charIlvlFont" .. slotName)
-						local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
-						font:SetTextColor(r, g, b, 1)
-						button:SetNormalFontObject(font)
-					end
-				end
-			)
+	if (TargetFrame) then
+		print("TargetFrame registered")
+		local function TargetFrameShow(frame)
+			if (UnitIsPlayer("target")) then
+				NotifyInspect("target")
+			else
+				print("unit is not a player")
+			end
+			print("target affiché")
 		end
-		local function CharFrameHide()
+		local function TargetFrameHide()
+			print("target caché")
 		end
 
-		PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
-		PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
+		TargetFrame:HookScript("OnShow", TargetFrameShow)
+		TargetFrame:HookScript("OnHide", TargetFrameHide)
+	else
+		print("impossible de register TargetFrame")
 	end
 end
 
@@ -660,7 +616,36 @@ end
 local function InspectReady(_, _, target)
 	if (InspectPaperDollItemsFrame) then
 		GearHelper:AddIlvlOnInspect(target)
+	else
+		if (GameTooltip:IsVisible()) then
+			local arrayIlvl = {}
+			for i = 1, 19 do
+				local itemLink = GetInventoryItemLink("target", i)
+				if (itemLink) then
+					local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
+					local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
+					arrayIlvl[equipLoc] = itemLvl
+					table.insert(arrayIlvl, itemLvl)
+				end
+			end
+			local ilvlAverage = 0
+			local itemCount = 0
+			table.foreach(
+				arrayIlvl,
+				function(equipLoc, ilvl)
+					if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+						ilvlAverage = ilvlAverage + ilvl
+						itemCount = itemCount + 1
+					end
+				end
+			)
+			if (itemCount ~= 0) then
+				-- GameTooltip:AddLine("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+				print("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+			end
+		end
 	end
+	--ClearInspectPlayer("target")
 end
 
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
