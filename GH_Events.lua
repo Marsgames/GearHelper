@@ -656,7 +656,13 @@ local function InspectReady(_, _, target)
 		-- 	end
 		-- end
 	end
-	--ClearInspectPlayer("target")
+	ClearInspectPlayer()
+end
+
+local function UpdateMouseOverUnit(_, _, c, d, e)
+	if CanInspect("mouseover") and CheckInteractDistance("mouseover", 1) then
+		NotifyInspect("mouseover")
+	end
 end
 
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
@@ -694,3 +700,4 @@ GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("PLAYER_ALIVE", PlayerAlive, ...)
 GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
+GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
