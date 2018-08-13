@@ -107,7 +107,8 @@ local defaultsOptions = {
 	"1.7",
 	"1.7.1",
 	"1.7.2",
-	"1.7.3"
+	"1.7.3",
+	"1.7.4"
 }
 
 addonName = ... --, GH_Globals = ...
@@ -1930,7 +1931,7 @@ function GearHelper:UpdateGHLfrButton()
 end
 
 function GearHelper:ResetCache()
-	print("Cache reseted")
+	--print("Cache reseted")
 	GearHelper.db.global.ItemCache = {}
 end
 
@@ -2119,12 +2120,12 @@ function GearHelper:AddIlvlOnInspect(target)
 
 				if (itemEquipLoc ~= nil) then
 					arrayIlvl[itemEquipLoc] = itemLevel
-					print("----------")
-					print("itemID : " .. itemID)
-					print("itemLink : " .. itemLink)
-					print("itemLevel : " .. itemLevel)
-					print("itemEquipLoc : " .. itemEquipLoc)
-					print("iR : " .. iR)
+					-- print("----------")
+					-- print("itemID : " .. itemID)
+					-- print("itemLink : " .. itemLink)
+					-- print("itemLevel : " .. itemLevel)
+					-- print("itemEquipLoc : " .. itemEquipLoc)
+					-- print("iR : " .. iR)
 
 					local button
 					if (itemEquipLoc == "INVTYPE_FINGER" and not fingerAlreadyDone) then
@@ -2267,7 +2268,7 @@ function GearHelper:AddIlvlOnInspect(target)
 			button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", 0, -110)
 
 			button:SetSize(1, 1)
-			button:SetText("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+			button:SetText(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
 			button:SetNormalFontObject("GameFontNormalSmall")
 
 			local font = ilvlAverageInspectFont or CreateFont("ilvlAverageInspectFont")

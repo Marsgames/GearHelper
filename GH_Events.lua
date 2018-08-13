@@ -552,25 +552,33 @@ local function PlayerLogin(_, _)
 		GearHelper:AddIlvlOnCharFrame()
 	end
 
-	if (TargetFrame) then
-		print("TargetFrame registered")
-		local function TargetFrameShow(frame)
-			if (UnitIsPlayer("target")) then
-				NotifyInspect("target")
-			else
-				print("unit is not a player")
-			end
-			print("target affiché")
-		end
-		local function TargetFrameHide()
-			print("target caché")
-		end
+	-- if (TargetFrame) then
+	-- 	print("TargetFrame registered")
+	-- 	local function TargetFrameShow(frame)
+	-- 		if (UnitIsPlayer("target")) then
+	-- 			NotifyInspect("target")
+	-- 		else
+	-- 			print("unit is not a player")
+	-- 		end
+	-- 		print("target affiché")
+	-- 	end
+	-- 	local function TargetFrameHide()
+	-- 		print("target caché")
+	-- 	end
 
-		TargetFrame:HookScript("OnShow", TargetFrameShow)
-		TargetFrame:HookScript("OnHide", TargetFrameHide)
-	else
-		print("impossible de register TargetFrame")
-	end
+	-- 	TargetFrame:HookScript("OnShow", TargetFrameShow)
+	-- 	TargetFrame:HookScript("OnHide", TargetFrameHide)
+	-- else
+	-- 	print("impossible de register TargetFrame")
+	-- end
+
+	-- if (WardrobeCollectionFrame) then
+	-- 	-- Récupérer la page active :
+	-- 	-- table.foreach(WardrobeCollectionFrame.SetsCollectionFrame.DetailsFrame.itemFramesPool, print)
+	-- 	print("WardrobeCollectionFrame ok")
+	-- else
+	-- 	print("pas ok wardrobe")
+	-- end
 end
 
 -- last loading event fired
@@ -620,33 +628,33 @@ local function InspectReady(_, _, target)
 	if (InspectPaperDollItemsFrame) then
 		GearHelper:AddIlvlOnInspect(target)
 	else
-		if (GameTooltip:IsVisible()) then
-			local arrayIlvl = {}
-			for i = 1, 19 do
-				local itemLink = GetInventoryItemLink("target", i)
-				if (itemLink) then
-					local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
-					local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
-					arrayIlvl[equipLoc] = itemLvl
-					table.insert(arrayIlvl, itemLvl)
-				end
-			end
-			local ilvlAverage = 0
-			local itemCount = 0
-			table.foreach(
-				arrayIlvl,
-				function(equipLoc, ilvl)
-					if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
-						ilvlAverage = ilvlAverage + ilvl
-						itemCount = itemCount + 1
-					end
-				end
-			)
-			if (itemCount ~= 0) then
-				-- GameTooltip:AddLine("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-				print("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-			end
-		end
+		-- if (GameTooltip:IsVisible()) then
+		-- 	local arrayIlvl = {}
+		-- 	for i = 1, 19 do
+		-- 		local itemLink = GetInventoryItemLink("target", i)
+		-- 		if (itemLink) then
+		-- 			local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
+		-- 			local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
+		-- 			arrayIlvl[equipLoc] = itemLvl
+		-- 			table.insert(arrayIlvl, itemLvl)
+		-- 		end
+		-- 	end
+		-- 	local ilvlAverage = 0
+		-- 	local itemCount = 0
+		-- 	table.foreach(
+		-- 		arrayIlvl,
+		-- 		function(equipLoc, ilvl)
+		-- 			if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+		-- 				ilvlAverage = ilvlAverage + ilvl
+		-- 				itemCount = itemCount + 1
+		-- 			end
+		-- 		end
+		-- 	)
+		-- 	if (itemCount ~= 0) then
+		-- 		-- GameTooltip:AddLine("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+		-- 		print("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+		-- 	end
+		-- end
 	end
 	--ClearInspectPlayer("target")
 end

@@ -144,6 +144,9 @@ L["MmTtCtrlClick"] = "Ctrl + click to |cFF00FF00hide|cFFFFFF00 minimap icon"
 L["DropRate"] = 								"Drop rate : "
 L["DropZone"] = 								"Location : "
 L["DropBy"] = 									"Dropped by : "
+L["ilvlInspect"] = "Average ilvl : "
+L["UIBossesKilled"] = "Bosses killed"
+L["UIBossesKilledDesc"] = "Show bosses killed on LFG panel"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
