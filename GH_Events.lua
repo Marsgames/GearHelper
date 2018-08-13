@@ -628,35 +628,43 @@ local function InspectReady(_, _, target)
 	if (InspectPaperDollItemsFrame) then
 		GearHelper:AddIlvlOnInspect(target)
 	else
-		-- if (GameTooltip:IsVisible()) then
-		-- 	local arrayIlvl = {}
-		-- 	for i = 1, 19 do
-		-- 		local itemLink = GetInventoryItemLink("target", i)
-		-- 		if (itemLink) then
-		-- 			local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
-		-- 			local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
-		-- 			arrayIlvl[equipLoc] = itemLvl
-		-- 			table.insert(arrayIlvl, itemLvl)
-		-- 		end
-		-- 	end
-		-- 	local ilvlAverage = 0
-		-- 	local itemCount = 0
-		-- 	table.foreach(
-		-- 		arrayIlvl,
-		-- 		function(equipLoc, ilvl)
-		-- 			if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
-		-- 				ilvlAverage = ilvlAverage + ilvl
-		-- 				itemCount = itemCount + 1
-		-- 			end
-		-- 		end
-		-- 	)
-		-- 	if (itemCount ~= 0) then
-		-- 		-- GameTooltip:AddLine("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-		-- 		print("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-		-- 	end
-		-- end
+		if (GameTooltip:IsVisible()) then
+			local arrayIlvl = {}
+			for i = 1, 19 do
+				local itemLink = GetInventoryItemLink("mouseover", i)
+				if (itemLink) then
+					local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
+					local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
+					if equipLoc ~= nil then
+						arrayIlvl[equipLoc] = itemLvl
+						table.insert(arrayIlvl, itemLvl)
+					end
+				end
+			end
+			local ilvlAverage = 0
+			local itemCount = 0
+			table.foreach(
+				arrayIlvl,
+				function(equipLoc, ilvl)
+					if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+						ilvlAverage = ilvlAverage + ilvl
+						itemCount = itemCount + 1
+					end
+				end
+			)
+			if (itemCount ~= 0) then
+				GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+			end
+			GameTooltip:HookScript(
+				"OnHide",
+				function()
+					ClearInspectPlayer()
+				end
+			)
+			GameTooltip:Show()
+		end
 	end
-	ClearInspectPlayer()
+	--ClearInspectPlayer()
 end
 
 local function UpdateMouseOverUnit(_, _, c, d, e)

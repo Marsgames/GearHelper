@@ -432,8 +432,8 @@ local ghSecondaryOptionsTable = {
 				},
 				bossesKilled = {
 					order = 9,
-					name = "Bosses killed",
-					desc = "Affiche les boss tués sur le menu LFR",
+					name = L["UIBossesKilled"],
+					desc = L["UIBossesKilledDesc"],
 					type = "toggle",
 					set = function(_, val)
 						GearHelper.db.profile.bossesKilled = val
