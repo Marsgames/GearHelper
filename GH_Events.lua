@@ -620,12 +620,14 @@ local function InspectReady(_, _, target)
 		if (GameTooltip:IsVisible()) then
 			local arrayIlvl = {}
 			for i = 1, 19 do
-				local itemLink = GetInventoryItemLink("target", i)
+				local itemLink = GetInventoryItemLink("mouseover", i)
 				if (itemLink) then
 					local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
 					local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
-					arrayIlvl[equipLoc] = itemLvl
-					table.insert(arrayIlvl, itemLvl)
+					if equipLoc ~= nil then
+						arrayIlvl[equipLoc] = itemLvl
+						table.insert(arrayIlvl, itemLvl)
+					end
 				end
 			end
 			local ilvlAverage = 0
@@ -640,12 +642,18 @@ local function InspectReady(_, _, target)
 				end
 			)
 			if (itemCount ~= 0) then
-				-- GameTooltip:AddLine("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-				print("ilvl moyen : " .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+				GameTooltip:AddLine("iLVL Moyen : "..tostring(math.floor((ilvlAverage / itemCount) + .5)))
 			end
+			GameTooltip:Show()
 		end
 	end
-	--ClearInspectPlayer("target")
+	ClearInspectPlayer()
+end
+
+local function UpdateMouseOverUnit(_, _, c, d, e)
+	if CanInspect("mouseover") and CheckInteractDistance("mouseover", 1) then
+		NotifyInspect("mouseover")
+	end
 end
 
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
@@ -683,3 +691,4 @@ GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("PLAYER_ALIVE", PlayerAlive, ...)
 GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
+GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)

@@ -742,7 +742,6 @@ function GearHelper:IsItemBetter(object, type)
 
 	if type:lower() == "itemlink" then
 		--First we query the GearHelper cache to speed up process and avoid potential nil from GetItemInfo
-		GearHelper:Print("IsItemBetter object : " .. tostring(object))
 		item = GearHelper:GetItemFromCache(object)
 		itemLink = object
 	elseif type:lower() == "tooltip" then
@@ -783,7 +782,6 @@ function GearHelper:BuildItemFromTooltip(object, type)
 	if type:lower() == "itemlink" then
 		tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
 		tip:SetOwner(WorldFrame, "ANCHOR_NONE")
-		GearHelper:Print("BuildItemFromTooltip object is : " .. tostring(object))
 		tip:SetHyperlink(object)
 	elseif type:lower() == "tooltip" then
 		tip = object
