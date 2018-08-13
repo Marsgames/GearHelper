@@ -32,7 +32,8 @@ local defaultsOptions = {
 		computeNotEquippable = true,
 		whisperAlert = true,
 		sayMyName = true,
-		minimap = {hide = false, isLock = false}
+		minimap = {hide = false, isLock = false},
+		bossesKilled = true
 	},
 	global = {
 		ItemCache = {},
@@ -182,7 +183,6 @@ function GearHelper:OnInitialize()
 	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
 	self.db.RegisterCallback(self, "OnProfileReset", "ResetConfig")
 	self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
-	
 
 	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
 
@@ -230,38 +230,39 @@ Description : Reset addon to default value
 Author : Raphaël Daumas
 ]]
 function GearHelper:ResetConfig()
-	GearHelper.db.profile.addonEnabled = true
-	GearHelper.db.profile.sellGreyItems = true
-	GearHelper.db.profile.autoGreed = true
-	GearHelper.db.profile.autoAcceptQuestReward = false
-	GearHelper.db.profile.autoNeed = true
-	GearHelper.db.profile.autoEquipLooted.actual = false
-	GearHelper.db.profile.autoEquipLooted.previous = false
-	GearHelper.db.profile.autoEquipWhenSwitchSpe = false
-	GearHelper.db.profile.weightTemplate = "NOX"
-	GearHelper.db.profile.lastWeightTemplate = ""
+	GearHelper.db.profile.addonEnabled = nil --true
+	GearHelper.db.profile.sellGreyItems = nil --true
+	GearHelper.db.profile.autoGreed = nil --true
+	GearHelper.db.profile.autoAcceptQuestReward = nil --false
+	GearHelper.db.profile.autoNeed = nil --true
+	GearHelper.db.profile.autoEquipLooted.actual = nil --false
+	GearHelper.db.profile.autoEquipLooted.previous = nil --false
+	GearHelper.db.profile.autoEquipWhenSwitchSpe = nil --false
+	GearHelper.db.profile.weightTemplate = nil --"NOX"
+	GearHelper.db.profile.lastWeightTemplate = nil --""
 	--GearHelper.db.profile.minimapButton = false
-	GearHelper.db.profile.autoRepair = 0
-	GearHelper.db.profile.autoInvite = true
-	GearHelper.db.profile.autoTell = true
-	GearHelper.db.profile.inviteMessage = "+GH123-"
-	GearHelper.db.profile.askLootRaid = true
-	GearHelper.db.profile.printWhenEquip = true
-	GearHelper.db.profile.debug = false
-	GearHelper.db.profile.CW = {}
-	GearHelper.db.profile.ilvlOption = false
-	GearHelper.db.profile.ilvlWeight = 10
-	GearHelper.db.profile.includeSocketInCompute = true
-	GearHelper.db.profile.computeNotEquippable = true
-	GearHelper.db.profile.whisperAlert = true
-	GearHelper.db.profile.sayMyName = true
-	GearHelper.db.profile.minimap = {hide = false, isLock = false}
+	GearHelper.db.profile.autoRepair = nil --0
+	GearHelper.db.profile.autoInvite = nil --true
+	GearHelper.db.profile.autoTell = nil --true
+	GearHelper.db.profile.inviteMessage = nil --"+GH123-"
+	GearHelper.db.profile.askLootRaid = nil --true
+	GearHelper.db.profile.printWhenEquip = nil --true
+	GearHelper.db.profile.debug = nil --false
+	GearHelper.db.profile.CW = nil --{}
+	GearHelper.db.profile.ilvlOption = nil --false
+	GearHelper.db.profile.ilvlWeight = nil --10
+	GearHelper.db.profile.includeSocketInCompute = nil --true
+	GearHelper.db.profile.computeNotEquippable = nil --true
+	GearHelper.db.profile.whisperAlert = nil --true
+	GearHelper.db.profile.sayMyName = nil --true
+	GearHelper.db.profile.minimap = nil --{hide = false, isLock = false}
+	GearHelper.db.profile.bossesKilled = nil --true
 
-	GearHelper.db.global.ItemCache = {}
-	GearHelper.db.global.itemWaitList = {}
-	GearHelper.db.global.myNames = ""
-	GearHelper.db.global.buildVersion = 0
-	GearHelper.db.global.equipLocInspect = {}
+	GearHelper.db.global.ItemCache = nil --{}
+	GearHelper.db.global.itemWaitList = nil --{}
+	GearHelper.db.global.myNames = nil --""
+	GearHelper.db.global.buildVersion = nil --0
+	GearHelper.db.global.equipLocInspect = nil --{}
 
 	InterfaceOptionsFrame:Hide()
 	InterfaceOptionsFrame:Show()
@@ -1412,14 +1413,18 @@ local ModifyTooltip = function(self, ...)
 			local result = GearHelper:IsItemBetter(itemLink, "ItemLink")
 			local item = GearHelper:GetItemByLink(itemLink)
 			local linesToAdd = GearHelper:LinesToAddToTooltip(result, item)
-			_, _, _, _, itemId = string.find(item.itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+			_, _, _, _, itemId =
+				string.find(
+				item.itemLink,
+				"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?"
+			)
 
 			if GearHelper.itemsDropRate[itemId] ~= nil then
-				table.insert(linesToAdd, L["DropRate"]..GearHelper.itemsDropRate[itemId]["Rate"].."%" )
+				table.insert(linesToAdd, L["DropRate"] .. GearHelper.itemsDropRate[itemId]["Rate"] .. "%")
 				if GearHelper.itemsDropRate[itemId]["Zone"] ~= "" then
-					table.insert(linesToAdd, L["DropZone"]..GearHelper.itemsDropRate[itemId]["Zone"])
+					table.insert(linesToAdd, L["DropZone"] .. GearHelper.itemsDropRate[itemId]["Zone"])
 				end
-				table.insert(linesToAdd, L["DropBy"]..GearHelper.itemsDropRate[itemId]["Drop"])
+				table.insert(linesToAdd, L["DropBy"] .. GearHelper.itemsDropRate[itemId]["Drop"])
 			end
 			if linesToAdd then
 				if
@@ -1759,7 +1764,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 				frameParent,
 				"SpellBookSkillLineTabTemplate"
 			)
-			button:Show()
 
 			if frameParent.lastButton then
 				button:SetPoint("TOPLEFT", frameParent.lastButton, "BOTTOMLEFT", 0, -15)
@@ -1828,6 +1832,10 @@ function GearHelper:CreateLfrButtons(frameParent)
 				end
 			)
 			button.checked = false
+		end
+		if (buttons[id]) then
+			local button = _G[frameParent:GetName() .. "GHLfrButtons" .. tostring(id)]
+			button:Show()
 		end
 	end
 end
@@ -1985,11 +1993,23 @@ function GearHelper:AddIlvlOnCharFrame()
 			end
 		)
 	end
+
 	local function CharFrameHide()
 	end
 
 	PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
 	PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
+end
+
+function GearHelper:HideLfrButtons()
+	local nbInstance = GetNumRFDungeons()
+	for i = 1, nbInstance do
+		local id, name = GetRFDungeonInfo(i)
+		if _G["RaidFinderQueueFrameGHLfrButtons" .. id] then
+			_G["RaidFinderQueueFrameGHLfrButtons" .. id]:Hide()
+		--_G["RaidFinderQueueFrameGHLfrButtons" .. id] = nil
+		end
+	end
 end
 
 function GearHelper:AddIlvlOnInspect(target)
@@ -2066,13 +2086,15 @@ function GearHelper:AddIlvlOnInspect(target)
 			yINVTYPE_WEAPONOFFHAND = -140
 		}
 
-		table.foreach(GearHelper.db.global.equipLocInspect, function(_, equipLoc)
-			if (_G["charIlvlInspectButton"..equipLoc]) then
-				_G["charIlvlInspectButton"..equipLoc]:Hide()
-				_G["charIlvlInspectButton"..equipLoc] = nil
+		table.foreach(
+			GearHelper.db.global.equipLocInspect,
+			function(_, equipLoc)
+				if (_G["charIlvlInspectButton" .. equipLoc]) then
+					_G["charIlvlInspectButton" .. equipLoc]:Hide()
+					_G["charIlvlInspectButton" .. equipLoc] = nil
+				end
 			end
-		end)
-		
+		)
 
 		local trinketAlreadyDone = false
 		local fingerAlreadyDone = false
@@ -2293,7 +2315,6 @@ local function InitEquipLocInspect()
 	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE1")
 	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_SECONDARYHAND")
 	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPONOFFHAND")
-
 end
 
 --[[

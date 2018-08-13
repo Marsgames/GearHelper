@@ -526,16 +526,19 @@ end
 
 local function PlayerLogin(_, _)
 	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
-	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid and GearHelper.db.profile then
+	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
 		local function LfrFrameShow(frame)
-			GearHelper:CreateLfrButtons(frame)
-			GearHelper:UpdateButtonsAndTooltips(frame)
-			GearHelper:UpdateGHLfrButton()
-			GearHelper:UpdateSelecCursor()
-			GearHelper:RegisterEvent("LFG_UPDATE")
-			GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+			if (GearHelper.db.profile.bossesKilled) then
+				GearHelper:CreateLfrButtons(frame)
+				GearHelper:UpdateButtonsAndTooltips(frame)
+				GearHelper:UpdateGHLfrButton()
+				GearHelper:UpdateSelecCursor()
+				GearHelper:RegisterEvent("LFG_UPDATE")
+				GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+			end
 		end
 		local function LfrFrameHide()
+			GearHelper:HideLfrButtons()
 			GearHelper:UnregisterEvent("LFG_UPDATE")
 		end
 

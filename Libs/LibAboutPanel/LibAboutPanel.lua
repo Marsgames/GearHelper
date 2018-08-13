@@ -13,7 +13,9 @@ Author: Tekkub, Ackis
 ]] --
 
 local lib, oldminor = LibStub:NewLibrary("LibAboutPanel", 3)
-if not lib then return end
+if not lib then
+	return
+end
 
 local L = {
 	["About"] = "About",
@@ -27,7 +29,7 @@ local L = {
 	["Website"] = "Website",
 	["Click and press Ctrl-C to copy"] = "Click and press Ctrl-C to copy.",
 	["on"] = "on",
-	["BugReport"] = "Bug Report",
+	["BugReport"] = "Bug Report"
 }
 
 local GAME_LOCALE = GetLocale()
@@ -83,7 +85,10 @@ end
 
 function lib.new(parent, addonname)
 	local frame = CreateFrame("Frame", nil, UIParent)
-	frame.name, frame.parent, frame.addonname = not parent and gsub(addonname, " ", "") or L["About"], parent, gsub(addonname, " ", "") -- Remove spaces from addonname because GetMetadata doesn't like that
+	frame.name, frame.parent, frame.addonname =
+		not parent and gsub(addonname, " ", "") or L["About"],
+		parent,
+		gsub(addonname, " ", "") -- Remove spaces from addonname because GetMetadata doesn't like that
 	frame:Hide()
 	frame:SetScript("OnShow", lib.OnShow)
 	InterfaceOptions_AddCategory(frame)
@@ -98,13 +103,15 @@ editbox:SetFontObject("GameFontHighlightSmall")
 lib.editbox = editbox
 
 local left = editbox:CreateTexture(nil, "BACKGROUND")
-left:SetWidth(8) left:SetHeight(20)
+left:SetWidth(8)
+left:SetHeight(20)
 left:SetPoint("LEFT", -5, 0)
 left:SetTexture("Interface\\Common\\Common-Input-Border")
 left:SetTexCoord(0, 0.0625, 0, 0.625)
 
 local right = editbox:CreateTexture(nil, "BACKGROUND")
-right:SetWidth(8) right:SetHeight(20)
+right:SetWidth(8)
+right:SetHeight(20)
 right:SetPoint("RIGHT", 0, 0)
 right:SetTexture("Interface\\Common\\Common-Input-Border")
 right:SetTexCoord(0.9375, 1, 0, 0.625)
@@ -120,11 +127,13 @@ editbox:SetScript("OnEscapePressed", editbox.ClearFocus)
 editbox:SetScript("OnEnterPressed", editbox.ClearFocus)
 editbox:SetScript("OnEditFocusLost", editbox.Hide)
 editbox:SetScript("OnEditFocusGained", editbox.HighlightText)
-editbox:SetScript("OnTextChanged", function(self)
-	self:SetText(self:GetParent().val)
-	self:HighlightText()
-end)
-
+editbox:SetScript(
+	"OnTextChanged",
+	function(self)
+		self:SetText(self:GetParent().val)
+		self:HighlightText()
+	end
+)
 
 function lib.OpenEditbox(self)
 	editbox:SetText(self.val)
@@ -134,12 +143,31 @@ function lib.OpenEditbox(self)
 	editbox:Show()
 end
 
+local fields = {
+	"Version",
+	"Author",
+	"X-Category",
+	"X-License",
+	"X-Email",
+	"Email",
+	"eMail",
+	"X-Website",
+	"X-BugReport",
+	"X-Credits",
+	"X-Localizations"
+}
+local haseditbox = {
+	["X-Website"] = true,
+	["X-BugReport"] = true,
+	["X-Email"] = true,
+	["Email"] = true,
+	["eMail"] = true
+}
+local fieldLabels = {["eMail"] = "Email"}
 
-local fields = { "Version", "Author", "X-Category", "X-License", "X-Email", "Email", "eMail", "X-Website", "X-BugReport", "X-Credits", "X-Localizations" }
-local haseditbox = { ["X-Website"] = true, ["X-BugReport"] = true, ["X-Email"] = true, ["Email"] = true, ["eMail"] = true }
-local fieldLabels = { ["eMail"] = "Email" }
-
-local function HideTooltip() GameTooltip:Hide() end
+local function HideTooltip()
+	GameTooltip:Hide()
+end
 
 local function ShowTooltip(self)
 	GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
@@ -161,7 +189,7 @@ function lib.OnShow(frame)
 		frame.about_title = title
 	end
 	title:SetPoint("TOPLEFT", 16, -16)
-	title:SetText(frame.parent and ( L["About"]) or frame.name)
+	title:SetText(frame.parent and (L["About"]) or frame.name)
 
 	if not frame.about_subtitle then
 		frame.about_subtitle = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")

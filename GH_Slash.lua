@@ -289,6 +289,7 @@ function GearHelper:MySlashCommand(input)
 
 	if input == "" then
 		InterfaceOptionsFrame:Show()
+		InterfaceOptionsFrame_OpenToCategory(GearHelper.cwFrame)
 		InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 	else
 		slashCmd["help"]()
