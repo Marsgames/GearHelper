@@ -483,7 +483,7 @@ function GearHelper:DoDisplayOverlay(result)
 	local displayOverlay = false
 	for _, v in pairs(result) do
 		for _, y in pairs(doDisplay) do
-			if v == y or v >= 0 then
+			if v == y or v > 0 then
 				displayOverlay = true
 			end
 		end

@@ -451,6 +451,42 @@ local ghSecondaryOptionsTable = {
 					get = function()
 						return GearHelper.db.profile.bossesKilled
 					end
+				},
+				ilvlCharFrame = {
+					order = 10,
+					name = L["UIIlvlCharFrame"],
+					desc = L["UIIlvlCharFrameDesc"],
+					type = "toggle",
+					set = function(_, val)
+						GearHelper.db.profile.ilvlCharFrame = val
+						if (val) then
+							GearHelper:AddIlvlOnCharFrame(true)
+						else
+							GearHelper:HideIlvlOnCharFrame()
+						end
+					end,
+					get = function()
+						return GearHelper.db.profile.ilvlCharFrame
+					end
+				},
+				ilvlInspectFrame = {
+					order = 11,
+					name = L["UIIlvlInspectFrame"],
+					desc = L["UIIlvlInspectFrameDesc"],
+					type = "toggle",
+					set = function(_, val)
+						GearHelper.db.profile.ilvlInspectFrame = val
+						if (val) then
+							if (InspectPaperDollItemsFrame and UnitGUID("target")) then
+								GearHelper:AddIlvlOnInspectFrame(UnitGUID("target"), true)
+							end
+						else
+							GearHelper:HideIlvlOnInspectFrame()
+						end
+					end,
+					get = function()
+						return GearHelper.db.profile.ilvlInspectFrame
+					end
 				}
 			}
 		}

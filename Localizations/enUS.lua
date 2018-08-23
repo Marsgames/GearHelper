@@ -2,99 +2,99 @@ GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "A
 local L = LibStub("AceLocale-3.0"):NewLocale("GearHelper", "enUS", true)
 -- local BT = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 
-L["merci"] = 								    "Author Marsgames - Temple Noir & Tempaxe - Temple Noir. Thank you to Nirek for his amazing work."
+L["merci"] = "Author Marsgames - Temple Noir & Tempaxe - Temple Noir. Special thanks for Nirek for his amazing work."
 
-L["local"] = 									"EN"
+L["local"] = "EN"
 -------------------------- CE QUI EST EN DDESSOUS DE CETTE LIGNE EST DISPO SUR CURSE --------------------------
-L["Addon"] = 									"GearHelper is : "
-L["ActivatedGreen"] = 							"Activated|r"
-L["DeactivatedRed"] = 							"Deactivated|r"
-L["itemLessThan"] = 							"This item is worse than your"
-L["itemLessThanGeneral"] = 						"This item is worse than yours"
-L["itemBetterThan"] = 							"This item is better than your "
-L["itemBetterThan2"] = 							"with a value of +"
-L["itemBetterThanGeneral"] = 					"This item is better than yours with a value of +"
-L["iNeededOn"] = 								"I needed on  "
-L["UIGHCheckBoxAddon"] = 						" Enable / disable GearHelper"
-L["UIGHCheckBoxSellGrey"] = 				    "Enable / disable auto sell grey items"
-L["UIGHCheckBoxAutoGreed"] = 					"Enable / disable auto greed in instance"
-L["UIGHCheckBoxAutoAcceptQuestReward"] = 		"Enable / disable auto accept quest reward"
-L["UIGHCheckBoxAutoNeed"] = 					"Enable / disable auto need in instance"
-L["UIGHCheckBoxAutoEquipLootedStuff"] =			"Enable / disable auto equip stuff when looted"
-L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] =		"Enable / disable auto equip stuff when change specialization"
-L["CantRepair"] = 								"You can't repair"
-L["repairCost"] = 								"Repair cost : "
-L["guildRepairCost"] = 							"Guild repair cost : "
-L["gold"] =										"g"			-- g for Gold (in english)  / po for Piece d'Or (in french)...
-L["dot"] = 										"."			-- ex : 3.24 golds (3 gold and 24 silver)
-L["DNR"] =										"Do not repair automatically"
-L["AutoRepair"] = 								"Repair with own founds"
-L["GuildAutoRepair"] = 							"Repair with guild founds"
-L["itemEgal"] =									"This item is equal as yours"
-L["itemEgala"] = 								"This item is equal as "
-L["itemEgalMainD"] =							"This item is equal as your Right Hand"
-L["itemEgalMainG"] = 							"This item is equal as your Left Hand"
-L["mainD"] = 									" Right Hand "
-L["mainG"] = 									" Left Hand "
-L["UIGHCheckBoxAutoInvite"] =					"Automatically invite the person who /w you the text         "
-L["checkGHAutoTell"] = 							"Enable / disable auto tell loot in raid"
-L["InviteMessage"] = 							"The message to whisper you for you to send an automatic invitation is : "
-L["moneyEarned"] = 								"Money earned by selling : "
-L["ask1"] = 									"You can ask ["
-L["ask2"] =										"] if he needs "
-L["demande1"] = 								"Do you want to ask to "
-L["demande2"] = 								" if he needs "
-L["yes"] = 										"Yes"
-L["no"] = 										"No"
-L["demande4frFR"] =	--[[don't translate this]]	"[GearHelper] - Salut, je voulais savoir si tu avais besoin de "
-L["demande4frFR2"] = --[[don't translate this]]	" que tu viens juste de gagner "
-L["demande4deDE"] = --[[don't translate this]]	"[GearHelper] - Hey, ich würde gerne wissen, ob du dein "
-L["demande4deDE2"] = --[[don't translate this]]	" brauchst"
-L["demande4enUS"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4enUS2"] = 							" that you just won "
-L["demande4ruRU"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4ruRU2"] = 							" that you just won "
-L["demande4itIT"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4itIT2"] = 							" that you just won "
-L["demande4esES"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4esES2"] = 							" that you just won "
-L["demande4esMX"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4esMX2"] = 							" that you just won "
-L["demande4koKR"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4koKR2"] = 							" that you just won "
-L["demande4ptBR"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4ptBR2"] = 							" that you just won "
-L["demande4zhCN"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4zhCN2"] = 							" that you just won "
-L["demande4zhTW"] = 							"[GearHelper] - Hey, I would like to know if you need your "
-L["demande4zhTW2"] = 							" that you just won "
-L["repfrFR"] =	--[[don't translate this]]      "S'il te plait, réponds en "
-L["repfrFR2"] =	--[[don't translate this]]      " ou en anglais."
-L["repenUS"] =	--[[don't translate this]]      "Please, answer in "
-L["repenUS2"] =	--[[don't translate this]]      ""
-L["repdeDE"] =	      "Please, answer in "
-L["repdeDE2"] =	     "or in english."
-L["repitIT"] =	      "Please, answer in "
-L["repitIT2"] =	     "or in english."
-L["repruRU"] =	      "Please, answer in "
-L["repruRU2"] =	     "or in english."
-L["repesES"] =	      "Please, answer in "
-L["repesES2"] =	     "or in english."
-L["represMX"] =	      "Please, answer in "
-L["repesMX2"] =	     "or in english."
-L["repkoKR"] =	      "Please, answer in "
-L["repkoKR2"] =	     "or in english."
-L["repptBR"] =	      "Please, answer in "
-L["repptBR2"] =	     "or in english."
-L["repzhCN"] =	      "Please, answer in "
-L["repzhCN2"] =	     "or in english."
-L["repzhTW"] =	      "Please, answer in "
-L["repzhTW2"] =	     "or in english."
-L["maLangue"] = 								"english."
-L["maj1"] =										"You are using version "
-L["maj2"] =										"|r of GearHelper. Version "
-L["maj3"] =										"|r was find from "
-L["equipVerbose"] = 							" has just been equipped by GearHelper"
+L["Addon"] = "GearHelper is : "
+L["ActivatedGreen"] = "Activated|r"
+L["DeactivatedRed"] = "Deactivated|r"
+L["itemLessThan"] = "This item is worse than your"
+L["itemLessThanGeneral"] = "This item is worse than yours"
+L["itemBetterThan"] = "This item is better than your "
+L["itemBetterThan2"] = "with a value of +"
+L["itemBetterThanGeneral"] = "This item is better than yours with a value of +"
+L["iNeededOn"] = "I needed on  "
+L["UIGHCheckBoxAddon"] = " Enable / disable GearHelper"
+L["UIGHCheckBoxSellGrey"] = "Enable / disable auto sell grey items"
+L["UIGHCheckBoxAutoGreed"] = "Enable / disable auto greed in instance"
+L["UIGHCheckBoxAutoAcceptQuestReward"] = "Enable / disable auto accept quest reward"
+L["UIGHCheckBoxAutoNeed"] = "Enable / disable auto need in instance"
+L["UIGHCheckBoxAutoEquipLootedStuff"] = "Enable / disable auto equip stuff when looted"
+L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] = "Enable / disable auto equip stuff when change specialization"
+L["CantRepair"] = "You can't repair"
+L["repairCost"] = "Repair cost : "
+L["guildRepairCost"] = "Guild repair cost : "
+L["gold"] = "g" -- g for Gold (in english)  / po for Piece d'Or (in french)...
+L["dot"] = "." -- ex : 3.24 golds (3 gold and 24 silver)
+L["DNR"] = "Do not repair automatically"
+L["AutoRepair"] = "Repair with own founds"
+L["GuildAutoRepair"] = "Repair with guild founds"
+L["itemEgal"] = "This item is equal as yours"
+L["itemEgala"] = "This item is equal as "
+L["itemEgalMainD"] = "This item is equal as your Right Hand"
+L["itemEgalMainG"] = "This item is equal as your Left Hand"
+L["mainD"] = " Right Hand "
+L["mainG"] = " Left Hand "
+L["UIGHCheckBoxAutoInvite"] = "Automatically invite the person who /w you the text         "
+L["checkGHAutoTell"] = "Enable / disable auto tell loot in raid"
+L["InviteMessage"] = "The message to whisper you for you to send an automatic invitation is : "
+L["moneyEarned"] = "Money earned by selling : "
+L["ask1"] = "You can ask ["
+L["ask2"] = "] if he needs "
+L["demande1"] = "Do you want to ask to "
+L["demande2"] = " if he needs "
+L["yes"] = "Yes"
+L["no"] = "No"
+L["demande4frFR"] --[[don't translate this]] = "[GearHelper] - Salut, je voulais savoir si tu avais besoin de "
+L["demande4frFR2"] --[[don't translate this]] = " que tu viens juste de gagner "
+L["demande4deDE"] --[[don't translate this]] = "[GearHelper] - Hey, ich würde gerne wissen, ob du dein "
+L["demande4deDE2"] --[[don't translate this]] = " brauchst"
+L["demande4enUS"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4enUS2"] = " that you just won "
+L["demande4ruRU"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4ruRU2"] = " that you just won "
+L["demande4itIT"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4itIT2"] = " that you just won "
+L["demande4esES"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4esES2"] = " that you just won "
+L["demande4esMX"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4esMX2"] = " that you just won "
+L["demande4koKR"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4koKR2"] = " that you just won "
+L["demande4ptBR"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4ptBR2"] = " that you just won "
+L["demande4zhCN"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4zhCN2"] = " that you just won "
+L["demande4zhTW"] = "[GearHelper] - Hey, I would like to know if you need your "
+L["demande4zhTW2"] = " that you just won "
+L["repfrFR"] --[[don't translate this]] = "S'il te plait, réponds en "
+L["repfrFR2"] --[[don't translate this]] = " ou en anglais."
+L["repenUS"] --[[don't translate this]] = "Please, answer in "
+L["repenUS2"] --[[don't translate this]] = ""
+L["repdeDE"] = "Please, answer in "
+L["repdeDE2"] = "or in english."
+L["repitIT"] = "Please, answer in "
+L["repitIT2"] = "or in english."
+L["repruRU"] = "Please, answer in "
+L["repruRU2"] = "or in english."
+L["repesES"] = "Please, answer in "
+L["repesES2"] = "or in english."
+L["represMX"] = "Please, answer in "
+L["repesMX2"] = "or in english."
+L["repkoKR"] = "Please, answer in "
+L["repkoKR2"] = "or in english."
+L["repptBR"] = "Please, answer in "
+L["repptBR2"] = "or in english."
+L["repzhCN"] = "Please, answer in "
+L["repzhCN2"] = "or in english."
+L["repzhTW"] = "Please, answer in "
+L["repzhTW2"] = "or in english."
+L["maLangue"] = "english."
+L["maj1"] = "You are using version "
+L["maj2"] = "|r of GearHelper. Version "
+L["maj3"] = "|r was find from "
+L["equipVerbose"] = " has just been equipped by GearHelper"
 L["enable"] = "Enable"
 L["gearOptions"] = "Gear Options"
 L["autoGreed"] = "Auto greed"
@@ -123,7 +123,7 @@ L["UIcwIlvlOption"] = "Consider iLvl into calculation"
 L["UIcwGemSocketCompute"] = "Consider empty socket in computing"
 L["betterThanNothing"] = "This item is better than nothing"
 L["UIGlobalComputeNotEquippable"] = "Show non equippable items"
-L["UIGlobalComputeNotEquippableDescription"] = "Show \"This item is worst than yours\" on non equippable items"
+L["UIGlobalComputeNotEquippableDescription"] = 'Show "This item is worst than yours" on non equippable items'
 L["UICWasPercentage"] = "Value in percentage"
 L["UICWasPercentageDescription"] = "Describe the importance of each statistic by a number representing a percentage, the sum of the values ​​must be 100"
 L["UIWhisperAlert"] = "Whisper Alert"
@@ -141,23 +141,32 @@ L["MmTtRClickDeactivate"] = "Right click to deactivate GearHelper"
 L["MmTtClickUnlock"] = "Shift + click to |cFF00FF00unlock|cFFFFFF00 minimap icon"
 L["MmTtClickLock"] = "Shift + click to |cFFFF0000lock|cFFFFFF00 minimap icon"
 L["MmTtCtrlClick"] = "Ctrl + click to |cFF00FF00hide|cFFFFFF00 minimap icon"
-L["DropRate"] = 								"Drop rate : "
-L["DropZone"] = 								"Location : "
-L["DropBy"] = 									"Dropped by : "
+L["DropRate"] = "Drop rate : "
+L["DropZone"] = "Location : "
+L["DropBy"] = "Dropped by : "
 L["ilvlInspect"] = "Average ilvl : "
 L["UIBossesKilled"] = "Bosses killed"
 L["UIBossesKilledDesc"] = "Show bosses killed on LFG panel"
--------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
+L["UIIlvlCharFrame"] = "ilvl char panel"
+L["UIIlvlCharFrameDesc"] = "Show your items ilvl on char panel"
+L["UIIlvlInspectFrame"] = "ilvl on inspect"
+L["UIIlvlInspectFrameDesc"] = "Show your target's ilvl when inspect"
+L["getLoot"] = "receives" -- text when another player get a loot ()
+L["maLangueenUS"] = "English."
+L["maLanguefrFR"] = "Anglais."
+L["maLangueesES"] = "Inglés."
+L["maLangueesEX"] = "Inglés."
+L["maLanguedeDE"] = "Englisch."
+L["maLangueitIT"] = "Inglese."
+L["maLangueruRU"] = "Английский."
+L["maLanguekoKR"] = "영어."
+L["maLangueptBR"] = "Inglês."
+L["maLanguezhCN"] = "英语."
+L["maLanguezhTW"] = "英語."
+-------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
-
-
-
-
-
-
-
 
 L["Tooltip"] = {
 	Stat = {
@@ -174,18 +183,18 @@ L["Tooltip"] = {
 		["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
 		["Leech"] = "Leech",
 		["Avoidance"] = "Avoidance",
-		["MovementSpeed"] = "Speed",
+		["MovementSpeed"] = "Speed"
 	},
 	["ItemLevel"] = "^Item Level",
 	["LevelRequired"] = "^Requires Level",
 	["GemSocketEmpty"] = "^Sockets",
-	["BonusGem"] = "^Socket bonus",
+	["BonusGem"] = "^Socket bonus"
 }
 
 L["Artifact"] = {
 	["251"] = {
 		"128293",
-		"128292",
+		"128292"
 	},
 	["259"] = {
 		"128869",
@@ -193,59 +202,59 @@ L["Artifact"] = {
 	},
 	["260"] = {
 		"128872",
-		"134552",
+		"134552"
 	},
 	["103"] = {
 		"128859",
-		"128860",
+		"128860"
 	},
 	["104"] = {
 		"128821",
-		"128822",
+		"128822"
 	},
 	["269"] = {
 		"128940",
-		"133948",
+		"133948"
 	},
 	["66"] = {
 		"128866",
-		"128867",
+		"128867"
 	},
 	["258"] = {
 		"128827",
-		"133958",
+		"133958"
 	},
 	["262"] = {
 		"128935",
-		"128936",
+		"128936"
 	},
 	["263"] = {
 		"128819",
-		"128873",
+		"128873"
 	},
 	["264"] = {
 		"128911",
-		"128934",
+		"128934"
 	},
 	["266"] = {
 		"128943",
-		"137246",
+		"137246"
 	},
 	["72"] = {
 		"128908",
-		"134553",
+		"134553"
 	},
 	["73"] = {
 		"128289",
-		"128288",
+		"128288"
 	},
 	["577"] = {
 		"127829",
-		"127830",
+		"127830"
 	},
 	["581"] = {
 		"128832",
-		"128831",
+		"128831"
 	},
 	["250"] = "128402",
 	["252"] = "128403",
@@ -266,18 +275,18 @@ L["Artifact"] = {
 	["261"] = "128476",
 	["265"] = "128942",
 	["267"] = "128941",
-	["71"] = "128910",
+	["71"] = "128910"
 }
 
 local BabbleI = LibStub("LibBabble-Inventory-3.0")
 local BT = BabbleI:GetLookupTable()
 
-L["armor"] = 								BT["Armor"]
-L["weapon"] = 								BT["Weapon"]
-L["divers"] = 								BT["Miscellaneous"]
-L["cannapeche"] = 							BT["Fishing Poles"]
-L["monture"] =                              BT["Mount"]
-L["mascotte"] =                             BT["Companion Pets"]
+L["armor"] = BT["Armor"]
+L["weapon"] = BT["Weapon"]
+L["divers"] = BT["Miscellaneous"]
+L["cannapeche"] = BT["Fishing Poles"]
+L["monture"] = BT["Mount"]
+L["mascotte"] = BT["Companion Pets"]
 L["TypeToNotNeed"] = {
 	["sac"] = BT["Bag"],
 	["conteneur"] = BT["Container"],
@@ -294,7 +303,7 @@ L["TypeToNotNeed"] = {
 	["quete"] = BT["Quest"],
 	["cle"] = BT["Key"],
 	["monture"] = BT["Mount"],
-	["mascotte"] = BT["Companion Pets"];
+	["mascotte"] = BT["Companion Pets"]
 }
 
 L["IsEquipable"] = {
@@ -383,7 +392,7 @@ L["IsEquipable"] = {
 		["Dague"] = BT["Dagger"],
 		["Epee1H"] = BT["One-Handed Swords"],
 		["Baton"] = BT["Staves"],
-		["Holdable"] = BT["Miscellaneous"],
+		["Holdable"] = BT["Miscellaneous"]
 	},
 	-- Démo
 	["WARLOCK"] = {
@@ -392,7 +401,7 @@ L["IsEquipable"] = {
 		["Epee1H"] = BT["One-Handed Swords"],
 		["Baton"] = BT["Staves"],
 		["Baguette"] = BT["Wands"],
-		["Holdable"] = BT["Miscellaneous"],
+		["Holdable"] = BT["Miscellaneous"]
 	},
 	-- Monk
 	["MONK"] = {

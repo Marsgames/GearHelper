@@ -69,26 +69,18 @@ local function OnMerchantShow()
 			if GearHelper.db.profile.autoRepair == 1 then
 				if argentPossedee >= prix then
 					RepairAllItems(false)
-					print(
-						GearHelper:ColorizeString(L["repairCost"], "Rose") ..
-							math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"]
-					)
+					print(GearHelper:ColorizeString(L["repairCost"], "Rose") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
 				else
 					print(L["CantRepair"])
 				end
 			elseif GearHelper.db.profile.autoRepair == 2 then
 				if droitGuilde ~= nil and (droitGuilde == -1 or (droitGuilde > argentGuilde and argentGuilde > prix)) then
 					RepairAllItems(true)
-					print(
-						cRose ..
-							L["guildRepairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"]
-					)
+					print(cRose .. L["guildRepairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
 				else
 					if argentPossedee >= prix then
 						RepairAllItems(false)
-						print(
-							cRose .. L["repairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"]
-						)
+						print(cRose .. L["repairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
 					else
 						print(L["CantRepair"])
 					end
@@ -120,6 +112,19 @@ Description : Quand le joueur se connecte : - crée les cw - check si l'addon es
 Author : Raphaël Daumas
 ]]
 local function PlayerEnteringWorld()
+	-- Si le joueur n'a pas activé les fenêtre interractives, fait du sale (les activz + reload)
+	local used = false
+	for i = 1, NUM_CHAT_WINDOWS do
+		local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
+		if (uninteractable) then
+			SetChatWindowUninteractable(i, false)
+			used = true
+		end
+	end
+	if used then
+		ReloadUI()
+	end
+
 	GearHelper:BuildCWTable()
 	if GearHelper.db.profile.addonEnabled == true then
 		GearHelper:sendAskVersion()
@@ -242,10 +247,7 @@ local function MerchantClosed()
 			end
 		end
 		if (gagne - argentFin > 0) then
-			print(
-				GearHelper:ColorizeString(L["moneyEarned"], "Vert") ..
-					math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"]
-			)
+			print(GearHelper:ColorizeString(L["moneyEarned"], "Vert") .. math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"])
 			gagne = 0
 		end
 	end
@@ -280,8 +282,7 @@ local function ActiveTalentGroupChanged()
 		GearHelper:equipItem(3)
 		GearHelper:equipItem(4)
 	end
-	GearHelper.cwTable.args["NoxGroup"].name =
-		"Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+	GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 end
 
 --[[
@@ -335,45 +336,25 @@ Description : Si quelqu'un loot quelque chose de mieux que ce qu'on a en instanc
 Input : Trop d'infos envoyées par la fonction de Blizzard
 Author : Raphaël Daumas
 ]]
-local function ChatMsgLoot(
-	_,
-	_,
-	message,
-	language,
-	sender,
-	channelString,
-	target,
-	flags,
-	unknown1,
-	channelNumber,
-	channelName,
-	unknown2,
-	counter)
-	GearHelper:createLinkAskIfHeNeeds(
-		0,
-		message,
-		sender,
-		language,
-		channelString,
-		target,
-		flags,
-		unknown1,
-		channelNumber,
-		channelName,
-		unknown2,
-		counter
-	)
+local function ChatMsgLoot(_, _, message, language, sender, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
+	GearHelper:CreateLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 
-	local used = false
-	for i = 1, NUM_CHAT_WINDOWS do
-		local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
-		if (uninteractable) then
-			SetChatWindowUninteractable(i, false)
-			used = true
+	if target ~= nil and target ~= GetUnitName("player") and target ~= "" and GearHelper.db.profile.askLootRaid then
+		if string.find(string.lower(message), L["getLoot"]) == nil or debug == 1 then
+			inspectAin = {waitingIlvl = false, equipLoc = nil, ilvl = nil, linkItemReceived = nil, message = nil, target = nil}
+			GearHelper.db.profile.inspectAin.waitingIlvl = true
+			GearHelper.db.profile.inspectAin.message = message
+			GearHelper.db.profile.inspectAin.target = target
+
+			for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
+				local itemTable = GearHelper:GetItemByLink(itemLink)
+				GearHelper.db.profile.inspectAin.linkItemReceived = itemTable.itemLink
+				do
+					return
+				end
+			end
+			NotifyInspect(target)
 		end
-	end
-	if used then
-		ReloadUI()
 	end
 end
 
@@ -473,8 +454,7 @@ local function GetItemInfoReceived(_, _, item)
 	if GearHelper.db.global.itemWaitList[item] then
 		local slotName = GearHelper.db.global.itemWaitList[item]
 		GearHelper.db.global.itemWaitList[item] = nil
-		GearHelper.charInventory[string.sub(slotName, 1, -5)] =
-			GearHelper:GetEquippedItemLink(GetInventorySlotInfo(slotName), slotName)
+		GearHelper.charInventory[string.sub(slotName, 1, -5)] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo(slotName), slotName)
 	end
 	if item ~= nil then
 		if GearHelper.idNilGetQuestReward ~= nil then
@@ -493,9 +473,9 @@ local function GetItemInfoReceived(_, _, item)
 	if (InspectPaperDollItemsFrame) then
 		-- print("------------")
 		-- print("item : " .. item)
-		-- print("AddIlvlOnInspect appelé depuis GetItemInfoReceived")
+		-- print("AddIlvlOnInspectFrame appelé depuis GetItemInfoReceived")
 		-- print("target : " .. UnitGUID("target"))
-		--GearHelper:AddIlvlOnInspect(UnitGUID("target"))
+		--GearHelper:AddIlvlOnInspectFrame(UnitGUID("target"))
 		NotifyInspect("target")
 	end
 end
@@ -625,15 +605,45 @@ local function PlayerAlive()
 end
 
 local function InspectReady(_, _, target)
-	if (InspectPaperDollItemsFrame) then
-		GearHelper:AddIlvlOnInspect(target)
-	else
+	-- inspectAin = {waitingIlvl = false, equipLoc = nil, ilvl = nil, linkItemReceived = nil, message = nil, target = nil}
+	if GearHelper.db.profile.inspectAin.waitingIlvl then ---------------- /GH AIN AVEC UN MESSAGE SPÉCIALE SI L'ILVL DE L'OBJET LOOT EST MOINS BON QUE CELUI ÉQUIPPÉ PAR CELUI QUI L'A LOOT
+		local itemLoot = GearHelper.db.profile.inspectAin.linkItemReceived
+		local itemLootTable = GearHelper:GetItemByLink(itemLoot)
+		local itemLootEquipLoc = GearHelper.db.global.equipLocInspect[itemLootTable.equipLoc]
+
+		if (itemLootEquipLoc ~= 11 and itemLootEquipLoc ~= 12 and itemLootEquipLoc ~= 13 and itemLootEquipLoc ~= 14) then
+			local itemEquipped = GetInventoryItemLink(target, itemLootEquipLoc)
+			if (itemEquipped ~= nil) then
+				local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped)
+				local itemEquippedIlvl = itemEquippedTable.iLvl
+				local itemLootIlvl = itemLootTable.iLvl
+
+				print("-------------")
+				print("item équippé par " .. GearHelper.db.profile.inspectAin.target .. " : " .. itemEquipped)
+				print("item reçu : " .. itemLoot)
+				if (itemEquippedIlvl >= itemLootIlvl) then
+					print("Vous pouvez essayer de demander cet objet")
+				else
+					print("L'item loot à un meilleur ilvl, + de chances de refus")
+				end
+			end
+		end
+
+		GearHelper.db.profile.inspectAin.waitingIlvl = false
+		GearHelper.db.profile.inspectAin.linkItemReceived = nil
+		GearHelper.db.profile.inspectAin.message = nil
+		GearHelper.db.profile.inspectAin.target = nil
+
+		ClearInspectPlayer()
+	elseif (InspectPaperDollItemsFrame) then -------------------- AFFICHE L'ILVL DES ITEMS D'UN JOUEUR SUR LA FICHE D'INSPECTION
+		GearHelper:AddIlvlOnInspectFrame(target)
+	else ------------------- AFFICHE L'ILVL MOYEN D'UN MEC SUR SON TOOLTIP 
 		if (GameTooltip:IsVisible()) then
 			local arrayIlvl = {}
 			for i = 1, 19 do
 				local itemLink = GetInventoryItemLink("mouseover", i)
 				if (itemLink) then
-					local itemScan = GearHelper:BuildItemFromTooltip(itemLink, "itemlink")
+					local itemScan = GearHelper:GetItemByLink(itemLink)
 					local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
 					if equipLoc ~= nil then
 						arrayIlvl[equipLoc] = itemLvl
@@ -655,19 +665,19 @@ local function InspectReady(_, _, target)
 			if (itemCount ~= 0) then
 				GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
 			end
-			GameTooltip:HookScript(
-				"OnHide",
-				function()
-					ClearInspectPlayer()
-				end
-			)
+			-- GameTooltip:HookScript(
+			-- 	"OnHide",
+			-- 	function()
+			ClearInspectPlayer()
+			-- 	end
+			-- )
 			GameTooltip:Show()
 		end
 	end
 	--ClearInspectPlayer()
 end
 
-local function UpdateMouseOverUnit(_, _, c, d, e)
+local function UpdateMouseOverUnit()
 	if CanInspect("mouseover") and CheckInteractDistance("mouseover", 1) then
 		NotifyInspect("mouseover")
 	end

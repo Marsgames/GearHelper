@@ -33,7 +33,10 @@ local defaultsOptions = {
 		whisperAlert = true,
 		sayMyName = true,
 		minimap = {hide = false, isLock = false},
-		bossesKilled = true
+		bossesKilled = true,
+		ilvlCharFrame = true,
+		ilvlInspectFrame = true,
+		inspectAin = {waitingIlvl = false, equipLoc = nil, ilvl = nil, linkItemReceived = nil, message = nil, target = nil}
 	},
 	global = {
 		ItemCache = {},
@@ -258,6 +261,9 @@ function GearHelper:ResetConfig()
 	GearHelper.db.profile.sayMyName = nil --true
 	GearHelper.db.profile.minimap = nil --{hide = false, isLock = false}
 	GearHelper.db.profile.bossesKilled = nil --true
+	GearHelper.db.profile.ilvlCharFrame = nil
+	GearHelper.db.profile.ilvlInspectFrame = nil
+	GearHelper.db.profile.inspectAin = nil
 
 	GearHelper.db.global.ItemCache = nil --{}
 	GearHelper.db.global.itemWaitList = nil --{}
@@ -281,10 +287,9 @@ function GearHelper:OnEnable()
 	-- Affiche à chaque connection l'état de l'addon
 	if GearHelper.db.profile.addonEnabled then
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["ActivatedGreen"], "Vert"))
-		GearHelper.cwTable.args["NoxGroup"].name =
-			"Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
-		if (GearHelper.db.global.equipLocInspect == {}) then
-			InitEquipLocInspect()
+		GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+		if (#GearHelper.db.global.equipLocInspect == 0) then
+			GearHelper:InitEquipLocInspect()
 		end
 	else
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"))
@@ -303,12 +308,7 @@ function GearHelper:OnMinimapTooltipShow(tooltip)
 	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
 	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
 	if (not self.db.profile.addonEnabled) then
-		tooltip:AddLine(
-			GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"),
-			1,
-			1,
-			1
-		)
+		tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"), 1, 1, 1)
 	end
 	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Jaune"), 1, 1, 1)
 	if (self.db.profile.addonEnabled) then
@@ -496,11 +496,7 @@ end
 -- @author : Raphaël Daumas
 function GearHelper:receiveAnswer(msgV, msgC)
 	if askTime and nbRappels > 0 and not GearHelper:IsInTable(GHoldVersions, msgV) and versionCible ~= version then
-		message(
-			L["maj1"] ..
-				GearHelper:ColorizeString(version, "Rouge") ..
-					L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)"
-		)
+		message(L["maj1"] .. GearHelper:ColorizeString(version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
 		askTime = nil
 		waitAnswerFrame:Hide()
 		nbRappels = nbRappels - 1
@@ -586,8 +582,7 @@ Author : Raphaël Saget
 function GearHelper:ScanCharacter()
 	GearHelper.charInventory["Head"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
 	GearHelper.charInventory["Neck"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
-	GearHelper.charInventory["Shoulder"] =
-		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
+	GearHelper.charInventory["Shoulder"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
 	GearHelper.charInventory["Back"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("BackSlot"), "BackSlot")
 	GearHelper.charInventory["Chest"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ChestSlot"), "ChestSlot")
 	GearHelper.charInventory["Wrist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WristSlot"), "WristSlot")
@@ -595,18 +590,12 @@ function GearHelper:ScanCharacter()
 	GearHelper.charInventory["Waist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WaistSlot"), "WaistSlot")
 	GearHelper.charInventory["Legs"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("LegsSlot"), "LegsSlot")
 	GearHelper.charInventory["Feet"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("FeetSlot"), "FeetSlot")
-	GearHelper.charInventory["Finger0"] =
-		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
-	GearHelper.charInventory["Finger1"] =
-		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
-	GearHelper.charInventory["Trinket0"] =
-		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
-	GearHelper.charInventory["Trinket1"] =
-		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
-	GearHelper.charInventory["MainHand"] =
-		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
-	GearHelper.charInventory["SecondaryHand"] =
-		GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
+	GearHelper.charInventory["Finger0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
+	GearHelper.charInventory["Finger1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
+	GearHelper.charInventory["Trinket0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
+	GearHelper.charInventory["Trinket1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
+	GearHelper.charInventory["MainHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
+	GearHelper.charInventory["SecondaryHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
 	if GearHelper.charInventory["MainHand"] ~= -2 and GearHelper.charInventory["MainHand"] ~= 0 then
 		local _, _, _, _, _, _, _, _, itemEquipLocWeapon = GetItemInfo(GearHelper.charInventory["MainHand"])
@@ -733,10 +722,12 @@ Input : object = tooltip or itemlink / type = "ItemLink" or "ToolTip", the type 
 Output : the normalized value of the item
 Author : Raphaël Saget
 ]]
-function GearHelper:IsItemBetter(object, type)
+function GearHelper:IsItemBetter(object, type, objectEquipped)
 	--The item to test
 	local item = {}
+	local itemEquipped = nil
 	local itemLink = ""
+	local itemEquippedLink = ""
 
 	if (IsEquippedItem(object)) then
 		return {-60}
@@ -746,6 +737,10 @@ function GearHelper:IsItemBetter(object, type)
 		--First we query the GearHelper cache to speed up process and avoid potential nil from GetItemInfo
 		item = GearHelper:GetItemFromCache(object)
 		itemLink = object
+		if (objectEquipped) then
+			itemEquipped = GearHelper:GetItemFromCache(objectEquipped)
+			itemEquippedLink = objectEquipped
+		end
 	elseif type:lower() == "tooltip" then
 		--We retrieve the hyperlink from the tooltip
 		_, itemLink = object:GetItem()
@@ -762,8 +757,12 @@ function GearHelper:IsItemBetter(object, type)
 		--And we add it to the cache
 		GearHelper:PutItemInCache(itemLink, item)
 	end
+	if (objectEquipped and not itemEquipped) then
+		itemEquipped = GearHelper:BuildItemFromTooltip(objectEquipped, "itemLink")
+		GearHelper:PutItemInCache(itemEquippedLink, itemEquipped)
+	end
 	--Normalize value to handle multiple cases
-	return GearHelper:NormalizeWeightResult(GearHelper:NewWeightCalculation(item))
+	return GearHelper:NormalizeWeightResult(GearHelper:NewWeightCalculation(item, itemEquipped))
 end
 
 --[[
@@ -792,11 +791,7 @@ function GearHelper:BuildItemFromTooltip(object, type)
 	--Get some info from GetItemInfoInstant because GetItemInfo is unreliable as of now
 	_, item.itemLink = tip:GetItem()
 	item.itemString = string.match(item.itemLink, "item[%-?%d:]+")
-	_, _, item.rarity =
-		string.find(
-		item.itemLink,
-		"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?"
-	)
+	_, _, item.rarity = string.find(item.itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 	item.id, item.type, item.subType, item.equipLoc = GetItemInfoInstant(item.itemLink)
 	item.name = _G["GameTooltipTextLeft1"]:GetText()
 	if GetItemInfo(item.itemLink) then
@@ -910,11 +905,11 @@ end
 Function : NewWeightCalculation
 Scope : GearHelper
 Description : The core calculation function
-Input : item = an item to test
+Input : item = an item to test | myEquipItem : another item to test instead of player equippedItem (FACULTATIF)
 Output : result = the value of the item
 Author : Raphaël Saget
 ]]
-function GearHelper:NewWeightCalculation(item)
+function GearHelper:NewWeightCalculation(item, myEquipItem)
 	if GearHelper.db.profile.addonEnabled then -- si addon activé
 		local result = {}
 		if not IsEquippedItem(item.id) and GearHelper:IsEquippableByMe(item) then
@@ -931,7 +926,12 @@ function GearHelper:NewWeightCalculation(item)
 				local slotsList = GearHelper.itemSlot[item.equipLoc]
 				for index, _ in pairs(slotsList) do --For each slot (2)
 					if isSlotEmpty[index] == false then --The slot is not empty, we calculate delta
-						local equippedItem = GearHelper:GetItemByLink(GearHelper.charInventory[slotsList[index]])
+						local equippedItem
+						if (myEquipItem) then
+							equippedItem = GearHelper:GetItemByLink(myEquipItem)
+						else
+							equippedItem = GearHelper:GetItemByLink(GearHelper.charInventory[slotsList[index]])
+						end
 						local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 						table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
 					else --The slot is empty, we pass directly the item
@@ -1074,10 +1074,7 @@ function GearHelper:equipItem(inThisBag)
 									return
 								end
 							else
-								if
-									not InCombatLockdown and weightCalcResult[1] ~= nil and weightCalcResult[1] > 0 or
-										weightCalcResult[2] ~= nil and weightCalcResult[2] > 0
-								 then
+								if not InCombatLockdown and weightCalcResult[1] ~= nil and weightCalcResult[1] > 0 or weightCalcResult[2] ~= nil and weightCalcResult[2] > 0 then
 									local table = GearHelper:GetItemByLink(itemLink)
 									local itemEquipLoc = table["equipLoc"]
 									local name = table["name"]
@@ -1153,35 +1150,19 @@ end
 ------------------------------------------------------------------
 -- Create a clickable link to ask a player if he needs his loot --
 -- @author Raphaël Daumas                                       --
-------------------------------------------------------------------
-function GearHelper:createLinkAskIfHeNeeds(
-	debug,
-	message,
-	sender,
-	language,
-	channelString,
-	target,
-	flags,
-	unknown1,
-	channelNumber,
-	channelName,
-	unknown2,
-	counter)
+function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter) ------------------------------------------------------------------
 	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
-	local sender = sender or "sender"
-	local language = language or "language"
-	local channelString = channelString or "channelString"
+	-- local sender = sender or "sender"
+	-- local language = language or "language"
+	-- local channelString = channelString or "channelString"
 	local target = target or GetUnitName("player")
-	local flags = flags or "DND"
-	local unknown1 = unknown1 or 1
-	local channelNumber = channelNumber or 1
-	local channelName = channelName or "channelName"
-	local unknown2 = unknown2 or 0
-	local counter = counter or 1
-
-	if
-		target ~= nil and target ~= GetUnitName("player") and target ~= "" and GearHelper.db.profile.askLootRaid or debug == 1
-	 then
+	-- local flags = flags or "DND"
+	-- local unknown1 = unknown1 or 1
+	-- local channelNumber = channelNumber or 1
+	-- local channelName = channelName or "channelName"
+	-- local unknown2 = unknown2 or 0
+	-- local counter = counter or 1
+	if target ~= nil and target ~= GetUnitName("player") and target ~= "" and GearHelper.db.profile.askLootRaid or debug == 1 then
 		if string.find(string.lower(message), "bonus") == nil or debug == 1 then
 			local couleur = ""
 			local className, classFile, classID = UnitClass(target)
@@ -1214,46 +1195,30 @@ function GearHelper:createLinkAskIfHeNeeds(
 			for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
 				local itemTable = GearHelper:GetItemByLink(itemLink)
 				local quality = GetQualityFromColor(itemTable.rarity)
+
 				if quality ~= nil and quality < 5 or debug == 1 then
 					itemLinkToAsk = itemLink
 					nameLink = GearHelper:ReturnGoodLink(itemLink, target, tar)
 
 					if debug ~= 1 then
 						local weightCalcResult = GearHelper:IsItemBetter(itemLink, "ItemLink")
+
+						-- local itemScan = GearHelper:GetItemByLink(itemLink)
+						-- local iL, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
+						-- print("----------")
+						-- print("")
+
 						if weightCalcResult ~= nil then
 							if #weightCalcResult == 1 then
 								if weightCalcResult[1] > 0 then
-									UIErrorsFrame:AddMessage(
-										GearHelper:ColorizeString(L["ask1"], "Jaune") ..
-											nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink,
-										0.0,
-										1.0,
-										0.0,
-										80
-									)
-									print(
-										GearHelper:ColorizeString(L["ask1"], "Jaune") ..
-											nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink
-									)
+									UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink, 0.0, 1.0, 0.0, 80)
+									print(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink)
 									PlaySound(5274, "Master")
 								end
 							else
-								if
-									weightCalcResult[1] ~= nil and weightCalcResult[1] > 0 or
-										weightCalcResult[2] ~= nil and weightCalcResult[2] > 0
-								 then
-									UIErrorsFrame:AddMessage(
-										GearHelper:ColorizeString(L["ask1"], "Jaune") ..
-											nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink,
-										0.0,
-										1.0,
-										0.0,
-										80
-									)
-									print(
-										GearHelper:ColorizeString(L["ask1"], "Jaune") ..
-											nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink
-									)
+								if weightCalcResult[1] ~= nil and weightCalcResult[1] > 0 or weightCalcResult[2] ~= nil and weightCalcResult[2] > 0 then
+									UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink, 0.0, 1.0, 0.0, 80)
+									print(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink)
 									PlaySound(5274, "Master")
 								end
 							end
@@ -1261,18 +1226,8 @@ function GearHelper:createLinkAskIfHeNeeds(
 							GearHelper:Print("WeightCalcResult nil")
 						end
 					elseif debug == 1 then
-						UIErrorsFrame:AddMessage(
-							GearHelper:ColorizeString(L["ask1"], "Jaune") ..
-								nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink,
-							0.0,
-							1.0,
-							0.0,
-							80
-						)
-						print(
-							GearHelper:ColorizeString(L["ask1"], "Jaune") ..
-								nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink
-						)
+						UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink, 0.0, 1.0, 0.0, 80)
+						print(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink)
 						PlaySound(5274, "Master")
 					end
 				end
@@ -1318,11 +1273,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				elseif result[1] == -50 then
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Trinket0")
 				elseif result[1] > 0 then
-					table.insert(
-						linesToAdd,
-						GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") ..
-							" Trinket0 " .. L["itemBetterThan2"] .. math.floor(result[1])
-					)
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Trinket0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
 					-- avec une valeur de "..math.floor(value))
@@ -1332,11 +1283,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				elseif result[2] == -50 then
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Trinket1")
 				elseif result[2] > 0 then
-					table.insert(
-						linesToAdd,
-						GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") ..
-							" Trinket1 " .. L["itemBetterThan2"] .. math.floor(result[2])
-					)
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Trinket1 " .. L["itemBetterThan2"] .. math.floor(result[2]))
 				end
 			elseif item.equipLoc == "INVTYPE_FINGER" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
@@ -1347,11 +1294,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				elseif result[1] == -50 then
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Finger0")
 				elseif result[1] > 0 then
-					table.insert(
-						linesToAdd,
-						GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") ..
-							" Finger0 " .. L["itemBetterThan2"] .. math.floor(result[1])
-					)
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Finger0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
 					-- avec une valeur de "..math.floor(value))
@@ -1361,11 +1304,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				elseif result[2] == -50 then
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Finger1")
 				elseif result[2] > 0 then
-					table.insert(
-						linesToAdd,
-						GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") ..
-							" Finger1 " .. L["itemBetterThan2"] .. math.floor(result[2])
-					)
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Finger1 " .. L["itemBetterThan2"] .. math.floor(result[2]))
 				end
 			elseif item.equipLoc == "INVTYPE_WEAPON" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
@@ -1376,11 +1315,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				elseif result[1] == -50 then
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. L["mainD"])
 				elseif result[1] > 0 then
-					table.insert(
-						linesToAdd,
-						GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") ..
-							L["mainD"] .. L["itemBetterThan2"] .. math.floor(result[1])
-					)
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. L["mainD"] .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
 					-- avec une valeur de "..math.floor(value))
@@ -1390,11 +1325,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				elseif result[2] == -50 then
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. L["mainG"])
 				elseif result[2] > 0 then
-					table.insert(
-						linesToAdd,
-						GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") ..
-							L["mainG"] .. L["itemBetterThan2"] .. math.floor(result[2])
-					)
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. L["mainG"] .. L["itemBetterThan2"] .. math.floor(result[2]))
 				end
 			else
 				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "Rouge"))
@@ -1412,11 +1343,7 @@ local ModifyTooltip = function(self, ...)
 			local result = GearHelper:IsItemBetter(itemLink, "ItemLink")
 			local item = GearHelper:GetItemByLink(itemLink)
 			local linesToAdd = GearHelper:LinesToAddToTooltip(result, item)
-			_, _, _, _, itemId =
-				string.find(
-				item.itemLink,
-				"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?"
-			)
+			_, _, _, _, itemId = string.find(item.itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 
 			if GearHelper.itemsDropRate[itemId] ~= nil then
 				table.insert(linesToAdd, L["DropRate"] .. GearHelper.itemsDropRate[itemId]["Rate"] .. "%")
@@ -1426,10 +1353,7 @@ local ModifyTooltip = function(self, ...)
 				table.insert(linesToAdd, L["DropBy"] .. GearHelper.itemsDropRate[itemId]["Drop"])
 			end
 			if linesToAdd then
-				if
-					(result[1] == -30 or result[1] == -10 or
-						GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id))
-				 then
+				if (result[1] == -30 or result[1] == -10 or GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id)) then
 					self:SetBackdropBorderColor(255, 0, 0) -- Rouge
 				elseif result[1] == 0 or result[1] == -60 then
 					self:SetBackdropBorderColor(255, 255, 0) -- Jaune
@@ -1496,16 +1420,13 @@ function GearHelper:askIfHeNeed(link, sendTo)
 			end
 			local theSource = "demande4" .. unitLocale
 			local theSource2 = "demande4" .. unitLocale .. "2"
-			local msg =
-				L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or
-				L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
+			local msg = L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
 			-- if msg == nil then
 			--     msg = L["demande4enUS"]
 			-- end
 			local rep = "rep" .. unitLocale
 			local rep2 = "rep" .. unitLocale .. "2"
-			local msgRep =
-				L[rep] .. L["maLangue"] .. L[rep2] ~= nil and L[rep] .. L["maLangue"] .. L[rep2] or L["repenUS"] .. L["maLangue"]
+			local msgRep = L[rep] .. L["maLangue"..unitLocale] .. L[rep2] ~= nil and L[rep] .. L["maLangue"..unitLocale] .. L[rep2] or L["repenUS"] .. L["maLangue"..unitLocale]
 
 			-- if msgRep == nil then
 			--     msgRep = L["repenUS"]..L["maLangue"]
@@ -1556,6 +1477,7 @@ Author : Raphaël Daumas
 function GearHelper:GetQuestReward()
 	local numQuestChoices = GetNumQuestChoices()
 	local name, link, typeI, subTypeI, itemSellPrice1
+	local isBetter = false
 	if numQuestChoices < 1 then
 		if GearHelper.db.profile.autoAcceptQuestReward then
 			GetQuestReward()
@@ -1637,45 +1559,54 @@ function GearHelper:GetQuestReward()
 
 		--print("maxweight : "..maxWeight)
 		-- button = nil
-		if maxWeight > 0 then
-			if GearHelper.db.profile.autoAcceptQuestReward then
-				GetQuestReward(keyWeight) -- normalement c'est bon
-				do
-					return
-				end
-			else
-				local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
+		local xDif = 0
+		if maxWeight > 0 and not isBetter then
+			local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
 
-				if button.overlay then
-					button.overlay:SetShown(false)
-					button.overlay = nil
-				end
-
-				if not button.overlay then
-					button.overlay = button:CreateTexture(nil, "OVERLAY")
-					button.overlay:SetSize(18, 18)
-					button.overlay:SetPoint("TOPLEFT", -9, 9)
-					button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
-					button.overlay:SetShown(true)
-				end
+			if button.overlay then
+				button.overlay:SetShown(false)
+				button.overlay = nil
 			end
-		else
-			if GearHelper.db.profile.autoAcceptQuestReward then
-				GetQuestReward(keyPrix) -- normalement c'est bon
-			else
-				local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyPrix]
 
-				if button.overlay then
-					button.overlay:SetShown(false)
-					button.overlay = nil
-				end
-				if not button.overlay then
-					button.overlay = button:CreateTexture(nil, "OVERLAY")
-					button.overlay:SetSize(18, 18)
-					button.overlay:SetPoint("TOPLEFT", -9, 9)
-					button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
-					button.overlay:SetShown(true)
-				end
+			if not button.overlay then
+				button.overlay = button:CreateTexture(nil, "OVERLAY")
+				button.overlay:SetSize(18, 18)
+				button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
+				button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+				button.overlay:SetShown(true)
+				xDif = xDif + 11
+			end
+
+			if GearHelper.db.profile.autoAcceptQuestReward then
+				--GetQuestReward(keyWeight) -- normalement c'est bon
+				local objetI = GetQuestItemLink("choice", keyWeight)
+				print("On prend " .. objetI)
+			end
+			isBetter = true
+		else
+			local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyPrix]
+
+			if button.overlay then
+				button.overlay:SetShown(false)
+				button.overlay = nil
+			end
+			if not button.overlay then
+				button.overlay = button:CreateTexture(nil, "OVERLAY")
+				button.overlay:SetSize(18, 18)
+				button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
+				button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
+				button.overlay:SetShown(true)
+				xDif = xDif + 11
+			end
+
+			if GearHelper.db.profile.autoAcceptQuestReward then
+				--GetQuestReward(keyPrix) -- normalement c'est bon
+				local objetI = GetQuestItemLink("choice", keyPrix)
+				print("On prend " .. objetI)
+			end
+
+			do
+				return
 			end
 		end
 	end
@@ -1706,10 +1637,7 @@ function GearHelper:AutoGreedAndNeed(number)
 		if canNeed then
 			if GearHelper.db.profile.autoNeed then
 				if itemType == L["armor"] or itemType == L["weapon"] then
-					if
-						(weightCalcResult[1] ~= nil and weightCalcResult[1] > 0) or
-							(weightCalcResult[2] ~= nil and weightCalcResult[2] > 0)
-					 then
+					if (weightCalcResult[1] ~= nil and weightCalcResult[1] > 0) or (weightCalcResult[2] ~= nil and weightCalcResult[2] > 0) then
 						-- print("J'ai need 1 "..name)
 						ConfirmLootRoll(number, 1)
 						UIErrorsFrame:AddMessage(L["iNeededOn"] .. name, 0.0, 1.0, 0.0, 150) -----------          DEBUG MODE        -----------
@@ -1756,13 +1684,7 @@ function GearHelper:CreateLfrButtons(frameParent)
 
 		-- Only make a button if there's data for it, and it hasn't been already made. This gets called multiple times so it updates correctly when you open up more raids
 		if dispo and dispoPourJoueur and not buttons[id] and nbBoss then
-			local button =
-				CreateFrame(
-				"CheckButton",
-				frameParent:GetName() .. "GHLfrButtons" .. tostring(id),
-				frameParent,
-				"SpellBookSkillLineTabTemplate"
-			)
+			local button = CreateFrame("CheckButton", frameParent:GetName() .. "GHLfrButtons" .. tostring(id), frameParent, "SpellBookSkillLineTabTemplate")
 
 			if frameParent.lastButton then
 				button:SetPoint("TOPLEFT", frameParent.lastButton, "BOTTOMLEFT", 0, -15)
@@ -1781,10 +1703,7 @@ function GearHelper:CreateLfrButtons(frameParent)
 
 			-- Need to find the button's texture in the regions so we can resize it. I don't like this part, but I can't think of a better way in case it's not the first region returned. (Is it ever not?)
 			for _, region in ipairs({button:GetRegions()}) do
-				if
-					type(region) ~= "userdata" and region.GetTexture and
-						region:GetTexture() == "Interface\\SpellBook\\SpellBook-SkillLineTab"
-				 then
+				if type(region) ~= "userdata" and region.GetTexture and region:GetTexture() == "Interface\\SpellBook\\SpellBook-SkillLineTab" then
 					region:SetWidth(64 + 24) -- Originally 64
 					break
 				end
@@ -1916,88 +1835,18 @@ end
 -- "check" le bouton si on est en attente d'un raid (crée le contour doré)
 -- Adaptation de l'addon BossesKilled
 function GearHelper:UpdateGHLfrButton()
-	for id, button in pairs(RaidFinderQueueFrame.GHLfrButtons) do
-		local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id)
-		if mode == "queued" or mode == "listed" or mode == "rolecheck" or mode == "suspended" then
-			button:SetChecked(true)
-			button.checked = true
-		else
-			button:SetChecked(false)
-			button.checked = false
+	if (RaidFinderQueueFrame.GHLfrButtons) then
+		for id, buttodn in pairs(RaidFinderQueueFrame.GHLfrButtons) do
+			local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id)
+			if mode == "queued" or mode == "listed" or mode == "rolecheck" or mode == "suspended" then
+				button:SetChecked(true)
+				button.checked = true
+			else
+				button:SetChecked(false)
+				button.checked = false
+			end
 		end
 	end
-end
-
-function GearHelper:ResetCache()
-	--print("Cache reseted")
-	GearHelper.db.global.ItemCache = {}
-end
-
-function GearHelper:AddIlvlOnCharFrame()
-	local function CharFrameShow(frame)
-		table.foreach(
-			GearHelper.charInventory,
-			function(slotName, item)
-				if (item ~= -1) then
-					local arrayPos = {
-						xHead = -204,
-						xNeck = -204,
-						xShoulder = -204,
-						xBack = -204,
-						xChest = -204,
-						xWrist = -204,
-						xMainHand = -125,
-						xHands = -3,
-						xWaist = -3,
-						xLegs = -3,
-						xFeet = -3,
-						xFinger0 = -3,
-						xFinger1 = -3,
-						xTrinket0 = -3,
-						xTrinket1 = -3,
-						xSecondaryHand = -77,
-						yHead = 140,
-						yNeck = 99,
-						yShoulder = 58,
-						yBack = 17,
-						yChest = -24,
-						yWrist = -147,
-						yMainHand = -140,
-						yHands = 140,
-						yWaist = 99,
-						yLegs = 58,
-						yFeet = 17,
-						yFinger0 = -24,
-						yFinger1 = -65,
-						yTrinket0 = -106,
-						yTrinket1 = -147,
-						ySecondaryHand = -140
-					}
-
-					local button =
-						_G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
-					button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
-					button:SetSize(1, 1)
-
-					local _, _, iR, itemLevel = GetItemInfo(item)
-
-					button:SetText(itemLevel)
-					button:SetNormalFontObject("GameFontNormalSmall")
-
-					local font = _G["charIlvlFont" .. slotName] or CreateFont("charIlvlFont" .. slotName)
-					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
-					font:SetTextColor(r, g, b, 1)
-					button:SetNormalFontObject(font)
-				end
-			end
-		)
-	end
-
-	local function CharFrameHide()
-	end
-
-	PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
-	PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
 end
 
 function GearHelper:HideLfrButtons()
@@ -2011,309 +1860,329 @@ function GearHelper:HideLfrButtons()
 	end
 end
 
-function GearHelper:AddIlvlOnInspect(target)
-	local function InspectFrameShow(frame)
-		-- local slotArray = {
-		-- 	InspectHeadSlot,
-		-- 	InspectNeckSlot,
-		-- 	InspectShoulderSlot,
-		-- 	InspectBackSlot,
-		-- 	InspectChestSlot,
-		-- 	InspectWristSlot,
-		-- 	InspectMainHandSlot,
-		-- 	InspectHandsSlot,
-		-- 	InspectWaistSlot,
-		-- 	InspectLegsSlot,
-		-- 	InspectFeetSlot,
-		-- 	InspectFinger0Slot,
-		-- 	InspectFinger1Slot,
-		-- 	InspectTrinket0Slot,
-		-- 	InspectTrinket1Slot,
-		-- 	InspectSecondaryHand
-		-- }
+function GearHelper:ResetCache()
+	--print("Cache reseted")
+	GearHelper.db.global.ItemCache = {}
+end
 
-		local arrayPos = {
-			xINVTYPE_HEAD = -100,
-			xINVTYPE_NECK = -100,
-			xINVTYPE_SHOULDER = -100,
-			xINVTYPE_BACK = -100,
-			xINVTYPE_ROBE = -100,
-			xINVTYPE_CLOAK = -100,
-			xINVTYPE_CHEST = -100,
-			xINVTYPE_BODY = -100,
-			xINVTYPE_TABARD = -100,
-			xINVTYPE_WRIST = -100,
-			xINVTYPE_MAINHAND = -20,
-			xINVTYPE_RANGED = -20,
-			xINVTYPE_WEAPONMAINHAND = -20,
-			xINVTYPE_2HWEAPON = -20,
-			xINVTYPE_WEAPON = -20,
-			xINVTYPE_RANGEDRIGHT = -20,
-			xINVTYPE_HAND = 95,
-			xINVTYPE_WAIST = 95,
-			xINVTYPE_LEGS = 95,
-			xINVTYPE_FEET = 95,
-			xINVTYPE_FINGER = 95,
-			xINVTYPE_TRINKET = 95,
-			xINVTYPE_SECONDARYHAND = 20,
-			xINVTYPE_WEAPONOFFHAND = 20,
-			yINVTYPE_HEAD = 140,
-			yINVTYPE_NECK = 99,
-			yINVTYPE_SHOULDER = 58,
-			yINVTYPE_BACK = 17,
-			yINVTYPE_CLOAK = 17,
-			yINVTYPE_CHEST = -24,
-			yINVTYPE_ROBE = -24,
-			yINVTYPE_BODY = -65,
-			yINVTYPE_TABARD = -106,
-			yINVTYPE_WRIST = -147,
-			yINVTYPE_MAINHAND = -140,
-			yINVTYPE_RANGED = -140,
-			yINVTYPE_WEAPONMAINHAND = -140,
-			yINVTYPE_2HWEAPON = -140,
-			yINVTYPE_WEAPON = -140,
-			yINVTYPE_RANGEDRIGHT = -140,
-			yINVTYPE_HAND = 140,
-			yINVTYPE_WAIST = 99,
-			yINVTYPE_LEGS = 58,
-			yINVTYPE_FEET = 17,
-			yINVTYPE_FINGER = -24,
-			yINVTYPE_FINGER1 = -65,
-			yINVTYPE_TRINKET = -106,
-			yINVTYPE_TRINKET1 = -147,
-			yINVTYPE_SECONDARYHAND = -140,
-			yINVTYPE_WEAPONOFFHAND = -140
-		}
+function GearHelper:AddIlvlOnCharFrame(show)
+	local function CharFrameShow(frame)
+		if GearHelper.db.profile.ilvlCharFrame then
+			table.foreach(
+				GearHelper.charInventory,
+				function(slotName, item, number)
+					if (item ~= -1) then
+						local arrayPos = {
+							xHead = -204,
+							xNeck = -204,
+							xShoulder = -204,
+							xBack = -204,
+							xChest = -204,
+							xWrist = -204,
+							xMainHand = -125,
+							xHands = -3,
+							xWaist = -3,
+							xLegs = -3,
+							xFeet = -3,
+							xFinger0 = -3,
+							xFinger1 = -3,
+							xTrinket0 = -3,
+							xTrinket1 = -3,
+							xSecondaryHand = -77,
+							yHead = 140,
+							yNeck = 99,
+							yShoulder = 58,
+							yBack = 17,
+							yChest = -24,
+							yWrist = -147,
+							yMainHand = -140,
+							yHands = 140,
+							yWaist = 99,
+							yLegs = 58,
+							yFeet = 17,
+							yFinger0 = -24,
+							yFinger1 = -65,
+							yTrinket0 = -106,
+							yTrinket1 = -147,
+							ySecondaryHand = -140
+						}
 
-		table.foreach(
-			GearHelper.db.global.equipLocInspect,
-			function(_, equipLoc)
-				if (_G["charIlvlInspectButton" .. equipLoc]) then
-					_G["charIlvlInspectButton" .. equipLoc]:Hide()
-					_G["charIlvlInspectButton" .. equipLoc] = nil
-				end
-			end
-		)
+						local button = _G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
+						button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
+						button:SetSize(1, 1)
 
-		local trinketAlreadyDone = false
-		local fingerAlreadyDone = false
-		local weaponAlreadyDone = false
+						if (item ~= 0) then
+							local itemScan = GearHelper:GetItemByLink(item)
+							local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
+							iR = ((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or (iR == "a335ee" and 4) or (iR == "ff8000" and 5) or (iR == "e6cc80" and 6) or (iR == "00ccff" and 7))
+							--local _, _, iR, itemLevel = GetItemInfo(item)
 
-		local arrayIlvl = {}
+							button:SetText(itemLevel)
+							button:SetNormalFontObject("GameFontNormalSmall")
 
-		for i = 1, 18 do
-			local itemID = GetInventoryItemLink("target", i)
-			if (itemID ~= nil and itemID ~= -1) then
-				local itemScan = GearHelper:BuildItemFromTooltip(itemID, "itemlink")
-				local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
-
-				--table.insert(arrayIlvl, itemLevel)
-				iR =
-					((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or
-					(iR == "a335ee" and 4) or
-					(iR == "ff8000" and 5) or
-					(iR == "e6cc80" and 6) or
-					(iR == "00ccff" and 7))
-				--local poor, uncommon, common, rare, epic, legendary, artifact, heirloom = 128824, 146976, 132930, 153256, 96707, 147297, 127830, 133597
-
-				if (itemEquipLoc ~= nil) then
-					arrayIlvl[itemEquipLoc] = itemLevel
-					-- print("----------")
-					-- print("itemID : " .. itemID)
-					-- print("itemLink : " .. itemLink)
-					-- print("itemLevel : " .. itemLevel)
-					-- print("itemEquipLoc : " .. itemEquipLoc)
-					-- print("iR : " .. iR)
-
-					local button
-					if (itemEquipLoc == "INVTYPE_FINGER" and not fingerAlreadyDone) then
-						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER"]))
-						-- print("Finger0")
-						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or
-							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
-						button:SetPoint(
-							"CENTER",
-							InspectPaperDollItemsFrame,
-							"CENTER",
-							arrayPos["x" .. itemEquipLoc],
-							arrayPos["yINVTYPE_FINGER"]
-						)
-						fingerAlreadyDone = true
-					elseif (itemEquipLoc == "INVTYPE_FINGER" and fingerAlreadyDone) then
-						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER1"]))
-						-- print("Finger1")
-						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
-							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
-						button:SetPoint(
-							"CENTER",
-							InspectPaperDollItemsFrame,
-							"CENTER",
-							arrayPos["x" .. itemEquipLoc],
-							arrayPos["yINVTYPE_FINGER1"]
-						)
-					elseif (itemEquipLoc == "INVTYPE_TRINKET" and not trinketAlreadyDone) then
-						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET"]))
-						-- print("Trinket0")
-						button =
-							_G["charIlvlButton" .. itemEquipLoc .. "0"] or
-							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
-						button:SetPoint(
-							"CENTER",
-							InspectPaperDollItemsFrame,
-							"CENTER",
-							arrayPos["x" .. itemEquipLoc],
-							arrayPos["yINVTYPE_TRINKET"]
-						)
-						trinketAlreadyDone = true
-					elseif (itemEquipLoc == "INVTYPE_TRINKET" and trinketAlreadyDone) then
-						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET1"]))
-						-- print("Trinket1")
-						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
-							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
-						button:SetPoint(
-							"CENTER",
-							InspectPaperDollItemsFrame,
-							"CENTER",
-							arrayPos["x" .. itemEquipLoc],
-							arrayPos["yINVTYPE_TRINKET1"]
-						)
-					elseif (itemEquipLoc == "INVTYPE_WEAPON" and not weaponAlreadyDone) then
-						-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONMAINHAND"]))
-						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONMAINHAND"]))
-						-- print("Arme0")
-						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or
-							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
-						button:SetPoint(
-							"CENTER",
-							InspectPaperDollItemsFrame,
-							"CENTER",
-							arrayPos["xINVTYPE_WEAPONMAINHAND"],
-							arrayPos["yINVTYPE_WEAPONMAINHAND"]
-						)
-						weaponAlreadyDone = true
-					elseif (itemEquipLoc == "INVTYPE_WEAPON" and weaponAlreadyDone) then
-						-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONOFFHAND"]))
-						-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONOFFHAND"]))
-						-- print("Arme1")
-						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or
-							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
-						button:SetPoint(
-							"CENTER",
-							InspectPaperDollItemsFrame,
-							"CENTER",
-							arrayPos["xINVTYPE_WEAPONOFFHAND"],
-							arrayPos["yINVTYPE_WEAPONOFFHAND"]
-						)
-					else
-						-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-						-- print("yPos : " .. tostring(arrayPos["y" .. itemEquipLoc]))
-						button =
-							_G["charIlvlInspectButton" .. itemEquipLoc] or
-							CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc, InspectPaperDollItemsFrame)
-						button:SetPoint(
-							"CENTER",
-							InspectPaperDollItemsFrame,
-							"CENTER",
-							arrayPos["x" .. itemEquipLoc],
-							arrayPos["y" .. itemEquipLoc]
-						)
+							local font = _G["charIlvlFont" .. slotName] or CreateFont("charIlvlFont" .. slotName)
+							local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+							font:SetTextColor(r, g, b, 1)
+							button:SetNormalFontObject(font)
+						end
 					end
-					button:SetSize(1, 1)
-					button:SetText(itemLevel)
-					button:SetNormalFontObject("GameFontNormalSmall")
-
-					local font =
-						_G["charIlvlInspectButton" .. itemEquipLoc .. itemID] or
-						CreateFont("charIlvlInspectButton" .. itemEquipLoc .. itemID)
-					local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
-					font:SetTextColor(r, g, b, 1)
-					button:SetNormalFontObject(font)
-					button:Show()
-				else
-					-- print("itemID : " .. itemID)
-					--print("Item pas en cache, relancer inspecter")
-					-- do
-					-- 	return
-					-- end
 				end
+			)
+		end
+	end
+
+	local function CharFrameHide()
+		GearHelper:HideIlvlOnCharFrame()
+	end
+
+	PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
+	PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
+
+	if (show) then
+		CharFrameShow()
+	end
+end
+
+function GearHelper:HideIlvlOnCharFrame()
+	table.foreach(
+		GearHelper.charInventory,
+		function(slotName, item)
+			if (_G["charIlvlButton" .. slotName]) then
+				_G["charIlvlButton" .. slotName]:Hide()
+				_G["charIlvlButton" .. slotName] = nil
 			end
 		end
+	)
+end
 
-		local ilvlAverage = 0
-		local itemCount = 0
-		table.foreach(
-			arrayIlvl,
-			function(equipLoc, ilvl)
-				-- print("equipLoc : " .. equipLoc)
-				if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
-					ilvlAverage = ilvlAverage + ilvl
-					itemCount = itemCount + 1
+function GearHelper:AddIlvlOnInspectFrame(target, show)
+	local function InspectFrameShow(frame)
+		if (GearHelper.db.profile.ilvlInspectFrame) then
+			local arrayPos = {
+				xINVTYPE_HEAD = -100,
+				xINVTYPE_NECK = -100,
+				xINVTYPE_SHOULDER = -100,
+				xINVTYPE_BACK = -100,
+				xINVTYPE_ROBE = -100,
+				xINVTYPE_CLOAK = -100,
+				xINVTYPE_CHEST = -100,
+				xINVTYPE_BODY = -100,
+				xINVTYPE_TABARD = -100,
+				xINVTYPE_WRIST = -100,
+				xINVTYPE_MAINHAND = -20,
+				xINVTYPE_RANGED = -20,
+				xINVTYPE_WEAPONMAINHAND = -20,
+				xINVTYPE_2HWEAPON = -20,
+				xINVTYPE_WEAPON = -20,
+				xINVTYPE_RANGEDRIGHT = -20,
+				xINVTYPE_HAND = 95,
+				xINVTYPE_WAIST = 95,
+				xINVTYPE_LEGS = 95,
+				xINVTYPE_FEET = 95,
+				xINVTYPE_FINGER = 95,
+				xINVTYPE_TRINKET = 95,
+				xINVTYPE_SECONDARYHAND = 20,
+				xINVTYPE_WEAPONOFFHAND = 20,
+				yINVTYPE_HEAD = 140,
+				yINVTYPE_NECK = 99,
+				yINVTYPE_SHOULDER = 58,
+				yINVTYPE_BACK = 17,
+				yINVTYPE_CLOAK = 17,
+				yINVTYPE_CHEST = -24,
+				yINVTYPE_ROBE = -24,
+				yINVTYPE_BODY = -65,
+				yINVTYPE_TABARD = -106,
+				yINVTYPE_WRIST = -147,
+				yINVTYPE_MAINHAND = -140,
+				yINVTYPE_RANGED = -140,
+				yINVTYPE_WEAPONMAINHAND = -140,
+				yINVTYPE_2HWEAPON = -140,
+				yINVTYPE_WEAPON = -140,
+				yINVTYPE_RANGEDRIGHT = -140,
+				yINVTYPE_HAND = 140,
+				yINVTYPE_WAIST = 99,
+				yINVTYPE_LEGS = 58,
+				yINVTYPE_FEET = 17,
+				yINVTYPE_FINGER = -24,
+				yINVTYPE_FINGER1 = -65,
+				yINVTYPE_TRINKET = -106,
+				yINVTYPE_TRINKET1 = -147,
+				yINVTYPE_SECONDARYHAND = -140,
+				yINVTYPE_WEAPONOFFHAND = -140
+			}
+
+			local trinketAlreadyDone = false
+			local fingerAlreadyDone = false
+			local weaponAlreadyDone = false
+
+			local arrayIlvl = {}
+
+			for i = 1, 18 do
+				local itemID = GetInventoryItemLink("target", i)
+				if (itemID ~= nil and itemID ~= -1) then
+					local itemScan = GearHelper:GetItemByLink(itemID)
+					local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
+
+					--table.insert(arrayIlvl, itemLevel)
+					iR = ((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or (iR == "a335ee" and 4) or (iR == "ff8000" and 5) or (iR == "e6cc80" and 6) or (iR == "00ccff" and 7))
+					--local poor, uncommon, common, rare, epic, legendary, artifact, heirloom = 128824, 146976, 132930, 153256, 96707, 147297, 127830, 133597
+
+					if (itemEquipLoc ~= nil) then
+						arrayIlvl[itemEquipLoc] = itemLevel
+						-- print("----------")
+						-- print("itemID : " .. itemID)
+						-- print("itemLink : " .. itemLink)
+						-- print("itemLevel : " .. itemLevel)
+						-- print("itemEquipLoc : " .. itemEquipLoc)
+						-- print("iR : " .. iR)
+
+						local button
+						if (itemEquipLoc == "INVTYPE_FINGER" and not fingerAlreadyDone) then
+							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER"]))
+							-- print("Finger0")
+							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
+							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_FINGER"])
+							fingerAlreadyDone = true
+						elseif (itemEquipLoc == "INVTYPE_FINGER" and fingerAlreadyDone) then
+							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER1"]))
+							-- print("Finger1")
+							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
+							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_FINGER1"])
+						elseif (itemEquipLoc == "INVTYPE_TRINKET" and not trinketAlreadyDone) then
+							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET"]))
+							-- print("Trinket0")
+							button = _G["charIlvlButton" .. itemEquipLoc .. "0"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
+							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_TRINKET"])
+							trinketAlreadyDone = true
+						elseif (itemEquipLoc == "INVTYPE_TRINKET" and trinketAlreadyDone) then
+							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET1"]))
+							-- print("Trinket1")
+							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
+							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_TRINKET1"])
+						elseif (itemEquipLoc == "INVTYPE_WEAPON" and not weaponAlreadyDone) then
+							-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONMAINHAND"]))
+							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONMAINHAND"]))
+							-- print("Arme0")
+							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
+							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["xINVTYPE_WEAPONMAINHAND"], arrayPos["yINVTYPE_WEAPONMAINHAND"])
+							weaponAlreadyDone = true
+						elseif (itemEquipLoc == "INVTYPE_WEAPON" and weaponAlreadyDone) then
+							-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONOFFHAND"]))
+							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONOFFHAND"]))
+							-- print("Arme1")
+							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
+							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["xINVTYPE_WEAPONOFFHAND"], arrayPos["yINVTYPE_WEAPONOFFHAND"])
+						else
+							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
+							-- print("yPos : " .. tostring(arrayPos["y" .. itemEquipLoc]))
+							button = _G["charIlvlInspectButton" .. itemEquipLoc] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc, InspectPaperDollItemsFrame)
+							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["y" .. itemEquipLoc])
+						end
+						button:SetSize(1, 1)
+						button:SetText(itemLevel)
+						button:SetNormalFontObject("GameFontNormalSmall")
+
+						local font = _G["charIlvlInspectButton" .. itemEquipLoc .. itemID] or CreateFont("charIlvlInspectButton" .. itemEquipLoc .. itemID)
+						local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+						font:SetTextColor(r, g, b, 1)
+						button:SetNormalFontObject(font)
+						button:Show()
+					end
 				end
 			end
-		)
-		-- print("itemCount : "..itemCount)
-		if (itemCount > 0) then
-			local button = _G["ilvlAverageInspect"] or CreateFrame("Button", "ilvlAverageInspect", InspectPaperDollItemsFrame)
-			button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", 0, -110)
 
-			button:SetSize(1, 1)
-			button:SetText(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-			button:SetNormalFontObject("GameFontNormalSmall")
+			local ilvlAverage = 0
+			local itemCount = 0
+			table.foreach(
+				arrayIlvl,
+				function(equipLoc, ilvl)
+					-- print("equipLoc : " .. equipLoc)
+					if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+						ilvlAverage = ilvlAverage + ilvl
+						itemCount = itemCount + 1
+					end
+				end
+			)
+			-- print("itemCount : "..itemCount)
+			if (itemCount > 0) then
+				local button = _G["ilvlAverageInspect"] or CreateFrame("Button", "ilvlAverageInspect", InspectPaperDollItemsFrame)
+				button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", 0, -110)
 
-			local font = ilvlAverageInspectFont or CreateFont("ilvlAverageInspectFont")
-			local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
-			font:SetTextColor(1, 0.9, 0, 1)
-			button:SetNormalFontObject(font)
+				button:SetSize(1, 1)
+				button:SetText(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+				button:SetNormalFontObject("GameFontNormalSmall")
+
+				local font = ilvlAverageInspectFont or CreateFont("ilvlAverageInspectFont")
+				local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
+				font:SetTextColor(1, 0.9, 0, 1)
+				button:SetNormalFontObject(font)
+			end
 		end
 	end
 
 	local function InspectFrameHide()
+		GearHelper:HideIlvlOnInspectFrame()
 	end
 
 	InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
 	InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
+
+	if (show) then
+		InspectFrameShow()
+	end
 end
 
-local function InitEquipLocInspect()
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_HEAD")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_NECK")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_SHOULDER")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_BACK")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_ROBE")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_CLOAK")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_CHEST")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_BODY")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TABARD")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WRIST")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_MAINHAND")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_RANGED")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPONMAINHAND")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_2HWEAPON")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON0")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPON1")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_RANGEDRIGHT")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_HAND")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WAIST")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_LEGS")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FEET")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER0")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_FINGER1")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE0")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_TRINKE1")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_SECONDARYHAND")
-	table.insert(GearHelper.db.global.equipLocInspect, "INVTYPE_WEAPONOFFHAND")
+function GearHelper:HideIlvlOnInspectFrame()
+	table.foreach(
+		GearHelper.db.global.equipLocInspect,
+		function(equipLoc, number)
+			if (_G["charIlvlInspectButton" .. equipLoc]) then
+				_G["charIlvlInspectButton" .. equipLoc]:Hide()
+				_G["charIlvlInspectButton" .. equipLoc] = nil
+			end
+			if (_G["ilvlAverageInspect"]) then
+				_G["ilvlAverageInspect"]:Hide()
+				_G["ilvlAverageInspect"] = nil
+			end
+		end
+	)
+end
+
+function GearHelper:InitEquipLocInspect()
+	GearHelper.db.global.equipLocInspect["INVTYPE_HEAD"] = 1
+	GearHelper.db.global.equipLocInspect["INVTYPE_NECK"] = 2
+	GearHelper.db.global.equipLocInspect["INVTYPE_SHOULDER"] = 3
+	GearHelper.db.global.equipLocInspect["INVTYPE_BACK"] = 15
+	GearHelper.db.global.equipLocInspect["INVTYPE_CLOAK"] = 15
+	GearHelper.db.global.equipLocInspect["INVTYPE_CHEST"] = 5
+	GearHelper.db.global.equipLocInspect["INVTYPE_ROBE"] = 5
+	GearHelper.db.global.equipLocInspect["INVTYPE_BODY"] = 4
+	GearHelper.db.global.equipLocInspect["INVTYPE_TABARD"] = 19
+	GearHelper.db.global.equipLocInspect["INVTYPE_WRIST"] = 9
+	GearHelper.db.global.equipLocInspect["INVTYPE_MAINHAND"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_RANGED"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPONMAINHAND"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_2HWEAPON"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON0"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON1"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_RANGEDRIGHT"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_HAND"] = 10
+	GearHelper.db.global.equipLocInspect["INVTYPE_WAIST"] = 6
+	GearHelper.db.global.equipLocInspect["INVTYPE_LEGS"] = 7
+	GearHelper.db.global.equipLocInspect["INVTYPE_FEET"] = 8
+	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER"] = 11
+	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER0"] = 11
+	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER1"] = 12
+	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET"] = 13
+	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET0"] = 13
+	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET1"] = 14
+	GearHelper.db.global.equipLocInspect["INVTYPE_SECONDARYHAND"] = 17
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPONOFFHAND"] = 17
 end
 
 --[[

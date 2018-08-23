@@ -19,12 +19,10 @@ L["iNeededOn"] = "J'ai fait fait besoin sur "
 L["UIGHCheckBoxAddon"] = "Active / désactive GearHelper"
 L["UIGHCheckBoxSellGrey"] = "Active / désactive la vente automatique d'objets gris"
 L["UIGHCheckBoxAutoGreed"] = "Active / désactive l'option de cupidité automatique en instance"
-L["UIGHCheckBoxAutoAcceptQuestReward"] =
-	"Active / désactive l'option pour recevoir automatiquement les récompenses de quêtes"
+L["UIGHCheckBoxAutoAcceptQuestReward"] = "Active / désactive l'option pour recevoir automatiquement les récompenses de quêtes"
 L["UIGHCheckBoxAutoNeed"] = "Active / désactive l'option de besoin automatique en instance"
 L["UIGHCheckBoxAutoEquipLootedStuff"] = "Active / désactive l'option pour équiper automatiquement le stuff ramassé"
-L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] =
-	"Active / désactive l'option pour équiper automatiquement le bon stuff au changement de spé"
+L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] = "Active / désactive l'option pour équiper automatiquement le bon stuff au changement de spé"
 L["CantRepair"] = "Vous ne pouvez pas réparer"
 L["repairCost"] = "Coût des réparations : "
 L["guildRepairCost"] = "Coût des réparations pour la guilde : "
@@ -62,8 +60,7 @@ L["autoNeed"] = "Besoin automatique"
 L["autoEquipLootedStuff"] = "Equiper automatiquement le stuff ramassé"
 L["autoEquipSpecChangedStuff"] = "Changer l'équipement en même temps que la spé"
 L["lootInRaidAlert"] = "Alerte des loots en raid"
-L["UIGHCheckBoxlootInRaidAlert"] =
-	"Active / Désactive l'option pour être informé si quelqu'un loot quelque chose de mieux que ce que vous avez, en instance"
+L["UIGHCheckBoxlootInRaidAlert"] = "Active / Désactive l'option pour être informé si quelqu'un loot quelque chose de mieux que ce que vous avez, en instance"
 L["UIprintWhenEquip"] = "Mode verbal"
 L["miscOptions"] = "Options secondaires"
 L["sellGrey"] = "Vente d'objets gris"
@@ -86,8 +83,7 @@ L["betterThanNothing"] = "Cet item est mieux que rien"
 L["UIGlobalComputeNotEquippable"] = "Afficher item non equippable"
 L["UIGlobalComputeNotEquippableDescription"] = "Afficher si un item est meilleur meme si il n'est pas équipable"
 L["UICWasPercentage"] = "Valeur en pourcentage"
-L["UICWasPercentageDescription"] =
-	"Decrire l'importance de chaque statistique par un chiffre représentant un pourcentage, la somme des valeurs doit faire 100"
+L["UICWasPercentageDescription"] = "Decrire l'importance de chaque statistique par un chiffre représentant un pourcentage, la somme des valeurs doit faire 100"
 L["UIWhisperAlert"] = "Alerte chuchotement"
 L["UIWhisperAlertDesc"] = "Joue un son quand un joueur vous /w"
 L["UISayMyName"] = "Dis mon nom"
@@ -109,8 +105,26 @@ L["DropBy"] = "Obtenu sur : "
 L["ilvlInspect"] = "ilvl moyen : "
 L["UIBossesKilled"] = "Bosses tués"
 L["UIBossesKilledDesc"] = "Affiche les bosses tués sur le menu LFR"
+L["UIIlvlCharFrame"] = "ilvl fiche personnage"
+L["UIIlvlCharFrameDesc"] = "Affiche l'ilvl sur la fiche de personnage"
+L["UIIlvlInspectFrame"] = "ilvl inspection"
+L["UIIlvlInspectFrameDesc"] = "Affiche l'ilvl d'un joueur quand vous l'inspectez"
+L["getLoot"] = "reçoit le butin" -- text when another player get a loot ()
+L["maLangueenUS"] = "French"
+L["maLanguefrFR"] = "Français"
+L["maLangueesES"] = "Francés"
+L["maLangueesEX"] = "Francés"
+L["maLanguedeDE"] = "Französisch"
+L["maLangueitIT"] = "Francese"
+L["maLangueruRU"] = "французский"
+L["maLanguekoKR"] = "프랑스의"
+L["maLangueptBR"] = "Francês"
+L["maLanguezhCN"] = "法国"
+L["maLanguezhTW"] = "法國"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 
+------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
+-----
 
 L["Tooltip"] = {
 	Stat = {

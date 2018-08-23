@@ -130,18 +130,11 @@ local slashCmd = {
 
 		for a = 1, #bagInventory do
 			local _, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(bagInventory[a])
-			if
-				itemEquipLoc ~= "INVTYPE_WEAPON" and itemEquipLoc ~= "INVTYPE_2HWEAPON" and itemEquipLoc ~= "INVTYPE_FINGER" and
-					itemEquipLoc ~= "INVTYPE_TRINKET"
-			 then
+			if itemEquipLoc ~= "INVTYPE_WEAPON" and itemEquipLoc ~= "INVTYPE_2HWEAPON" and itemEquipLoc ~= "INVTYPE_FINGER" and itemEquipLoc ~= "INVTYPE_TRINKET" then
 				print("On test " .. bagInventory[a])
 
 				local exItem = stuffBefore[GearHelper.itemSlot[itemEquipLoc]]
-				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name =
-					string.find(
-					exItem,
-					"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?"
-				)
+				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name = string.find(exItem, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 				--
 				--EquipItemByName(bagInventory[a])
 				--[[print(GetCombatRating(11)) --Critique
@@ -149,9 +142,7 @@ local slashCmd = {
 				print(GetCombatRating(20)) --Hate
 				print(GetCombatRating(26)) --Maitrise
 				print(GetCombatRating(29)) --Polyvalence
-				print(GetCombatRating(21)) --Evitement]] print(
-					"On replace " .. exItem
-				)
+				print(GetCombatRating(21)) --Evitement]] print("On replace " .. exItem)
 			--EquipItemByName(Id)
 			end
 		end
@@ -195,13 +186,13 @@ local slashCmd = {
 		GearHelper.equipItem(4)
 	end,
 	ain = function()
-		GearHelper:createLinkAskIfHeNeeds(1)
+		GearHelper:CreateLinkAskIfHeNeeds(1)
 	end,
 	reset = function()
 		GearHelper:setDefault()
 	end,
 	aze = function()
-		GearHelper:createLinkAskIfHeNeeds(1)
+		GearHelper:CreateLinkAskIfHeNeeds(1)
 
 		local used = false
 		for i = 1, NUM_CHAT_WINDOWS do
