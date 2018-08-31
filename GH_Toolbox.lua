@@ -55,50 +55,48 @@ Last Modified : Raphaël Saget
 function GearHelper:IsEquippableByMe(item)
 	local isItMadeForMe = false
 
-	if IsEquippableItem(item.id) then
-		local myLevel = UnitLevel("player")
-		local _, myClass = UnitClass("player")
-		local currentSpec = GetSpecialization()
-		local playerSpec = GetSpecializationInfo(currentSpec)
+	if not IsEquippableItem(item.id) then
+		return false
+	end
 
-		if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" then
-			--Is it a common item shared by all classes ?
-			isItMadeForMe = false
-		elseif
-			item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or
-				item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or
-				item.subType == L.IsEquipable.PRIEST.Tissu
-		 then
-			--Is it an artifact weapon ?
-			isItMadeForMe = true
-		elseif item.rarity == "e6cc80" then
-			if type(L.Artifact[tostring(playerSpec)]) == "string" then
-				if tostring(item.id) == L.Artifact[tostring(playerSpec)] then
-					isItMadeForMe = true
-				end
-			else
-				table.foreach(
-					L.Artifact[tostring(playerSpec)],
-					function(_, v)
-						if tostring(item.id) == v then
-							isItMadeForMe = true
-						end
-					end
-				)
+	local myLevel = UnitLevel("player")
+	local _, myClass = UnitClass("player")
+	local currentSpec = GetSpecialization()
+	local playerSpec = GetSpecializationInfo(currentSpec)
+
+	if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" then
+		--Is it a common item shared by all classes ?
+		isItMadeForMe = false
+	elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or item.subType == L.IsEquipable.PRIEST.Tissu then
+		--Is it an artifact weapon ?
+		isItMadeForMe = true
+	elseif item.rarity == "e6cc80" then
+		if type(L.Artifact[tostring(playerSpec)]) == "string" then
+			if tostring(item.id) == L.Artifact[tostring(playerSpec)] then
+				isItMadeForMe = true
 			end
-		elseif item.equipLoc == "INVTYPE_TABARD" or item.equipLoc == "INVTYPE_BODY" then -- Do not consider as equippable because they have no stats and we dont store them in charInventory
-			isItMadeForMe = false
 		else
-			--Is it an item that i can equip with my character ?
 			table.foreach(
-				L.IsEquipable[tostring(myClass)],
+				L.Artifact[tostring(playerSpec)],
 				function(_, v)
-					if item.subType == v then
+					if tostring(item.id) == v then
 						isItMadeForMe = true
 					end
 				end
 			)
 		end
+	elseif item.equipLoc == "INVTYPE_TABARD" or item.equipLoc == "INVTYPE_BODY" then -- Do not consider as equippable because they have no stats and we dont store them in charInventory
+		isItMadeForMe = false
+	else
+		--Is it an item that i can equip with my character ?
+		table.foreach(
+			L.IsEquipable[tostring(myClass)],
+			function(_, v)
+				if item.subType == v then
+					isItMadeForMe = true
+				end
+			end
+		)
 	end
 	return isItMadeForMe
 end
