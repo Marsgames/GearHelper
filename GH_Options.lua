@@ -142,9 +142,7 @@ local ghOptionsTable = {
 						---------- A ETUDIER --------
 						local icon = LibStub("LibDBIcon-1.0")
 						local ghIcon = icon:GetMinimapButton("GHIcon")
-						ghIcon.icon =
-							GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or
-							"Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
+						ghIcon.icon = GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
 						icon:Refresh("GHIcon")
 						-----------------------------
 					end,
@@ -232,6 +230,7 @@ local ghOptionsTable = {
 					type = "toggle",
 					set = function(_, val)
 						GearHelper.db.profile.autoEquipLooted.actual = val
+						GearHelper.db.profile.autoEquipLooted.previous = val
 					end,
 					get = function()
 						return GearHelper.db.profile.autoEquipLooted.actual
@@ -1439,8 +1438,7 @@ local aboutTable = {
 		author = {
 			order = 1,
 			fontSize = "medium",
-			name = "                |cFFFFFF00Author :|r Marsgames - Temple Noir\n                               Tempaxe - Temple Noir" --[[Ta mère]] ..
-				" \n",
+			name = "                |cFFFFFF00Author :|r Marsgames - Temple Noir\n                               Tempaxe - Temple Noir" --[[Ta mère]] .. " \n",
 			type = "description"
 		},
 		email = {
@@ -1479,7 +1477,6 @@ LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwT
 -- LibStub("AceConfig-3.0"):RegisterOptionsTable("About", aboutTable)
 GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Options secondaires", "Options secondaires", "GearHelper")
-GearHelper.cwFrame =
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
+GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
 LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
 -- LibStub("AceConfigDialog-3.0"):AddToBlizOptions("About", "About", "GearHelper")

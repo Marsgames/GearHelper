@@ -20,16 +20,18 @@ local function AddonLoaded(_, _, name)
 	GearHelper:InitTemplates()
 
 	if name ~= addonName then
-		do return end
+		do
+			return
+		end
 	end
 
-		--RegisterAddonMessagePrefix(prefixAddon)
-		print(GearHelper:ColorizeString(L["merci"], "Vert"))
-		local runningBuild = select(4, GetBuildInfo())
-		if GearHelper.db.global.buildVersion ~= runningBuild then
-			GearHelper.db.global.buildVersion = runningBuild
-			GearHelper:ResetCache()
-		end
+	--RegisterAddonMessagePrefix(prefixAddon)
+	print(GearHelper:ColorizeString(L["merci"], "Vert"))
+	local runningBuild = select(4, GetBuildInfo())
+	if GearHelper.db.global.buildVersion ~= runningBuild then
+		GearHelper.db.global.buildVersion = runningBuild
+		GearHelper:ResetCache()
+	end
 end
 
 --[[
@@ -148,31 +150,37 @@ Author : Raphaël Daumas
 ]]
 local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
 	if prefixMessage ~= prefixAddon then
-		do return end
-	end
-	if not GearHelper.db.profile.addonEnabled then 
-		do return end
-	end
-
-		local emetteur = ""
-		if sender:find("-") then
-			emetteur = sender:sub(0, (sender:find("-") - 1))
-		else
-			emetteur = sender
+		do
+			return
 		end
+	end
+	if not GearHelper.db.profile.addonEnabled then
+		do
+			return
+		end
+	end
 
-			if emetteur == GetUnitName("player") then
-				do return end
-			end
-				local prefVersion = message:sub(0, (message:find(";") - 1))
-				if prefVersion == "answerVersion" then
-					local vVersion = message:sub(message:find(";") + 1, #message)
-					versionCible = vVersion
-					GearHelper:receiveAnswer(vVersion, sender)
-				end
-				if prefVersion == "askVersion" then
-					GearHelper:sendAnswerVersion()
-				end
+	local emetteur = ""
+	if sender:find("-") then
+		emetteur = sender:sub(0, (sender:find("-") - 1))
+	else
+		emetteur = sender
+	end
+
+	if emetteur == GetUnitName("player") then
+		do
+			return
+		end
+	end
+	local prefVersion = message:sub(0, (message:find(";") - 1))
+	if prefVersion == "answerVersion" then
+		local vVersion = message:sub(message:find(";") + 1, #message)
+		versionCible = vVersion
+		GearHelper:receiveAnswer(vVersion, sender)
+	end
+	if prefVersion == "askVersion" then
+		GearHelper:sendAnswerVersion()
+	end
 end
 
 --[[
@@ -184,20 +192,22 @@ Author : Raphaël Daumas
 ]]
 local function ItemPush(_, _, bag)
 	if not GearHelper.db.profile.autoEquipLooted.actual then
-		do return end
+		do
+			return
+		end
 	end
 
-		local theBag = bag
-		if bag == 23 then
-			theBag = 4
-		elseif bag == 22 then
-			theBag = 3
-		elseif bag == 21 then
-			theBag = 2
-		elseif bag == 20 then
-			theBag = 1
-		end
-		GearHelper:equipItem(theBag)
+	local theBag = bag
+	if bag == 23 then
+		theBag = 4
+	elseif bag == 22 then
+		theBag = 3
+	elseif bag == 21 then
+		theBag = 2
+	elseif bag == 20 then
+		theBag = 1
+	end
+	GearHelper:equipItem(theBag)
 end
 
 --[[
@@ -241,28 +251,29 @@ Description : Appelé quand la fenetre d'un marchant se ferme. calcul l'argent g
 Author : Raphaël Daumas
 ]]
 local function MerchantClosed()
-
 	if not GearHelper.db.profile.sellGreyItems then
-		do return end
+		do
+			return
+		end
 	end
 
-		local argentFin = 0
-		for bag = 0, 4 do
-			for slot = 1, GetContainerNumSlots(bag) do
-				if GetContainerItemID(bag, slot) ~= nil then
-					local _, itemCount = GetContainerItemInfo(bag, slot)
-					local id = GetContainerItemID(bag, slot)
-					if id then
-						local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
-						argentFin = argentFin + (vendorPrice * itemCount)
-					end
+	local argentFin = 0
+	for bag = 0, 4 do
+		for slot = 1, GetContainerNumSlots(bag) do
+			if GetContainerItemID(bag, slot) ~= nil then
+				local _, itemCount = GetContainerItemInfo(bag, slot)
+				local id = GetContainerItemID(bag, slot)
+				if id then
+					local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
+					argentFin = argentFin + (vendorPrice * itemCount)
 				end
 			end
 		end
-		if (gagne - argentFin > 0) then
-			print(GearHelper:ColorizeString(L["moneyEarned"], "Vert") .. math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"])
-			gagne = 0
-		end
+	end
+	if (gagne - argentFin > 0) then
+		print(GearHelper:ColorizeString(L["moneyEarned"], "Vert") .. math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"])
+		gagne = 0
+	end
 end
 
 --[[
@@ -273,15 +284,19 @@ Author : Raphaël Daumas
 ]]
 local function BagUpdate()
 	if not GearHelper.charInventory["MainHand"] then
-		do return end
+		do
+			return
+		end
 	end
 	if GearHelper.charInventory["MainHand"] == "" then
-		do return end
+		do
+			return
+		end
 	end
 
 	-- Random check to verify that charInventory is initialized because BagUpdate is fired before PlayerEnteringWorld
-		GearHelper:ScanCharacter()
-		GearHelper:poseDot()
+	GearHelper:ScanCharacter()
+	GearHelper:poseDot()
 end
 
 --[[
@@ -292,16 +307,18 @@ Author : Raphaël Daumas
 ]]
 local function ActiveTalentGroupChanged()
 	if not GearHelper.db.profile.autoEquipWhenSwitchSpe then
-			GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
-		do return end
+		GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+		do
+			return
+		end
 	end
 
-		-- waitSpeTime:Show()
-		GearHelper:equipItem(0)
-		GearHelper:equipItem(1)
-		GearHelper:equipItem(2)
-		GearHelper:equipItem(3)
-		GearHelper:equipItem(4)
+	-- waitSpeTime:Show()
+	GearHelper:equipItem(0)
+	GearHelper:equipItem(1)
+	GearHelper:equipItem(2)
+	GearHelper:equipItem(3)
+	GearHelper:equipItem(4)
 end
 
 --[[
@@ -315,16 +332,18 @@ Author : Raphaël Daumas
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)
 	if not GearHelper.db.profile.autoInvite or not msg then
 		GearHelper:ShowMessageSMN(channel, sender, msg)
-		do return end
+		do
+			return
+		end
 	end
 
-		local playerIsNotMe = not string.find(sender, GetUnitName("player"))
-		if msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe and GetNumGroupMembers() == 5 then
-			ConvertToRaid()
-			InviteUnit(sender)
-		elseif msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe then
-			InviteUnit(sender)
-		end
+	local playerIsNotMe = not string.find(sender, GetUnitName("player"))
+	if msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe and GetNumGroupMembers() == 5 then
+		ConvertToRaid()
+		InviteUnit(sender)
+	elseif msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe then
+		InviteUnit(sender)
+	end
 
 	GearHelper:ShowMessageSMN(channel, sender, msg)
 end
@@ -364,7 +383,7 @@ local function ChatMsgLoot(_, _, message, language, sender, channelString, targe
 	-- if not target then
 	-- 	do return end
 	-- end
-	-- if target == GetUnitName("player") then 
+	-- if target == GetUnitName("player") then
 	-- 	do return end
 	-- end
 	-- if target == "" then
@@ -373,23 +392,23 @@ local function ChatMsgLoot(_, _, message, language, sender, channelString, targe
 	-- if not GearHelper.db.profile.askLootRaid then
 	-- 	do return end
 	-- end
-	-- if string.find(string.lower(message), L["getLoot"]) then 
+	-- if string.find(string.lower(message), L["getLoot"]) then
 	-- 	do return end
 	-- end
 
-			-- inspectAin = {waitingIlvl = false, equipLoc = nil, ilvl = nil, linkItemReceived = nil, message = nil, target = nil}
-			-- GearHelper.db.profile.inspectAin.waitingIlvl = true
-			-- GearHelper.db.profile.inspectAin.message = message
-			-- GearHelper.db.profile.inspectAin.target = target
+	-- inspectAin = {waitingIlvl = false, equipLoc = nil, ilvl = nil, linkItemReceived = nil, message = nil, target = nil}
+	-- GearHelper.db.profile.inspectAin.waitingIlvl = true
+	-- GearHelper.db.profile.inspectAin.message = message
+	-- GearHelper.db.profile.inspectAin.target = target
 
-			-- for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
-			-- 	local itemTable = GearHelper:GetItemByLink(itemLink)
-			-- 	GearHelper.db.profile.inspectAin.linkItemReceived = itemTable.itemLink
-			-- 	do
-			-- 		return
-			-- 	end
-			-- end
-			--NotifyInspect(target)
+	-- for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
+	-- 	local itemTable = GearHelper:GetItemByLink(itemLink)
+	-- 	GearHelper.db.profile.inspectAin.linkItemReceived = itemTable.itemLink
+	-- 	do
+	-- 		return
+	-- 	end
+	-- end
+	--NotifyInspect(target)
 end
 
 local function ChatMsgBattleground(_, _, msg, sender, lang, channel)
@@ -449,25 +468,31 @@ Author : Raphaël Daumas
 ]]
 local function UnitInventoryChanged(_, _, joueur)
 	if not GearHelper.db.profile.addonEnabled then
-		do return end
+		do
+			return
+		end
 	end
 	if joueur ~= "player" then
-		do return end
-	end		
-
-		GearHelper:ScanCharacter()
-
-		if not GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")) then
-			do return end
+		do
+			return
 		end
+	end
 
-			local _, _, _, _, _, _, subclass = GetItemInfo(GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")))
-			if subclass == L["cannapeche"] then
-				GearHelper.db.profile.autoEquipLooted.previous = GearHelper.db.profile.autoEquipLooted.actual
-				GearHelper.db.profile.autoEquipLooted.actual = false
-			else
-				GearHelper.db.profile.autoEquipLooted.actual = GearHelper.db.profile.autoEquipLooted.previous
-			end
+	GearHelper:ScanCharacter()
+
+	if not GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")) then
+		do
+			return
+		end
+	end
+
+	local _, _, _, _, _, _, subclass = GetItemInfo(GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")))
+	if subclass == L["cannapeche"] then
+		GearHelper.db.profile.autoEquipLooted.previous = GearHelper.db.profile.autoEquipLooted.actual
+		GearHelper.db.profile.autoEquipLooted.actual = false
+	else
+		GearHelper.db.profile.autoEquipLooted.actual = GearHelper.db.profile.autoEquipLooted.previous
+	end
 end
 
 --[[
@@ -477,12 +502,14 @@ Description : Bonne question ? Equipe les bons items quand on accepte une quête
 Author : Raphaël Daumas
 ]]
 local function QuestTurnedIn()
-	if not GearHelper.db.profile.autoEquipLooted.actual then 
-		do return end
+	if not GearHelper.db.profile.autoEquipLooted.actual then
+		do
+			return
+		end
 	end
 
-		waitSpeTimer = time()
-		waitSpeFrame:Show()
+	waitSpeTimer = time()
+	waitSpeFrame:Show()
 end
 
 --[[
@@ -528,7 +555,6 @@ local function PlayerFlagsChanged(_, _)
 	-- if not GearHelper.db.profile.debug then
 	-- 	do return end
 	-- end
-
 	-- PlaySound(5804, "Master")
 end
 
@@ -548,16 +574,18 @@ local function PlayerLogin(_, _)
 	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
 	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
 		local function LfrFrameShow(frame)
-			if not GearHelper.db.profile.bossesKilled then 
-				do return end
+			if not GearHelper.db.profile.bossesKilled then
+				do
+					return
+				end
 			end
 
-				GearHelper:CreateLfrButtons(frame)
-				GearHelper:UpdateButtonsAndTooltips(frame)
-				GearHelper:UpdateGHLfrButton()
-				GearHelper:UpdateSelecCursor()
-				GearHelper:RegisterEvent("LFG_UPDATE")
-				GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+			GearHelper:CreateLfrButtons(frame)
+			GearHelper:UpdateButtonsAndTooltips(frame)
+			GearHelper:UpdateGHLfrButton()
+			GearHelper:UpdateSelecCursor()
+			GearHelper:RegisterEvent("LFG_UPDATE")
+			GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 		end
 		local function LfrFrameHide()
 			GearHelper:HideLfrButtons()
@@ -655,21 +683,23 @@ local function InspectReady(_, _, target)
 
 		if (itemLootEquipLoc ~= 11 and itemLootEquipLoc ~= 12 and itemLootEquipLoc ~= 13 and itemLootEquipLoc ~= 14) then
 			local itemEquipped = GetInventoryItemLink(target, itemLootEquipLoc)
-			if ( not itemEquipped) then
-				do return end
-			end
-				local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped)
-				local itemEquippedIlvl = itemEquippedTable.iLvl
-				local itemLootIlvl = itemLootTable.iLvl
-
-				print("-------------")
-				print("item équippé par " .. GearHelper.db.profile.inspectAin.target .. " : " .. itemEquipped)
-				print("item reçu : " .. itemLoot)
-				if (itemEquippedIlvl >= itemLootIlvl) then
-					print("Vous pouvez essayer de demander cet objet")
-				else
-					print("L'item loot à un meilleur ilvl, + de chances de refus")
+			if (not itemEquipped) then
+				do
+					return
 				end
+			end
+			local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped)
+			local itemEquippedIlvl = itemEquippedTable.iLvl
+			local itemLootIlvl = itemLootTable.iLvl
+
+			print("-------------")
+			print("item équippé par " .. GearHelper.db.profile.inspectAin.target .. " : " .. itemEquipped)
+			print("item reçu : " .. itemLoot)
+			if (itemEquippedIlvl >= itemLootIlvl) then
+				print("Vous pouvez essayer de demander cet objet")
+			else
+				print("L'item loot à un meilleur ilvl, + de chances de refus")
+			end
 		end
 
 		GearHelper.db.profile.inspectAin.waitingIlvl = false
@@ -680,57 +710,63 @@ local function InspectReady(_, _, target)
 		ClearInspectPlayer()
 	elseif (InspectPaperDollItemsFrame) then -------------------- AFFICHE L'ILVL DES ITEMS D'UN JOUEUR SUR LA FICHE D'INSPECTION
 		GearHelper:AddIlvlOnInspectFrame(target)
-	else ------------------- AFFICHE L'ILVL MOYEN D'UN MEC SUR SON TOOLTIP 
+	else ------------------- AFFICHE L'ILVL MOYEN D'UN MEC SUR SON TOOLTIP
 		if not GameTooltip:IsVisible() then
-			do return end
+			do
+				return
+			end
 		end
 
-			local arrayIlvl = {}
-			for i = 1, 19 do
-				local itemLink = GetInventoryItemLink("mouseover", i)
-				if (itemLink) then
-					local itemScan = GearHelper:GetItemByLink(itemLink)
-					local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
-					if equipLoc ~= nil then
-						arrayIlvl[equipLoc] = itemLvl
-						table.insert(arrayIlvl, itemLvl)
-					end
+		local arrayIlvl = {}
+		for i = 1, 19 do
+			local itemLink = GetInventoryItemLink("mouseover", i)
+			if (itemLink) then
+				local itemScan = GearHelper:GetItemByLink(itemLink)
+				local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
+				if equipLoc ~= nil then
+					arrayIlvl[equipLoc] = itemLvl
+					table.insert(arrayIlvl, itemLvl)
 				end
 			end
-			local ilvlAverage = 0
-			local itemCount = 0
-			table.foreach(
-				arrayIlvl,
-				function(equipLoc, ilvl)
-					if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
-						ilvlAverage = ilvlAverage + ilvl
-						itemCount = itemCount + 1
-					end
+		end
+		local ilvlAverage = 0
+		local itemCount = 0
+		table.foreach(
+			arrayIlvl,
+			function(equipLoc, ilvl)
+				if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+					ilvlAverage = ilvlAverage + ilvl
+					itemCount = itemCount + 1
 				end
-			)
-			if (itemCount ~= 0) then
-				GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
 			end
-			-- GameTooltip:HookScript(
-			-- 	"OnHide",
-			-- 	function()
-			ClearInspectPlayer()
-			-- 	end
-			-- )
-			GameTooltip:Show()
+		)
+		if (itemCount ~= 0) then
+			GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+		end
+		-- GameTooltip:HookScript(
+		-- 	"OnHide",
+		-- 	function()
+		ClearInspectPlayer()
+		-- 	end
+		-- )
+		GameTooltip:Show()
 	end
 	--ClearInspectPlayer()
 end
 
 local function UpdateMouseOverUnit()
-	if not CanInspect("mouseover") then 
-		do return end
+	if not CanInspect("mouseover") then
+		do
+			return
+		end
 	end
 	if not CheckInteractDistance("mouseover", 1) then
-		do return end
+		do
+			return
+		end
 	end
 
-		NotifyInspect("mouseover")
+	NotifyInspect("mouseover")
 end
 
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)

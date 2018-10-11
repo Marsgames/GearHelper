@@ -531,15 +531,15 @@ waitAnswerFrame:SetScript(
 	end
 )
 
--- waitSpeFrame:SetScript("OnUpdate", function( self )
--- 	if time() > waitSpeTimer + 0.5 then
--- 		for bag = 0,4 do
--- 			numBag = bag
--- 			GearHelper:equipItem()
--- 		end
--- 		self:Hide()
--- 	end
--- end)
+waitSpeFrame:SetScript("OnUpdate", function( self )
+	if time() > waitSpeTimer + 0.5 then
+		for bag = 0,4 do
+			numBag = bag
+			GearHelper:equipItem()
+		end
+		self:Hide()
+	end
+end)
 
 waitNilFrame:SetScript(
 	"OnUpdate",
