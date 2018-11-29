@@ -275,7 +275,8 @@ Author : Raphaël Daumas
 ]]
 local function ActiveTalentGroupChanged()
 	if GearHelper.db.profile.autoEquipWhenSwitchSpe then
-		-- waitSpeTime:Show()
+		waitSpeTimer = time()
+		waitSpeFrame:Show()
 		GearHelper:equipItem(0)
 		GearHelper:equipItem(1)
 		GearHelper:equipItem(2)
@@ -637,7 +638,7 @@ local function InspectReady(_, _, target)
 		ClearInspectPlayer()
 	elseif (InspectPaperDollItemsFrame) then -------------------- AFFICHE L'ILVL DES ITEMS D'UN JOUEUR SUR LA FICHE D'INSPECTION
 		GearHelper:AddIlvlOnInspectFrame(target)
-	else ------------------- AFFICHE L'ILVL MOYEN D'UN MEC SUR SON TOOLTIP 
+	else ------------------- AFFICHE L'ILVL MOYEN D'UN MEC SUR SON TOOLTIP
 		if (GameTooltip:IsVisible()) then
 			local arrayIlvl = {}
 			for i = 1, 19 do

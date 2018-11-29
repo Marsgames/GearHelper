@@ -1,41 +1,68 @@
-# Compiled Lua sources
-luac.out
+@@ -1,3 +1,22 @@
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+ # Created by https://www.gitignore.io/api/git,lua,svn,macos,visualstudiocode
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+ ### Git ###
+ # Created by git for backups. To disable backups in Git:
+ # $ git config --global mergetool.keepBackup false
+ *.orig
 
-# Precompiled Headers
-*.gch
-*.pch
+ # Created by git when using merge tools for conflicts
+ *.BACKUP.*
+ *.BASE.*
+ *.LOCAL.*
+ *.REMOTE.*
+ *_BACKUP_*.txt
+ *_BASE_*.txt
+ *_LOCAL_*.txt
+ *_REMOTE_*.txt
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+ ### Lua ###
+ # Compiled Lua sources
+ luac.out
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+ @@ -39,3 +58,44 @@ luac.out
+ *.x86_64
+ *.hex
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
 
+ ### macOS ###
+ # General
+ .DS_Store
+ .AppleDouble
+ .LSOverride
+
+ # Icon must end with two \r
+ Icon
+
+ # Thumbnails
+ ._*
+
+ # Files that might appear in the root of a volume
+ .DocumentRevisions-V100
+ .fseventsd
+ .Spotlight-V100
+ .TemporaryItems
+ .Trashes
+ .VolumeIcon.icns
+ .com.apple.timemachine.donotpresent
+
+ # Directories potentially created on remote AFP share
+ .AppleDB
+ .AppleDesktop
+ Network Trash Folder
+ Temporary Items
+ .apdisk
+
+ ### SVN ###
+ .svn/
+
+ ### VisualStudioCode ###
+ .vscode/*
+ !.vscode/settings.json
+ !.vscode/tasks.json
+ !.vscode/launch.json
+ !.vscode/extensions.json
+
+
+ # End of https://www.gitignore.io/api/git,lua,svn,macos,visualstudiocode 

@@ -77,147 +77,147 @@ end
 local rawValues = {
 	-- MAGE ARCANE --
 	["62"] = {
-		["NOX"] = "Intellect [9.05] > Versatility [7.55] >= Crit [7.4] >= Haste [7.25] > Mastery [4.55]",
+		["NOX"] = "Intellect [9.06] > Versatility [7.56] >= Crit [7.41] >= Haste [7.26] > Mastery [4.56]"
 	},
 	-- MAGE FIRE --
 	["63"] = {
-		["NOX"] = "Intellect [9.02] > Crit [7.52] > Mastery [6.02] > Versatility [4.52] >= Haste [4.37]",
+		["NOX"] = "Intellect [9.08] > Crit [7.58] > Mastery [6.08] > Versatility [4.58] >= Haste [4.43]"
 	},
 	-- MAGE FROST --
 	["64"] = {
-		["NOX"] = "Intellect [9.08] > Crit [7.58] > Haste [6.08] > Versatility [4.58] >= Mastery [4.28]",
+		["NOX"] = "Intellect [9.07] > Crit [7.57] > Haste [6.07] > Versatility [4.57] >= Mastery [4.27]"
 	},
 	-- PALADIN HOLY --
 	["65"] = {
-		["NOX"] = "Intellect [9.08] > Crit [7.58] > Mastery [6.08] >= Versatility [5.78] > Haste [3.08]",
+		["NOX"] = "Intellect [9.01] > Crit [7.51] > Mastery [6.01] >= Versatility [5.71] > Haste [3.01]"
 	},
 	-- PALADIN PROTECTION --
 	["66"] = {
-		["NOX"] = "Stamina [12.05] > Strength [9.05] > Haste [7.55] > Versatility [6.05] >= Mastery [5.75] > Crit [3.05]",
+		["NOX"] = "Stamina [12.06] > Strength [9.06] > Haste [7.56] > Versatility [6.06] >= Mastery [5.76] > Crit [3.06]"
 	},
 	-- PALADIN RETRIBUTION --
 	["70"] = {
-		["NOX"] = "Strength [9.04] > Haste [7.54] > Crit [6.04] >= Versatility [5.82] > Mastery [4.54]",
+		["NOX"] = "Strength [9.04] > Haste [7.54] > Crit [6.04] >= Versatility [5.82] > Mastery [4.54]"
 	},
 	-- WARRIOR ARMS --
 	["71"] = {
-		["NOX"] = "Strength [9.04] > Crit [7.54] > Haste [6.04] > Versatility [4.54] > Mastery [3.04]",
+		["NOX"] = "Strength [9.02] > Crit [7.52] > Haste [6.02] > Versatility [4.52] > Mastery [3.02]"
 	},
 	-- WARRIOR FURY --
 	["72"] = {
-		["NOX"] = "Strength [9.06] > Crit [7.56] > Haste [6.06] > Versatility [4.56] > Mastery [3.06]",
+		["NOX"] = "Strength [9.05] > Crit [7.55] > Haste [6.05] > Versatility [4.55] > Mastery [3.05]"
 	},
 	-- WARRIOR PROTECTION --
 	["73"] = {
-		["NOX"] = "Stamina [12.04] > Strength [9.04] > Haste [7.54] > Mastery [6.04] >= Versatility [5.74] > Crit [3.04]",
+		["NOX"] = "Stamina [12.03] > Strength [9.03] > Haste [7.53] > Mastery [6.03] >= Versatility [5.73] > Crit [3.03]"
 	},
 	-- DRUID BALANCE --
 	["102"] = {
-		["NOX"] = "Intellect [9.02] > Haste [7.52] > Crit [6.02] >= Versatility [5.72] > Mastery [3.02]",
+		["NOX"] = "Intellect [9.05] > Haste [7.55] > Crit [6.05] >= Versatility [5.75] > Mastery [3.05]"
 	},
 	-- DRUID FERAL --
 	["103"] = {
-		["NOX"] = "Agility [9.06] > Haste [7.56] > Mastery [6.06] >= Crit [5.68] >= Versatility [5.31]",
+		["NOX"] = "Agility [9.06] > Haste [7.56] > Mastery [6.06] >= Crit [5.68] >= Versatility [5.31]"
 	},
 	-- DRUID GUARDIAN --
 	["104"] = {
-		["NOX"] = "Stamina [12.04] > Agility [9.04] > Mastery [7.54] > Versatility [6.04] > Crit [4.54] >= Haste [4.32]",
+		["NOX"] = "Stamina [12.01] > Agility [9.01] > Mastery [7.51] > Versatility [6.01] > Crit [4.51] >= Haste [4.29]"
 	},
 	-- DRUID RESTORATION --
 	["105"] = {
-		["NOX"] = "Intellect [9.02] > Mastery [7.52] > Haste [6.02] > Crit [4.52] > Versatility [3.02]",
+		["NOX"] = "Intellect [9.06] > Mastery [7.56] > Haste [6.06] > Crit [4.56] > Versatility [3.06]"
 	},
 	-- DK BLOOD --
 	["250"] = {
-		["NOX"] = "Stamina [12.08] > Strength [9.08] > Haste [7.58] > Versatility [6.08] > Mastery [4.58] > Crit [3.08]",
+		["NOX"] = "Stamina [12.04] > Strength [9.04] > Haste [7.54] > Versatility [6.04] > Mastery [4.54] > Crit [3.04]"
 	},
 	-- DK FROST --
 	["251"] = {
-		["NOX"] = "Strength [9.01] > Crit [7.51] >= Haste [7.13] >= Mastery [6.76] >= Versatility [6.38]",
+		["NOX"] = "Strength [9.02] > Crit [7.52] >= Haste [7.14] >= Mastery [6.77] >= Versatility [6.39]"
 	},
 	-- DK UNHOLY --
 	["252"] = {
-		["NOX"] = "Strength [9.04] > Mastery [7.54] > Crit [6.04] > Haste [4.54] > Versatility [3.04]",
+		["NOX"] = "Strength [9.03] > Mastery [7.53] > Crit [6.03] > Haste [4.53] > Versatility [3.03]"
 	},
 	-- HUNTER BEAST MASTERY --
 	["253"] = {
-		["NOX"] = "Agility [9.04] > Haste [7.54] >= Crit [7.24] >= Versatility [7.09] >= Mastery [6.94]",
+		["NOX"] = "Agility [9.01] > Haste [7.51] >= Crit [7.21] >= Versatility [7.06] >= Mastery [6.91]"
 	},
 	-- HUNTER MARKSMANSHIP --
 	["254"] = {
-		["NOX"] = "Agility [9.05] > Haste [7.55] = Versatility [7.55] > Crit [6.05] >= Mastery [5.67]",
+		["NOX"] = "Agility [9.03] > Haste [7.53] = Versatility [7.53] > Crit [6.03] >= Mastery [5.66]"
 	},
 	-- HUNTER SURVIVAL --
 	["255"] = {
-		["NOX"] = "Agility [9.06] > Haste [7.56] > Versatility [6.06] > Crit [4.56] > Mastery [3.06]",
+		["NOX"] = "Agility [9.06] > Haste [7.56] > Versatility [6.06] > Crit [4.56] > Mastery [3.06]"
 	},
 	-- PRIEST DISCIPLINE --
 	["256"] = {
-		["NOX"] = "Intellect [9.08] > Haste [7.58] > Mastery [6.08] > Versatility [4.58] >= Crit [4.43]",
+		["NOX"] = "Intellect [9.08] > Haste [7.58] > Mastery [6.08] > Versatility [4.58] >= Crit [4.43]"
 	},
 	-- PRIEST HOLY --
 	["257"] = {
-		["NOX"] = "Intellect [9.01] > Mastery [7.51] > Crit [6.01] > Haste [4.51] > Versatility [3.01]",
+		["NOX"] = "Intellect [9.01] > Mastery [7.51] > Crit [6.01] > Haste [4.51] > Versatility [3.01]"
 	},
 	-- PRIEST SHADOW --
 	["258"] = {
-		["NOX"] = "Intellect [9.04] > Haste [7.54] > Crit [6.04] > Versatility [4.54] > Mastery [1.54]",
+		["NOX"] = "Intellect [9.03] > Haste [7.53] > Crit [6.03] > Versatility [4.53] > Mastery [1.53]"
 	},
 	-- ROGUE ASSASSINATION --
 	["259"] = {
-		["NOX"] = "Agility [9.05] > Haste [7.55] > Crit [6.05] > Mastery [4.55] > Versatility [3.05]",
+		["NOX"] = "Agility [9.06] > Haste [7.56] > Crit [6.06] > Mastery [4.56] > Versatility [3.06]"
 	},
 	-- ROGUE OUTLAW --
 	["260"] = {
-		["NOX"] = "Agility [9.07] > Versatility [7.57] > Haste [6.07] > Crit [4.57] >= Mastery [4.35]",
+		["NOX"] = "Agility [9.07] > Versatility [7.57] > Haste [6.07] > Crit [4.57] >= Mastery [4.35]"
 	},
 	-- ROGUE SUBTLETY --
 	["261"] = {
-		["NOX"] = "Agility [9.01] > Haste [7.51] > Mastery [6.01] >= Versatility [5.79] > Crit [4.51]",
+		["NOX"] = "Agility [9.05] > Haste [7.55] > Mastery [6.05] >= Versatility [5.83] > Crit [4.55]"
 	},
 	-- SHAMAN ELEMENTAL --
 	["262"] = {
-		["NOX"] = "Intellect [9.07] > Crit [7.57] > Haste [6.07] >= Versatility [5.85] >= Mastery [5.62]",
+		["NOX"] = "Intellect [9.05] > Crit [7.55] > Haste [6.05] >= Versatility [5.83] >= Mastery [5.6]"
 	},
 	-- SHAMAN ENHANCEMENT --
 	["263"] = {
-		["NOX"] = "Agility [9.02] > Haste [7.52] > Crit [6.02] > Versatility [4.52] > Mastery [3.02]",
+		["NOX"] = "Agility [9.01] > Haste [7.51] > Crit [6.01] > Versatility [4.51] > Mastery [3.01]"
 	},
 	-- SHAMAN RESTORATION --
 	["264"] = {
-		["NOX"] = "Intellect [9.03] > Crit [7.53] > Versatility [6.03] > Haste [4.53] >= Mastery [4.31]",
+		["NOX"] = "Intellect [9.05] > Crit [7.55] > Versatility [6.05] > Haste [4.55] >= Mastery [4.33]"
 	},
 	-- WARLOCK AFFLICTION --
 	["265"] = {
-		["NOX"] = "Intellect [9.07] > Mastery [7.57] = Haste [7.57] > Crit [6.07] > Versatility [4.57]",
+		["NOX"] = "Intellect [9.05] > Mastery [7.55] = Haste [7.55] > Crit [6.05] > Versatility [4.55]"
 	},
 	-- WARLOCK DEMONOLOGY --
 	["266"] = {
-		["NOX"] = "Intellect [9.07] > Mastery [7.57] > Haste [6.07] > Crit [4.57] >= Versatility [4.42]",
+		["NOX"] = "Intellect [9.03] > Mastery [7.53] > Haste [6.03] > Crit [4.53] >= Versatility [4.38]"
 	},
 	-- WARLOCK DESTRUCTION --
 	["267"] = {
-		["NOX"] = "Intellect [9.08] > Haste [7.58] >= Crit [7.21] > Versatility [4.58] > Mastery [3.08]",
+		["NOX"] = "Intellect [9.04] > Haste [7.54] >= Crit [7.17] > Versatility [4.54] > Mastery [3.04]"
 	},
 	-- MONK BREWMASTER --
 	["268"] = {
-		["NOX"] = "Stamina [12.06] > Agility [9.06] > Crit [7.56] > Versatility [6.06] > Mastery [4.56] > Haste [3.06]",
+		["NOX"] = "Stamina [12.04] > Agility [9.04] > Crit [7.54] > Versatility [6.04] > Mastery [4.54] > Haste [3.04]"
 	},
 	-- MONK WINDWALKER --
 	["269"] = {
-		["NOX"] = "Agility [9.01] > Versatility [7.51] > Mastery [6.01] > Crit [4.51] > Haste [3.01]",
+		["NOX"] = "Agility [9.03] > Versatility [7.53] > Mastery [6.03] > Crit [4.53] > Haste [3.03]"
 	},
 	-- MONK MISTWEAVER --
 	["270"] = {
-		["NOX"] = "Intellect [9.06] > Crit [7.56] > Versatility [6.06] > Haste [4.56] > Mastery [3.06]",
+		["NOX"] = "Intellect [9.08] > Crit [7.58] > Versatility [6.08] > Haste [4.58] > Mastery [3.08]"
 	},
 	-- DEMON HUNTER HAVOC --
 	["577"] = {
-		["NOX"] = "Agility [9.04] > Haste [7.54] >= Versatility [7.17] > Crit [6.04] > Mastery [4.54]",
+		["NOX"] = "Agility [9.04] > Haste [7.54] >= Versatility [7.17] > Crit [6.04] > Mastery [4.54]"
 	},
 	-- DEMON HUNTER VENGEANCE --
 	["581"] = {
-		["NOX"] = "Stamina [12.03] > Agility [9.03] > Haste [7.53] > Versatility [6.03] > Mastery [4.53] > Crit [3.03]",
+		["NOX"] = "Stamina [12.08] > Agility [9.08] > Haste [7.58] > Versatility [6.08] > Mastery [4.58] > Crit [3.08]"
 	}
 }
 

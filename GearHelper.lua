@@ -144,8 +144,8 @@ GearHelper.charInventory = {}
 local specialisationID, specName, description, icon, background, role, primaryStat = nil
 local itemLinkToAsk
 
--- waitSpeFrame = CreateFrame("Frame")
--- waitSpeTimer = nil
+waitSpeFrame = CreateFrame("Frame")
+waitSpeTimer = nil
 local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
 numBag = 0
@@ -174,7 +174,7 @@ local nbRappels = 3
 ----------------- Fin de définition des variables -----------------
 
 waitAnswerFrame:Hide()
--- waitSpeFrame:Hide()
+waitSpeFrame:Hide()
 waitNilFrame:Hide()
 
 -------------------------------------------------------
@@ -513,15 +513,16 @@ waitAnswerFrame:SetScript(
 	end
 )
 
--- waitSpeFrame:SetScript("OnUpdate", function( self )
--- 	if time() > waitSpeTimer + 0.5 then
--- 		for bag = 0,4 do
--- 			numBag = bag
--- 			GearHelper:equipItem()
--- 		end
--- 		self:Hide()
--- 	end
--- end)
+waitSpeFrame:SetScript("OnUpdate", function( self )
+	if time() <= waitSpeTimer + 0.5 then
+		do return end
+	end
+		for bag = 0,4 do
+			numBag = bag
+			GearHelper:equipItem()
+		end
+		self:Hide()
+end)
 
 waitNilFrame:SetScript(
 	"OnUpdate",
@@ -1054,7 +1055,10 @@ function GearHelper:equipItem(inThisBag)
 	waitEquipFrame:SetScript(
 		"OnUpdate",
 		function(self, elapsed)
-			if time() > waitEquipTimer + 0.5 then
+			if time() <= waitEquipTimer + 0.5 then
+				do return end
+			end
+			-- if time() > waitEquipTimer + 0.5 then
 				if typeInstance ~= "pvp" and tostring(difficultyIndex) ~= "24" then
 					-- if numBag == nil then numBag = 0 end
 					for slot = 1, GetContainerNumSlots(bagToEquip) do
@@ -1112,7 +1116,7 @@ function GearHelper:equipItem(inThisBag)
 						-- end
 					end
 					self:Hide()
-				end
+				-- end
 			end
 		end
 	)
