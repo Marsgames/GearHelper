@@ -283,17 +283,17 @@ Description :
 Author : Raphaël Saget
 ]]
 function GearHelper:OnEnable()
+	if not GearHelper.db.profile.addonEnabled then
+		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"))
+		do return end
+	end
 	-- Called when the addon is enabled
 	-- Affiche à chaque connection l'état de l'addon
-	if GearHelper.db.profile.addonEnabled then
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["ActivatedGreen"], "Vert"))
 		GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 		if (#GearHelper.db.global.equipLocInspect == 0) then
 			GearHelper:InitEquipLocInspect()
 		end
-	else
-		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"))
-	end
 end
 
 function GearHelper:OnMinimapTooltipShow(tooltip)
@@ -417,18 +417,23 @@ end
 -- commentaire :
 -- @author : Raphaël Daumas
 function GearHelper:setInviteMessage(valeur)
-	if valeur ~= nil then
-		GearHelper.db.profile.inviteMessage = tostring(valeur)
-		print(L["InviteMessage"] .. tostring(GearHelper.db.profile.inviteMessage))
+	if valeur == nil then
+		do return end
 	end
+
+	GearHelper.db.profile.inviteMessage = tostring(valeur)
+		print(L["InviteMessage"] .. tostring(GearHelper.db.profile.inviteMessage))
 end
 
 function GearHelper:ShowMessageSMN(channel, sender, msg)
+	if not GearHelper.db.profile.sayMyName or not msg then 
+		do return end
+	end
+
 	local stop = false
 	local i = 1
-	if (GearHelper.db.profile.sayMyName and msg ~= nil) then
 		local arrayNames = GearHelper:MySplit(GearHelper.db.global.myNames, ",")
-		if (msg ~= nil and arrayNames[i] ~= nil) then
+		if (arrayNames[i] ~= nil) then
 			while (not stop and arrayNames[i]) do
 				if (string.match(msg:lower(), arrayNames[i]:lower())) then
 					UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0, 5.0, 4)
@@ -441,7 +446,6 @@ function GearHelper:ShowMessageSMN(channel, sender, msg)
 				i = i + 1
 			end
 		end
-	end
 end
 
 -- desc : Add a string to the "array" of names
@@ -450,10 +454,12 @@ end
 -- commentaire :
 -- @author : Raphaël Daumas
 function GearHelper:setMyNames(valeur)
-	if valeur ~= nil then
+	if not valeur then 
+		do return end
+	end
+
 		GearHelper.db.global.myNames = tostring(valeur .. ",")
 	--print(L["InviteMessage"]..tostring( GearHelper.db.profile.inviteMessage ))
-	end
 end
 
 -- desc : Envoie dans la guilde / raid / groupe une demande aux autres GH pour savoir s'ils sont à jour
@@ -495,21 +501,33 @@ end
 -- commentaire :
 -- @author : Raphaël Daumas
 function GearHelper:receiveAnswer(msgV, msgC)
-	if askTime and nbRappels > 0 and not GearHelper:IsInTable(GHoldVersions, msgV) and versionCible ~= version then
+	if not askTime then 
+		do return end
+	end
+	if nbRappels <= 0 then 
+		do return end
+	end
+	if GearHelper:IsInTable(GHoldVersions, msgV) then
+		do return end
+	end
+	if versionCible == version then
+		do return end
+	end
+
 		message(L["maj1"] .. GearHelper:ColorizeString(version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
 		askTime = nil
 		waitAnswerFrame:Hide()
 		nbRappels = nbRappels - 1
-	end
 end
 
 waitAnswerFrame:SetScript(
 	"OnUpdate",
 	function(self, elapsed)
-		if askTime and (time() - askTime) > maxWaitTime then
+		if not askTime or (time() - askTime) <= maxWaitTime then
+			do return end
+		end
 			askTime = nil
 			waitAnswerFrame:Hide()
-		end
 	end
 )
 
@@ -527,10 +545,11 @@ end)
 waitNilFrame:SetScript(
 	"OnUpdate",
 	function(self)
-		if time() > waitNilTimer + 10 then
+		if time() <= waitNilTimer + 10 then
+			do return end
+		end
 			setDefault()
 			self:Hide()
-		end
 	end
 )
 
@@ -911,9 +930,15 @@ Output : result = the value of the item
 Author : Raphaël Saget
 ]]
 function GearHelper:NewWeightCalculation(item, myEquipItem)
-	if GearHelper.db.profile.addonEnabled then -- si addon activé
+	if not GearHelper.db.profile.addonEnabled then
+		do return end
+	end
+	if IsEquippedItem(item.id) or not GearHelper:IsEquippableByMe(item) then
+		return {"notEquippable"}
+	end
+
 		local result = {}
-		if not IsEquippedItem(item.id) and GearHelper:IsEquippableByMe(item) then
+		-- if not IsEquippedItem(item.id) and GearHelper:IsEquippableByMe(item) then
 			local tabSpec = GetItemSpecInfo(item.itemLink)
 			local isSlotEmpty = GearHelper:IsSlotEmpty(item.equipLoc)
 			--Item in inventory is not in cache, we return nil and the item that we were testing
@@ -1029,12 +1054,8 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 						table.insert(result, tmpResult)
 					end
 				end
-			end
-		else
-			table.insert(result, "notEquippable")
-		end
+			end			
 		return result
-	end
 end
 
 ---------------- Empecher si donjon marcheurs du temps    is in instance 		local _, _, difficulty = GetInstanceInfo()
@@ -1166,8 +1187,25 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 	-- local channelName = channelName or "channelName"
 	-- local unknown2 = unknown2 or 0
 	-- local counter = counter or 1
-	if target ~= nil and target ~= GetUnitName("player") and target ~= "" and GearHelper.db.profile.askLootRaid or debug == 1 then
-		if string.find(string.lower(message), "bonus") == nil or debug == 1 then
+	if debug ~= 1 then
+	if target == nil then
+		do return end
+	end
+	if target == GetUnitName("player") then
+		do return end
+	end
+	if target == "" then
+		do return end
+	end
+	if not GearHelper.db.profile.askLootRaid then 
+		do return end
+	end
+	if string.find(string.lower(message), "bonus") then
+		do return end
+	end
+	end
+
+
 			local couleur = ""
 			local className, classFile, classID = UnitClass(target)
 			local tar
@@ -1236,8 +1274,6 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 					end
 				end
 			end
-		end
-	end
 end
 
 --[[
@@ -1251,10 +1287,9 @@ Author : Raphaël Saget
 function GearHelper:LinesToAddToTooltip(result, item)
 	local linesToAdd = {}
 	if GearHelper.db.profile.computeNotEquippable == false and result[1] == -20 or result[1] == -40 then --nil or not equippable
-		do
-			return
-		end
-	else
+		do return end
+	end
+
 		if #result == 1 then
 			if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
 				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "Rouge"))
@@ -1335,15 +1370,27 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "Rouge"))
 			end
 		end
-	end
 	return linesToAdd
 end
 
 local ModifyTooltip = function(self, ...)
-	if GearHelper.db ~= nil and GearHelper.db.profile.addonEnabled == true then
-		local _, itemLink = self:GetItem()
+	if not GearHelper.db then 
+		do return end
+	end
+	if not GearHelper.db.profile.addonEnabled then
+		do return end
+	end
 
-		if itemLink and not string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r") then --The itemlink skipped is the one returned by dungeon reward so things turn wrong, thanks blizzard
+	local _, itemLink = self:GetItem()
+
+	if not itemLink then
+		do return end
+	end
+	if string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r") then
+		do return end
+	end
+
+
 			local result = GearHelper:IsItemBetter(itemLink, "ItemLink")
 			local item = GearHelper:GetItemByLink(itemLink)
 			local linesToAdd = GearHelper:LinesToAddToTooltip(result, item)
@@ -1377,8 +1424,6 @@ local ModifyTooltip = function(self, ...)
 					self:AddLine(v)
 				end
 			end
-		end
-	end
 end
 
 for _, obj in next, {
@@ -1630,7 +1675,10 @@ function GearHelper:AutoGreedAndNeed(number)
 	-- number = ID de l'id du roll (1, 2, 3)
 	-- rollType = 0 pass, 1 need, 2 cupi, 3 dez
 	-- ConfirmLootRoll(number, rollType)
-	if (GearHelper.db.profile.autoNeed or GearHelper.db.profile.autoGreed) then
+if not GearHelper.db.profile.autoNeed and not GearHelper.db.profile.autoGreed then
+	do return end
+end
+
 		local link, name, _, _, _, canNeed, canGreed = GetLootRollItemInfo(number)
 		local itemTable = GearHelper:GetItemByLink(link)
 		local itemType = itemTable.type
@@ -1667,7 +1715,6 @@ function GearHelper:AutoGreedAndNeed(number)
 				ConfirmLootRoll(number, 2)
 			end
 		end
-	end
 end
 
 -- Créer les boutons le long du panel LFR
@@ -1839,7 +1886,10 @@ end
 -- "check" le bouton si on est en attente d'un raid (crée le contour doré)
 -- Adaptation de l'addon BossesKilled
 function GearHelper:UpdateGHLfrButton()
-	if (RaidFinderQueueFrame.GHLfrButtons) then
+	if not RaidFinderQueueFrame.GHLfrButtons then 
+		do return end
+	end
+
 		for id, buttodn in pairs(RaidFinderQueueFrame.GHLfrButtons) do
 			local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id)
 			if mode == "queued" or mode == "listed" or mode == "rolecheck" or mode == "suspended" then
@@ -1850,7 +1900,6 @@ function GearHelper:UpdateGHLfrButton()
 				button.checked = false
 			end
 		end
-	end
 end
 
 function GearHelper:HideLfrButtons()
@@ -1871,7 +1920,10 @@ end
 
 function GearHelper:AddIlvlOnCharFrame(show)
 	local function CharFrameShow(frame)
-		if GearHelper.db.profile.ilvlCharFrame then
+		if not GearHelper.db.profile.ilvlCharFrame then
+			do return end
+		end
+
 			table.foreach(
 				GearHelper.charInventory,
 				function(slotName, item, number)
@@ -1932,7 +1984,6 @@ function GearHelper:AddIlvlOnCharFrame(show)
 					end
 				end
 			)
-		end
 	end
 
 	local function CharFrameHide()
@@ -1961,7 +2012,9 @@ end
 
 function GearHelper:AddIlvlOnInspectFrame(target, show)
 	local function InspectFrameShow(frame)
-		if (GearHelper.db.profile.ilvlInspectFrame) then
+		if not GearHelper.db.profile.ilvlInspectFrame then 
+			do return end
+		end
 			local arrayPos = {
 				xINVTYPE_HEAD = -100,
 				xINVTYPE_NECK = -100,
@@ -2125,7 +2178,6 @@ function GearHelper:AddIlvlOnInspectFrame(target, show)
 				font:SetTextColor(1, 0.9, 0, 1)
 				button:SetNormalFontObject(font)
 			end
-		end
 	end
 
 	local function InspectFrameHide()

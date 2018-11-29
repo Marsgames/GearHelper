@@ -1,4 +1,4 @@
-GearHelper.itemSlot = { INVTYPE_AMMO = "Ammo", INVTYPE_HEAD = "Head", INVTYPE_NECK = "Neck", INVTYPE_SHOULDER = "Shoulder", INVTYPE_BODY = "Body", INVTYPE_CHEST = "Chest", INVTYPE_ROBE = "Chest", INVTYPE_WAIST = "Waist", INVTYPE_LEGS = "Legs", INVTYPE_FEET = "Feet", INVTYPE_WRIST = "Wrist", INVTYPE_HAND = "Hands", INVTYPE_FINGER = { "Finger0", "Finger1" }, INVTYPE_TRINKET = { "Trinket0", "Trinket1" }, INVTYPE_CLOAK = "Back", INVTYPE_SHIELD = "SecondaryHand", INVTYPE_WEAPON = { "MainHand", "SecondaryHand" }, INVTYPE_2HWEAPON = "MainHand", INVTYPE_WEAPONMAINHAND = "MainHand", INVTYPE_WEAPONOFFHAND = "SecondaryHand", INVTYPE_HOLDABLE = "SecondaryHand", INVTYPE_RANGED = "MainHand", INVTYPE_RANGEDRIGHT = "MainHand" }
+GearHelper.itemSlot = {INVTYPE_AMMO = "Ammo", INVTYPE_HEAD = "Head", INVTYPE_NECK = "Neck", INVTYPE_SHOULDER = "Shoulder", INVTYPE_BODY = "Body", INVTYPE_CHEST = "Chest", INVTYPE_ROBE = "Chest", INVTYPE_WAIST = "Waist", INVTYPE_LEGS = "Legs", INVTYPE_FEET = "Feet", INVTYPE_WRIST = "Wrist", INVTYPE_HAND = "Hands", INVTYPE_FINGER = {"Finger0", "Finger1"}, INVTYPE_TRINKET = {"Trinket0", "Trinket1"}, INVTYPE_CLOAK = "Back", INVTYPE_SHIELD = "SecondaryHand", INVTYPE_WEAPON = {"MainHand", "SecondaryHand"}, INVTYPE_2HWEAPON = "MainHand", INVTYPE_WEAPONMAINHAND = "MainHand", INVTYPE_WEAPONOFFHAND = "SecondaryHand", INVTYPE_HOLDABLE = "SecondaryHand", INVTYPE_RANGED = "MainHand", INVTYPE_RANGEDRIGHT = "MainHand"}
 
 --[[
 Function : ParseDefaultValues
@@ -8,70 +8,69 @@ Input : rawValues = stat string, specID = specialization associated to the templ
 Author : Raphaël Saget
 ]]
 local function ParseDefaultValues(rawValues, specID, templateID)
-    local rawCopy = rawValues
-    local tmpTemplate = {
-        ["Intellect"] = 0,
-        ["Haste"] = 0,
-        ["CriticalStrike"] = 0,
-        ["Versatility"] = 0,
-        ["Mastery"] = 0,
-        ["Agility"] = 0,
-        ["Stamina"] = 0,
-        ["Strength"] = 0,
-        ["Armor"] = 0,
-        ["Leech"] = 0,
-        ["Avoidance"] = 0,
-        ["MainHandDps"] = 0,
-        ["MovementSpeed"] = 0,
-        ["OffHandDps"] = 0,
-        ["Max"] = 0
-    }
-    local lastWord = ""
-    local count = 1
+	local rawCopy = rawValues
+	local tmpTemplate = {
+		["Intellect"] = 0,
+		["Haste"] = 0,
+		["CriticalStrike"] = 0,
+		["Versatility"] = 0,
+		["Mastery"] = 0,
+		["Agility"] = 0,
+		["Stamina"] = 0,
+		["Strength"] = 0,
+		["Armor"] = 0,
+		["Leech"] = 0,
+		["Avoidance"] = 0,
+		["MainHandDps"] = 0,
+		["MovementSpeed"] = 0,
+		["OffHandDps"] = 0,
+		["Max"] = 0
+	}
+	local lastWord = ""
+	local count = 1
 
-    for token in string.gmatch(rawCopy, "[^%s]+") do
-        if count == 1 or count == 4 or count == 7 or count == 10 or count == 13 or count == 16 or count == 19 or count == 22 or count == 25 or count == 28 or count == 31 then
-            lastWord = token
-        end
+	for token in string.gmatch(rawCopy, "[^%s]+") do
+		if count == 1 or count == 4 or count == 7 or count == 10 or count == 13 or count == 16 or count == 19 or count == 22 or count == 25 or count == 28 or count == 31 then
+			lastWord = token
+		end
 
-        if count == 2 or count == 5 or count == 8 or count == 11 or count == 14 or count == 17 or count == 20 or count == 23 or count == 26 or count == 29 or count == 32 then
-            --Refactoring some spelling from Noxxic and AMR
-            if lastWord == "Crit" then
-                lastWord = "CriticalStrike"
-            end
+		if count == 2 or count == 5 or count == 8 or count == 11 or count == 14 or count == 17 or count == 20 or count == 23 or count == 26 or count == 29 or count == 32 then
+			--Refactoring some spelling from Noxxic and AMR
+			if lastWord == "Crit" then
+				lastWord = "CriticalStrike"
+			end
 
-            if lastWord == "OffHandDamage" then
-                lastWord = "OffHandDps"
-            end
+			if lastWord == "OffHandDamage" then
+				lastWord = "OffHandDps"
+			end
 
-            if lastWord == "MainHandDamage" then
-                lastWord = "MainHandDps"
-            end
+			if lastWord == "MainHandDamage" then
+				lastWord = "MainHandDps"
+			end
 
-            if string.gsub(token, "%[", "") then
-                token = string.gsub(token, "%[", "")
-            end
-            if string.gsub(token, "%]", "") then
-                token = string.gsub(token, "%]", "")
-            end
+			if string.gsub(token, "%[", "") then
+				token = string.gsub(token, "%[", "")
+			end
+			if string.gsub(token, "%]", "") then
+				token = string.gsub(token, "%]", "")
+			end
 
-            tmpTemplate[lastWord] = tonumber(token)
-        end
+			tmpTemplate[lastWord] = tonumber(token)
+		end
 
-        count = count + 1
+		count = count + 1
+	end
 
-    end
+	for _, value in pairs(tmpTemplate) do
+		if tmpTemplate.Max < value then
+			tmpTemplate.Max = value
+		end
+	end
 
-    for _, value in pairs(tmpTemplate) do
-        if tmpTemplate.Max < value then
-            tmpTemplate.Max = value
-        end
-    end
-
-    if GearHelper.db.global.templates[specID] == nil then
-        GearHelper.db.global.templates[specID] = {}
-    end
-    GearHelper.db.global.templates[specID][templateID] = tmpTemplate
+	if GearHelper.db.global.templates[specID] == nil then
+		GearHelper.db.global.templates[specID] = {}
+	end
+	GearHelper.db.global.templates[specID][templateID] = tmpTemplate
 end
 
 local rawValues = {
@@ -221,9 +220,6 @@ local rawValues = {
 	}
 }
 
-
-
-
 --[[
 Function : InitTemplates
 Scope : GearHelper
@@ -233,9 +229,9 @@ Output :
 Author : Raphaël Saget
 ]]
 function GearHelper:InitTemplates()
-    for spec, templates in pairs(rawValues) do
-        for templateID, stats in pairs(templates) do
-            ParseDefaultValues(stats, spec, templateID)
-        end
-    end
+	for spec, templates in pairs(rawValues) do
+		for templateID, stats in pairs(templates) do
+			ParseDefaultValues(stats, spec, templateID)
+		end
+	end
 end
