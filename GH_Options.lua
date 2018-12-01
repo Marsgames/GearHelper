@@ -1,23 +1,9 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
---[[
-Function : GetInvMsg
-Scope : local
-Description : Return the invite message set by the user
-Output : the invite message
-Author : Raphaël Daumas
-]]
 local function GetInvMsg()
 	return GearHelper.db.profile.inviteMessage
 end
 
---[[
-Function : GetMyNames
-Scope : local
-Description : Return names 
-Output : names
-Author : Raphaël Daumas
-]]
 local function GetMyNames()
 	if (GearHelper.db.global.myNames == {}) then
 		table.insert(GearHelper.db.global.myNames, GetUnitName("player") .. ",")
@@ -26,14 +12,6 @@ local function GetMyNames()
 	return GearHelper.db.global.myNames
 end
 
---[[
-Function : GetStatCW
-Scope : local
-Description : Return a particular stat from a template
-Input : info = name of the template, stat = stat name in template
-Output : the value associated to the stat
-Author : Raphaël Saget
-]]
 local function GetStatCW(info, stat, bool)
 	if bool then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
@@ -48,14 +26,6 @@ local function GetStatCW(info, stat, bool)
 	end
 end
 
---[[
-Function : SetStatCW
-Scope : local
-Description : Set a particular stat in a template
-Input : info = name of the template, val = value of the stat, stat = stat name in template
-Output : the value associated to the stat
-Author : Raphaël Saget
-]]
 local function SetStatCW(info, val, stat)
 	if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
 		GearHelper.db.profile.CW[info[1]][stat] = (tonumber(val) / 100) * 50
@@ -66,14 +36,6 @@ local function SetStatCW(info, val, stat)
 	end
 end
 
---[[
-Function : ValidateInputPattern
-Scope : local
-Description : Validate if input is only composed of number or alphabetic character
-Input : val = the string to check, stat = type to validate
-Output : true if the string is compliant or a string with the error message if not
-Author : Raphaël Saget
-]]
 local function ValidateInputPattern(val, type, info)
 	if type == "number" then
 		if string.match(val, "(%D+)") and string.len(val) ~= 0 then
@@ -110,14 +72,6 @@ local function ValidateInputPattern(val, type, info)
 	end
 end
 
---[[
-Function :
-Scope : local
-Description : Template of setting for the addon main GUI
-Input :
-Output :
-Author : Raphaël Saget
-]]
 local ghOptionsTable = {
 	name = "GearHelper",
 	type = "group",
@@ -492,14 +446,6 @@ local ghSecondaryOptionsTable = {
 	}
 }
 
---[[
-Function : DeleteTemplate
-Scope : local
-Description : Delete a template from database and from GUI
-Input : info = the name of the template
-Output :
-Author : Raphaël Saget
-]]
 local function DeleteTemplate(info)
 	local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(L["customWeights"], "dialog", "GearHelper-1.0")
 
@@ -512,14 +458,6 @@ local function DeleteTemplate(info)
 	LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
 end
 
---[[
-Function : CreateNewTemplate
-Scope : local
-Description : Called when user add a new template of stat, it create a new stat template in DB and add new GUI elements for the new template
-Input : templateName = the name of the template
-Output :
-Author : Raphaël Saget
-]]
 local function CreateNewTemplate(templateName)
 	for _, v in pairs(GearHelper.db.profile.CW) do
 		if (v.Name == templateName) then
@@ -811,14 +749,6 @@ local function CreateNewTemplate(templateName)
 	LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
 end
 
---[[
-Function :
-Scope : local
-Description : Template of setting for the addon custom weight GUI
-Input :
-Output :
-Author : Raphaël Saget
-]]
 GearHelper.cwTable = {
 	name = L["customWeights"],
 	type = "group",
@@ -1139,14 +1069,6 @@ GearHelper.cwTable = {
 	}
 }
 
---[[
-Function : BuildCWTable
-Scope : GearHelper
-Description : Dynamically build custom weight GUI based on registered template in DB
-Input :
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:BuildCWTable()
 	for _, v in pairs(self.db.profile.CW) do
 		if (v.Name ~= nil) then
@@ -1417,14 +1339,6 @@ function GearHelper:BuildCWTable()
 	LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
 end
 
---[[
-Function :
-Scope : local
-Description : Template setting for the addon about GUI
-Input :
-Output :
-Author : Raphaël Saget
-]]
 local aboutTable = {
 	name = "About",
 	type = "group",
@@ -1432,7 +1346,7 @@ local aboutTable = {
 		version = {
 			order = 0,
 			fontSize = "medium",
-			name = "\n\n\n\n\n                |cFFFFFF00Version :|r " .. version --[[4124.27.0.2.0.31]] .. "\n",
+			name = "\n\n\n\n\n                |cFFFFFF00Version :|r " .. version .. "\n",
 			type = "description"
 		},
 		author = {
@@ -1444,7 +1358,7 @@ local aboutTable = {
 		email = {
 			order = 2,
 			fontSize = "medium",
-			name = "                |cFFFFFF00E-Mail :|r marsgames@gmail.com" --[[fdp@fdp.land]] .. " \n",
+			name = "                |cFFFFFF00E-Mail :|r marsgames@gmail.com" .. " \n",
 			type = "description"
 		},
 		bug = {
@@ -1474,9 +1388,7 @@ local aboutTable = {
 LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
 LibStub("AceConfig-3.0"):RegisterOptionsTable("Options secondaires", ghSecondaryOptionsTable)
 LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwTable)
--- LibStub("AceConfig-3.0"):RegisterOptionsTable("About", aboutTable)
 GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Options secondaires", "Options secondaires", "GearHelper")
 GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
 LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
--- LibStub("AceConfigDialog-3.0"):AddToBlizOptions("About", "About", "GearHelper")

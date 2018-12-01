@@ -1,12 +1,10 @@
 local slashCmd = {
 	help = function(msg)
-		--print("help --> affiche l'aide")
 		GearHelper:Print("state --> affiche l'état de l'addon")
 		GearHelper:Print("list --> ScanBag() + scanCharacter()")
 		print("config --> affiche le panneau de config")
 		print("version --> affiche la version de l'addon")
 		GearHelper:Print("im msg --> change le message d'auto invite par msg")
-		--print("ram --> affiche la ram utilisée par l'addon")
 		GearHelper:Print("createItemLink --> crée un faux itemLink (qui marche)")
 		GearHelper:Print("debug --> active / désactive le mode debug (prints)")
 		GearHelper:Print("optimize --> calcul le stuff le plus opti ?")
@@ -31,8 +29,6 @@ local slashCmd = {
 		GearHelper.db.global.ItemCache = {}
 	end,
 	list = function()
-		-- GearHelper:ScanBag()
-		-- GearHelper:scanCharacter()
 		for bag = 0, 4 do
 			for slot = 1, GetContainerNumSlots(bag) do
 				local _, _, _, _, _, _, link = GetContainerItemInfo(bag, slot)
@@ -42,16 +38,6 @@ local slashCmd = {
 					end
 					print(bag .. " " .. slot)
 					print(link)
-				------------------- GetItemStats return nil de temps en temps
-				-- local aze = GetItemStats(link)
-				-- if(aze ~= nil and not table.isEmpty(aze)) then
-				-- 	print("----------")
-				-- 	print(link)
-				-- 	foreach(aze, print)
-				-- end
-				-------------------------------------------------------------
-				--statTable = GetItemStatDelta("|cff9d9d9ditem:147019::::::::110:265::3:3:3561:1492:3528:::[]|h|h|r", link)
-				--foreach(statTable, print)
 				end
 			end
 		end
@@ -72,7 +58,6 @@ local slashCmd = {
 		print("RAM used by GearHelper : " .. ramUse .. "ko")
 	end,
 	createitemlink = function()
-		--GearHelper:askIfHeNeed("Marsgames", "[Pierre de soin]", "Marsgames")
 		local aze = "|cff1eff00|Hitem:128942::::::::100:105::::::|h[/gh createItemLink]|h|r"
 		print(aze)
 		print("GearHelper:IsEquipped = " .. tostring(GearHelper:IsEquipped(aze)))
@@ -125,8 +110,6 @@ local slashCmd = {
 			end
 		end
 		local stuffBefore = GearHelper.charInventory
-		--SaveEquipmentSet("zeubi", 1029009)
-		--print(GetEquipmentSetInfoByName("zeubzeub"))
 
 		for a = 1, #bagInventory do
 			local _, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(bagInventory[a])
@@ -135,15 +118,6 @@ local slashCmd = {
 
 				local exItem = stuffBefore[GearHelper.itemSlot[itemEquipLoc]]
 				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name = string.find(exItem, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
-				--
-				--EquipItemByName(bagInventory[a])
-				--[[print(GetCombatRating(11)) --Critique
-				print(GetCombatRating(17)) --Ponction
-				print(GetCombatRating(20)) --Hate
-				print(GetCombatRating(26)) --Maitrise
-				print(GetCombatRating(29)) --Polyvalence
-				print(GetCombatRating(21)) --Evitement]] print("On replace " .. exItem)
-			--EquipItemByName(Id)
 			end
 		end
 		waitEquipTimer = time()
@@ -223,7 +197,6 @@ local slashCmd = {
 	end,
 	jb = function()
 		local itemLink = GetContainerItemLink(1, 14)
-		--print(itemLink)
 		local aze = GearHelper:weightCalculation(itemLink)
 
 		table.foreach(aze, print)
@@ -240,7 +213,6 @@ local slashCmd = {
 		GearHelper:ResetCache()
 	end,
 	inspect = function()
-		--local target = UnitGUID("focus")
 		if (CheckInteractDistance("target", 1)) then
 			if CanInspect("target", true) then
 				NotifyInspect("target")
@@ -252,22 +224,12 @@ local slashCmd = {
 		else
 			print("trop loin")
 		end
-
-		-- print("-----------")
 	end
 }
 
 GearHelper:RegisterChatCommand("GearHelper", "MySlashCommand")
 GearHelper:RegisterChatCommand("GH", "MySlashCommand")
 
---[[
-Function : MySlashCommand
-Scope : GearHelper
-Description : Enregistre les slash cmd
-Input :
-Output :
-Author : Raphaël Daumas
-]]
 function GearHelper:MySlashCommand(input)
 	for cmd, action in pairs(slashCmd) do
 		if input == cmd then
