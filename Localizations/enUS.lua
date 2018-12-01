@@ -164,7 +164,8 @@ L["maLangueptBR"] = "Inglês."
 L["maLanguezhCN"] = "英语."
 L["maLanguezhTW"] = "英語."
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
-
+L["isAlive"] = "is alive !"
+L["isDead"] = "is dead !"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
