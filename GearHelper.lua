@@ -1826,10 +1826,10 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 			local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
 
 			if isDead and bossName ~= nil then
-				textBoss = GearHelper:ColorizeString(bossName, "rougefonce") .. GearHelper:ColorizeString(" est mort !", "Rouge")
+				textBoss = GearHelper:ColorizeString(bossName, "rougefonce") .. GearHelper:ColorizeString(" "..L["isDead"], "Rouge")
 				bossTues = bossName and bossTues + 1
 			elseif not isDead and bossName then
-				textBoss = GearHelper:ColorizeString(bossName, "vertfonce") .. GearHelper:ColorizeString(" est vivant !", "Vert")
+				textBoss = GearHelper:ColorizeString(bossName, "vertfonce") .. GearHelper:ColorizeString(" "..L["isAlive"], "Vert")
 			end
 			table.insert(tooltip, textBoss)
 		end
@@ -1890,7 +1890,7 @@ function GearHelper:UpdateGHLfrButton()
 		do return end
 	end
 
-		for id, buttodn in pairs(RaidFinderQueueFrame.GHLfrButtons) do
+		for id, button in pairs(RaidFinderQueueFrame.GHLfrButtons) do
 			local mode = GetLFGMode(LE_LFG_CATEGORY_RF, id)
 			if mode == "queued" or mode == "listed" or mode == "rolecheck" or mode == "suspended" then
 				button:SetChecked(true)

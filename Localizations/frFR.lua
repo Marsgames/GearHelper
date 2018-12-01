@@ -122,7 +122,8 @@ L["maLangueptBR"] = "Francês"
 L["maLanguezhCN"] = "法国"
 L["maLanguezhTW"] = "法國"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
-
+L["isAlive"] = "est vivant(e) !"
+L["isDead"] = "est mort(e) !"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
