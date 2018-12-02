@@ -1,4 +1,3 @@
-
 local slashCmd = {
 	help = function()
 		GearHelper:SlashDisplayHelp()
@@ -47,6 +46,9 @@ local slashCmd = {
 	end,
 	inspect = function()
 		GearHelper:SlashInspect()
+	end,
+	check = function()
+		GearHelper:SlashCheck()
 	end
 }
 
@@ -55,7 +57,7 @@ GearHelper:RegisterChatCommand("GH", "MySlashCommand")
 
 function GearHelper:MySlashCommand(input)
 	for cmd, action in pairs(slashCmd) do
-		if input == cmd then
+		if input:lower() == cmd:lower() then
 			action()
 			do
 				return

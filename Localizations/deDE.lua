@@ -3,7 +3,7 @@ if not L then
 	return
 end
 
-L["merci"] = "|cFF00FF00Thank you Salty for the translation"
+L["merci"] = "|cFF00FF00Thank you Salty and gOOvER for the translations"
 
 L["local"] = "DE"
 
@@ -33,8 +33,11 @@ L["maLanguekoKR"] = "독일의"
 L["maLangueptBR"] = "Alemão"
 L["maLanguezhCN"] = "德国"
 L["maLanguezhTW"] = "德國"
-
-
+L["ask1"] = "|cFFFFFF00Du kannst fragen ["
+L["ask2"] = "|cFFFFFF00] ob er es braucht"
+L["gold"] = "g"
+L["mainD"] = "Rechte Hand"
+L["mainG"] = "Linke Hand"
 
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 

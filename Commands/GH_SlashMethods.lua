@@ -2,26 +2,26 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:SlashDisplayHelp()
     GearHelper:Print("state - Display the addon status")
-	GearHelper:Print("list - Run a scanBag + scanCharacter")
-	print(L["helpConfig"])
-	print(L["helpVersion"])
-	GearHelper:Print("im 'newMsg' - Change the auto invite token by newMsg")
-	GearHelper:Print("createItemLink - Generate a fake itemLink")
-	GearHelper:Print("debug - Enable the debug print mode")
-	GearHelper:Print("askLoot - Enable the feature (auto ask for loot)")
-	GearHelper:Print('dot - Enable the dot on better items icons')
-	GearHelper:Print('suppDot - Disable the dot on better items icons')
-	print(L["helpCw"])
-	GearHelper:Print("ain - Test the ask if needed function")
-	GearHelper:Print("reset - Reset GearHelper")
-	GearHelper:Print("resetCache - Clear the GearHelper cache")
-	GearHelper:Print("printCache - Print the GearHelper cache")
+    GearHelper:Print("list - Run a scanBag + scanCharacter")
+    print(L["helpConfig"])
+    print(L["helpVersion"])
+    GearHelper:Print("im 'newMsg' - Change the auto invite token by newMsg")
+    GearHelper:Print("createItemLink - Generate a fake itemLink")
+    GearHelper:Print("debug - Enable the debug print mode")
+    GearHelper:Print("askLoot - Enable the feature (auto ask for loot)")
+    GearHelper:Print("dot - Enable the dot on better items icons")
+    GearHelper:Print("suppDot - Disable the dot on better items icons")
+    print(L["helpCw"])
+    GearHelper:Print("ain - Test the ask if needed function")
+    GearHelper:Print("reset - Reset GearHelper")
+    GearHelper:Print("resetCache - Clear the GearHelper cache")
+    GearHelper:Print("printCache - Print the GearHelper cache")
 end
 
 function GearHelper:SlashPrintCache()
     for k, v in pairs(GearHelper.db.global.ItemCache) do
         GearHelper:Print(k)
-        foreach(v, print)
+        foreach(v, GearHelper:Print())
     end
 end
 
@@ -57,7 +57,7 @@ function GearHelper:SlashCreateItemLink()
     local tempItemLink = "|cff1eff00|Hitem:128942::::::::100:105::::::|h[/gh createItemLink]|h|r"
     GearHelper:Print(tempItemLink)
     GearHelper:Print("GearHelper:IsEquipped = " .. tostring(GearHelper:IsEquipped(tempItemLink)))
-    table.foreach(GearHelper:weightCalculation(tempItemLink), print)
+    table.foreach(GearHelper:weightCalculation(tempItemLink), GearHelper:Print())
 end
 
 function GearHelper:SlashAskLoot()
@@ -111,5 +111,22 @@ function GearHelper:SlashInspect()
         end
     else
         print("trop loin")
+    end
+end
+
+function GearHelper:SlashCheck()
+    if (not lfrCheckButton_GlobalName) then
+        lfrCheckButton = CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
+        lfrCheckButton:SetPoint("TOPRIGHT", -325, -45)
+        lfrCheckButton_GlobalNameText:SetText(L["lfrCheckButtonText"])
+        lfrCheckButton.tooltip = L["lfrCheckButtonTooltip"]
+        lfrCheckButton:SetScript(
+            "OnClick",
+            function()
+                azeCheck = lfrCheckButton:GetChecked()
+            end
+        )
+    else
+        lfrCheckButton_GlobalName:Show()
     end
 end
