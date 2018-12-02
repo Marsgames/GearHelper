@@ -121,12 +121,14 @@ L["maLanguekoKR"] = "프랑스의"
 L["maLangueptBR"] = "Francês"
 L["maLanguezhCN"] = "法国"
 L["maLanguezhTW"] = "法國"
-L["slashCommandConfig"] = "config - Ouvre le panneau de configuration"
-L["slashCommandVersion"] = "version - Affiche la version de l'addon"
-L["slashCommandCw"] = "cw - Ouvre le panneau de custom weight"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 L["isAlive"] = "est vivant(e) !"
 L["isDead"] = "est mort(e) !"
+L["lfrCheckButtonText"] = "Accepter auto rdy check"
+L["lfrCheckButtonTooltip"] = 'Cochez cette case pour répondre automatiquement "prêt" en LFR lors de l\'appel'
+L["helpConfig"] = "config --> affiche le panneau de config"
+L["helpVersion"] = "version --> affiche la version de l'addon"
+L["helpCw"] = "cw --> Ouvre le panneau des Customs Weights"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 

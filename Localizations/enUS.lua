@@ -68,7 +68,7 @@ L["demande4zhCN"] = "[GearHelper] - Hey, I would like to know if you need your "
 L["demande4zhCN2"] = " that you just won "
 L["demande4zhTW"] = "[GearHelper] - Hey, I would like to know if you need your "
 L["demande4zhTW2"] = " that you just won "
-L["repfrFR"] --[[don't translate this]] = "S'il te plait, réponds en "
+L["repfrFR"] --[[don't translate this]] = "S'il te plait, répond en "
 L["repfrFR2"] --[[don't translate this]] = " ou en anglais."
 L["repenUS"] --[[don't translate this]] = "Please, answer in "
 L["repenUS2"] --[[don't translate this]] = ""
@@ -163,13 +163,14 @@ L["maLanguekoKR"] = "영어."
 L["maLangueptBR"] = "Inglês."
 L["maLanguezhCN"] = "英语."
 L["maLanguezhTW"] = "英語."
-L["slashCommandConfig"] = "config - Open the configuration panel"
-L["slashCommandVersion"] = "version - Display the addon version"
-L["slashCommandCw"] = "cw - Open the custom weight panel"
-
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 L["isAlive"] = "is alive !"
 L["isDead"] = "is dead !"
+L["lfrCheckButtonText"] = "Auto accept rdy check"
+L["lfrCheckButtonTooltip"] = "Check this box to auto accept ready check when you are in LFR"
+L["helpConfig"] = "config --> open config panel"
+L["helpVersion"] = "version --> display your version of GH"
+L["helpCw"] = "cw --> open Customs Weights panel"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
