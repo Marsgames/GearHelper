@@ -2,6 +2,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local prefixAddon = "GeARHeLPeRPReFIX"
 local gagne = 0
+lfrCheckIsChecked = false
 
 waitingIDTable = waitingIDTable
 
@@ -136,6 +137,43 @@ local function PlayerEnteringWorld()
 		GearHelper:poseDot()
 		if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
 			GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
+		end
+	end
+
+	local _, instanceType, _, _, _, _, _, _, _, lfgDungeonsID = GetInstanceInfo()
+	if "raid" == instanceType then
+		-- end
+		if (nil == lfgDungeonsID) then
+			lfrCheckIsChecked = false
+			if (lfrCheckButton_GlobalName) then
+				lfrCheckButton_GlobalName:Hide()
+			end
+			do
+				return
+			end
+		end
+		-- si le joueur est dans un groupe LFR afficher sous la minimap une case cochable permettant d'accepter automatiquement les appels
+		-- ConfirmReadyCheck(int)
+
+		-- if (not lfrCheckButton_GlobalName) then
+		lfrCheckButton = lfrCheckButton_GlobalName or CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
+		lfrCheckButton:SetPoint("TOPRIGHT", -325, -45)
+		lfrCheckButton_GlobalNameText:SetText(L["lfrCheckButtonText"])
+		lfrCheckButton.tooltip = L["lfrCheckButtonTooltip"]
+		lfrCheckButton:SetScript(
+			"OnClick",
+			function()
+				lfrCheckIsChecked = lfrCheckButton:GetChecked()
+				print(lfrCheckIsChecked)
+			end
+		)
+		-- else
+		lfrCheckButton_GlobalName:Show()
+		lfrCheckButton_GlobalName:SetChecked(lfrCheckIsChecked)
+	else
+		lfrCheckIsChecked = false
+		if (lfrCheckButton_GlobalName) then
+			lfrCheckButton_GlobalName:Hide()
 		end
 	end
 end
@@ -314,7 +352,7 @@ local function ActiveTalentGroupChanged()
 	end
 
 	waitSpeTimer = time()
-		waitSpeFrame:Show()
+	waitSpeFrame:Show()
 	GearHelper:equipItem(0)
 	GearHelper:equipItem(1)
 	GearHelper:equipItem(2)
@@ -770,6 +808,20 @@ local function UpdateMouseOverUnit()
 	NotifyInspect("mouseover")
 end
 
+local function ReadyCheck()
+	-- local _, instanceType, _, _, _, _, _, _, _, lfgDungeonsID = GetInstanceInfo()
+	-- print("GH_Events/PlayerEnteringWorld --> lfgDungeonsID : " .. tostring(lfgDungeonsID))
+	-- if "raid" == instanceType and nil ~= lfgDungeonsID then
+	if lfrCheckIsChecked then
+		print("on utilise ConfirmReadyCheck(1)")
+		ConfirmReadyCheck(1)
+		ReadyCheckFrame:Hide()
+	else
+		print("lfrCheckIsChecked : " .. tostring(lfrCheckIsChecked))
+	end
+	-- end
+end
+
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
@@ -806,3 +858,4 @@ GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("PLAYER_ALIVE", PlayerAlive, ...)
 GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
 GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
+GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)

@@ -1,10 +1,12 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 local slashCmd = {
 	help = function(msg)
 		--print("help --> affiche l'aide")
 		GearHelper:Print("state --> affiche l'état de l'addon")
 		GearHelper:Print("list --> ScanBag() + scanCharacter()")
-		print("config --> affiche le panneau de config")
-		print("version --> affiche la version de l'addon")
+		print(L["helpConfig"])
+		print(L["helpVersion"])
 		GearHelper:Print("im msg --> change le message d'auto invite par msg")
 		--print("ram --> affiche la ram utilisée par l'addon")
 		GearHelper:Print("createItemLink --> crée un faux itemLink (qui marche)")
@@ -16,7 +18,7 @@ local slashCmd = {
 		GearHelper:Print("askloot --> active / désactive l'option pour annoncer les loots mieux que les notres en instance")
 		GearHelper:Print('dot --> affiche les icones des "meilleurs items" sur les icones des stuffs')
 		GearHelper:Print('suppdot --> supprime les icones de "meilleurs item" sur les icones des stuffs')
-		print("cw --> Ouvre le panneau des Customs Weights")
+		print(L["helpCw"])
 		GearHelper:Print("eccip --> equip le meilleur stuff des sacs")
 		GearHelper:Print("ain --> test la fonction Ask If He Needs")
 		GearHelper:Print("reset --> reset GearHelper")
@@ -254,6 +256,22 @@ local slashCmd = {
 		end
 
 		-- print("-----------")
+	end,
+	check = function()
+		if (not lfrCheckButton_GlobalName) then
+			lfrCheckButton = CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
+			lfrCheckButton:SetPoint("TOPRIGHT", -325, -45)
+			lfrCheckButton_GlobalNameText:SetText(L["lfrCheckButtonText"])
+			lfrCheckButton.tooltip = L["lfrCheckButtonTooltip"]
+			lfrCheckButton:SetScript(
+				"OnClick",
+				function()
+					azeCheck = lfrCheckButton:GetChecked()
+				end
+			)
+		else
+			lfrCheckButton_GlobalName:Show()
+		end
 	end
 }
 
