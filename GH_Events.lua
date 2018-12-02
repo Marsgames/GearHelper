@@ -1,6 +1,5 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local prefixAddon = "GeARHeLPeRPReFIX"
 local gagne = 0
 lfrCheckIsChecked = false
 
@@ -155,7 +154,7 @@ local function PlayerEnteringWorld()
 end
 
 local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
-	if prefixMessage ~= prefixAddon then
+	if prefixMessage ~= GearHelperVars.prefixAddon then
 		do
 			return
 		end
@@ -416,7 +415,6 @@ local function QuestTurnedIn()
 end
 
 local function GetItemInfoReceived(_, _, item)
-
 	if GearHelper.db.global.itemWaitList[item] then
 		local slotName = GearHelper.db.global.itemWaitList[item]
 		GearHelper.db.global.itemWaitList[item] = nil
@@ -552,7 +550,6 @@ local function InspectReady(_, _, target)
 		end
 
 		ClearInspectPlayer()
-
 		GameTooltip:Show()
 	end
 end
