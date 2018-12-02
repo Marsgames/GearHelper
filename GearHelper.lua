@@ -1,8 +1,5 @@
 -- https://mothereff.in/lua-minifier
---------------------------- Définition des variables ---------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---ligne 609 le bloc a l'air foireux, le reprendre
+
 local defaultsOptions = {
 	profile = {
 		addonEnabled = true,
@@ -47,11 +44,8 @@ local defaultsOptions = {
 	}
 } -- NE PAS OUBLIER DE RAJOUTER LA VERSION PRÉCÉDENTE ICI APRÈS CHAQUE MISE A JOUR !!!!
 --
---[[
 
---Supprimer les traduction doublon activé/désactivé et concatener phrase+activé/désactivé
-
-]] local GHoldVersions = {
+local GHoldVersions = {
 	"0.0",
 	"0.1",
 	"0.2",
@@ -114,30 +108,20 @@ local defaultsOptions = {
 	"1.7.4"
 }
 
-addonName = ... --, GH_Globals = ...
+addonName = ...
 addonName = "GearHelper"
---L.stats = {}
---frameInterface = nil
 
 version = GetAddOnMetadata(addonName, "Version")
 versionCible = nil
 
 waitingIDTable = {}
 
---print("Version actuelle : "..version)
 local prefixAddon = "GeARHeLPeRPReFIX"
---..version -- rajouter version si on veut que notre addon ne comunique QUE avec les GH de la même version
 local prefixForMars = "GHForMGTN"
--- ^ Pour le préfix, choisir un nom qu'on est sûr que personne d'autre ne réutilisera
---local L = AceLocale:GetLocale("GearHelper") -- permet de récupérer le text dans toutes les langues
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
--- local allEvents = {}
 local allPrefix = {["askVersion" .. prefixAddon] = sendAnswerVersion, ["answerVersion" .. prefixAddon] = receiveAnswer}
--- local nbSlotsBag = {[0] = 0, [1] = 0, [2] = 0, [3] = 0, [4] = 0}
--- local eventHandler = CreateFrame("Frame")
 local waitAnswerFrame = CreateFrame("Frame")
--- local loadFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
 GearHelper.charInventory = {}
 
@@ -150,24 +134,7 @@ local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
 numBag = 0
 
---local idMieux = {}
-
 local nbRappels = 3
-
--- local function sendInfo()
--- 	local guid = UnitGUID(UnitName("player"))
--- 	local class, _, race, _, sex, name, realm = GetPlayerInfoByGUID(guid)
--- 	if sex == 1 then
--- 		sex = "Inconnu / Neutre"
--- 	elseif sex == 2 then
--- 		sex = "Male"
--- 	elseif sex == 3 then
--- 		sex = "Femelle"
--- 	end
--- 	local guildName, guildRankName = GetGuildInfo(name)
--- 	local message = (tostring(name).." utilise l'addon avec la version "..tostring(version).."\nc'est un "..tostring(race).." "..tostring(class).." "..tostring(sex).."\nGuilde : "..tostring(guildName).." / rang : "..tostring(guildRankName))
--- 	return message
--- end
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
@@ -177,10 +144,6 @@ waitAnswerFrame:Hide()
 waitSpeFrame:Hide()
 waitNilFrame:Hide()
 
--------------------------------------------------------
--- Initialize addon configuration for the first time --
--- @author Raphaël Saget & Raphaël Daumas            --
--------------------------------------------------------
 function GearHelper:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("GearHelperDB", defaultsOptions)
 	self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
@@ -213,26 +176,11 @@ function GearHelper:OnInitialize()
 	icon:Register("GHIcon", GHIcon, self.db.profile.minimap)
 end
 
---[[
-Function :
-Scope : GearHelper
-Description :
-Author : Raphaël Saget
-]]
 function GearHelper:RefreshConfig()
-	-- C'est call quand ça ?
-	-- GearHelper:Print("Refresh config called")
-
 	InterfaceOptionsFrame:Show()
 	InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
---[[
-Function : ResetConfig
-Scope : GearHelper
-Description : Reset addon to default value
-Author : Raphaël Daumas
-]]
 function GearHelper:ResetConfig()
 	GearHelper.db.profile.addonEnabled = nil --true
 	GearHelper.db.profile.sellGreyItems = nil --true
@@ -276,12 +224,6 @@ function GearHelper:ResetConfig()
 	InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
---[[
-Function :
-Scope : GearHelper
-Description :
-Author : Raphaël Saget
-]]
 function GearHelper:OnEnable()
 	if not GearHelper.db.profile.addonEnabled then
 		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"))
@@ -297,14 +239,6 @@ function GearHelper:OnEnable()
 end
 
 function GearHelper:OnMinimapTooltipShow(tooltip)
-	-- local p=tooltip:CreateFontString("myFirstPanel","OVERLAY")
-	-- p:SetFont('Fonts\\ARIALN.ttf', 15, 'outline')
-	-- p:SetTextColor(1, 0.82, 0)
-	-- p:SetPoint("TOPLEFT")
-	-- p:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
-
-	-- tooltip:SetFont
-
 	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
 	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
 	if (not self.db.profile.addonEnabled) then
@@ -322,7 +256,6 @@ function GearHelper:OnMinimapTooltipShow(tooltip)
 	else
 		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickActivate"], "Jaune"), 1, 1, 1)
 	end
-	--tooltip:AddLine("<Addon Summary>", 1, 1, 1)
 	tooltip:Show()
 end
 
@@ -346,7 +279,6 @@ function GearHelper:OnMinimapTooltipClick(button, tooltip)
 			icon:Hide("GHIcon")
 			self.db.profile.minimap.hide = true
 		else
-			--GameTooltip:Show()
 			if (button == "LeftButton") then
 				InterfaceOptionsFrame:Show()
 				InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
@@ -362,60 +294,15 @@ function GearHelper:OnMinimapTooltipClick(button, tooltip)
 	end
 end
 
---[[
-Function :
-Scope : GearHelper
-Description :
-Author : Raphaël Saget
-]]
 function GearHelper:OnDisable()
 	-- Called when the addon is disabled
 end
 
--- desc : Reset all options
--- entrée : ø
--- sortie : ø
--- commentaire :
 function GearHelper:setDefault()
 	GearHelper.db = nil
-	-- GearHelper.db.profile.addonEnabled = nil
-	-- GearHelper.db.profile.sellGreyItems = nil
-	-- GearHelper.db.profile.autoGreed = nil
-	-- GearHelper.db.profile.autoAcceptQuestReward = nil
-	-- GearHelper.db.profile.autoNeed = nil
-	-- GearHelper.db.profile.autoEquipLooted.actual = nil
-	-- GearHelper.db.profile.autoEquipLooted.previous = nil
-	-- GearHelper.db.profile.autoEquipWhenSwitchSpe = nil
-	-- GearHelper.db.profile.weightTemplate = nil
-	-- GearHelper.db.profile.lastWeightTemplate = nil
-	-- GearHelper.db.profile.minimapButton = nil
-	-- GearHelper.db.profile.autoRepair = nil
-	-- GearHelper.db.profile.autoInvite = nil
-	-- GearHelper.db.profile.autoTell = nil
-	-- GearHelper.db.profile.inviteMessage = nil
-	-- GearHelper.db.profile.askLootRaid = nil
-	-- GearHelper.db.profile.printWhenEquip = nil
-	-- GearHelper.db.profile.debug = nil
-	-- GearHelper.db.profile.CW = nil
-	-- GearHelper.db.profile.ilvlOption = nil
-	-- GearHelper.db.profile.ilvlWeight = nil
-	-- GearHelper.db.profile.includeSocketInCompute = nil
-	-- GearHelper.db.profile.computeNotEquippable = nil
-	-- GearHelper.db.profile.whisperAlert = nil
-	-- GearHelper.db.profile.sayMyName = nil
-	-- GearHelper.db.profile.minimap = nil
-
-	-- GearHelper.db.global.ItemCache = nil
-	-- GearHelper.db.global.itemWaitList = nil
-	-- GearHelper.db.global.myNames = nil
 	ReloadUI()
 end
 
--- desc : Modify the message to whisp you to be invite in your group
--- entrée : The message to be whispered
--- sortie : ø
--- commentaire :
--- @author : Raphaël Daumas
 function GearHelper:setInviteMessage(valeur)
 	if valeur == nil then
 		do return end
@@ -448,25 +335,14 @@ function GearHelper:ShowMessageSMN(channel, sender, msg)
 		end
 end
 
--- desc : Add a string to the "array" of names
--- entrée :
--- sortie : ø
--- commentaire :
--- @author : Raphaël Daumas
 function GearHelper:setMyNames(valeur)
 	if not valeur then 
 		do return end
 	end
 
 		GearHelper.db.global.myNames = tostring(valeur .. ",")
-	--print(L["InviteMessage"]..tostring( GearHelper.db.profile.inviteMessage ))
 end
 
--- desc : Envoie dans la guilde / raid / groupe une demande aux autres GH pour savoir s'ils sont à jour
--- entrée : ø
--- sortie : ø
--- commentaire :
--- @author : Raphaël Daumas
 function GearHelper:sendAskVersion()
 	if UnitInRaid("player") ~= nil and UnitInRaid("player") or UnitInParty("player") ~= nil and UnitInParty("player") then
 		C_ChatInfo.SendAddonMessageLogged(prefixAddon, "askVersion;" .. version, "RAID")
@@ -479,27 +355,15 @@ function GearHelper:sendAskVersion()
 	waitAnswerFrame:Show()
 end
 
--- desc : Quand on reçoit une demande de version, l'addon utilise cette fonction qui envoit la réponse
--- entrée : ø
--- sortie : ø
--- commentaire :
--- @author : Raphaël Daumas
 function GearHelper:sendAnswerVersion()
 	if UnitInRaid("player") ~= nil and UnitInRaid("player") or UnitInParty("player") ~= nil and UnitInParty("player") then
 		C_ChatInfo.SendAddonMessageLogged(prefixAddon, "answerVersion;" .. version, "RAID")
-	-- C_ChatInfo.SendAddonMessageLogged(prefixForMars, sendInfo(), "RAID")
 	end
 	if IsInGuild() ~= nil and IsInGuild() == true then
 		C_ChatInfo.SendAddonMessageLogged(prefixAddon, "answerVersion;" .. version, "GUILD")
-	-- C_ChatInfo.SendAddonMessageLogged(prefixForMars, sendInfo(), "GUILD")
 	end
 end
 
--- desc : Vérifie si l'addon est à jour quand il recoit une réponse
--- entrée : string (version de la cible), string (nom de la cible)
--- sortie : string (message si l'addon n'est pas à jour, sinon rien)
--- commentaire :
--- @author : Raphaël Daumas
 function GearHelper:receiveAnswer(msgV, msgC)
 	if not askTime then 
 		do return end
@@ -557,15 +421,6 @@ waitNilFrame:SetScript(
 -- FONCTIONS --
 -------------------------------------------------------------------------------
 
---[[
-Function : GetEquippedItemLink
-Scope : GearHelper
-Description : Get item link from an inventory slot
-Input : slotID = the slot to query
-Output : itemLink of the slot or 0 if no item and -2 if waiting for event
-Author : Raphaël Saget
-Thanks to : lightspark@wowinterface
-]]
 function GearHelper:GetEquippedItemLink(slotID, slotName)
 	local itemLink = GetInventoryItemLink("player", slotID)
 	local itemID = GetInventoryItemID("player", slotID)
@@ -591,14 +446,6 @@ function GearHelper:GetEquippedItemLink(slotID, slotName)
 	end
 end
 
---[[
-Function :
-Scope : GearHelper
-Description :
-Input :
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:ScanCharacter()
 	GearHelper.charInventory["Head"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
 	GearHelper.charInventory["Neck"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
@@ -626,23 +473,6 @@ function GearHelper:ScanCharacter()
 	end
 end
 
--- -- desc : Fonction qui parse un link en ID
--- -- entrée : itemLink ( EX : |Hitem:124586:0:0:0:0:12254684455852 )
--- -- sortie : ID ( EX : 124586 )
--- -- commentaire :
--- function GearHelper:parseID(link)
--- 	local a = string.match(link, "item[%-?%d::]+")
--- 	local b = string.sub(a, 5, 12)
--- 	local c = string.gsub(b, ":", "")
--- 	return c
--- end
-
---[[
-Function : poseDot
-Scope : GearHelper
-Description : Add a green dot on itemIcon in bag if it's better than what is equiped
-Author : Raphaël Daumas
-]]
 function GearHelper:poseDot()
 	for bag = 0, 4 do
 		for slot = 1, GetContainerNumSlots(bag) do
@@ -672,14 +502,6 @@ function GearHelper:poseDot()
 	ContainerFrame_UpdateAll()
 end
 
---[[
-Function : GetStatFromTemplate
-Scope : local
-Description : Get a stat based on a string from the selected stat template
-Input : stat = string representing the stat we want
-Output : nil if stat not found or the stat from the template
-Author : Raphaël Saget
-]]
 local function GetStatFromTemplate(stat)
 	if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
@@ -697,14 +519,6 @@ local function GetStatFromTemplate(stat)
 	end
 end
 
---[[
-Function : ApplyTemplateToDelta
-Scope : GearHelper
-Description : Apply weight value from selected template to delta
-Input : delta = the delta between 2 items
-Output : valueItem = number representing value diff between 2 items or "notAdapted" if all stat of the items are not relevant in the user template
-Author : Raphaël Saget
-]]
 function GearHelper:ApplyTemplateToDelta(delta)
 	local valueItem = 0
 	local mainStat = GearHelper:FindHighestStatInTemplate()
@@ -734,14 +548,6 @@ end
 local waitTable = {}
 local waitFrame = nil
 
---[[
-Function : IsItemBetter
-Scope : GearHelper
-Description : Build item or retrieve it from cache and calculate is value
-Input : object = tooltip or itemlink / type = "ItemLink" or "ToolTip", the type of input "object"
-Output : the normalized value of the item
-Author : Raphaël Saget
-]]
 function GearHelper:IsItemBetter(object, type, objectEquipped)
 	--The item to test
 	local item = {}
@@ -785,20 +591,11 @@ function GearHelper:IsItemBetter(object, type, objectEquipped)
 	return GearHelper:NormalizeWeightResult(GearHelper:NewWeightCalculation(item, itemEquipped))
 end
 
---[[
-Function : BuildItemFromTooltip
-Scope : GearHelper
-Description : Build an item object from a tooltip or an itemLink
-Input : object = a tooltip or an itemLink, type = "ToolTip" or "ItemLink"
-Output : item = the item builded
-Author : Raphaël Saget
-]]
 function GearHelper:BuildItemFromTooltip(object, type)
 	local tip = ""
 	local item = {}
 	local textures = {}
 	local n = 0
-	-- print("BuildItemFromTooltip "..type)
 	--Check if we have a tooltip or itemlink in input
 	if type:lower() == "itemlink" then
 		tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
@@ -871,14 +668,6 @@ function GearHelper:BuildItemFromTooltip(object, type)
 	return item
 end
 
---[[
-Function : GetItemFromCache
-Scope : GearHelper
-Description : Retrieve an item from cache based on his itemLink
-Input : itemLink = itemLink of the object
-Output : item = the item in cache or nil if not found
-Author : Raphaël Saget
-]]
 function GearHelper:GetItemFromCache(itemLink)
 	for k, v in pairs(GearHelper.db.global.ItemCache) do
 		if k == itemLink then
@@ -888,26 +677,10 @@ function GearHelper:GetItemFromCache(itemLink)
 	return nil
 end
 
---[[
-Function : PutItemInCache
-Scope : GearHelper
-Description : Put an item in global GH cache
-Input : itemLink = itemLink of the object / item = the item to put in cache
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:PutItemInCache(itemLink, item)
 	GearHelper.db.global.ItemCache[itemLink] = item
 end
 
---[[
-Function : GetItemByLink
-Scope : GearHelper
-Description : Retrieve an item object based on an itemLink
-Input : itemLink = itemLink of the object
-Output : item = the object
-Author : Raphaël Saget
-]]
 function GearHelper:GetItemByLink(itemLink)
 	--Try to get item from GH Cache
 	local item = GearHelper:GetItemFromCache(itemLink)
@@ -921,14 +694,6 @@ function GearHelper:GetItemByLink(itemLink)
 	return item
 end
 
---[[
-Function : NewWeightCalculation
-Scope : GearHelper
-Description : The core calculation function
-Input : item = an item to test | myEquipItem : another item to test instead of player equippedItem (FACULTATIF)
-Output : result = the value of the item
-Author : Raphaël Saget
-]]
 function GearHelper:NewWeightCalculation(item, myEquipItem)
 	if not GearHelper.db.profile.addonEnabled then
 		do return end
@@ -943,7 +708,6 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 			local isSlotEmpty = GearHelper:IsSlotEmpty(item.equipLoc)
 			--Item in inventory is not in cache, we return nil and the item that we were testing
 			if not isSlotEmpty then
-				-- GearHelper:Print("NewWeightCalculation : Inventory not cached")
 				return nil, item
 			end
 
@@ -1058,14 +822,6 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 		return result
 end
 
----------------- Empecher si donjon marcheurs du temps    is in instance 		local _, _, difficulty = GetInstanceInfo()
---[[
-Function : equipItem
-Scope : GearHelper
-Description : Equipe les items du sac qui sont mieux que ceeux équipés
-Input : num du sac pour équiper le contenu d'un sac en particulier. Si rien est rentré, équipe le sac 0
-Author : Raphaël Daumas
-]]
 function GearHelper:equipItem(inThisBag)
 	local bagToEquip = inThisBag or 0
 	local _, typeInstance, difficultyIndex = GetInstanceInfo()
@@ -1094,7 +850,6 @@ function GearHelper:equipItem(inThisBag)
 								end
 							)
 							if weightCalcResult == -1010 then
-								-- print("equipItem s'est prit un -1010, on annule")
 								do
 									return
 								end
@@ -1134,24 +889,14 @@ function GearHelper:equipItem(inThisBag)
 								end
 							end
 						end
-						-- end
 					end
 					self:Hide()
-				-- end
 			end
 		end
 	)
 	waitEquipFrame:Show()
 end
 
---[[
-Function : GetQualityFromColor
-Scope : local
-Description : Retourne l'entier qu'on aurait eu en utilisant GetItemInfo
-Input : string (la couleur (hex) de l'item)
-Output : number (la couleur reetournée par GetItemInfo)
-Author : Raphaël Daumas
-]]
 local function GetQualityFromColor(color)
 	if (color == "9d9d9d") then
 		return 0
@@ -1172,21 +917,10 @@ local function GetQualityFromColor(color)
 	end
 end
 
-------------------------------------------------------------------
--- Create a clickable link to ask a player if he needs his loot --
--- @author Raphaël Daumas                                       --
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter) ------------------------------------------------------------------
 	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
-	-- local sender = sender or "sender"
-	-- local language = language or "language"
-	-- local channelString = channelString or "channelString"
 	local target = target or GetUnitName("player")
-	-- local flags = flags or "DND"
-	-- local unknown1 = unknown1 or 1
-	-- local channelNumber = channelNumber or 1
-	-- local channelName = channelName or "channelName"
-	-- local unknown2 = unknown2 or 0
-	-- local counter = counter or 1
+
 	if debug ~= 1 then
 	if target == nil then
 		do return end
@@ -1220,13 +954,11 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 			local OldSetItemRef = SetItemRef
 			function SetItemRef(link, text, button, chatFrame)
 				local func = strmatch(link, "^GHWhispWhenClick:(%a+)")
-				-- print("link : "..link)
 				if func == "askIfHeNeed" then
 					local _, nomPerso, itID, persoLink = strsplit("_", link)
 					local _, theItemLink = GetItemInfo(itID)
 					local itemTable = GearHelper:GetItemByLink(theItemLink)
 					local itLink1 = itemTable.itemLink
-					-- local name, link, quality, iLevel, reqLevel, itLink1, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(itID)
 
 					GearHelper:askIfHeNeed(itLink1, nomPerso)
 				else
@@ -1244,11 +976,6 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 
 					if debug ~= 1 then
 						local weightCalcResult = GearHelper:IsItemBetter(itemLink, "ItemLink")
-
-						-- local itemScan = GearHelper:GetItemByLink(itemLink)
-						-- local iL, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
-						-- print("----------")
-						-- print("")
 
 						if weightCalcResult ~= nil then
 							if #weightCalcResult == 1 then
@@ -1276,14 +1003,6 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 			end
 end
 
---[[
-Function : LinesToAddToTooltip
-Scope : GearHelper
-Description :
-Input :
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:LinesToAddToTooltip(result, item)
 	local linesToAdd = {}
 	if GearHelper.db.profile.computeNotEquippable == false and result[1] == -20 or result[1] == -40 then --nil or not equippable
@@ -1446,11 +1165,6 @@ GameTooltip:HookScript(
 	end
 )
 
------------------------------------------------------------------
--- Whisper to the right player, the right text,                --
---      in the right language to ask him if he needs his loot. --
--- @author Raphaël Daumas                                      --
------------------------------------------------------------------
 function GearHelper:askIfHeNeed(link, sendTo)
 	local className, classFile, classID = UnitClass(sendTo)
 	local itemTable = GearHelper:GetItemByLink(link)
@@ -1463,29 +1177,18 @@ function GearHelper:askIfHeNeed(link, sendTo)
 		OnAccept = function(self, data, data2)
 			local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
 			local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
-			--local unitLocale = "frFR"
 			if unitLocale == nil then
 				unitLocale = "enUS"
 			end
 			local theSource = "demande4" .. unitLocale
 			local theSource2 = "demande4" .. unitLocale .. "2"
 			local msg = L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
-			-- if msg == nil then
-			--     msg = L["demande4enUS"]
-			-- end
 			local rep = "rep" .. unitLocale
 			local rep2 = "rep" .. unitLocale .. "2"
 			local msgRep = L[rep] .. L["maLangue"..unitLocale] .. L[rep2] ~= nil and L[rep] .. L["maLangue"..unitLocale] .. L[rep2] or L["repenUS"] .. L["maLangue"..unitLocale]
 
-			-- if msgRep == nil then
-			--     msgRep = L["repenUS"]..L["maLangue"]
-			-- end
-			-- if unitLocale == "deDE" then
-			--     SendChatMessage(msg..itemLink..L["demande4deDE2"].." ?", "WHISPER", "Common", sendTo)
-			-- else
 			SendChatMessage(msg, "WHISPER", "Common", sendTo)
 			SendChatMessage(msgRep, "WHISPER", "Common", sendTo)
-			-- end
 			StaticPopup_Hide("AskIfHeNeed")
 		end,
 		timeout = 0,
@@ -1496,33 +1199,6 @@ function GearHelper:askIfHeNeed(link, sendTo)
 	StaticPopup_Show("AskIfHeNeed")
 end
 
--- tabWaitItem = {}
--- local function RegisterItemInfo(item)
--- 	if GetItemInfo(item) == nil then
--- 		local isItemAlreadyInTab = false
--- 		for i=0, #tabWaitItem do
--- 			if tabWaitItem[i] == item then
--- 				isItemAlreadyInTab = true
--- 			end
--- 		end
--- 		if isItemAlreadyInTab == false then
--- 			table.insert(tabWaitItem, item)
--- 		end
--- 		return false
--- 	else
--- 		return GetItemInfo(item)
--- 	end
--- end
-
--- GearHelper:Print("")
---[[
-Function : GetQuestReward
-Scope : GearHelper
-Description : Accept quest if theres one or less items. If there's more, chose the best or the most expensive
-Input : ø
-Output :ø
-Author : Raphaël Daumas
-]]
 function GearHelper:GetQuestReward()
 	local numQuestChoices = GetNumQuestChoices()
 	local name, link, typeI, subTypeI, itemSellPrice1
@@ -1546,10 +1222,8 @@ function GearHelper:GetQuestReward()
 			name = itemTable.name
 			link = itemTable.itemLink
 			typeI = itemTable.type
-			-- subType = itemTable.subType
 			itemSellPrice1 = itemTable.sellPrice
 
-			-- , , _, _, _, typeI, subTypeI, _, _, _, itemSellPrice1 = GetItemInfo(objetI)
 			if not GetItemInfo(objetI) then
 				GearHelper.idNilGetQuestReward = objetI
 				coroutine.yield()
@@ -1571,7 +1245,6 @@ function GearHelper:GetQuestReward()
 					GearHelper:Print("On a un -1010 dans GetQuestReward")
 				end
 			else
-				-- local _, _, _, _, _, _, _, _, _, _, itemSellPrice1 = GetItemInfo(objetI)
 				table.insert(weightTable, -10)
 
 				table.insert(prixTable, itemSellPrice1)
@@ -1600,14 +1273,7 @@ function GearHelper:GetQuestReward()
 
 		local prixTriee = prixTable
 		GearHelper:CountingSort(prixTriee)
-		-- table.sort( prixTriee )
 
-		-- print("prix table ----")
-		-- foreach(prixTriee, print)
-		-- print("fin prix table ------")
-
-		--print("maxweight : "..maxWeight)
-		-- button = nil
 		local xDif = 0
 		if maxWeight > 0 and not isBetter then
 			local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
@@ -1627,7 +1293,6 @@ function GearHelper:GetQuestReward()
 			end
 
 			if GearHelper.db.profile.autoAcceptQuestReward then
-				--GetQuestReward(keyWeight) -- normalement c'est bon
 				local objetI = GetQuestItemLink("choice", keyWeight)
 				print("On prend " .. objetI)
 			end
@@ -1649,7 +1314,6 @@ function GearHelper:GetQuestReward()
 			end
 
 			if GearHelper.db.profile.autoAcceptQuestReward then
-				--GetQuestReward(keyPrix) -- normalement c'est bon
 				local objetI = GetQuestItemLink("choice", keyPrix)
 				print("On prend " .. objetI)
 			end
@@ -1661,20 +1325,7 @@ function GearHelper:GetQuestReward()
 	end
 end
 
--- GearHelper:Print("")
---[[
-Function : AutoGreedAndNeed
-Scope : GearHelper
-Description : Automatically chose the best option when loot roll in instance
-Input : number --> loot number in order of appearence
-Output :ø
-Améliorations : Ajouter auto dez si besoin
-Author : Raphaël Daumas
-]]
 function GearHelper:AutoGreedAndNeed(number)
-	-- number = ID de l'id du roll (1, 2, 3)
-	-- rollType = 0 pass, 1 need, 2 cupi, 3 dez
-	-- ConfirmLootRoll(number, rollType)
 if not GearHelper.db.profile.autoNeed and not GearHelper.db.profile.autoGreed then
 	do return end
 end
@@ -1690,11 +1341,9 @@ end
 			if GearHelper.db.profile.autoNeed then
 				if itemType == L["armor"] or itemType == L["weapon"] then
 					if (weightCalcResult[1] ~= nil and weightCalcResult[1] > 0) or (weightCalcResult[2] ~= nil and weightCalcResult[2] > 0) then
-						-- print("J'ai need 1 "..name)
 						ConfirmLootRoll(number, 1)
 						UIErrorsFrame:AddMessage(L["iNeededOn"] .. name, 0.0, 1.0, 0.0, 150) -----------          DEBUG MODE        -----------
 					elseif GearHelper.db.profile.autoGreed then
-						-- print("J'ai cupi 2 "..name)
 						ConfirmLootRoll(number, 2)
 					end
 				end
@@ -1717,8 +1366,6 @@ end
 		end
 end
 
--- Créer les boutons le long du panel LFR
--- Adaptation de l'addon BossesKilled
 function GearHelper:CreateLfrButtons(frameParent)
 	local nbInstance = GetNumRFDungeons()
 	local scale = min(480 / ((nbInstance - 6) * 24), 1) --> Ajuste la taille des boutons en fonction de leur nombre
@@ -1792,7 +1439,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 				"OnClick",
 				function(this)
 					RaidFinderQueueFrame_SetRaid(this.dungeonID)
-					--self.UpdateSelecCursor()
 
 					-- This is to override the automatic highlighting when you click the button, while we want to use that to show queue status instead.
 					-- I've no idea why simply overriding this OnClick and not doing a SetChecked doesn't disable the behavior.
@@ -1809,8 +1455,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 	end
 end
 
--- Reset les textes des tooltips et des boutons
--- Adaptation de l'addon BossesKilled
 function GearHelper:UpdateButtonsAndTooltips(frameParent)
 	local buttons = frameParent.GHLfrButtons
 
@@ -1854,8 +1498,6 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 	end
 end
 
--- Crée / modifie le curseur des boutons LFR
--- Adaptation de l'addon BossesKilled
 function GearHelper:UpdateSelecCursor()
 	-- Création du curseur s'il n'existe pas
 	if not GearHelper.cursor then
@@ -1908,13 +1550,11 @@ function GearHelper:HideLfrButtons()
 		local id, name = GetRFDungeonInfo(i)
 		if _G["RaidFinderQueueFrameGHLfrButtons" .. id] then
 			_G["RaidFinderQueueFrameGHLfrButtons" .. id]:Hide()
-		--_G["RaidFinderQueueFrameGHLfrButtons" .. id] = nil
 		end
 	end
 end
 
 function GearHelper:ResetCache()
-	--print("Cache reseted")
 	GearHelper.db.global.ItemCache = {}
 end
 
@@ -1971,7 +1611,6 @@ function GearHelper:AddIlvlOnCharFrame(show)
 							local itemScan = GearHelper:GetItemByLink(item)
 							local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
 							iR = ((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or (iR == "a335ee" and 4) or (iR == "ff8000" and 5) or (iR == "e6cc80" and 6) or (iR == "00ccff" and 7))
-							--local _, _, iR, itemLevel = GetItemInfo(item)
 
 							button:SetText(itemLevel)
 							button:SetNormalFontObject("GameFontNormalSmall")
@@ -2080,62 +1719,34 @@ function GearHelper:AddIlvlOnInspectFrame(target, show)
 					local itemScan = GearHelper:GetItemByLink(itemID)
 					local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
 
-					--table.insert(arrayIlvl, itemLevel)
 					iR = ((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or (iR == "a335ee" and 4) or (iR == "ff8000" and 5) or (iR == "e6cc80" and 6) or (iR == "00ccff" and 7))
-					--local poor, uncommon, common, rare, epic, legendary, artifact, heirloom = 128824, 146976, 132930, 153256, 96707, 147297, 127830, 133597
 
 					if (itemEquipLoc ~= nil) then
 						arrayIlvl[itemEquipLoc] = itemLevel
-						-- print("----------")
-						-- print("itemID : " .. itemID)
-						-- print("itemLink : " .. itemLink)
-						-- print("itemLevel : " .. itemLevel)
-						-- print("itemEquipLoc : " .. itemEquipLoc)
-						-- print("iR : " .. iR)
 
 						local button
 						if (itemEquipLoc == "INVTYPE_FINGER" and not fingerAlreadyDone) then
-							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER"]))
-							-- print("Finger0")
 							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
 							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_FINGER"])
 							fingerAlreadyDone = true
 						elseif (itemEquipLoc == "INVTYPE_FINGER" and fingerAlreadyDone) then
-							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_FINGER1"]))
-							-- print("Finger1")
 							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
 							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_FINGER1"])
 						elseif (itemEquipLoc == "INVTYPE_TRINKET" and not trinketAlreadyDone) then
-							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET"]))
-							-- print("Trinket0")
 							button = _G["charIlvlButton" .. itemEquipLoc .. "0"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
 							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_TRINKET"])
 							trinketAlreadyDone = true
 						elseif (itemEquipLoc == "INVTYPE_TRINKET" and trinketAlreadyDone) then
-							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_TRINKET1"]))
-							-- print("Trinket1")
 							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
 							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["yINVTYPE_TRINKET1"])
 						elseif (itemEquipLoc == "INVTYPE_WEAPON" and not weaponAlreadyDone) then
-							-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONMAINHAND"]))
-							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONMAINHAND"]))
-							-- print("Arme0")
 							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "0"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "0", InspectPaperDollItemsFrame)
 							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["xINVTYPE_WEAPONMAINHAND"], arrayPos["yINVTYPE_WEAPONMAINHAND"])
 							weaponAlreadyDone = true
 						elseif (itemEquipLoc == "INVTYPE_WEAPON" and weaponAlreadyDone) then
-							-- print("xPos : " .. tostring(arrayPos["xINVTYPE_WEAPONOFFHAND"]))
-							-- print("yPos : " .. tostring(arrayPos["yINVTYPE_WEAPONOFFHAND"]))
-							-- print("Arme1")
 							button = _G["charIlvlInspectButton" .. itemEquipLoc .. "1"] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc .. "1", InspectPaperDollItemsFrame)
 							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["xINVTYPE_WEAPONOFFHAND"], arrayPos["yINVTYPE_WEAPONOFFHAND"])
 						else
-							-- print("xPos : " .. tostring(arrayPos["x" .. itemEquipLoc]))
-							-- print("yPos : " .. tostring(arrayPos["y" .. itemEquipLoc]))
 							button = _G["charIlvlInspectButton" .. itemEquipLoc] or CreateFrame("Button", "charIlvlInspectButton" .. itemEquipLoc, InspectPaperDollItemsFrame)
 							button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", arrayPos["x" .. itemEquipLoc], arrayPos["y" .. itemEquipLoc])
 						end
@@ -2157,14 +1768,12 @@ function GearHelper:AddIlvlOnInspectFrame(target, show)
 			table.foreach(
 				arrayIlvl,
 				function(equipLoc, ilvl)
-					-- print("equipLoc : " .. equipLoc)
 					if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
 						ilvlAverage = ilvlAverage + ilvl
 						itemCount = itemCount + 1
 					end
 				end
 			)
-			-- print("itemCount : "..itemCount)
 			if (itemCount > 0) then
 				local button = _G["ilvlAverageInspect"] or CreateFrame("Button", "ilvlAverageInspect", InspectPaperDollItemsFrame)
 				button:SetPoint("CENTER", InspectPaperDollItemsFrame, "CENTER", 0, -110)
@@ -2240,52 +1849,3 @@ function GearHelper:InitEquipLocInspect()
 	GearHelper.db.global.equipLocInspect["INVTYPE_SECONDARYHAND"] = 17
 	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPONOFFHAND"] = 17
 end
-
---[[
--- Se déclenche quand on rentre en combat
-function allEvents:PLAYER_REGEN_DISABLED( ... )
-GearHelper.db.profile.addonEnabled= false
-end
-
--- Se déclenche quand on sort du combat
-function allEvents:PLAYER_REGEN_ENABLED( ... )
-if startState == nil then
-startState = true
-end
-print("startState = "..tostring( startState ))
-GearHelper.db.profile.addonEnabled= startState
-end
-]]
---
-
-------------------------------------------------          ----------------------------------------------          ------------------------------------------------
--- xxxxxxx xxxxxxx --      -- xxxxxxx xxxxxxx --          -- xxxxxxx xxxxxxx --      -- xxxxx xxxxxxx --          -- xxxxxxx xxxxxxx --      -- xxxxxxx xxxxxxx --
-------------------------------------------------          ----------------------------------------------          ------------------------------------------------
-
--- for event, _ in pairs(allEvents) do
---   eventHandler:RegisterEvent(event)
--- end
--- eventHandler:SetScript("OnEvent", function ( self, event, ... )
---   --if GearHelper.db.profile.addonEnabledor GearHelper.db.profile.addonEnabled== nil then
---   allEvents[event](self, ...)
---   --end
--- end)
-
---------------
-
--- pour chaques piece de stuff
--- faire une recherche dans l'inventaire
--- regarder s'il existe un stuff du même type
--- si oui, regarder s'il est meilleurs que celui qu'on à
--- si oui l'équiper
--- si non, le laisser dans l'inventaire
--- fonction GearHelper:weightCalculation si finger ou trinket abs ca doit planter
---recup le retour de la tabcaracter et pour chaque faire un GearHelper:weightCalculation ca economise des lignes pour trinket et bague
-
--- Répertorier les pièces d'inventaire
--- Répertorier les pièces dispo dans le sac (spé)
--- Marquer les pièces de l'inventaire qui peuvent etre swap par celle du sac
--- Définir le nombre de pièces Y à tester et les lister
--- Définir le nombre de commutations possibles (nbPieceSlotX * nbPieceSlotY * nbPieceSlotZ etc...)
--- Equiper les pièces pour chaque commutation et recuperer stat
--- Comparer stat par rapport au caps

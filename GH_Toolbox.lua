@@ -1,13 +1,5 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
---[[
-Function : Print
-Scope : GearHelper
-Description : Print object based on debug flag
-Input : object = object to print
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:Print(object)
 	if object ~= nil then
 		if GearHelper.db.profile.debug and type(object) == "table" then
@@ -20,14 +12,6 @@ function GearHelper:Print(object)
 	end
 end
 
---[[
-Function : SiObjetGris
-Scope : GearHelper
-Description : Retourne si un item passé en paramètre est un objet gris ou non
-Input : number (id de l'item)
-Output : bool (objet gris ? true / false)
-Author : Raphaël Daumas
-]]
 function GearHelper:SiObjetGris(itemID)
 	local _, _, itemRarity, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(itemID)
 	local result = {}
@@ -43,15 +27,6 @@ function GearHelper:SiObjetGris(itemID)
 	end
 end
 
---[[
-Function : IsEquippableByMe
-Scope : GearHelper
-Description : Retourne si l'item passé en paramètre est équipable par mon perso ou non
-Input : number ? (id ded l'item)
-Output : bool (est équipable par moi ? true / false)
-Author : Raphaël Daumas
-Last Modified : Raphaël Saget
-]]
 function GearHelper:IsEquippableByMe(item)
 	local isItMadeForMe = false
 
@@ -101,15 +76,6 @@ function GearHelper:IsEquippableByMe(item)
 	return isItMadeForMe
 end
 
---[[
-Function : IsSlotEmpty
-Scope : GearHelper
-Description : Test an itemEquiLoc and return if it is empty
-Input : equipLoc = item equip location
-Output : nil = if item is not in cache / result = array containing true or false
-Author : Raphaël Daumas & Raphaël Saget
-Last Modified By : Raphaël Saget
-]]
 function GearHelper:IsSlotEmpty(equipLoc)
 	local result = {}
 	if equipLoc == "INVTYPE_TRINKET" then
@@ -193,14 +159,6 @@ function GearHelper:IsSlotEmpty(equipLoc)
 	return result
 end
 
---[[
-Function : IsInTable
-Scope : GearHelper
-Description : Retourne si un élément est présent dans un tableau
-Input : array (le tableau dans lequel on doit chercher), - (l'élément qu'on recherche)
-Output : bool (présent ? true / false)
-Author : Raphaël Daumas
-]]
 function GearHelper:IsInTable(array, data)
 	local result = false
 	table.foreach(
@@ -219,7 +177,6 @@ function GearHelper:IsEmptyTable(maTable)
 	return (next(maTable) == nil)
 end
 
--- Récupéré sur internet - tranqforme string en array
 function GearHelper:MySplit(inputString, separator)
 	if separator == nil then
 		separator = "%s"
@@ -233,14 +190,6 @@ function GearHelper:MySplit(inputString, separator)
 	return t
 end
 
---[[
-Function :GetStatDeltaBetweenItems
-Scope : GearHelper
-Description : Compute state delta between 2 item object
-Input : looted = looted object / equipped = equipped object
-Output : array of delta
-Author : Raphaël Saget
-]]
 function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 	local delta = {}
 
@@ -265,14 +214,6 @@ function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 	return delta
 end
 
---[[
-Function : GetGemValue
-Scope : GearHelper
-Description : Return the value of a gem according to the player lvl
-Input :
-Output :  Value of a gem at this level
-Author : Raphaël Saget
-]]
 function GearHelper:GetGemValue()
 	local _, gemItemLink = GetItemInfo("151585")
 	if gemItemLink == nil then
@@ -295,14 +236,6 @@ function GearHelper:GetGemValue()
 	end
 end
 
---[[
-Function : ReturnGoodLink
-Scope : GearHelper
-Description : Créer un item link spécial qui permet d'envoyer automatiquement un message à un joueur
-Input : itemLink (le lien ded l'item qu'on veut demander au joueur), string (nom du joueur), string (nom du joueur avec la couleur)
-Output : itemLink
-Author : Raphaël Daumas
-]]
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
 	local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
 	local _, itemId = strsplit(":", itemString)
@@ -312,57 +245,14 @@ function GearHelper:ReturnGoodLink(itemLink, target, tar)
 	end
 
 	return "|HGHWhispWhenClick:askIfHeNeed_" .. target .. "_" .. itemId .. "_|h" .. tar .. "|h"
-	-- return "|HGHWhispWhenClick:askIfHeNeed_"..target.."_"..itemLink.."_|h"..tar.."|h"
 end
 
---[[
-Function : CouleurClasse
-Scope : GearHelper
-Description : Renvoi la couleur de la classe d'un joueur
-Input : string (nom anglais ded la classe)
-Output : string (couleur de la classe)
-Author : Raphaël Daumas
-]]
 function GearHelper:CouleurClasse(classFileName)
 	local color = RAID_CLASS_COLORS[classFileName]
 
 	return "|c" .. color.colorStr
-
-	-- if classID == 1 then -- war
-	--     return "|cFFC79C6E"
-	-- elseif classID == 2 then -- pala
-	--     return "|cFFF58CBA"
-	-- elseif classID == 3 then -- hunter
-	--     return "|cFFABD473"
-	-- elseif classID == 4 then -- rogue
-	--     return "|cFFFFF569"
-	-- elseif classID == 5 then -- Pretre
-	--     return "|cFFFFFFFF"
-	-- elseif classID == 6 then -- dk
-	--     return "|cFF41F3B"
-	-- elseif classID == 7 then -- chamy
-	--     return "|cFF0070DE"
-	-- elseif classID == 8 then -- mage
-	--     return "|cFF69CCF0"
-	-- elseif classID == 9 then -- démo
-	--     return "|cFF9482C9"
-	-- elseif classID == 10 then -- moine
-	--     return "|cFF00FF96"
-	-- elseif classID == 11 then -- druid
-	--     return "|cFFFF7D0A"
-	-- elseif classID == 12 then -- DH
-	--     return "|cFFA330C9"
-	-- end
 end
 
---[[
-Function : FindHighestStatInTemplate
-Scope : GearHelper
-Description : Find the main stat of the actual template
-Input :
-Output : nil if template is not found / Nothing if template is empty or default / maxK the name of the stat
-Author : Raphaël Saget
-]]
 function GearHelper:FindHighestStatInTemplate()
 	if GearHelper.db.profile.weightTemplate == "NOX" then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
@@ -400,14 +290,6 @@ function GearHelper:FindHighestStatInTemplate()
 	end
 end
 
---[[
-Function : ColorizeString
-Scope : GearHelper
-Description : Colorize a string based on a parameter
-Input : text = string to colorize / color = color to apply
-Output : colorized string or just string if color is invalid
-Author : Raphaël Saget
-]]
 function GearHelper:ColorizeString(text, color)
 	local colorList = {}
 	colorList.jaune = "|cFFFFFF00"
@@ -427,14 +309,6 @@ function GearHelper:ColorizeString(text, color)
 	end
 end
 
---[[
-Function :
-Scope : GearHelper
-Description :
-Input :
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:NormalizeWeightResult(result)
 	-- -10 not adapted (no stat in template)
 	-- -20 not equippable
@@ -468,14 +342,6 @@ function GearHelper:NormalizeWeightResult(result)
 	return result
 end
 
---[[
-Function :
-Scope : GearHelper
-Description :
-Input :
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:DoDisplayOverlay(result)
 	local doDisplay = {-50}
 	local displayOverlay = false
@@ -489,10 +355,6 @@ function GearHelper:DoDisplayOverlay(result)
 	return displayOverlay
 end
 
--- desc : Fonction qui parse un link en ID
--- entrée : itemLink ( EX : |Hitem:124586:0:0:0:0:12254684455852 )
--- sortie : ID ( EX : 124586 )
--- commentaire :
 function GearHelper:parseID(link)
 	local a = string.match(link, "item[%-?%d::]+")
 	local b = string.sub(a, 5, 12)
@@ -500,13 +362,6 @@ function GearHelper:parseID(link)
 	return c
 end
 
---[[
-Function : CountingSort
-Scope : GearHelper
-Description : Algo de tri d'entier qui n'a pas le temps
-Input : table d'entiers
-Author : Raphaël Daumas
-]]
 function GearHelper:CountingSort(f)
 	local min, max = math.min(unpack(f)), math.max(unpack(f))
 	local count = {}

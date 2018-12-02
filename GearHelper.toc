@@ -59,7 +59,8 @@ Localizations\zhTW.lua
 ########## Addon ##########
 GearHelper.lua
 WeightValues.lua
-GH_Slash.lua
+Commands\GH_SlashMethods.lua
+Commands\GH_Slash.lua
 GH_Events.lua
 GH_Options.lua
 GH_Toolbox.lua

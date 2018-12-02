@@ -1,12 +1,5 @@
 GearHelper.itemSlot = {INVTYPE_AMMO = "Ammo", INVTYPE_HEAD = "Head", INVTYPE_NECK = "Neck", INVTYPE_SHOULDER = "Shoulder", INVTYPE_BODY = "Body", INVTYPE_CHEST = "Chest", INVTYPE_ROBE = "Chest", INVTYPE_WAIST = "Waist", INVTYPE_LEGS = "Legs", INVTYPE_FEET = "Feet", INVTYPE_WRIST = "Wrist", INVTYPE_HAND = "Hands", INVTYPE_FINGER = {"Finger0", "Finger1"}, INVTYPE_TRINKET = {"Trinket0", "Trinket1"}, INVTYPE_CLOAK = "Back", INVTYPE_SHIELD = "SecondaryHand", INVTYPE_WEAPON = {"MainHand", "SecondaryHand"}, INVTYPE_2HWEAPON = "MainHand", INVTYPE_WEAPONMAINHAND = "MainHand", INVTYPE_WEAPONOFFHAND = "SecondaryHand", INVTYPE_HOLDABLE = "SecondaryHand", INVTYPE_RANGED = "MainHand", INVTYPE_RANGEDRIGHT = "MainHand"}
 
---[[
-Function : ParseDefaultValues
-Scope : local
-Description : Parse template strings to get each stat and store them in database
-Input : rawValues = stat string, specID = specialization associated to the template, templateID = name of the template
-Author : Raphaël Saget
-]]
 local function ParseDefaultValues(rawValues, specID, templateID)
 	local rawCopy = rawValues
 	local tmpTemplate = {
@@ -220,14 +213,6 @@ local rawValues = {
 	}
 }
 
---[[
-Function : InitTemplates
-Scope : GearHelper
-Description : Global function to process every templates strings
-Input :
-Output :
-Author : Raphaël Saget
-]]
 function GearHelper:InitTemplates()
 	for spec, templates in pairs(rawValues) do
 		for templateID, stats in pairs(templates) do
