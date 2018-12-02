@@ -163,6 +163,10 @@ L["maLanguekoKR"] = "영어."
 L["maLangueptBR"] = "Inglês."
 L["maLanguezhCN"] = "英语."
 L["maLanguezhTW"] = "英語."
+L["slashCommandConfig"] = "config - Open the configuration panel"
+L["slashCommandVersion"] = "version - Display the addon version"
+L["slashCommandCw"] = "cw - Open the custom weight panel"
+
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 L["isAlive"] = "is alive !"
 L["isDead"] = "is dead !"
