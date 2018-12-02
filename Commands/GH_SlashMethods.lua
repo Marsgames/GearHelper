@@ -21,7 +21,7 @@ end
 function GearHelper:SlashPrintCache()
     for k, v in pairs(GearHelper.db.global.ItemCache) do
         GearHelper:Print(k)
-        foreach(v, GearHelper:Print)
+        foreach(v, print)
     end
 end
 
@@ -57,7 +57,7 @@ function GearHelper:SlashCreateItemLink()
     local tempItemLink = "|cff1eff00|Hitem:128942::::::::100:105::::::|h[/gh createItemLink]|h|r"
     GearHelper:Print(tempItemLink)
     GearHelper:Print("GearHelper:IsEquipped = " .. tostring(GearHelper:IsEquipped(tempItemLink)))
-    table.foreach(GearHelper:weightCalculation(tempItemLink), GearHelper:Print)
+    table.foreach(GearHelper:weightCalculation(tempItemLink), print)
 end
 
 function GearHelper:SlashAskLoot()

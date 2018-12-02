@@ -1,21 +1,53 @@
 
 local slashCmd = {
-	help = GearHelper:SlashDisplayHelp(),
-	printCache = GearHelper:SlashPrintCache(),
-	list = GearHelper:SlashList(),
-	config = GearHelper:SlashConfig(),
-	version = GearHelper:SlashVersion(),
-	im = GearHelper:SlashIm(),
-	createItemlink = GearHelper:SlashCreateItemLink(),
-	askLoot = GearHelper:SlashAskLoot(),
-	dot = GearHelper:SlashDot(),
-	suppDot = GearHelper:SlashSuppDot(),
-	cw = GearHelper:SlashCw(),
-	ain = GearHelper:SlashAin(),
-	reset = GearHelper:SlashReset(),
-	resetCache = GearHelper:SlashResetCache(),
-	debug = GearHelper:SlashDebug(),
-	inspect = GearHelper:SlashInspect()
+	help = function()
+		GearHelper:SlashDisplayHelp()
+	end,
+	printCache = function()
+		GearHelper:SlashPrintCache()
+	end,
+	list = function()
+		GearHelper:SlashList()
+	end,
+	config = function()
+		GearHelper:SlashConfig()
+	end,
+	version = function()
+		GearHelper:SlashVersion()
+	end,
+	im = function()
+		GearHelper:SlashIm()
+	end,
+	createItemlink = function()
+		GearHelper:SlashCreateItemLink()
+	end,
+	askLoot = function()
+		GearHelper:SlashAskLoot()
+	end,
+	dot = function()
+		GearHelper:SlashDot()
+	end,
+	suppDot = function()
+		GearHelper:SlashSuppDot()
+	end,
+	cw = function()
+		GearHelper:SlashCw()
+	end,
+	ain = function()
+		GearHelper:SlashAin()
+	end,
+	reset = function()
+		GearHelper:SlashReset()
+	end,
+	resetCache = function()
+		GearHelper:SlashResetCache()
+	end,
+	debug = function()
+		GearHelper:SlashDebug()
+	end,
+	inspect = function()
+		GearHelper:SlashInspect()
+	end
 }
 
 GearHelper:RegisterChatCommand("GearHelper", "MySlashCommand")
