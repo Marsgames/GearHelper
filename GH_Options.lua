@@ -324,7 +324,7 @@ local ghSecondaryOptionsTable = {
 					order = 4,
 					name = L["UIautoInvite"],
 					desc = function()
-						return L["UIGHCheckBoxAutoInvite"] .. GearHelper:ColorizeString(GetInvMsg(), "Vert")
+						return L["UIGHCheckBoxAutoInvite"] .. GearHelper:ColorizeString(GetInvMsg(), "LightGreen")
 					end,
 					type = "toggle",
 					set = function(_, val)

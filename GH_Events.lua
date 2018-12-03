@@ -18,7 +18,7 @@ local function AddonLoaded(_, _, name)
 		end
 	end
 
-	print(GearHelper:ColorizeString(L["merci"], "Vert"))
+	print(GearHelper:ColorizeString(L["merci"], "LightGreen"))
 	local runningBuild = select(4, GetBuildInfo())
 	if GearHelper.db.global.buildVersion ~= runningBuild then
 		GearHelper.db.global.buildVersion = runningBuild
@@ -59,7 +59,7 @@ local function OnMerchantShow()
 			if GearHelper.db.profile.autoRepair == 1 then
 				if argentPossedee >= prix then
 					RepairAllItems(false)
-					print(GearHelper:ColorizeString(L["repairCost"], "Rose") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
+					print(GearHelper:ColorizeString(L["repairCost"], "Pink") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
 				else
 					print(L["CantRepair"])
 				end
@@ -249,7 +249,7 @@ local function MerchantClosed()
 		end
 	end
 	if (gagne - argentFin > 0) then
-		print(GearHelper:ColorizeString(L["moneyEarned"], "Vert") .. math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"])
+		print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"])
 		gagne = 0
 	end
 end

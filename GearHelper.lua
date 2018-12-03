@@ -1,5 +1,5 @@
 -- https://mothereff.in/lua-minifier
---{{ }}
+--{{ Local Vars }}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 local waitAnswerFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
@@ -49,7 +49,7 @@ local defaultsOptions = {
 	}
 }
 
--- GearHelperVars.
+--{{ Global Vars }}
 GearHelperVars = {
 	version = GetAddOnMetadata("GearHelper", "Version"),
 	prefixAddon = "GeARHeLPeRPReFIX",
@@ -61,23 +61,12 @@ GearHelperVars = {
 
 local allPrefix = {["askVersion" .. GearHelperVars.prefixAddon] = sendAnswerVersion, ["answerVersion" .. GearHelperVars.prefixAddon] = receiveAnswer}
 
--------------------------------------------------------------------------------
--------------------------------------------------------------------------------
------------------ Fin de définition des variables -----------------
-
 waitAnswerFrame:Hide()
 GearHelperVars.waitSpeFrame:Hide()
 waitNilFrame:Hide()
 
-function GearHelper:OnInitialize()
-	self.db = LibStub("AceDB-3.0"):New("GearHelperDB", defaultsOptions)
-	self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
-	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
-	self.db.RegisterCallback(self, "OnProfileReset", "ResetConfig")
-	self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
-
+local function CreateMinimapIcon()
 	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
-
 	local icon = LibStub("LibDBIcon-1.0")
 	local GHIcon =
 		LibStub("LibDataBroker-1.1"):NewDataObject(
@@ -98,7 +87,17 @@ function GearHelper:OnInitialize()
 			end
 		}
 	)
-	icon:Register("GHIcon", GHIcon, self.db.profile.minimap)
+	icon:Register("GHIcon", GHIcon, GearHelper.db.profile.minimap)
+end
+
+function GearHelper:OnInitialize()
+	self.db = LibStub("AceDB-3.0"):New("GearHelperDB", defaultsOptions)
+	self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
+	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
+	self.db.RegisterCallback(self, "OnProfileReset", "ResetConfig")
+	self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+
+	CreateMinimapIcon()
 end
 
 function GearHelper:RefreshConfig()
@@ -151,12 +150,12 @@ end
 
 function GearHelper:OnEnable()
 	if not GearHelper.db.profile.addonEnabled then
-		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"))
+		print(GearHelper:ColorizeString(L["Addon"], "LightGreen") .. GearHelper:ColorizeString(L["DeactivatedRed"], "LightRed"))
 		do return end
 	end
 	-- Called when the addon is enabled
 	-- Affiche à chaque connection l'état de l'addon
-		print(GearHelper:ColorizeString(L["Addon"], "Vert") .. GearHelper:ColorizeString(L["ActivatedGreen"], "Vert"))
+		print(GearHelper:ColorizeString(L["Addon"], "LightGreen") .. GearHelper:ColorizeString(L["ActivatedGreen"], "LightGreen"))
 		GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 		if (#GearHelper.db.global.equipLocInspect == 0) then
 			GearHelper:InitEquipLocInspect()
@@ -165,21 +164,21 @@ end
 
 function GearHelper:OnMinimapTooltipShow(tooltip)
 	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
-	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "Vert" or "Rouge"))
+	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "LightGreen" or "LightRed"))
 	if (not self.db.profile.addonEnabled) then
-		tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Jaune") .. GearHelper:ColorizeString(L["DeactivatedRed"], "Rouge"), 1, 1, 1)
+		tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Yellow") .. GearHelper:ColorizeString(L["DeactivatedRed"], "LightRed"), 1, 1, 1)
 	end
-	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Jaune"), 1, 1, 1)
+	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Yellow"), 1, 1, 1)
 	if (self.db.profile.addonEnabled) then
-		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Jaune"), 1, 1, 1)
+		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
 		if self.db.profile.minimap.isLock then
-			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickUnlock"], "Jaune"), 1, 1, 1)
+			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
 		else
-			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickLock"], "Jaune"), 1, 1, 1)
+			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickLock"], "Yellow"), 1, 1, 1)
 		end
-		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtCtrlClick"], "Jaune"), 1, 1, 1)
+		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
 	else
-		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickActivate"], "Jaune"), 1, 1, 1)
+		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
 	end
 	tooltip:Show()
 end
@@ -299,7 +298,7 @@ function GearHelper:receiveAnswer(msgV, msgC)
 	if tonumber(msgV) ~= nil and tonumber(msgV) <= GearHelperVars.addonTruncatedVersion then
 		do return end
 	end
-	message(L["maj1"] .. GearHelper:ColorizeString(GearHelperVars.version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
+	message(L["maj1"] .. GearHelper:ColorizeString(GearHelperVars.version, "LightRed") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "LightGreen") .. L["maj3"] .. msgC .. " (Curse)")
 	askTime = nil
 	waitAnswerFrame:Hide()
 	updateAddonReminderCount = updateAddonReminderCount - 1
@@ -900,14 +899,14 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 						if weightCalcResult ~= nil then
 							if #weightCalcResult == 1 then
 								if weightCalcResult[1] > 0 then
-									UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink, 0.0, 1.0, 0.0, 80)
-									print(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink)
+									UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
+									print(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink)
 									PlaySound(5274, "Master")
 								end
 							else
 								if weightCalcResult[1] ~= nil and weightCalcResult[1] > 0 or weightCalcResult[2] ~= nil and weightCalcResult[2] > 0 then
-									UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink, 0.0, 1.0, 0.0, 80)
-									print(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink)
+									UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
+									print(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink)
 									PlaySound(5274, "Master")
 								end
 							end
@@ -915,8 +914,8 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 							GearHelper:Print("WeightCalcResult nil")
 						end
 					elseif debug == 1 then
-						UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink, 0.0, 1.0, 0.0, 80)
-						print(GearHelper:ColorizeString(L["ask1"], "Jaune") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Jaune") .. itemLink)
+						UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
+						print(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink)
 						PlaySound(5274, "Master")
 					end
 				end
@@ -931,82 +930,82 @@ function GearHelper:LinesToAddToTooltip(result, item)
 
 		if #result == 1 then
 			if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "Rouge"))
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
 			elseif result[1] == -60 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Jaune"))
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
 			elseif result[1] == 0 then
 				table.insert(linesToAdd, L["itemEgal"])
 			elseif result[1] == -50 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux"))
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Better"))
 			elseif result[1] > 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThanGeneral"], "Mieux") .. math.floor(result[1]))
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThanGeneral"], "Better") .. math.floor(result[1]))
 			end
 		elseif #result == 2 then
 			if item.equipLoc == "INVTYPE_TRINKET" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
 					-- avec une valeur de "..math.floor(value))
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "Rouge") .. " Trinket0")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Trinket0")
 				elseif result[1] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket0")
 				elseif result[1] == -50 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Trinket0")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Better") .. " Trinket0")
 				elseif result[1] > 0 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Trinket0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " Trinket0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
 					-- avec une valeur de "..math.floor(value))
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "Rouge") .. " Trinket1")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Trinket1")
 				elseif result[2] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket1")
 				elseif result[2] == -50 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Trinket1")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Better") .. " Trinket1")
 				elseif result[2] > 0 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Trinket1 " .. L["itemBetterThan2"] .. math.floor(result[2]))
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " Trinket1 " .. L["itemBetterThan2"] .. math.floor(result[2]))
 				end
 			elseif item.equipLoc == "INVTYPE_FINGER" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
 					-- avec une valeur de "..math.floor(value))
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "Rouge") .. " Finger0")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Finger0")
 				elseif result[1] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket0")
 				elseif result[1] == -50 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Finger0")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Better") .. " Finger0")
 				elseif result[1] > 0 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Finger0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " Finger0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
 					-- avec une valeur de "..math.floor(value))
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "Rouge") .. " Finger1")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Finger1")
 				elseif result[2] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket1")
 				elseif result[2] == -50 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. " Finger1")
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Better") .. " Finger1")
 				elseif result[2] > 0 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. " Finger1 " .. L["itemBetterThan2"] .. math.floor(result[2]))
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " Finger1 " .. L["itemBetterThan2"] .. math.floor(result[2]))
 				end
 			elseif item.equipLoc == "INVTYPE_WEAPON" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
 					-- avec une valeur de "..math.floor(value))
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "Rouge") .. L["mainD"])
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. L["mainD"])
 				elseif result[1] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket0")
 				elseif result[1] == -50 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. L["mainD"])
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Better") .. L["mainD"])
 				elseif result[1] > 0 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. L["mainD"] .. L["itemBetterThan2"] .. math.floor(result[1]))
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. L["mainD"] .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
 					-- avec une valeur de "..math.floor(value))
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "Rouge") .. L["mainG"])
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. L["mainG"])
 				elseif result[2] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket1")
 				elseif result[2] == -50 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Mieux") .. L["mainG"])
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["betterThanNothing"], "Better") .. L["mainG"])
 				elseif result[2] > 0 then
-					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Mieux") .. L["mainG"] .. L["itemBetterThan2"] .. math.floor(result[2]))
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. L["mainG"] .. L["itemBetterThan2"] .. math.floor(result[2]))
 				end
 			else
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "Rouge"))
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
 			end
 		end
 	return linesToAdd
@@ -1048,14 +1047,14 @@ local ModifyTooltip = function(self, ...)
 				elseif result[1] == 0 or result[1] == -60 then
 					self:SetBackdropBorderColor(255, 255, 0) -- Jaune
 				elseif result[1] == -50 or result[1] > 0 then
-					self:SetBackdropBorderColor(0, 255, 150) -- "vert"
+					self:SetBackdropBorderColor(0, 255, 150) -- "LightGreen"
 				end
 
 				if #result == 2 then
 					if result[2] == 0 then
 						self:SetBackdropBorderColor(255, 255, 0) -- Jaune
 					elseif result[2] == -50 or result[2] > 0 then
-						self:SetBackdropBorderColor(0, 255, 150) -- "Vert"
+						self:SetBackdropBorderColor(0, 255, 150) -- "LightGreen"
 					end
 				end
 
@@ -1390,10 +1389,10 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 			local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
 
 			if isDead and bossName ~= nil then
-				textBoss = GearHelper:ColorizeString(bossName, "rougefonce") .. GearHelper:ColorizeString(" "..L["isDead"], "Rouge")
+				textBoss = GearHelper:ColorizeString(bossName, "Red") .. GearHelper:ColorizeString(" "..L["isDead"], "LightRed")
 				bossTues = bossName and bossTues + 1
 			elseif not isDead and bossName then
-				textBoss = GearHelper:ColorizeString(bossName, "vertfonce") .. GearHelper:ColorizeString(" "..L["isAlive"], "Vert")
+				textBoss = GearHelper:ColorizeString(bossName, "Green") .. GearHelper:ColorizeString(" "..L["isAlive"], "LightGreen")
 			end
 			table.insert(tooltip, textBoss)
 		end
@@ -1402,11 +1401,11 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 		button.tooltip = tooltip
 		local result = bossTues .. "/" .. nbBoss
 		if (bossTues == nbBoss) then
-			result = GearHelper:ColorizeString(result, "Rouge")
+			result = GearHelper:ColorizeString(result, "LightRed")
 		elseif (bossTues == 0) then
-			result = GearHelper:ColorizeString(result, "Vert")
+			result = GearHelper:ColorizeString(result, "LightGreen")
 		else
-			result = GearHelper:ColorizeString(result, "Jaune")
+			result = GearHelper:ColorizeString(result, "Yellow")
 		end
 
 		-- Utilise cette fonction pour ajouter du text si elle est dispo (évite des erreurs)
