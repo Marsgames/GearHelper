@@ -36,6 +36,15 @@ Libs\Ace3\AceConsole-3.0\AceConsole-3.0.xml
 Libs\Ace3\AceGUI-3.0\AceGUI-3.0.xml
 Libs\Ace3\AceConfig-3.0\AceConfig-3.0.xml
 
+########### wowUnit ###########
+Libs\wowUnit\template.xml
+Libs\wowUnit\external_functions.lua
+Libs\wowUnit\core.lua
+Libs\wowUnit\frame.lua
+Libs\wowUnit\asserts.lua
+Libs\wowUnit\tests.lua
+
+
 ########## Autre ##########
 Libs\LibDBIcon-1.0\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\LibDBIcon-1.0\LibDBIcon-1.0.lua
@@ -65,3 +74,4 @@ GH_Events.lua
 GH_Options.lua
 GH_Toolbox.lua
 items.lua
+GH_UnitTests.lua

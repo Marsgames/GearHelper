@@ -1,9 +1,9 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local gagne = 0
-lfrCheckIsChecked = false
+local lfrCheckIsChecked = false
 
-waitingIDTable = waitingIDTable
+-- waitingIDTable = waitingIDTable
 
 local function AddonLoaded(_, _, name)
 	if GearHelper.db.global.templates == nil then

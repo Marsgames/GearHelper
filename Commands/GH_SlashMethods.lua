@@ -16,6 +16,7 @@ function GearHelper:SlashDisplayHelp()
     GearHelper:Print("reset - Reset GearHelper")
     GearHelper:Print("resetCache - Clear the GearHelper cache")
     GearHelper:Print("printCache - Print the GearHelper cache")
+    GearHelper:Print("test - run unit tests")
 end
 
 function GearHelper:SlashPrintCache()
@@ -46,7 +47,7 @@ function GearHelper:SlashConfig()
 end
 
 function GearHelper:SlashVersion()
-    print("|cFF00FF00GearHelper|r|cFFFFFF00 version : " .. version)
+    print("|cFF00FF00GearHelper|r|cFFFFFF00 version : " .. GearHelperVars.version)
 end
 
 function GearHelper:SlashIm()
@@ -129,4 +130,11 @@ function GearHelper:SlashCheck()
     else
         lfrCheckButton_GlobalName:Show()
     end
+end
+
+function GearHelper:SlashTest()
+    local editbox = ChatEdit_ChooseBoxForSend(DEFAULT_CHAT_FRAME) --  Get an editbox
+    ChatEdit_ActivateChat(editbox) --   Show the editbox
+    editbox:SetText("/test GearHelper") -- Command goes here
+    ChatEdit_OnEnterPressed(editbox) -- Process command and hide (runs ChatEdit_SendText() and ChatEdit_DeactivateChat() respectively)
 end
