@@ -1,8 +1,11 @@
 -- https://mothereff.in/lua-minifier
+--{{ }}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 local waitAnswerFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
-
+local waitNilFrame = CreateFrame("Frame")
+local waitNilTimer = nil
+local updateAddonReminderCount = 3
 local defaultsOptions = {
 	profile = {
 		addonEnabled = true,
@@ -48,7 +51,6 @@ local defaultsOptions = {
 
 -- GearHelperVars.
 GearHelperVars = {
-	-- addonName = "GearHelper",
 	version = GetAddOnMetadata("GearHelper", "Version"),
 	prefixAddon = "GeARHeLPeRPReFIX",
 	addonTruncatedVersion = 1,
@@ -58,10 +60,6 @@ GearHelperVars = {
 }
 
 local allPrefix = {["askVersion" .. GearHelperVars.prefixAddon] = sendAnswerVersion, ["answerVersion" .. GearHelperVars.prefixAddon] = receiveAnswer}
-local waitNilFrame = CreateFrame("Frame")
-local waitNilTimer = nil
-
-local nbRappels = 3
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
@@ -295,7 +293,7 @@ function GearHelper:receiveAnswer(msgV, msgC)
 	if not askTime then 
 		do return end
 	end
-	if nbRappels <= 0 then 
+	if updateAddonReminderCount <= 0 then 
 		do return end
 	end
 	if tonumber(msgV) ~= nil and tonumber(msgV) <= GearHelperVars.addonTruncatedVersion then
@@ -304,7 +302,7 @@ function GearHelper:receiveAnswer(msgV, msgC)
 	message(L["maj1"] .. GearHelper:ColorizeString(GearHelperVars.version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
 	askTime = nil
 	waitAnswerFrame:Hide()
-	nbRappels = nbRappels - 1
+	updateAddonReminderCount = updateAddonReminderCount - 1
 end
 
 waitAnswerFrame:SetScript(
@@ -370,28 +368,28 @@ function GearHelper:GetEquippedItemLink(slotID, slotName)
 end
 
 function GearHelper:ScanCharacter()
-	["Head"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
-	["Neck"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
-	["Shoulder"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
-	["Back"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("BackSlot"), "BackSlot")
-	["Chest"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ChestSlot"), "ChestSlot")
-	["Wrist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WristSlot"), "WristSlot")
-	["Hands"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HandsSlot"), "HandsSlot")
-	["Waist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WaistSlot"), "WaistSlot")
-	["Legs"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("LegsSlot"), "LegsSlot")
-	["Feet"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("FeetSlot"), "FeetSlot")
-	["Finger0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
-	["Finger1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
-	["Trinket0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
-	["Trinket1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
-	["MainHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
-	["SecondaryHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
+	GearHelperVars.charInventory["Head"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
+	GearHelperVars.charInventory["Neck"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
+	GearHelperVars.charInventory["Shoulder"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
+	GearHelperVars.charInventory["Back"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("BackSlot"), "BackSlot")
+	GearHelperVars.charInventory["Chest"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("ChestSlot"), "ChestSlot")
+	GearHelperVars.charInventory["Wrist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WristSlot"), "WristSlot")
+	GearHelperVars.charInventory["Hands"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("HandsSlot"), "HandsSlot")
+	GearHelperVars.charInventory["Waist"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("WaistSlot"), "WaistSlot")
+	GearHelperVars.charInventory["Legs"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("LegsSlot"), "LegsSlot")
+	GearHelperVars.charInventory["Feet"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("FeetSlot"), "FeetSlot")
+	GearHelperVars.charInventory["Finger0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
+	GearHelperVars.charInventory["Finger1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
+	GearHelperVars.charInventory["Trinket0"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
+	GearHelperVars.charInventory["Trinket1"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
+	GearHelperVars.charInventory["MainHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
+	GearHelperVars.charInventory["SecondaryHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
-	if ["MainHand"] ~= -2 and ["MainHand"] ~= 0 then
-		local _, _, _, _, _, _, _, _, itemEquipLocWeapon = GetItemInfo(["MainHand"])
+	if GearHelperVars.charInventory["MainHand"] ~= -2 and GearHelperVars.charInventory["MainHand"] ~= 0 then
+		local _, _, _, _, _, _, _, _, itemEquipLocWeapon = GetItemInfo(GearHelperVars.charInventory["MainHand"])
 
 		if itemEquipLocWeapon == "INVTYPE_2HWEAPON" or itemEquipLocWeapon == "INVTYPE_RANGED" then
-			["SecondaryHand"] = -1
+			GearHelperVars.charInventory["SecondaryHand"] = -1
 		end
 	end
 end
@@ -643,7 +641,7 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 						if (myEquipItem) then
 							equippedItem = GearHelper:GetItemByLink(myEquipItem)
 						else
-							equippedItem = GearHelper:GetItemByLink([slotsList[index]])
+							equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory[slotsList[index]])
 						end
 						local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 						table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
@@ -671,11 +669,11 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 					else
 						table.insert(result, tmpResult)
 					end
-				elseif not isSlotEmpty[1] and isSlotEmpty[2] and ["SecondaryHand"] == -1 then -- Slot 2 empty because mainhand is 2 hand
-					local equippedItem = GearHelper:GetItemByLink(["MainHand"])
+				elseif not isSlotEmpty[1] and isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == -1 then -- Slot 2 empty because mainhand is 2 hand
+					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
-				elseif not isSlotEmpty[1] and isSlotEmpty[2] and ["SecondaryHand"] == 0 then
+				elseif not isSlotEmpty[1] and isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == 0 then
 					local tmpResult = GearHelper:ApplyTemplateToDelta(item)
 					if type(tmpResult) == "string" and tmpResult == "notAdapted" then
 						table.insert(result, "betterThanNothing")
@@ -683,8 +681,8 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 						table.insert(result, tmpResult)
 					end
 				elseif not isSlotEmpty[1] and not isSlotEmpty[2] then
-					local equippedItemMH = GearHelper:GetItemByLink(["MainHand"])
-					local equippedItemSH = GearHelper:GetItemByLink(["SecondaryHand"])
+					local equippedItemMH = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
+					local equippedItemSH = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
 					local deltaMH = GearHelper:GetStatDeltaBetweenItems(item, equippedItemMH)
 					local deltaSH = GearHelper:GetStatDeltaBetweenItems(item, equippedItemSH)
 					table.insert(result, GearHelper:ApplyTemplateToDelta(deltaMH))
@@ -699,20 +697,20 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 						table.insert(result, tmpResult)
 					end
 				elseif isSlotEmpty[1] and not isSlotEmpty[2] then
-					local equippedItem = GearHelper:GetItemByLink(["SecondaryHand"])
+					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
 				elseif not isSlotEmpty[1] and isSlotEmpty[2] then
-					local equippedItem = GearHelper:GetItemByLink(["MainHand"])
+					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
-				elseif not isSlotEmpty[1] and not isSlotEmpty[2] and ["SecondaryHand"] == -1 then
-					local equippedItem = GearHelper:GetItemByLink(["MainHand"])
+				elseif not isSlotEmpty[1] and not isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == -1 then
+					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
 				elseif not isSlotEmpty[1] and not isSlotEmpty[2] then
-					local MHequippedItem = GearHelper:GetItemByLink(["MainHand"])
-					local SHequippedItem = GearHelper:GetItemByLink(["SecondaryHand"])
+					local MHequippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
+					local SHequippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
 					local totalMHandSH = {}
 					for k, v in pairs(MHequippedItem) do
 						if type(v) == "numbers" then
@@ -724,12 +722,12 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 				end
 			else
 				if isSlotEmpty[1] == false then -- Si il y a un item equipé
-					if [GearHelper.itemSlot[item.equipLoc]] == -1 then --If this is a offhand weapon and we have a 2h equipped
-						local equippedItem = GearHelper:GetItemByLink(["MainHand"])
+					if GearHelperVars.charInventory[GearHelper.itemSlot[item.equipLoc]] == -1 then --If this is a offhand weapon and we have a 2h equipped
+						local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 						local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 						table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
 					else
-						local equippedItem = GearHelper:GetItemByLink([GearHelper.itemSlot[item.equipLoc]])
+						local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory[GearHelper.itemSlot[item.equipLoc]])
 						local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
 						table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
 					end
@@ -1487,7 +1485,7 @@ function GearHelper:AddIlvlOnCharFrame(show)
 		end
 
 			table.foreach(
-				,
+				GearHelperVars.charInventory,
 				function(slotName, item, number)
 					if (item ~= -1) then
 						local arrayPos = {
@@ -1561,7 +1559,7 @@ end
 
 function GearHelper:HideIlvlOnCharFrame()
 	table.foreach(
-		,
+		GearHelperVars.charInventory,
 		function(slotName, item)
 			if (_G["charIlvlButton" .. slotName]) then
 				_G["charIlvlButton" .. slotName]:Hide()
