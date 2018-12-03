@@ -49,6 +49,9 @@ local slashCmd = {
 	end,
 	check = function()
 		GearHelper:SlashCheck()
+	end,
+	test = function()
+		GearHelper:SlashTest()
 	end
 }
 

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    
+    <Button name="wowUnitTestFrameTemplate" virtual="true">
+        <Size x="104" y="13"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <FontString name="$parentLabel" inherits="GameFontNormalSmall" parentKey="Label">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension y="-1"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentStatText" inherits="GameFontHighlightSmall" justifyH="RIGHT" parentKey="Value">
+                    <Anchors>
+                        <Anchor point="TOPRIGHT">
+                            <Offset>
+                                <AbsDimension y="-1"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>
+                self.startingHeight = self:GetHeight()
+            </OnLoad>
+            <OnEnter>
+                if (not self.Highlight) then
+                    self.Highlight = self:CreateTexture(self:GetName().."Highlight", "BACKGROUND");
+                    self.Highlight:SetPoint("LEFT", self:GetParent(), "LEFT", 1, 0);
+                    self.Highlight:SetPoint("RIGHT", self:GetParent(), "RIGHT", 0, 0);
+                    self.Highlight:SetPoint("TOP");
+                    self.Highlight:SetPoint("BOTTOM");
+                    self.Highlight:SetTexture(1, 1, 1);
+                    self.Highlight:SetAlpha(0.1);
+                end
+                
+                self.Highlight:Show();
+            </OnEnter>
+            <OnLeave>
+                self.Highlight:Hide();
+            </OnLeave>
+            <OnClick>
+                wowUnit.UI:ToggleTestFrame(self);
+            </OnClick>
+        </Scripts>
+    </Button>
+    
+    <Frame name="wowUnitTestCategoryFrameTemplate" virtual="true">
+        <Size x="169" y="100"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBgTop" inherits="Char-Stat-Top" parentKey="BgTop">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="RIGHT"/>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBgBottom" inherits="Char-Stat-Bottom" parentKey="BgBottom">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT"/>
+                        <Anchor point="RIGHT"/>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBgMiddle" file="Interface\CharacterFrame\Char-Stat-Middle" parentKey="BgMiddle" vertTile="true">
+                    <Size x="169" y="8"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="$parentBgTop" relativePoint="BOTTOMLEFT" x="2"/>
+                        <Anchor point="BOTTOMLEFT" relativeTo="$parentBgBottom" relativePoint="TOPLEFT"/>
+                        <Anchor point="RIGHT" x="2"/>
+                    </Anchors>
+                    <TexCoords left="0.00390625" right="0.66406250" top="0.00000000" bottom="1.00000000"/>
+                </Texture>
+                <Texture name="$parentBgMinimized" inherits="Char-Stat-Minimized" parentKey="BgMinimized" hidden="true">
+                    <Size x="169" y="18"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="RIGHT"/>
+                    </Anchors>
+                </Texture>
+                <FontString name="$parentNameText" inherits="GameFontHighlight" justifyH="LEFT" parentKey="NameText">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="15" y="-3"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture name="$parentCollapsedIcon" parentKey="CollapsedIcon" inherits="Char-Stat-Plus" hidden="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="5" y="-5"/>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentExpandedIcon" parentKey="ExpandedIcon" inherits="Char-Stat-Minus">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="5" y="-7"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentToolbar">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="0" y="-20"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        if self:GetParent().collapsed then
+                            wowUnit.UI:ExpandTestCategoryFrame(self:GetParent());
+                        else
+                            wowUnit.UI:CollapseTestCategoryFrame(self:GetParent());
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentTest1" inherits="wowUnitTestFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="16" y="-19"/>
+                    <Anchor point="RIGHT" x="-4"/>
+                </Anchors>
+            </Button>
+        </Frames>
+    </Frame>
+
+    <ScrollFrame name="wowUnitTestsScrollFrame" inherits="UIPanelScrollFrameTemplate" hidden="true">
+        <Scripts>
+            <OnLoad>
+                self.ScrollBar.scrollStep = 50;
+                ScrollFrame_OnLoad(self);
+                ScrollFrame_OnScrollRangeChanged(self);
+            </OnLoad>
+        </Scripts>
+        <ScrollChild>
+            <Frame name="wowUnitTestsScrollChild">
+                <Size x="170" y="1000"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                </Anchors>
+            </Frame>
+        </ScrollChild>
+    </ScrollFrame>
+</Ui>

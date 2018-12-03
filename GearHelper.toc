@@ -65,3 +65,4 @@ GH_Events.lua
 GH_Options.lua
 GH_Toolbox.lua
 items.lua
+GH_UnitTests.lua
