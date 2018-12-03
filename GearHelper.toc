@@ -22,7 +22,7 @@
 ## X-eMail: marsgamess@gmail.com
 ## X-BugReport: https://wow.curseforge.com/projects/gearhelper/issues
 
-## SavedVariables: GHVar, GearHelperDB
+## SavedVariables: GearHelperDB
 
 ########## Libraries ##########
 ############ Ace3 ############

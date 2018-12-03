@@ -45,82 +45,22 @@ local defaultsOptions = {
 } -- NE PAS OUBLIER DE RAJOUTER LA VERSION PRÉCÉDENTE ICI APRÈS CHAQUE MISE A JOUR !!!!
 --
 
-local GHoldVersions = {
-	"0.0",
-	"0.1",
-	"0.2",
-	"0.3",
-	"0.4",
-	"0.5",
-	"0.51",
-	"0.6",
-	"0.61",
-	"0.7",
-	"0.8",
-	"0.9",
-	"0.9.1",
-	"1.0",
-	"1.0.1",
-	"1.0.2",
-	"1.0.3",
-	"1.1",
-	"1.2",
-	"1.3",
-	"1.3.1",
-	"1.3.2",
-	"1.3.3",
-	"1.4",
-	"1.4.1",
-	"1.4.2",
-	"1.5",
-	"1.5.1",
-	"1.5.2",
-	"1.5.3",
-	"1.5.4",
-	"1.5.5",
-	"1.5.6",
-	"1.5.7",
-	"1.5.8",
-	"1.5.9",
-	"1.5.9.1",
-	"1.6",
-	"1.6.1",
-	"1.6.2",
-	"1.6.2.1",
-	"1.6.3",
-	"1.6.4",
-	"1.6.5",
-	"1.6.5.1",
-	"1.6.5.2",
-	"1.6.5.3",
-	"1.6.5.4",
-	"1.6.5.5",
-	"1.6.5.6",
-	"1.6.5.7",
-	"1.6.5.8",
-	"1.6.6",
-	"1.6.6.1",
-	"1.6.6.2",
-	"1.7",
-	"1.7.1",
-	"1.7.2",
-	"1.7.3",
-	"1.7.4"
-}
-
 addonName = ...
 addonName = "GearHelper"
 
 version = GetAddOnMetadata(addonName, "Version")
-versionCible = nil
 
 waitingIDTable = {}
 
-local prefixAddon = "GeARHeLPeRPReFIX"
+GearHelperVars = {
+	prefixAddon = "GeARHeLPeRPReFIX",
+	addonTruncatedVersion = 1
+}
+
 local prefixForMars = "GHForMGTN"
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local allPrefix = {["askVersion" .. prefixAddon] = sendAnswerVersion, ["answerVersion" .. prefixAddon] = receiveAnswer}
+local allPrefix = {["askVersion" .. GearHelperVars.prefixAddon] = sendAnswerVersion, ["answerVersion" .. GearHelperVars.prefixAddon] = receiveAnswer}
 local waitAnswerFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
 GearHelper.charInventory = {}
@@ -345,10 +285,10 @@ end
 
 function GearHelper:sendAskVersion()
 	if UnitInRaid("player") ~= nil and UnitInRaid("player") or UnitInParty("player") ~= nil and UnitInParty("player") then
-		C_ChatInfo.SendAddonMessageLogged(prefixAddon, "askVersion;" .. version, "RAID")
+		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "askVersion;" .. version, "RAID")
 	end
 	if IsInGuild() ~= nil and IsInGuild() == true then
-		C_ChatInfo.SendAddonMessageLogged(prefixAddon, "askVersion;" .. version, "GUILD")
+		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "askVersion;" .. version, "GUILD")
 	end
 
 	askTime = time()
@@ -357,10 +297,10 @@ end
 
 function GearHelper:sendAnswerVersion()
 	if UnitInRaid("player") ~= nil and UnitInRaid("player") or UnitInParty("player") ~= nil and UnitInParty("player") then
-		C_ChatInfo.SendAddonMessageLogged(prefixAddon, "answerVersion;" .. version, "RAID")
+		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "answerVersion;" .. GearHelperVars.addonTruncatedVersion, "RAID")
 	end
 	if IsInGuild() ~= nil and IsInGuild() == true then
-		C_ChatInfo.SendAddonMessageLogged(prefixAddon, "answerVersion;" .. version, "GUILD")
+		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "answerVersion;" .. GearHelperVars.addonTruncatedVersion, "GUILD")
 	end
 end
 
@@ -371,17 +311,13 @@ function GearHelper:receiveAnswer(msgV, msgC)
 	if nbRappels <= 0 then 
 		do return end
 	end
-	if GearHelper:IsInTable(GHoldVersions, msgV) then
+	if tonumber(msgV) ~= nil and tonumber(msgV) <= GearHelperVars.addonTruncatedVersion then
 		do return end
 	end
-	if versionCible == version then
-		do return end
-	end
-
-		message(L["maj1"] .. GearHelper:ColorizeString(version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
-		askTime = nil
-		waitAnswerFrame:Hide()
-		nbRappels = nbRappels - 1
+	message(L["maj1"] .. GearHelper:ColorizeString(version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
+	askTime = nil
+	waitAnswerFrame:Hide()
+	nbRappels = nbRappels - 1
 end
 
 waitAnswerFrame:SetScript(
