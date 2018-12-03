@@ -80,77 +80,77 @@ function GearHelper:IsSlotEmpty(equipLoc)
 	local result = {}
 	if equipLoc == "INVTYPE_TRINKET" then
 		--Item not cached yet
-		if GearHelper.charInventory["Trinket0"] == -2 or GearHelper.charInventory["Trinket1"] == -2 then
+		if GearHelperVars.charInventory["Trinket0"] == -2 or GearHelperVars.charInventory["Trinket1"] == -2 then
 			return nil
 		end
 
-		if GearHelper.charInventory["Trinket0"] == 0 then
+		if GearHelperVars.charInventory["Trinket0"] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 
-		if GearHelper.charInventory["Trinket1"] == 0 then
+		if GearHelperVars.charInventory["Trinket1"] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 	elseif equipLoc == "INVTYPE_FINGER" then
 		--Item not cached yet
-		if GearHelper.charInventory["Finger0"] == -2 or GearHelper.charInventory["Finger1"] == -2 then
+		if GearHelperVars.charInventory["Finger0"] == -2 or GearHelperVars.charInventory["Finger1"] == -2 then
 			return nil
 		end
-		if GearHelper.charInventory["Finger0"] == 0 then
+		if GearHelperVars.charInventory["Finger0"] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 
-		if GearHelper.charInventory["Finger1"] == 0 then
+		if GearHelperVars.charInventory["Finger1"] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 	elseif equipLoc == "INVTYPE_WEAPON" then
-		if GearHelper.charInventory["MainHand"] == -2 or GearHelper.charInventory["SecondaryHand"] == -2 then
+		if GearHelperVars.charInventory["MainHand"] == -2 or GearHelperVars.charInventory["SecondaryHand"] == -2 then
 			return nil
 		end
 
-		if GearHelper.charInventory["MainHand"] == 0 then
+		if GearHelperVars.charInventory["MainHand"] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 
-		if GearHelper.charInventory["SecondaryHand"] == 0 or GearHelper.charInventory["SecondaryHand"] == -1 then
+		if GearHelperVars.charInventory["SecondaryHand"] == 0 or GearHelperVars.charInventory["SecondaryHand"] == -1 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 	elseif equipLoc == "INVTYPE_RANGED" or equipLoc == "INVTYPE_2HWEAPON" then
 		--Item not cached yet
-		if GearHelper.charInventory["MainHand"] == -2 or GearHelper.charInventory["SecondaryHand"] == -2 then
+		if GearHelperVars.charInventory["MainHand"] == -2 or GearHelperVars.charInventory["SecondaryHand"] == -2 then
 			return nil
 		end
 		--If MainHand is empty
-		if GearHelper.charInventory["MainHand"] == 0 then
+		if GearHelperVars.charInventory["MainHand"] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 
-		if GearHelper.charInventory["SecondaryHand"] == 0 then
+		if GearHelperVars.charInventory["SecondaryHand"] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)
 		end
 	else
 		--Item not cached yet
-		if GearHelper.charInventory[GearHelper.itemSlot[equipLoc]] == -2 then
+		if GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]] == -2 then
 			return nil
 		end
 
-		if GearHelper.charInventory[GearHelper.itemSlot[equipLoc]] == 0 then
+		if GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]] == 0 then
 			table.insert(result, true)
 		else
 			table.insert(result, false)

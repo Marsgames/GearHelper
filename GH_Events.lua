@@ -255,12 +255,12 @@ local function MerchantClosed()
 end
 
 local function BagUpdate()
-	if not GearHelper.charInventory["MainHand"] then
+	if not GearHelperVars.charInventory["MainHand"] then
 		do
 			return
 		end
 	end
-	if GearHelper.charInventory["MainHand"] == "" then
+	if GearHelperVars.charInventory["MainHand"] == "" then
 		do
 			return
 		end
@@ -279,8 +279,8 @@ local function ActiveTalentGroupChanged()
 		end
 	end
 
-	waitSpeTimer = time()
-	waitSpeFrame:Show()
+	GearHelperVars.waitSpeTimer = time()
+	GearHelperVars.waitSpeFrame:Show()
 	GearHelper:equipItem(0)
 	GearHelper:equipItem(1)
 	GearHelper:equipItem(2)
@@ -410,15 +410,15 @@ local function QuestTurnedIn()
 		end
 	end
 
-	waitSpeTimer = time()
-	waitSpeFrame:Show()
+	GearHelperVars.waitSpeTimer = time()
+	GearHelperVars.waitSpeFrame:Show()
 end
 
 local function GetItemInfoReceived(_, _, item)
 	if GearHelper.db.global.itemWaitList[item] then
 		local slotName = GearHelper.db.global.itemWaitList[item]
 		GearHelper.db.global.itemWaitList[item] = nil
-		GearHelper.charInventory[string.sub(slotName, 1, -5)] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo(slotName), slotName)
+		GearHelperVars.charInventory[string.sub(slotName, 1, -5)] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo(slotName), slotName)
 	end
 	if item ~= nil then
 		if GearHelper.idNilGetQuestReward ~= nil then
