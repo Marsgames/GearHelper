@@ -1,9 +1,9 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local gagne = 0
-lfrCheckIsChecked = false
+local lfrCheckIsChecked = false
 
-waitingIDTable = waitingIDTable
+-- waitingIDTable = waitingIDTable
 
 local function AddonLoaded(_, _, name)
 	if GearHelper.db.global.templates == nil then
@@ -279,8 +279,8 @@ local function ActiveTalentGroupChanged()
 		end
 	end
 
-	waitSpeTimer = time()
-	waitSpeFrame:Show()
+	GearHelperVars.waitSpeTimer = time()
+	GearHelperVars.waitSpeFrame:Show()
 	GearHelper:equipItem(0)
 	GearHelper:equipItem(1)
 	GearHelper:equipItem(2)
@@ -410,8 +410,8 @@ local function QuestTurnedIn()
 		end
 	end
 
-	waitSpeTimer = time()
-	waitSpeFrame:Show()
+	GearHelperVars.waitSpeTimer = time()
+	GearHelperVars.waitSpeFrame:Show()
 end
 
 local function GetItemInfoReceived(_, _, item)

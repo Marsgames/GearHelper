@@ -1,16 +1,21 @@
 ## Interface: 80000
-## Dependencies:
-## OptionalDeps:
-## SavedVariables:
-## SavedVariablesPerCharacter:
+## Dependencies: 
+## OptionalDeps: 
+## SavedVariables: 
+## SavedVariablesPerCharacter: 
 
 ## Title: wowUnit
-## Author: Mirroar
-## Version: 6.0v1
+## Author: Mirroar / Fulgerul (Contributor)
+## Version: 5
 ## Notes: A unit testing framework for LUA Addon developers.
 
-template.xml
+Libs\Ace3\LibStub\LibStub.lua
+Libs\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\Ace3\AceAddon-3.0\AceAddon-3.0.xml
+Libs\Ace3\AceGUI-3.0\AceGUI-3.0.xml
 
+template.xml
+	
 external_functions.lua
 core.lua
 frame.lua

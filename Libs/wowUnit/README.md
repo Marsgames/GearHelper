@@ -1,5 +1,5 @@
 wowUnit is a [unit testing](http://en.wikipedia.org/wiki/Unit_testing "see Wikipedia")
-framework intended to be used for AddOn development in World of Warcraft.
+framework intended to be used for AddOn development in World of Warcraft made by [Mirroar](https://github.com/Mirroar) and updated by [Fulgerul](https://github.com/fulgerul). I only intend to make it work for the latest WoW update. All the work was done by Mirroar and Fulgerul, and they are the ones who must be thank.
 
 Example
 =======
@@ -125,7 +125,7 @@ wowUnit:assertEquals(value1, value2, message)
 ---------------------------------------------
 
 #### value1, value2
-This test will pass if and only if value1 is deemed equal to value2 in an _if
+This test will pass if and only if value1 is deemed equal to value2 in an _if 
 (value1 == value2) then ..._ statement.
 
 Note: Lua does not do automatic type conversion here, so _1_ and _"1"_ are not
@@ -141,7 +141,7 @@ wowUnit:assertNonEquals(value1, value2, message)
 ---------------------------------------------
 
 #### value1, value2
-This test will pass if and only if value1 is not deemed equal to value2 in an _if
+This test will pass if and only if value1 is not deemed equal to value2 in an _if 
 (value1 ~= value2) then ..._ statement.
 
 Note: Lua does not do automatic type conversion here, so _1_ and _"1"_ are not
@@ -170,17 +170,6 @@ wowUnit:isNil(value, message)
 #### value
 This test will pass if and only if value evaluates to nil in an
 _if (type(value) == "nil") then ..._ statement.
-
-#### message
-(optional) This message will be displayed in the test window to indicate which
-tests passed or failed.
-
-wowUnit:isEmpty(value, message)
------------------------------
-
-#### value
-This test will pass if and only if value is an empty table or evaluates
-to nil in an _if (type(value) == "nil") then ..._ statement.
 
 #### message
 (optional) This message will be displayed in the test window to indicate which
@@ -262,14 +251,14 @@ Example:
 		local timeFrame = CreateFrame("Frame");
 		timeFrame:SetScript("OnUpdate", function(self, elapsed)
 			timeElapsed = timeElapsed + elapsed;
-
+			
 			-- How many seconds you want to block
 			if (timeElapsed > 5) then
 				timeFrame:SetScript("OnUpdate", nil);	-- don't forget to remove checks like this, otherwise you might be spamming asserts every frame
-
+				
 				-- Code to check the results
 				wowUnit:assert(myAddon.processCompleted, "all done");
-
+				
 				-- Code to release block
 				wowUnit:resumeTesting(testID);
 			end

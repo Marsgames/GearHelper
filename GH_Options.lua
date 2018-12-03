@@ -1346,7 +1346,7 @@ local aboutTable = {
 		version = {
 			order = 0,
 			fontSize = "medium",
-			name = "\n\n\n\n\n                |cFFFFFF00Version :|r " .. version .. "\n",
+			name = "\n\n\n\n\n                |cFFFFFF00Version :|r " .. GearHelperVars.version .. "\n",
 			type = "description"
 		},
 		author = {

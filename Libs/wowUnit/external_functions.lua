@@ -9,16 +9,16 @@ table.
 Example:
 
 t = {
-    ['1'] = nil,
-    ['2'] = nil,
-    ['3'] = 'xxx',
-    ['4'] = 'xxx',
-    ['5'] = 'xxx',
+   ['1'] = nil,
+   ['2'] = nil,
+   ['3'] = 'xxx',
+   ['4'] = 'xxx',
+   ['5'] = 'xxx',
 }
 
 print("Ordered iterating")
 for key, val in orderedPairs(t) do
-    print(key.." : "..val)
+   print(key.." : "..val)
 end
 
 Output:
@@ -48,40 +48,43 @@ function __genOrderedIndex( t )
         table.insert( orderedIndex, key )
     end
     table.sort( orderedIndex, cmp_multitype ) --### CANGE ###
-
-    return orderedIndex
+    
+	return orderedIndex
 end
 
 function orderedNext(t, state)
-    -- Equivalent of the next function, but returns the keys in the alphabetic
-    -- order. We use a temporary ordered key table that is stored in the
-    -- table being iterated.
-
-    --print("orderedNext: state = "..tostring(state) )
-    if state == nil then
-        -- the first time, generate the index
-        t.__orderedIndex = __genOrderedIndex( t )
-        key = t.__orderedIndex[1]
-
-        if key ~= "__orderedIndex" then
-           return key, t[key]
-        end
-    end
-    -- fetch the next value
-    key = nil
-    for i = 1,table.getn(t.__orderedIndex) do
-        if t.__orderedIndex[i] == state then
-            key = t.__orderedIndex[i+1]
-        end
-    end
-
-    if key and key ~= "__orderedIndex "then
-        return key, t[key]
-    end
-
-    -- no more value to return, cleanup
-    t.__orderedIndex = nil
-    return
+   -- Equivalent of the next function, but returns the keys in the alphabetic
+   -- order. We use a temporary ordered key table that is stored in the
+   -- table being iterated.
+   
+   --print("orderedNext: state = "..tostring(state) )
+   if state == nil then
+      -- the first time, generate the index
+      t.__orderedIndex = __genOrderedIndex( t )
+      key = t.__orderedIndex[1]
+      
+	  if key ~= "__orderedIndex" then
+		return key, t[key]
+	  end
+   end
+   -- fetch the next value
+   key = nil
+   for i = 1,table.getn(t.__orderedIndex) do
+      if t.__orderedIndex[i] == state then
+         key = t.__orderedIndex[i+1]
+      end
+   end
+   
+   if key and key ~= "__orderedIndex "then
+   
+    
+	return key, t[key]
+	
+   end
+   
+   -- no more value to return, cleanup
+   t.__orderedIndex = nil
+   return
 end
 
 function orderedPairs(t)

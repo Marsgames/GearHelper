@@ -14,7 +14,6 @@ local defaultsOptions = {
 		autoEquipWhenSwitchSpe = false,
 		weightTemplate = "NOX",
 		lastWeightTemplate = "",
-		--minimapButton = false,
 		autoRepair = 0,
 		autoInvite = true,
 		autoTell = true,
@@ -45,16 +44,16 @@ local defaultsOptions = {
 } -- NE PAS OUBLIER DE RAJOUTER LA VERSION PRÉCÉDENTE ICI APRÈS CHAQUE MISE A JOUR !!!!
 --
 
-addonName = ...
-addonName = "GearHelper"
-
-version = GetAddOnMetadata(addonName, "Version")
-
-waitingIDTable = {}
-
+-- GearHelperVars.
 GearHelperVars = {
+	-- addonName = "GearHelper",
+	version = GetAddOnMetadata("GearHelper", "Version"),
 	prefixAddon = "GeARHeLPeRPReFIX",
-	addonTruncatedVersion = 1
+	addonTruncatedVersion = 1,
+	-- waitingIDTable = {},
+	-- numBag = 0,
+	waitSpeFrame = CreateFrame("Frame"),
+	waitSpeTimer = nil
 }
 
 local prefixForMars = "GHForMGTN"
@@ -68,11 +67,9 @@ GearHelper.charInventory = {}
 local specialisationID, specName, description, icon, background, role, primaryStat = nil
 local itemLinkToAsk
 
-waitSpeFrame = CreateFrame("Frame")
-waitSpeTimer = nil
+
 local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
-numBag = 0
 
 local nbRappels = 3
 
@@ -81,7 +78,7 @@ local nbRappels = 3
 ----------------- Fin de définition des variables -----------------
 
 waitAnswerFrame:Hide()
-waitSpeFrame:Hide()
+GearHelperVars.waitSpeFrame:Hide()
 waitNilFrame:Hide()
 
 function GearHelper:OnInitialize()
@@ -285,10 +282,10 @@ end
 
 function GearHelper:sendAskVersion()
 	if UnitInRaid("player") ~= nil and UnitInRaid("player") or UnitInParty("player") ~= nil and UnitInParty("player") then
-		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "askVersion;" .. version, "RAID")
+		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "askVersion;" .. GearHelperVars.version, "RAID")
 	end
 	if IsInGuild() ~= nil and IsInGuild() == true then
-		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "askVersion;" .. version, "GUILD")
+		C_ChatInfo.SendAddonMessageLogged(GearHelperVars.prefixAddon, "askVersion;" .. GearHelperVars.version, "GUILD")
 	end
 
 	askTime = time()
@@ -314,7 +311,7 @@ function GearHelper:receiveAnswer(msgV, msgC)
 	if tonumber(msgV) ~= nil and tonumber(msgV) <= GearHelperVars.addonTruncatedVersion then
 		do return end
 	end
-	message(L["maj1"] .. GearHelper:ColorizeString(version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
+	message(L["maj1"] .. GearHelper:ColorizeString(GearHelperVars.version, "Rouge") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "Vert") .. L["maj3"] .. msgC .. " (Curse)")
 	askTime = nil
 	waitAnswerFrame:Hide()
 	nbRappels = nbRappels - 1
@@ -331,8 +328,8 @@ waitAnswerFrame:SetScript(
 	end
 )
 
-waitSpeFrame:SetScript("OnUpdate", function( self )
-	if time() <= waitSpeTimer + 0.5 then
+GearHelperVars.waitSpeFrame:SetScript("OnUpdate", function( self )
+	if time() <= GearHelperVars.waitSpeTimer + 0.5 then
 		do return end
 	end
 		for bag = 0,4 do

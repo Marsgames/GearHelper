@@ -47,7 +47,7 @@ function GearHelper:SlashConfig()
 end
 
 function GearHelper:SlashVersion()
-    print("|cFF00FF00GearHelper|r|cFFFFFF00 version : " .. version)
+    print("|cFF00FF00GearHelper|r|cFFFFFF00 version : " .. GearHelperVars.version)
 end
 
 function GearHelper:SlashIm()
