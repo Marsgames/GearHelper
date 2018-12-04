@@ -1,4 +1,6 @@
 -- https://mothereff.in/lua-minifier
+-- TODO Replace error code by proper exception
+-- TODO extract player inventory related function to an independant lib
 --{{ Local Vars }}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 local waitAnswerFrame = CreateFrame("Frame")
@@ -77,10 +79,10 @@ local function CreateMinimapIcon()
 			icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
 			label = "GearHelper",
 			OnClick = function(_, button)
-				GearHelper:OnMinimapTooltipClick(button, tooltip)
+				OnMinimapTooltipClick(button, tooltip)
 			end,
 			OnTooltipShow = function()
-				GearHelper:OnMinimapTooltipShow(tooltip)
+				OnMinimapTooltipShow(tooltip)
 			end,
 			OnLeave = function()
 				tooltip:Hide()
@@ -151,54 +153,59 @@ end
 function GearHelper:OnEnable()
 	if not GearHelper.db.profile.addonEnabled then
 		print(GearHelper:ColorizeString(L["Addon"], "LightGreen") .. GearHelper:ColorizeString(L["DeactivatedRed"], "LightRed"))
-		do return end
+		return
 	end
-	-- Called when the addon is enabled
-	-- Affiche à chaque connection l'état de l'addon
-		print(GearHelper:ColorizeString(L["Addon"], "LightGreen") .. GearHelper:ColorizeString(L["ActivatedGreen"], "LightGreen"))
-		GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
-		if (#GearHelper.db.global.equipLocInspect == 0) then
-			GearHelper:InitEquipLocInspect()
-		end
+	
+	print(GearHelper:ColorizeString(L["Addon"], "LightGreen") .. GearHelper:ColorizeString(L["ActivatedGreen"], "LightGreen"))
+	GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+	if (#GearHelper.db.global.equipLocInspect == 0) then
+		GearHelper:InitEquipLocInspect()
+	end
 end
 
-function GearHelper:OnMinimapTooltipShow(tooltip)
+local function OnMinimapTooltipShow(tooltip)
 	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
 	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "LightGreen" or "LightRed"))
-	if (not self.db.profile.addonEnabled) then
+	
+	if not self.db.profile.addonEnabled then
 		tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Yellow") .. GearHelper:ColorizeString(L["DeactivatedRed"], "LightRed"), 1, 1, 1)
 	end
+
 	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Yellow"), 1, 1, 1)
-	if (self.db.profile.addonEnabled) then
+
+	if self.db.profile.addonEnabled then
 		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
+
 		if self.db.profile.minimap.isLock then
 			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
 		else
 			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickLock"], "Yellow"), 1, 1, 1)
 		end
+
 		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
 	else
 		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
 	end
+
 	tooltip:Show()
 end
 
-function GearHelper:OnMinimapTooltipClick(button, tooltip)
-	if (InterfaceOptionsFrame:IsShown()) then
+local function OnMinimapTooltipClick(button, tooltip)
+	if InterfaceOptionsFrame:IsShown() then
 		InterfaceOptionsFrame:Hide()
 	else
 		local icon = LibStub("LibDBIcon-1.0")
+
 		if IsShiftKeyDown() then
 			if (self.db.profile.minimap.isLock) then
 				icon:Unlock("GHIcon")
 			else
 				icon:Lock("GHIcon")
 			end
-			self.db.profile.minimap.isLock = not self.db.profile.minimap.isLock
 
-			-- trouver un moyen de reset tooltip
+			self.db.profile.minimap.isLock = not self.db.profile.minimap.isLock
 			tooltip:Hide()
-			GearHelper:OnMinimapTooltipShow(tooltip)
+			OnMinimapTooltipShow(tooltip)
 		elseif IsControlKeyDown() then
 			icon:Hide("GHIcon")
 			self.db.profile.minimap.hide = true
@@ -207,19 +214,12 @@ function GearHelper:OnMinimapTooltipClick(button, tooltip)
 				InterfaceOptionsFrame:Show()
 				InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 			else
-				-- trouver un moyen de reset icon
 				self.db.profile.addonEnabled = not self.db.profile.addonEnabled
-
-				-- trouver un moyen de reset tooltip
 				tooltip:Hide()
-				GearHelper:OnMinimapTooltipShow(tooltip)
+				OnMinimapTooltipShow(tooltip)
 			end
 		end
 	end
-end
-
-function GearHelper:OnDisable()
-	-- Called when the addon is disabled
 end
 
 function GearHelper:setDefault()
@@ -227,44 +227,44 @@ function GearHelper:setDefault()
 	ReloadUI()
 end
 
-function GearHelper:setInviteMessage(valeur)
-	if valeur == nil then
-		do return end
+function GearHelper:setInviteMessage(newMessage)
+	if newMessage == nil then
+		return
 	end
 
-	GearHelper.db.profile.inviteMessage = tostring(valeur)
-		print(L["InviteMessage"] .. tostring(GearHelper.db.profile.inviteMessage))
+	GearHelper.db.profile.inviteMessage = tostring(newMessage)
+	print(L["InviteMessage"] .. tostring(GearHelper.db.profile.inviteMessage))
 end
 
-function GearHelper:ShowMessageSMN(channel, sender, msg)
+function GearHelper:showMessageSMN(channel, sender, msg)
 	if not GearHelper.db.profile.sayMyName or not msg then 
-		do return end
+		return
 	end
 
 	local stop = false
-	local i = 1
-		local arrayNames = GearHelper:MySplit(GearHelper.db.global.myNames, ",")
-		if (arrayNames[i] ~= nil) then
-			while (not stop and arrayNames[i]) do
-				if (string.match(msg:lower(), arrayNames[i]:lower())) then
-					UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0, 5.0, 4)
-					PlaySound(5275, "Master")
-					stop = true
-					do
-						return
-					end
-				end
-				i = i + 1
-			end
-		end
-end
-
-function GearHelper:setMyNames(valeur)
-	if not valeur then 
-		do return end
+	local arrayNames = GearHelper:MySplit(GearHelper.db.global.myNames, ",")
+	if arrayNames[1] == nil then
+		return
 	end
 
-		GearHelper.db.global.myNames = tostring(valeur .. ",")
+	local i = 1
+	while (not stop and arrayNames[i]) do
+		if (string.match(msg:lower(), arrayNames[i]:lower())) then
+			UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0, 5.0, 4)
+			PlaySound(5275, "Master")
+			stop = true
+			return
+		end
+		i = i + 1
+	end
+end
+
+function GearHelper:setMyNames(name)
+	if not name then 
+		return
+	end
+
+	GearHelper.db.global.myNames = tostring(name .. ",")
 end
 
 function GearHelper:sendAskVersion()
@@ -289,15 +289,10 @@ function GearHelper:sendAnswerVersion()
 end
 
 function GearHelper:receiveAnswer(msgV, msgC)
-	if not askTime then 
-		do return end
+	if not askTime or updateAddonReminderCount <= 0 or tonumber(msgV) ~= nil and tonumber(msgV) <= GearHelperVars.addonTruncatedVersion then 
+		return
 	end
-	if updateAddonReminderCount <= 0 then 
-		do return end
-	end
-	if tonumber(msgV) ~= nil and tonumber(msgV) <= GearHelperVars.addonTruncatedVersion then
-		do return end
-	end
+
 	message(L["maj1"] .. GearHelper:ColorizeString(GearHelperVars.version, "LightRed") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "LightGreen") .. L["maj3"] .. msgC .. " (Curse)")
 	askTime = nil
 	waitAnswerFrame:Hide()
@@ -308,22 +303,22 @@ waitAnswerFrame:SetScript(
 	"OnUpdate",
 	function(self, elapsed)
 		if not askTime or (time() - askTime) <= maxWaitTime then
-			do return end
+			return
 		end
-			askTime = nil
-			waitAnswerFrame:Hide()
+		askTime = nil
+		waitAnswerFrame:Hide()
 	end
 )
 
 GearHelperVars.waitSpeFrame:SetScript("OnUpdate", function( self )
 	if time() <= GearHelperVars.waitSpeTimer + 0.5 then
-		do return end
+		return
 	end
-		for bag = 0,4 do
-			numBag = bag
-			GearHelper:equipItem()
-		end
-		self:Hide()
+	for bag = 0,4 do
+		numBag = bag
+		GearHelper:equipItem()
+	end
+	self:Hide()
 end)
 
 waitNilFrame:SetScript(
@@ -337,16 +332,11 @@ waitNilFrame:SetScript(
 	end
 )
 
--------------------------------------------------------------------------------
--- FONCTIONS --
--------------------------------------------------------------------------------
-
 function GearHelper:GetEquippedItemLink(slotID, slotName)
 	local itemLink = GetInventoryItemLink("player", slotID)
 	local itemID = GetInventoryItemID("player", slotID)
 	local itemString, itemName
 
-	--If itemLink is not null (there is an object) try to get itemName
 	if itemLink then
 		itemString, itemName = itemLink:match("|H(.*)|h%[(.*)%]|h")
 	end
@@ -399,13 +389,13 @@ function GearHelper:poseDot()
 			local myBag = bag + 1
 			local mySlot = GetContainerNumSlots(bag) - (slot - 1)
 			local button = _G["ContainerFrame" .. myBag .. "Item" .. mySlot]
+			local itemLink = GetContainerItemLink(bag, slot)
 
 			if button.overlay then
 				button.overlay:SetShown(false)
 				button.overlay = nil
 			end
 
-			local itemLink = GetContainerItemLink(bag, slot)
 			if itemLink then
 				if GearHelper:DoDisplayOverlay(GearHelper:IsItemBetter(itemLink, "ItemLink")) then
 					if not button.overlay then
@@ -943,7 +933,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 		elseif #result == 2 then
 			if item.equipLoc == "INVTYPE_TRINKET" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
-					-- avec une valeur de "..math.floor(value))
+					-- avec une newMessage de "..math.floor(value))
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Trinket0")
 				elseif result[1] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket0")
@@ -953,7 +943,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " Trinket0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
-					-- avec une valeur de "..math.floor(value))
+					-- avec une newMessage de "..math.floor(value))
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Trinket1")
 				elseif result[2] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket1")
@@ -964,7 +954,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				end
 			elseif item.equipLoc == "INVTYPE_FINGER" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
-					-- avec une valeur de "..math.floor(value))
+					-- avec une newMessage de "..math.floor(value))
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Finger0")
 				elseif result[1] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket0")
@@ -974,7 +964,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " Finger0 " .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
-					-- avec une valeur de "..math.floor(value))
+					-- avec une newMessage de "..math.floor(value))
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " Finger1")
 				elseif result[2] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket1")
@@ -985,7 +975,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 				end
 			elseif item.equipLoc == "INVTYPE_WEAPON" then
 				if result[1] == -30 or result[1] == -10 or IsEquippableItem(item.id) and result[1] == -20 then
-					-- avec une valeur de "..math.floor(value))
+					-- avec une newMessage de "..math.floor(value))
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. L["mainD"])
 				elseif result[1] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket0")
@@ -995,7 +985,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. L["mainD"] .. L["itemBetterThan2"] .. math.floor(result[1]))
 				end
 				if result[2] == -30 or result[2] == -10 or IsEquippableItem(item.id) and result[2] == -20 then
-					-- avec une valeur de "..math.floor(value))
+					-- avec une newMessage de "..math.floor(value))
 					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. L["mainG"])
 				elseif result[2] == 0 then
 					table.insert(linesToAdd, L["itemEgala"] .. "Trinket1")

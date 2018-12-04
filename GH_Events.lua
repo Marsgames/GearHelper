@@ -290,7 +290,7 @@ end
 
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)
 	if not GearHelper.db.profile.autoInvite or not msg then
-		GearHelper:ShowMessageSMN(channel, sender, msg)
+		GearHelper:showMessageSMN(channel, sender, msg)
 		do
 			return
 		end
@@ -304,7 +304,7 @@ local function ChatMsgChannel(_, _, msg, sender, lang, channel)
 		InviteUnit(sender)
 	end
 
-	GearHelper:ShowMessageSMN(channel, sender, msg)
+	GearHelper:showMessageSMN(channel, sender, msg)
 end
 
 local function ChatMsgWhisper(_, _, msg, sender)
@@ -327,51 +327,51 @@ local function ChatMsgLoot(_, _, message, language, sender, channelString, targe
 end
 
 local function ChatMsgBattleground(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("BG", sender, msg)
+	GearHelper:showMessageSMN("BG", sender, msg)
 end
 
 local function ChatMsgBattlegroundLeader(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("BG", sender, msg)
+	GearHelper:showMessageSMN("BG", sender, msg)
 end
 
 local function ChatMsgEmote(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Emote", sender, msg)
+	GearHelper:showMessageSMN("Emote", sender, msg)
 end
 
 local function ChatMsgGuild(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Guild", sender, msg)
+	GearHelper:showMessageSMN("Guild", sender, msg)
 end
 
 local function ChatMsgOfficer(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Officer", sender, msg)
+	GearHelper:showMessageSMN("Officer", sender, msg)
 end
 
 local function ChatMsgParty(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Party", sender, msg)
+	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
 local function ChatMsgPartyLeader(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Party", sender, msg)
+	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
 local function ChatMsgRaid(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Raid", sender, msg)
+	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
 local function ChatMsgRaidLeader(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Raid", sender, msg)
+	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
 local function ChatMsgRaidWarning(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Raid_warning", sender, msg)
+	GearHelper:showMessageSMN("Raid_warning", sender, msg)
 end
 
 local function ChatMsgSay(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Say", sender, msg)
+	GearHelper:showMessageSMN("Say", sender, msg)
 end
 
 local function ChatMsgYell(_, _, msg, sender, lang, channel)
-	GearHelper:ShowMessageSMN("Yell", sender, msg)
+	GearHelper:showMessageSMN("Yell", sender, msg)
 end
 
 local function UnitInventoryChanged(_, _, joueur)
