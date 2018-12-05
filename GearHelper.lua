@@ -299,21 +299,20 @@ local function delayBetweenEquip(frame)
 		numBag = bag
 		GearHelper:equipItem()
 	end
-	self:Hide()
+	frame:Hide()
 end
 
 GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
-waitNilFrame:SetScript(
-	"OnUpdate",
-	function(self)
-		if time() <= waitNilTimer + 10 then
-			do return end
-		end
-			setDefault()
-			self:Hide()
+local function delayNilFrame(frame)
+	if time() <= waitNilTimer + 10 then
+		do return end
 	end
-)
+	setDefault()
+	frame:Hide()
+end
+
+waitNilFrame:SetScript("OnUpdate",delayNilFrame)
 
 function GearHelper:GetEquippedItemLink(slotID, slotName)
 	local itemLink = GetInventoryItemLink("player", slotID)
