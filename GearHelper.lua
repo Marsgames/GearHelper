@@ -1,6 +1,9 @@
 -- https://mothereff.in/lua-minifier
+-- Memory footprint 12048.4 k
 -- TODO Replace error code by proper exception
 -- TODO extract player inventory related function to an independant lib
+-- TODO Move functions in split files
+
 --{{ Local Vars }}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 local waitAnswerFrame = CreateFrame("Frame")
@@ -67,6 +70,65 @@ waitAnswerFrame:Hide()
 GearHelperVars.waitSpeFrame:Hide()
 waitNilFrame:Hide()
 
+local function OnMinimapTooltipShow(tooltip)
+	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
+	tooltip:SetText(GearHelper:ColorizeString("GearHelper", GearHelper.db.profile.addonEnabled and "LightGreen" or "LightRed"))
+	
+	if not GearHelper.db.profile.addonEnabled then
+		tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Yellow") .. GearHelper:ColorizeString(L["DeactivatedRed"], "LightRed"), 1, 1, 1)
+	end
+
+	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Yellow"), 1, 1, 1)
+
+	if GearHelper.db.profile.addonEnabled then
+		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
+
+		if GearHelper.db.profile.minimap.isLock then
+			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
+		else
+			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickLock"], "Yellow"), 1, 1, 1)
+		end
+
+		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
+	else
+		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
+	end
+
+	tooltip:Show()
+end
+
+local function OnMinimapTooltipClick(button, tooltip)
+	if InterfaceOptionsFrame:IsShown() then
+		InterfaceOptionsFrame:Hide()
+	else
+		local icon = LibStub("LibDBIcon-1.0")
+
+		if IsShiftKeyDown() then
+			if (GearHelper.db.profile.minimap.isLock) then
+				icon:Unlock("GHIcon")
+			else
+				icon:Lock("GHIcon")
+			end
+
+			GearHelper.db.profile.minimap.isLock = not GearHelper.db.profile.minimap.isLock
+			tooltip:Hide()
+			OnMinimapTooltipShow(tooltip)
+		elseif IsControlKeyDown() then
+			icon:Hide("GHIcon")
+			GearHelper.db.profile.minimap.hide = true
+		else
+			if (button == "LeftButton") then
+				InterfaceOptionsFrame:Show()
+				InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
+			else
+				GearHelper.db.profile.addonEnabled = not GearHelper.db.profile.addonEnabled
+				tooltip:Hide()
+				OnMinimapTooltipShow(tooltip)
+			end
+		end
+	end
+end
+
 local function CreateMinimapIcon()
 	local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, "GameTooltipTemplate")
 	local icon = LibStub("LibDBIcon-1.0")
@@ -107,43 +169,19 @@ function GearHelper:RefreshConfig()
 	InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
-function GearHelper:ResetConfig()
-	GearHelper.db.profile.addonEnabled = nil --true
-	GearHelper.db.profile.sellGreyItems = nil --true
-	GearHelper.db.profile.autoGreed = nil --true
-	GearHelper.db.profile.autoAcceptQuestReward = nil --false
-	GearHelper.db.profile.autoNeed = nil --true
-	GearHelper.db.profile.autoEquipLooted.actual = nil --false
-	GearHelper.db.profile.autoEquipLooted.previous = nil --false
-	GearHelper.db.profile.autoEquipWhenSwitchSpe = nil --false
-	GearHelper.db.profile.weightTemplate = nil --"NOX"
-	GearHelper.db.profile.lastWeightTemplate = nil --""
-	--GearHelper.db.profile.minimapButton = false
-	GearHelper.db.profile.autoRepair = nil --0
-	GearHelper.db.profile.autoInvite = nil --true
-	GearHelper.db.profile.autoTell = nil --true
-	GearHelper.db.profile.inviteMessage = nil --"+GH123-"
-	GearHelper.db.profile.askLootRaid = nil --true
-	GearHelper.db.profile.printWhenEquip = nil --true
-	GearHelper.db.profile.debug = nil --false
-	GearHelper.db.profile.CW = nil --{}
-	GearHelper.db.profile.ilvlOption = nil --false
-	GearHelper.db.profile.ilvlWeight = nil --10
-	GearHelper.db.profile.includeSocketInCompute = nil --true
-	GearHelper.db.profile.computeNotEquippable = nil --true
-	GearHelper.db.profile.whisperAlert = nil --true
-	GearHelper.db.profile.sayMyName = nil --true
-	GearHelper.db.profile.minimap = nil --{hide = false, isLock = false}
-	GearHelper.db.profile.bossesKilled = nil --true
-	GearHelper.db.profile.ilvlCharFrame = nil
-	GearHelper.db.profile.ilvlInspectFrame = nil
-	GearHelper.db.profile.inspectAin = nil
+local function nilTableValues(tableToReset)
+	for key, v in pairs(tableToReset) do
+		if type(tableToReset[key]) == "table" then
+			nilTableValues(tableToReset[key])
+		else
+			tableToReset[key] = nil
+		end
+	end
+end
 
-	GearHelper.db.global.ItemCache = nil --{}
-	GearHelper.db.global.itemWaitList = nil --{}
-	GearHelper.db.global.myNames = nil --""
-	GearHelper.db.global.buildVersion = nil --0
-	GearHelper.db.global.equipLocInspect = nil --{}
+function GearHelper:ResetConfig()
+	nilTableValues(self.db.profile)
+	nilTableValues(self.db.global)
 
 	InterfaceOptionsFrame:Hide()
 	InterfaceOptionsFrame:Show()
@@ -151,79 +189,20 @@ function GearHelper:ResetConfig()
 end
 
 function GearHelper:OnEnable()
-	if not GearHelper.db.profile.addonEnabled then
-		print(GearHelper:ColorizeString(L["Addon"], "LightGreen") .. GearHelper:ColorizeString(L["DeactivatedRed"], "LightRed"))
+	if not self.db.profile.addonEnabled then
+		print(self:ColorizeString(L["Addon"], "LightGreen") .. self:ColorizeString(L["DeactivatedRed"], "LightRed"))
 		return
 	end
 	
-	print(GearHelper:ColorizeString(L["Addon"], "LightGreen") .. GearHelper:ColorizeString(L["ActivatedGreen"], "LightGreen"))
-	GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
-	if (#GearHelper.db.global.equipLocInspect == 0) then
-		GearHelper:InitEquipLocInspect()
-	end
-end
-
-local function OnMinimapTooltipShow(tooltip)
-	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
-	tooltip:SetText(GearHelper:ColorizeString("GearHelper", self.db.profile.addonEnabled and "LightGreen" or "LightRed"))
-	
-	if not self.db.profile.addonEnabled then
-		tooltip:AddLine(GearHelper:ColorizeString(L["Addon"], "Yellow") .. GearHelper:ColorizeString(L["DeactivatedRed"], "LightRed"), 1, 1, 1)
-	end
-
-	tooltip:AddLine(GearHelper:ColorizeString(L["MmTtLClick"], "Yellow"), 1, 1, 1)
-
-	if self.db.profile.addonEnabled then
-		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
-
-		if self.db.profile.minimap.isLock then
-			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
-		else
-			tooltip:AddLine(GearHelper:ColorizeString(L["MmTtClickLock"], "Yellow"), 1, 1, 1)
-		end
-
-		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
-	else
-		tooltip:AddLine(GearHelper:ColorizeString(L["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
-	end
-
-	tooltip:Show()
-end
-
-local function OnMinimapTooltipClick(button, tooltip)
-	if InterfaceOptionsFrame:IsShown() then
-		InterfaceOptionsFrame:Hide()
-	else
-		local icon = LibStub("LibDBIcon-1.0")
-
-		if IsShiftKeyDown() then
-			if (self.db.profile.minimap.isLock) then
-				icon:Unlock("GHIcon")
-			else
-				icon:Lock("GHIcon")
-			end
-
-			self.db.profile.minimap.isLock = not self.db.profile.minimap.isLock
-			tooltip:Hide()
-			OnMinimapTooltipShow(tooltip)
-		elseif IsControlKeyDown() then
-			icon:Hide("GHIcon")
-			self.db.profile.minimap.hide = true
-		else
-			if (button == "LeftButton") then
-				InterfaceOptionsFrame:Show()
-				InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
-			else
-				self.db.profile.addonEnabled = not self.db.profile.addonEnabled
-				tooltip:Hide()
-				OnMinimapTooltipShow(tooltip)
-			end
-		end
+	print(self:ColorizeString(L["Addon"], "LightGreen") .. self:ColorizeString(L["ActivatedGreen"], "LightGreen"))
+	self.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+	if (#self.db.global.equipLocInspect == 0) then
+		self:InitEquipLocInspect()
 	end
 end
 
 function GearHelper:setDefault()
-	GearHelper.db = nil
+	self.db = nil
 	ReloadUI()
 end
 
@@ -232,17 +211,17 @@ function GearHelper:setInviteMessage(newMessage)
 		return
 	end
 
-	GearHelper.db.profile.inviteMessage = tostring(newMessage)
-	print(L["InviteMessage"] .. tostring(GearHelper.db.profile.inviteMessage))
+	self.db.profile.inviteMessage = tostring(newMessage)
+	print(L["InviteMessage"] .. tostring(self.db.profile.inviteMessage))
 end
 
 function GearHelper:showMessageSMN(channel, sender, msg)
-	if not GearHelper.db.profile.sayMyName or not msg then 
+	if not self.db.profile.sayMyName or not msg then 
 		return
 	end
 
 	local stop = false
-	local arrayNames = GearHelper:MySplit(GearHelper.db.global.myNames, ",")
+	local arrayNames = self:MySplit(self.db.global.myNames, ",")
 	if arrayNames[1] == nil then
 		return
 	end
@@ -264,7 +243,7 @@ function GearHelper:setMyNames(name)
 		return
 	end
 
-	GearHelper.db.global.myNames = tostring(name .. ",")
+	self.db.global.myNames = tostring(name .. ",")
 end
 
 function GearHelper:sendAskVersion()
@@ -293,24 +272,26 @@ function GearHelper:receiveAnswer(msgV, msgC)
 		return
 	end
 
-	message(L["maj1"] .. GearHelper:ColorizeString(GearHelperVars.version, "LightRed") .. L["maj2"] .. GearHelper:ColorizeString(msgV, "LightGreen") .. L["maj3"] .. msgC .. " (Curse)")
+	message(L["maj1"] .. self:ColorizeString(GearHelperVars.version, "LightRed") .. L["maj2"] .. self:ColorizeString(msgV, "LightGreen") .. L["maj3"] .. msgC .. " (Curse)")
 	askTime = nil
 	waitAnswerFrame:Hide()
 	updateAddonReminderCount = updateAddonReminderCount - 1
 end
 
+local function computeAskTime(frame, elapsed)
+	if not askTime or (time() - askTime) <= maxWaitTime then
+		return
+	end
+	askTime = nil
+	frame:Hide()
+end
+
 waitAnswerFrame:SetScript(
 	"OnUpdate",
-	function(self, elapsed)
-		if not askTime or (time() - askTime) <= maxWaitTime then
-			return
-		end
-		askTime = nil
-		waitAnswerFrame:Hide()
-	end
+	computeAskTime
 )
 
-GearHelperVars.waitSpeFrame:SetScript("OnUpdate", function( self )
+local function delayBetweenEquip(frame)
 	if time() <= GearHelperVars.waitSpeTimer + 0.5 then
 		return
 	end
@@ -319,7 +300,9 @@ GearHelperVars.waitSpeFrame:SetScript("OnUpdate", function( self )
 		GearHelper:equipItem()
 	end
 	self:Hide()
-end)
+end
+
+GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 waitNilFrame:SetScript(
 	"OnUpdate",
@@ -429,10 +412,10 @@ local function GetStatFromTemplate(stat)
 	end
 end
 
-function GearHelper:ApplyTemplateToDelta(delta)
+local function ApplyTemplateToDelta(delta)
 	local valueItem = 0
 	local mainStat = GearHelper:FindHighestStatInTemplate()
-	local areAllValueZero = true --Some items have all their stats out of template so the are barely useless but 0 mean equivalent so we put a negative value at end
+	local areAllValueZero = true
 	if mainStat ~= nil and mainStat ~= "Nothing" and GearHelper.db.profile.includeSocketInCompute then
 		valueItem = delta.nbGem * GearHelper:GetGemValue() * GetStatFromTemplate(mainStat)
 	end
@@ -633,9 +616,9 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 							equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory[slotsList[index]])
 						end
 						local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-						table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+						table.insert(result, ApplyTemplateToDelta(delta))
 					else --The slot is empty, we pass directly the item
-						local tmpResult = GearHelper:ApplyTemplateToDelta(item)
+						local tmpResult = ApplyTemplateToDelta(item)
 						if type(tmpResult) == "string" and tmpResult == "notAdapted" then
 							table.insert(result, "betterThanNothing")
 						else
@@ -645,14 +628,14 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 				end
 			elseif item.equipLoc == "INVTYPE_WEAPON" then -- Masse à une main / épée à 1 main / Dague 1 main
 				if isSlotEmpty[1] and isSlotEmpty[2] then --Nothing in both hands
-					local tmpResult = GearHelper:ApplyTemplateToDelta(item)
+					local tmpResult = ApplyTemplateToDelta(item)
 					if type(tmpResult) == "string" and tmpResult == "notAdapted" then
 						table.insert(result, "betterThanNothing")
 					else
 						table.insert(result, tmpResult)
 					end
 				elseif isSlotEmpty[1] and not isSlotEmpty[2] then -- Slot 1 empty / Slot 2 full
-					local tmpResult = GearHelper:ApplyTemplateToDelta(item)
+					local tmpResult = ApplyTemplateToDelta(item)
 					if type(tmpResult) == "string" and tmpResult == "notAdapted" then
 						table.insert(result, "betterThanNothing")
 					else
@@ -661,9 +644,9 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 				elseif not isSlotEmpty[1] and isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == -1 then -- Slot 2 empty because mainhand is 2 hand
 					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+					table.insert(result, ApplyTemplateToDelta(delta))
 				elseif not isSlotEmpty[1] and isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == 0 then
-					local tmpResult = GearHelper:ApplyTemplateToDelta(item)
+					local tmpResult = ApplyTemplateToDelta(item)
 					if type(tmpResult) == "string" and tmpResult == "notAdapted" then
 						table.insert(result, "betterThanNothing")
 					else
@@ -674,12 +657,12 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 					local equippedItemSH = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
 					local deltaMH = GearHelper:GetStatDeltaBetweenItems(item, equippedItemMH)
 					local deltaSH = GearHelper:GetStatDeltaBetweenItems(item, equippedItemSH)
-					table.insert(result, GearHelper:ApplyTemplateToDelta(deltaMH))
-					table.insert(result, GearHelper:ApplyTemplateToDelta(deltaSH))
+					table.insert(result, ApplyTemplateToDelta(deltaMH))
+					table.insert(result, ApplyTemplateToDelta(deltaSH))
 				end
 			elseif item.equipLoc == "INVTYPE_2HWEAPON" or item.equipLoc == "INVTYPE_RANGED" then -- baton / Canne à pêche / hache à 2 main / masse 2 main / épée 2 main AND arc
 				if isSlotEmpty[1] and isSlotEmpty[2] then
-					local tmpResult = GearHelper:ApplyTemplateToDelta(item)
+					local tmpResult = ApplyTemplateToDelta(item)
 					if type(tmpResult) == "string" and tmpResult == "notAdapted" then
 						table.insert(result, "betterThanNothing")
 					else
@@ -688,15 +671,15 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 				elseif isSlotEmpty[1] and not isSlotEmpty[2] then
 					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+					table.insert(result, ApplyTemplateToDelta(delta))
 				elseif not isSlotEmpty[1] and isSlotEmpty[2] then
 					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+					table.insert(result, ApplyTemplateToDelta(delta))
 				elseif not isSlotEmpty[1] and not isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == -1 then
 					local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+					table.insert(result, ApplyTemplateToDelta(delta))
 				elseif not isSlotEmpty[1] and not isSlotEmpty[2] then
 					local MHequippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 					local SHequippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
@@ -707,21 +690,21 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 						end
 					end
 					local delta = GearHelper:GetStatDeltaBetweenItems(item, totalMHandSH)
-					table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+					table.insert(result, ApplyTemplateToDelta(delta))
 				end
 			else
 				if isSlotEmpty[1] == false then -- Si il y a un item equipé
 					if GearHelperVars.charInventory[GearHelper.itemSlot[item.equipLoc]] == -1 then --If this is a offhand weapon and we have a 2h equipped
 						local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 						local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-						table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+						table.insert(result, ApplyTemplateToDelta(delta))
 					else
 						local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory[GearHelper.itemSlot[item.equipLoc]])
 						local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-						table.insert(result, GearHelper:ApplyTemplateToDelta(delta))
+						table.insert(result, ApplyTemplateToDelta(delta))
 					end
 				else
-					local tmpResult = GearHelper:ApplyTemplateToDelta(item)
+					local tmpResult = ApplyTemplateToDelta(item)
 					if type(tmpResult) == "string" and tmpResult == "notAdapted" then
 						table.insert(result, "betterThanNothing")
 					else
