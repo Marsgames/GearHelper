@@ -6,6 +6,8 @@
 
 --{{ Local Vars }}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+local delaySpeTimer = 0.5
+local delayNilTimer = 10
 local waitAnswerFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
 local waitNilFrame = CreateFrame("Frame")
@@ -292,7 +294,7 @@ waitAnswerFrame:SetScript(
 )
 
 local function delayBetweenEquip(frame)
-	if time() <= GearHelperVars.waitSpeTimer + 0.5 then
+	if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
 		return
 	end
 	for bag = 0,4 do
@@ -305,7 +307,7 @@ end
 GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 local function delayNilFrame(frame)
-	if time() <= waitNilTimer + 10 then
+	if time() <= waitNilTimer + delayNilTimer then
 		do return end
 	end
 	setDefault()
@@ -323,12 +325,10 @@ function GearHelper:GetEquippedItemLink(slotID, slotName)
 		itemString, itemName = itemLink:match("|H(.*)|h%[(.*)%]|h")
 	end
 
-	--If no itemID then there is no object in slot
 	if itemID then
-		--If no itemName there is an item but it is not in cache
 		if not itemName or itemName == "" then
-			GetItemInfo(itemID) -- for GET_ITEM_INFO_RECEIVED
-			GearHelper.db.global.itemWaitList[itemID] = slotName
+			GetItemInfo(itemID)
+			self.db.global.itemWaitList[itemID] = slotName
 			return -2
 		else
 			return itemLink
@@ -378,16 +378,14 @@ function GearHelper:poseDot()
 				button.overlay = nil
 			end
 
-			if itemLink then
-				if GearHelper:DoDisplayOverlay(GearHelper:IsItemBetter(itemLink, "ItemLink")) then
-					if not button.overlay then
-						button.overlay = button:CreateTexture(nil, "OVERLAY")
-						button.overlay:SetSize(18, 18)
-						button.overlay:SetPoint("TOPLEFT")
-						button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
-						button.overlay:SetShown(true)
-					end
-				end
+			if itemLink 
+			and self:DoDisplayOverlay(self:IsItemBetter(itemLink, "ItemLink")) 
+			and not button.overlay then
+				button.overlay = button:CreateTexture(nil, "OVERLAY")
+				button.overlay:SetSize(18, 18)
+				button.overlay:SetPoint("TOPLEFT")
+				button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+				button.overlay:SetShown(true)
 			end
 		end
 	end
@@ -399,14 +397,10 @@ local function GetStatFromTemplate(stat)
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		if GearHelper.db.global.templates[currentSpec]["NOX"][stat] ~= nil then
 			return GearHelper.db.global.templates[currentSpec]["NOX"][stat]
-		else
-			return nil
 		end
 	else
 		if GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate][stat] ~= nil then
 			return GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate][stat]
-		else
-			return nil
 		end
 	end
 end
