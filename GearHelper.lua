@@ -4,6 +4,8 @@
 -- TODO extract player inventory related function to an independant lib
 -- TODO Move functions in split files
 
+-- #errors : 01
+
 --{{ Local Vars }}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 local delaySpeTimer = 0.5
@@ -51,7 +53,7 @@ local defaultsOptions = {
 		ItemCache = {},
 		itemWaitList = {},
 		myNames = "",
-		buildVersion = 0,
+		buildVersion = 1,
 		equipLocInspect = {}
 	}
 }
@@ -60,7 +62,7 @@ local defaultsOptions = {
 GearHelperVars = {
 	version = GetAddOnMetadata("GearHelper", "Version"),
 	prefixAddon = "GeARHeLPeRPReFIX",
-	addonTruncatedVersion = 1,
+	addonTruncatedVersion = 2,
 	waitSpeFrame = CreateFrame("Frame"),
 	waitSpeTimer = nil,
 	charInventory = {}
@@ -878,6 +880,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 							end
 						else
 							GearHelper:Print("WeightCalcResult nil")
+							-- error("ERROR 01 : WeightCakcResult is nil in GearHelper.lua/CreateLinkAskIfHeNeeds line 880")
 						end
 					elseif debug == 1 then
 						UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)

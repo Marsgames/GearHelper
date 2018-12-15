@@ -185,7 +185,7 @@ local rawValues = {
 	},
 	-- WARLOCK DEMONOLOGY --
 	["266"] = {
-		["NOX"] = "Intellect [9.03] > Mastery [7.53] > Haste [6.03] > Crit [4.53] >= Versatility [4.38]"
+		["NOX"] = "Intellect [9.01] > Mastery [7.51] > Haste [6.01] > Crit [4.51] >= Versatility [4.36]"
 	},
 	-- WARLOCK DESTRUCTION --
 	["267"] = {
@@ -220,3 +220,33 @@ function GearHelper:InitTemplates()
 		end
 	end
 end
+
+--[[
+
+local pawnString = "( Pawn: v1: \"PvE-Demon_Hunter-Havoc-Noxxic\": Class=DemonHunter, Spec=1, CritRating=6.04, MasteryRating=4.54, Agility=9.04, HasteRating=7.54, Versatility=7.17)"
+
+function split(s, delimiter)
+    result = {};
+    for match in (s..delimiter):gmatch("(.-)"..delimiter) do
+        table.insert(result, match);
+    end
+    return result;
+end
+
+local pawnSplit = split(pawnString, ",")
+
+for key, value in pairs(pawnSplit) do
+    print(key..'='..value)
+end
+
+---------------------------
+-- print -->
+---- 1=( Pawn: v1: "PvE-Demon_Hunter-Havoc-Noxxic": Class=DemonHunter
+---- 2= Spec=1
+---- 3= CritRating=6.04
+---- 4= MasteryRating=4.54
+---- 5= Agility=9.04
+---- 6= HasteRating=7.54
+---- 7= Versatility=7.17)
+
+]] --

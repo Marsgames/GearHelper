@@ -132,14 +132,13 @@ local function PlayerEnteringWorld()
 		-- si le joueur est dans un groupe LFR afficher sous la minimap une case cochable permettant d'accepter automatiquement les appels
 
 		lfrCheckButton = lfrCheckButton_GlobalName or CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
-		lfrCheckButton:SetPoint("TOPRIGHT", -325, -45)
+		lfrCheckButton:SetPoint("TOPRIGHT", -325, -50)
 		lfrCheckButton_GlobalNameText:SetText(L["lfrCheckButtonText"])
 		lfrCheckButton.tooltip = L["lfrCheckButtonTooltip"]
 		lfrCheckButton:SetScript(
 			"OnClick",
 			function()
 				lfrCheckIsChecked = lfrCheckButton:GetChecked()
-				print(lfrCheckIsChecked)
 			end
 		)
 		-- else
@@ -571,11 +570,10 @@ end
 
 local function ReadyCheck()
 	if lfrCheckIsChecked then
-		print("on utilise ConfirmReadyCheck(1)")
 		ConfirmReadyCheck(1)
 		ReadyCheckFrame:Hide()
-	else
-		print("lfrCheckIsChecked : " .. tostring(lfrCheckIsChecked))
+		print("Ready check accepted")
+		UIErrorsFrame:AddMessage("Ready check accepted", 0.0, 1.0, 0.0, 80)
 	end
 end
 
