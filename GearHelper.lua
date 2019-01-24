@@ -419,8 +419,10 @@ local function ApplyTemplateToDelta(delta)
 		if L.Tooltip.Stat[k] ~= nil then
 			if GetStatFromTemplate(k) ~= 0 then
 				areAllValueZero = false
+				if valueItem ~= 0 and v ~= 0 then 
+					valueItem = valueItem + GetStatFromTemplate(k) * v
+				end
 			end
-			valueItem = valueItem + GetStatFromTemplate(k) * v
 		end
 	end
 
