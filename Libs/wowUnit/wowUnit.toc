@@ -6,7 +6,7 @@
 
 ## Title: wowUnit
 ## Author: Mirroar / Fulgerul (Contributor)
-## Version: 5
+## Version: 5.1
 ## Notes: A unit testing framework for LUA Addon developers.
 
 Libs\Ace3\LibStub\LibStub.lua

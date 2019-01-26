@@ -53,7 +53,7 @@ local defaultsOptions = {
 		ItemCache = {},
 		itemWaitList = {},
 		myNames = "",
-		buildVersion = 1,
+		buildVersion = 2,
 		equipLocInspect = {}
 	}
 }
@@ -368,30 +368,30 @@ function GearHelper:ScanCharacter()
 end
 
 function GearHelper:poseDot()
-	for bag = 0, 4 do
-		for slot = 1, GetContainerNumSlots(bag) do
-			local myBag = bag + 1
-			local mySlot = GetContainerNumSlots(bag) - (slot - 1)
-			local button = _G["ContainerFrame" .. myBag .. "Item" .. mySlot]
-			local itemLink = GetContainerItemLink(bag, slot)
+	-- for bag = 0, 4 do
+	-- 	for slot = 1, GetContainerNumSlots(bag) do
+	-- 		local myBag = bag + 1
+	-- 		local mySlot = GetContainerNumSlots(bag) - (slot - 1)
+	-- 		local button = _G["ContainerFrame" .. myBag .. "Item" .. mySlot]
+	-- 		local itemLink = GetContainerItemLink(bag, slot)
 
-			if button.overlay then
-				button.overlay:SetShown(false)
-				button.overlay = nil
-			end
+	-- 		if button.overlay then
+	-- 			button.overlay:SetShown(false)
+	-- 			button.overlay = nil
+	-- 		end
 
-			if itemLink 
-			and self:DoDisplayOverlay(self:IsItemBetter(itemLink, "ItemLink")) 
-			and not button.overlay then
-				button.overlay = button:CreateTexture(nil, "OVERLAY")
-				button.overlay:SetSize(18, 18)
-				button.overlay:SetPoint("TOPLEFT")
-				button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
-				button.overlay:SetShown(true)
-			end
-		end
-	end
-	ContainerFrame_UpdateAll()
+	-- 		if itemLink 
+	-- 		and self:DoDisplayOverlay(self:IsItemBetter(itemLink, "ItemLink")) 
+	-- 		and not button.overlay then
+	-- 			button.overlay = button:CreateTexture(nil, "OVERLAY")
+	-- 			button.overlay:SetSize(18, 18)
+	-- 			button.overlay:SetPoint("TOPLEFT")
+	-- 			button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+	-- 			button.overlay:SetShown(true)
+	-- 		end
+	-- 	end
+	-- end
+	-- ContainerFrame_UpdateAll()
 end
 
 local function GetStatFromTemplate(stat)
