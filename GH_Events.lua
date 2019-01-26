@@ -95,6 +95,10 @@ local function OnMerchantShow()
 	end
 end
 
+-- local function Dot()
+-- 	GearHelper:poseDot()
+-- 	print("On a appelé posedot")
+-- end
 local function PlayerEnteringWorld()
 	local used = false
 	for i = 1, NUM_CHAT_WINDOWS do
@@ -113,6 +117,7 @@ local function PlayerEnteringWorld()
 		GearHelper:sendAskVersion()
 		GearHelper:ScanCharacter()
 		GearHelper:poseDot()
+		-- ContainerFrame1:HookScript("OnShow", Dot)
 		if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
 			GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
 		end
@@ -455,7 +460,6 @@ local function PlayerLogin(_, _)
 					return
 				end
 			end
-
 			GearHelper:CreateLfrButtons(frame)
 			GearHelper:UpdateButtonsAndTooltips(frame)
 			GearHelper:UpdateGHLfrButton()
