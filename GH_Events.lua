@@ -66,11 +66,11 @@ local function OnMerchantShow()
 			elseif GearHelper.db.profile.autoRepair == 2 then
 				if droitGuilde ~= nil and (droitGuilde == -1 or (droitGuilde > argentGuilde and argentGuilde > prix)) then
 					RepairAllItems(true)
-					print(cRose .. L["guildRepairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
+					print(GearHelper:ColorizeString(L["guildRepairCost"], "Pink") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
 				else
 					if argentPossedee >= prix then
 						RepairAllItems(false)
-						print(cRose .. L["repairCost"] .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
+						print(GearHelper:ColorizeString(L["repairCost"], "Pink") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
 					else
 						print(L["CantRepair"])
 					end
