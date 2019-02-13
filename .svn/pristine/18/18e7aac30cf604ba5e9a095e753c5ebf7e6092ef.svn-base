@@ -1,6 +1,0 @@
-files['*.rockspec'].global = false
-files['.luacheckrc'].global = false
-exclude_files  = {"Libs", ".svn", "Problèmes"}
-std = {
-   globals = {"LibStub", "GearHelper"}, -- these globals can be set and accessed.
-}
