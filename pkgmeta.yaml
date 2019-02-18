@@ -32,6 +32,8 @@ ignore: # Files and directories beginning with a dot (such as .git) are automati
   - Infos.docx
   - README.md
   - Libs
+  - removeUnused
+  - pkgmeta.yml
 
 required-dependencies:
   - Ace3
