@@ -484,10 +484,14 @@ function GearHelper:BuildItemFromTooltip(object, type)
 	local item = {}
 	local textures = {}
 	local n = 0
+
+	if string.match(object, "battlepet") then
+		return
+	end
 	--Check if we have a tooltip or itemlink in input
 	if type:lower() == "itemlink" then
 		tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
-		tip:SetOwner(WorldFrame, "ANCHOR_NONE")
+		tip:SetOwner(WorldFrame, "ANCHOR_NONE")		
 		tip:SetHyperlink(object)
 	elseif type:lower() == "tooltip" then
 		tip = object
@@ -588,7 +592,7 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 			return
 		end
 	end
-	if IsEquippedItem(item.id) or not GearHelper:IsEquippableByMe(item) then
+	if item == nil or IsEquippedItem(item.id) or not GearHelper:IsEquippableByMe(item) then
 		return {"notEquippable"}
 	end
 

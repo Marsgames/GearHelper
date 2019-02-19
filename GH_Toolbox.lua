@@ -30,7 +30,7 @@ end
 function GearHelper:IsEquippableByMe(item)
 	local isItMadeForMe = false
 
-	if not IsEquippableItem(item.id) then
+	if not IsEquippableItem(item.id) or string.match(item.itemLink, "battlepet") then
 		return false
 	end
 
