@@ -2,7 +2,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local gagne = 0
 local lfrCheckIsChecked = false
-
+local lastBagUpdateEvent = time()
 -- waitingIDTable = waitingIDTable
 
 local function AddonLoaded(_, _, name)
@@ -259,6 +259,12 @@ local function MerchantClosed()
 end
 
 local function BagUpdate()
+	if time() - lastBagUpdateEvent < 2 then
+		return
+	end
+
+	lastBagUpdateEvent = time()
+
 	if not GearHelperVars.charInventory["MainHand"] then
 		do
 			return
