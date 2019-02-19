@@ -408,27 +408,28 @@ local function ApplyTemplateToDelta(delta)
 	local valueItem = 0
 	local mainStat = GearHelper:FindHighestStatInTemplate()
 	local areAllValueZero = true
+
 	if mainStat ~= nil and mainStat ~= "Nothing" and GearHelper.db.profile.includeSocketInCompute then
 		valueItem = delta.nbGem * GearHelper:GetGemValue() * GetStatFromTemplate(mainStat)
-	end
-
-	for k, v in pairs(delta) do
-		if L.Tooltip.Stat[k] ~= nil then
-			if GetStatFromTemplate(k) ~= 0 then
-				areAllValueZero = false
-				if valueItem ~= 0 and v ~= 0 then
-					valueItem = valueItem + GetStatFromTemplate(k) * v
-				end
-			end
-		end
+		areAllValueZero = false
 	end
 
 	if GearHelper.db.profile.iLvlOption == true then
+		areAllValueZero = false
 		valueItem = valueItem + delta.iLvl * GearHelper.db.profile.iLvlWeight
 	end
+
+	for k, v in pairs(delta) do
+		if L.Tooltip.Stat[k] ~= nil and GetStatFromTemplate(k) ~= 0 and v ~= 0 then
+			areAllValueZero = false
+			valueItem = valueItem + GetStatFromTemplate(k) * v
+		end
+	end
+
 	if valueItem == 0 and areAllValueZero then
 		valueItem = "notAdapted"
 	end
+
 	return valueItem
 end
 
@@ -592,6 +593,7 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 			return
 		end
 	end
+
 	if item == nil or IsEquippedItem(item.id) or not GearHelper:IsEquippableByMe(item) then
 		return {"notEquippable"}
 	end
@@ -713,6 +715,7 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 			end
 		end
 	end
+
 	return result
 end
 
@@ -738,7 +741,6 @@ function GearHelper:equipItem(inThisBag)
 					local itemLink = GetContainerItemLink(bagToEquip, slot)
 					if itemLink ~= nil then
 						local weightCalcResult = GearHelper:IsItemBetter(itemLink, "ItemLink")
-						GearHelper:Print("----------")
 						foreach(
 							weightCalcResult,
 							function(k, v)
@@ -912,7 +914,7 @@ function GearHelper:LinesToAddToTooltip(result, item)
 	local linesToAdd = {}
 	if GearHelper.db.profile.computeNotEquippable == false and result[1] == -20 or result[1] == -40 then --nil or not equippable
 		do
-			return
+			return linesToAdd
 		end
 	end
 
