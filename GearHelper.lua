@@ -5,7 +5,6 @@
 -- TODO Move functions in split files
 
 -- #errors : 01
-max_time = 0
 
 --{{ Local Vars }}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
