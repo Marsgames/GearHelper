@@ -1,6 +1,42 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
+local GHBenchmarkedFuncCount = {}
+local BenchmarkMode = false
+
+function GearHelper:ResetBenchmark(type)
+	if type == "Count" then
+		GHBenchmarkedFuncCount = {}
+	end
+end
+
+function GearHelper:SwapBenchmarkMode()
+	BenchmarkMode = not BenchmarkMode
+end
+
+function GearHelper:GetBenchmarkMode()
+	return BenchmarkMode
+end
+
+function GearHelper:GetBenchmarkResult(type)
+	if type == "Count" then
+		return GHBenchmarkedFuncCount
+	end
+end
+
+function GearHelper:BenchmarkCountFuncCall(funcName)
+	if GearHelper:GetBenchmarkMode() == false then
+		return
+	end
+
+	if GHBenchmarkedFuncCount[funcName] == nil then
+		GHBenchmarkedFuncCount[funcName] = 0
+	end
+
+	GHBenchmarkedFuncCount[funcName] = GHBenchmarkedFuncCount[funcName] + 1
+end
+
 function GearHelper:Print(object)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:Print")
 	if object ~= nil then
 		if GearHelper.db.profile.debug and type(object) == "table" then
 			foreach(object, print)
@@ -13,6 +49,7 @@ function GearHelper:Print(object)
 end
 
 function GearHelper:SiObjetGris(itemID)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:SiObjetGris")
 	local _, _, itemRarity, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(itemID)
 	local result = {}
 
@@ -28,6 +65,7 @@ function GearHelper:SiObjetGris(itemID)
 end
 
 function GearHelper:IsEquippableByMe(item)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEquippableByMe")
 	local isItMadeForMe = false
 
 	if not IsEquippableItem(item.id) or string.match(item.itemLink, "battlepet") then
@@ -77,6 +115,7 @@ function GearHelper:IsEquippableByMe(item)
 end
 
 function GearHelper:IsSlotEmpty(equipLoc)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:IsSlotEmpty")
 	local result = {}
 	if equipLoc == "INVTYPE_TRINKET" then
 		--Item not cached yet
@@ -160,6 +199,7 @@ function GearHelper:IsSlotEmpty(equipLoc)
 end
 
 function GearHelper:IsInTable(array, data)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:IsInTable")
 	local result = false
 	table.foreach(
 		array,
@@ -174,10 +214,12 @@ function GearHelper:IsInTable(array, data)
 end
 
 function GearHelper:IsEmptyTable(maTable)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEmptyTable")
 	return (next(maTable) == nil)
 end
 
 function GearHelper:MySplit(inputString, separator)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:MySplit")
 	if separator == nil then
 		separator = "%s"
 	end
@@ -191,6 +233,7 @@ function GearHelper:MySplit(inputString, separator)
 end
 
 function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:GetStatDeltaBetweenItems")
 	local delta = {}
 
 	for k, v in pairs(looted) do
@@ -215,6 +258,7 @@ function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 end
 
 function GearHelper:GetGemValue()
+	GearHelper:BenchmarkCountFuncCall("GearHelper:GetGemValue")
 	local _, gemItemLink = GetItemInfo("151585")
 	if gemItemLink == nil then
 		return 0
@@ -237,6 +281,7 @@ function GearHelper:GetGemValue()
 end
 
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:ReturnGoodLink")
 	local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
 	local _, itemId = strsplit(":", itemString)
 
@@ -248,12 +293,14 @@ function GearHelper:ReturnGoodLink(itemLink, target, tar)
 end
 
 function GearHelper:CouleurClasse(classFileName)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:CouleurClasse")
 	local color = RAID_CLASS_COLORS[classFileName]
 
 	return "|c" .. color.colorStr
 end
 
 function GearHelper:FindHighestStatInTemplate()
+	GearHelper:BenchmarkCountFuncCall("GearHelper:FindHighestStatInTemplate")
 	if GearHelper.db.profile.weightTemplate == "NOX" then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		if GearHelper.db.global.templates[currentSpec]["NOX"] ~= nil then
@@ -291,6 +338,7 @@ function GearHelper:FindHighestStatInTemplate()
 end
 
 function GearHelper:ColorizeString(text, color)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:ColorizeString")
 	local colorList = {}
 	colorList.yellow = "|cFFFFFF00"
 	colorList.lightgreen = "|cFF00FF00"
@@ -310,6 +358,7 @@ function GearHelper:ColorizeString(text, color)
 end
 
 function GearHelper:NormalizeWeightResult(result)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:NormalizeWeightResult")
 	-- -10 not adapted (no stat in template)
 	-- -20 not equippable
 	-- -30 item worst than equipped one
@@ -343,6 +392,7 @@ function GearHelper:NormalizeWeightResult(result)
 end
 
 function GearHelper:DoDisplayOverlay(result)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:DoDisplayOverlay")
 	local doDisplay = {-50}
 	local displayOverlay = false
 	for _, v in pairs(result) do
@@ -356,6 +406,7 @@ function GearHelper:DoDisplayOverlay(result)
 end
 
 function GearHelper:parseID(link)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:parseID")
 	local a = string.match(link, "item[%-?%d::]+")
 	local b = string.sub(a, 5, 12)
 	local c = string.gsub(b, ":", "")
@@ -363,6 +414,7 @@ function GearHelper:parseID(link)
 end
 
 function GearHelper:CountingSort(f)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:CountingSort")
 	local min, max = math.min(unpack(f)), math.max(unpack(f))
 	local count = {}
 	for i = min, max do
