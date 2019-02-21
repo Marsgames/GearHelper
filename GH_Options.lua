@@ -1,10 +1,12 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local function GetInvMsg()
+	GearHelper:BenchmarkCountFuncCall("GetInvMsg")
 	return GearHelper.db.profile.inviteMessage
 end
 
 local function GetMyNames()
+	GearHelper:BenchmarkCountFuncCall("GetMyNames")
 	if (GearHelper.db.global.myNames == {}) then
 		table.insert(GearHelper.db.global.myNames, GetUnitName("player") .. ",")
 	end
@@ -13,6 +15,7 @@ local function GetMyNames()
 end
 
 local function GetStatCW(info, stat, bool)
+	GearHelper:BenchmarkCountFuncCall("GetStatCW")
 	if bool then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		return tostring(GearHelper.db.global.templates[(currentSpec)]["NOX"][stat])
@@ -27,6 +30,7 @@ local function GetStatCW(info, stat, bool)
 end
 
 local function SetStatCW(info, val, stat)
+	GearHelper:BenchmarkCountFuncCall("SetStatCW")
 	if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
 		GearHelper.db.profile.CW[info[1]][stat] = (tonumber(val) / 100) * 50
 		return tostring(GearHelper.db.profile.CW[info[1]][stat])
@@ -37,6 +41,7 @@ local function SetStatCW(info, val, stat)
 end
 
 local function ValidateInputPattern(val, type, info)
+	GearHelper:BenchmarkCountFuncCall("ValidateInputPattern")
 	if type == "number" then
 		if string.match(val, "(%D+)") and string.len(val) ~= 0 then
 			return "Please use numbers only"
@@ -447,6 +452,7 @@ local ghSecondaryOptionsTable = {
 }
 
 local function DeleteTemplate(info)
+	GearHelper:BenchmarkCountFuncCall("DeleteTemplate")
 	local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(L["customWeights"], "dialog", "GearHelper-1.0")
 
 	configTable.args.TemplateSelection.values[info[1]] = nil
@@ -459,6 +465,7 @@ local function DeleteTemplate(info)
 end
 
 local function CreateNewTemplate(templateName)
+	GearHelper:BenchmarkCountFuncCall("CreateNewTemplate")
 	for _, v in pairs(GearHelper.db.profile.CW) do
 		if (v.Name == templateName) then
 			return
@@ -1070,6 +1077,7 @@ GearHelper.cwTable = {
 }
 
 function GearHelper:BuildCWTable()
+	GearHelper:BenchmarkCountFuncCall("GearHelper:BuildCWTable")
 	for _, v in pairs(self.db.profile.CW) do
 		if (v.Name ~= nil) then
 			local newGroup = {

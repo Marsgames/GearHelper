@@ -138,3 +138,23 @@ function GearHelper:SlashTest()
     editbox:SetText("/test GearHelper") -- Command goes here
     ChatEdit_OnEnterPressed(editbox) -- Process command and hide (runs ChatEdit_SendText() and ChatEdit_DeactivateChat() respectively)
 end
+
+function GearHelper:SlashBenchmark()
+    GearHelper:SwapBenchmarkMode()
+    GearHelper:Print("Benchmark Mode : " .. tostring(GearHelper:GetBenchmarkMode()))
+end
+
+function GearHelper:SlashBenchmarkCountResult()
+    if not GearHelper:GetBenchmarkMode() then
+        print("Benchmark Mode not enabled ! Use /gh benchmark")
+        return
+    end
+
+    for k,v in pairs(GearHelper:GetBenchmarkResult("Count")) do
+        print(k.." -> "..v)
+    end
+end
+
+function GearHelper:SlashBenchmarkResetCountResult()
+    GearHelper:ResetBenchmark("Count")
+end
