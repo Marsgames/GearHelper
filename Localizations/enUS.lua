@@ -170,6 +170,8 @@ L["slashCommandVersion"] = "version - Display the addon version"
 L["slashCommandCw"] = "cw - Open the custom weight panel"
 L["lfrCheckButtonText"] = "Auto accept rdy check"
 L["lfrCheckButtonTooltip"] = "Check this box to auto accept ready check when you are in LFR"
+L["secondaryOptions"] = "Secondary options"
+L["thanksPanel"] = "Thanks"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------

@@ -128,7 +128,8 @@ L["slashCommandVersion"] = "version - Affiche la version de l'addon"
 L["slashCommandCw"] = "cw - Ouvre le panneau de custom weight"
 L["lfrCheckButtonText"] = "Accepter auto rdy check"
 L["lfrCheckButtonTooltip"] = 'Cochez cette case pour répondre automatiquement "prêt" en LFR lors de l\'appel'
-
+L["secondaryOptions"] = "Options secondaires"
+L["thanksPanel"] = "Remerciements"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
