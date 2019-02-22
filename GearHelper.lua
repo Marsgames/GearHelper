@@ -400,7 +400,7 @@ function GearHelper:poseDot()
 				button.overlay = nil
 			end
 
-			if itemLink and self:DoDisplayOverlay(self:IsItemBetter(itemLink, "ItemLink")) and not button.overlay then
+			if itemLink and self:IsItemBetter(itemLink) and not button.overlay then
 				button.overlay = button:CreateTexture(nil, "OVERLAY")
 				button.overlay:SetSize(18, 18)
 				button.overlay:SetPoint("TOPLEFT")
@@ -459,71 +459,106 @@ end
 local waitTable = {}
 local waitFrame = nil
 
-function GearHelper:IsItemBetter(object, type, objectEquipped)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:IsItemBetter")
-	--The item to test
-	local item = {}
-	local itemEquipped = nil
-	local itemLink = ""
-	local itemEquippedLink = ""
+local function GetItemsByEquipLoc(equipLoc)
+	GearHelper:BenchmarkCountFuncCall("GetItemsByEquipLoc")
+	local result = {}
 
-	local id = GetItemInfoInstant(object)
-	if (id and IsEquippedItem(id)) or (IsEquippedItem(object)) then
-		return {-60}
-	end
-
-	if type:lower() == "itemlink" then
-		--First we query the GearHelper cache to speed up process and avoid potential nil from GetItemInfo
-		item = GearHelper:GetItemFromCache(object)
-		itemLink = object
-		if (objectEquipped) then
-			itemEquipped = GearHelper:GetItemFromCache(objectEquipped)
-			itemEquippedLink = objectEquipped
+	if equipLoc == "INVTYPE_TRINKET" then
+		if type(GearHelperVars.charInventory["Trinket0"]) != "number" then
+			table.insert(result, GearHelperVars.charInventory["Trinket0"])
 		end
-	elseif type:lower() == "tooltip" then
-		--We retrieve the hyperlink from the tooltip
-		_, itemLink = object:GetItem()
-		--We query the cache
-		item = GearHelper:GetItemFromCache(itemLink)
+
+		if type(GearHelperVars.charInventory["Trinket1"]) != "number" then
+			table.insert(result, GearHelperVars.charInventory["Trinket1"])
+		end
+	elseif equipLoc == "INVTYPE_FINGER" then
+		if type(GearHelperVars.charInventory["Finger0"]) != "number" then
+			table.insert(result, GearHelperVars.charInventory["Finger0"])
+		end
+
+		if type(GearHelperVars.charInventory["Finger1"]) != "number" then
+			table.insert(result, GearHelperVars.charInventory["Finger1"])
+		end
+	elseif equipLoc == "INVTYPE_WEAPON" or equipLoc == "INVTYPE_RANGED" or equipLoc == "INVTYPE_2HWEAPON" then
+		if type(GearHelperVars.charInventory["MainHand"]) != "number" then
+			table.insert(result, GearHelperVars.charInventory["MainHand"])
+		end
+
+		if type(GearHelperVars.charInventory["SecondaryHand"]) != "number" then
+			table.insert(result, GearHelperVars.charInventory["SecondaryHand"])
+		end
 	else
-		--If argument are wrong we return nil
-		return
+		if type(GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]]) != "number" then
+			table.insert(result, GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]])
+		end
 	end
-	--itemLink will always be set at this point so we just test for item
-	if not item then
-		--Item was not found in cache at this point so we create it
-		item = GearHelper:BuildItemFromTooltip(object, type)
-		--And we add it to the cache
-		GearHelper:PutItemInCache(itemLink, item)
-	end
-	if (objectEquipped and not itemEquipped) then
-		itemEquipped = GearHelper:BuildItemFromTooltip(objectEquipped, "itemLink")
-		GearHelper:PutItemInCache(itemEquippedLink, itemEquipped)
-	end
-	--Normalize value to handle multiple cases
-	return GearHelper:NormalizeWeightResult(GearHelper:NewWeightCalculation(item, itemEquipped))
+
+	return result
 end
 
-function GearHelper:BuildItemFromTooltip(object, type)
+function GearHelper:IsItemBetter(itemLink)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:IsItemBetter")
+	local item = {}
+	local itemEquipped = nil
+	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
+
+	if id == nil or itemLink == nil or IsEquippedItem(id) or IsEquippedItem(itemLink) then
+		return false
+	end
+
+	item = self:GetItemByLink(itemLink)
+
+	if not item then
+		return false
+	end
+
+	equippedItems = GetItemsByEquipLoc(equipLoc)
+
+	for equippedItem in pairs(equippedItems) do 
+		if GearHelper:NewWeightCalculation(item, equippedItem) > 0 then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function GetNumberOfGemsFromTooltip()
+	GearHelper:BenchmarkCountFuncCall("GetNumberOfGemsFromTooltip")
+	local n = 0
+	local textures = {}
+
+	for i = 1, 10 do
+		textures[i] = _G["GameTooltipTexture" .. i]
+	end
+
+	for i = 1, 10 do
+		if textures[i]:IsShown() then
+			n = n + 1
+		end
+	end
+
+	return tonumber(n)
+end
+
+function GearHelper:BuildItemFromTooltip(itemLink)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:BuildItemFromTooltip")
 	local tip = ""
 	local item = {}
-	local textures = {}
-	local n = 0
 
-	if string.match(object, "battlepet") then
-		return
-	end
-	--Check if we have a tooltip or itemlink in input
-	if type:lower() == "itemlink" then
-		tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
-		tip:SetOwner(WorldFrame, "ANCHOR_NONE")		
-		tip:SetHyperlink(object)
-	elseif type:lower() == "tooltip" then
-		tip = object
+	if not itemLink then
+		error(GHExceptionInvalidItemLink)
 	end
 
-	--Get some info from GetItemInfoInstant because GetItemInfo is unreliable as of now
+	if string.match(itemLink, "battlepet") then
+		error(GHExceptionInvalidItem)
+	end
+
+	tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
+	tip:SetOwner(WorldFrame, "ANCHOR_NONE")		
+	tip:SetHyperlink(itemLink)
+
+	item.levelRequired = 0
 	_, item.itemLink = tip:GetItem()
 	item.itemString = string.match(item.itemLink, "item[%-?%d:]+")
 	_, _, item.rarity = string.find(item.itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
@@ -532,38 +567,20 @@ function GearHelper:BuildItemFromTooltip(object, type)
 	if GetItemInfo(item.itemLink) then
 		_, _, _, _, _, _, _, _, _, _, item.sellPrice = GetItemInfo(item.itemLink)
 	end
-	--Count the number of texture to know the number of gem on an item
-	for i = 1, 10 do
-		textures[i] = _G["GameTooltipTexture" .. i]
-	end
-	for i = 1, 10 do
-		if textures[i]:IsShown() then
-			n = n + 1
-		end
-	end
-	item.nbGem = tonumber(n)
 
-	--We parse the lines from the tooltip
+	item.nbGem = GetNumberOfGemsFromTooltip()
+
 	for i = 2, tip:NumLines() do
-		local line = ""
-		if type:lower() == "tooltip" then
-			line = _G["GameTooltipTextLeft" .. i]
-		elseif type:lower() == "itemlink" then
-			line = _G["myTooltipFromTemplateTextLeft" .. i]
-		end
-		local text = line:GetText()
+		local text = _G["myTooltipFromTemplateTextLeft" .. i]:GetText()
+	
 		if text then
-			--Get the itemlevel
 			if string.find(text, L["Tooltip"].ItemLevel) then
-				--Get the required level to use the item
 				for word in string.gmatch(text, "(%d+)") do
 					item.iLvl = tonumber(word)
 				end
 			elseif string.find(text, L["Tooltip"].LevelRequired) then
-				--Get the bonus associated to gem socket
 				item.levelRequired = tonumber(string.match(text, "%d+"))
 			elseif string.find(text, L["Tooltip"].BonusGem) then
-				--Parse the stat from tooltip
 				for k, v in pairs(L["Tooltip"].Stat) do
 					if string.find(string.match(text, "%+(.*)"), v) then
 						item.bonusGem = {}
@@ -579,10 +596,7 @@ function GearHelper:BuildItemFromTooltip(object, type)
 			end
 		end
 	end
-	--To avoid error for useless objects like hearthstone
-	if item.levelRequired == nil then
-		item.levelRequired = 0
-	end
+
 	return item
 end
 
@@ -608,20 +622,20 @@ function GearHelper:GetItemByLink(itemLink)
 
 	--Not found in cache
 	if not item then
-		item = GearHelper:BuildItemFromTooltip(itemLink, "ItemLink")
+		item = GearHelper:BuildItemFromTooltip(itemLink)
 		GearHelper:PutItemInCache(itemLink, item)
 	end
 
 	return item
 end
 
+local function ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
+	local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
+	return ApplyTemplateToDelta(delta)
+end
+
 function GearHelper:NewWeightCalculation(item, myEquipItem)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:NewWeightCalculation")
-	if not GearHelper.db.profile.addonEnabled then
-		do
-			return
-		end
-	end
 
 	if item == nil or IsEquippedItem(item.id) or not GearHelper:IsEquippableByMe(item) then
 		return {"notEquippable"}
@@ -647,8 +661,7 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 				else
 					equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory[slotsList[index]])
 				end
-				local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-				table.insert(result, ApplyTemplateToDelta(delta))
+				table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItem))
 			else --The slot is empty, we pass directly the item
 				local tmpResult = ApplyTemplateToDelta(item)
 				if type(tmpResult) == "string" and tmpResult == "notAdapted" then
@@ -675,8 +688,7 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 			end
 		elseif not isSlotEmpty[1] and isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == -1 then -- Slot 2 empty because mainhand is 2 hand
 			local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
-			local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-			table.insert(result, ApplyTemplateToDelta(delta))
+			table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItem))
 		elseif not isSlotEmpty[1] and isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == 0 then
 			local tmpResult = ApplyTemplateToDelta(item)
 			if type(tmpResult) == "string" and tmpResult == "notAdapted" then
@@ -687,10 +699,8 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 		elseif not isSlotEmpty[1] and not isSlotEmpty[2] then
 			local equippedItemMH = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 			local equippedItemSH = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
-			local deltaMH = GearHelper:GetStatDeltaBetweenItems(item, equippedItemMH)
-			local deltaSH = GearHelper:GetStatDeltaBetweenItems(item, equippedItemSH)
-			table.insert(result, ApplyTemplateToDelta(deltaMH))
-			table.insert(result, ApplyTemplateToDelta(deltaSH))
+			table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItemMH))
+			table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItemSH))
 		end
 	elseif item.equipLoc == "INVTYPE_2HWEAPON" or item.equipLoc == "INVTYPE_RANGED" then -- baton / Canne à pêche / hache à 2 main / masse 2 main / épée 2 main AND arc
 		if isSlotEmpty[1] and isSlotEmpty[2] then
@@ -702,16 +712,13 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 			end
 		elseif isSlotEmpty[1] and not isSlotEmpty[2] then
 			local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
-			local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-			table.insert(result, ApplyTemplateToDelta(delta))
+			table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItem))
 		elseif not isSlotEmpty[1] and isSlotEmpty[2] then
 			local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
-			local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-			table.insert(result, ApplyTemplateToDelta(delta))
+			table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItem))
 		elseif not isSlotEmpty[1] and not isSlotEmpty[2] and GearHelperVars.charInventory["SecondaryHand"] == -1 then
 			local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
-			local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-			table.insert(result, ApplyTemplateToDelta(delta))
+			table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItem))
 		elseif not isSlotEmpty[1] and not isSlotEmpty[2] then
 			local MHequippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 			local SHequippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["SecondaryHand"])
@@ -721,19 +728,16 @@ function GearHelper:NewWeightCalculation(item, myEquipItem)
 					totalMHandSH[k] = v + SHequippedItem[k]
 				end
 			end
-			local delta = GearHelper:GetStatDeltaBetweenItems(item, totalMHandSH)
-			table.insert(result, ApplyTemplateToDelta(delta))
+			table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, totalMHandSH))
 		end
 	else
 		if isSlotEmpty[1] == false then -- Si il y a un item equipé
 			if GearHelperVars.charInventory[GearHelper.itemSlot[item.equipLoc]] == -1 then --If this is a offhand weapon and we have a 2h equipped
 				local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
-				local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-				table.insert(result, ApplyTemplateToDelta(delta))
+				table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItem))
 			else
 				local equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory[GearHelper.itemSlot[item.equipLoc]])
-				local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-				table.insert(result, ApplyTemplateToDelta(delta))
+				table.insert(result, ComputeWithTemplateDeltaBetweenItems(item, equippedItem))
 			end
 		else
 			local tmpResult = ApplyTemplateToDelta(item)
