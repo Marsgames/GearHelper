@@ -1,9 +1,0 @@
-MY_PATH="`dirname \"$0\"`"
-cd $MY_PATH
-find . -name ".*" -exec rm -rf {} \;
-rm -r Errors
-rm -r Changelog.docx
-rm -r Infos.docx
-rm -r pkgmeta.yaml
-rm -r README.md
-rm -r removeUnused

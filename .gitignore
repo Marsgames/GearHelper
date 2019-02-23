@@ -97,5 +97,12 @@ Temporary Items
 !.vscode/launch.json
 !.vscode/extensions.json
 
+### RD ###
+Changelog.docx
+Errors/
+Info.docx
+removeUnused
+Libs/
+
 
 # End of https://www.gitignore.io/api/git,lua,svn,macos,visualstudiocode
