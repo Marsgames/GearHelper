@@ -2,7 +2,6 @@ package-as: GearHelper
 
 ignore:
  - README.md
- - Libs/
 
 externals:
  Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
@@ -21,6 +20,3 @@ externals:
  Libs/LibRealmInfo: git://github.com/phanx-wow/LibRealmInfo.git
 
 enable-nolib-creation: no
-
-manual-changelog:
- filename: CHANGES.txt
