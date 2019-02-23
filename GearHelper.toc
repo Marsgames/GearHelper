@@ -21,6 +21,8 @@
 
 ## SavedVariables: GearHelperDB
 
+embeds.xml
+
 ########## Localizations ##########
 Localizations\enUS.lua
 Localizations\frFR.lua
