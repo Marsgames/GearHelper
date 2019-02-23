@@ -2,10 +2,11 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local gagne = 0
 local lfrCheckIsChecked = false
-
+local lastBagUpdateEvent = time()
 -- waitingIDTable = waitingIDTable
 
 local function AddonLoaded(_, _, name)
+	GearHelper:BenchmarkCountFuncCall("AddonLoaded")
 	if GearHelper.db.global.templates == nil then
 		GearHelper.db.global.templates = {}
 	end
@@ -27,6 +28,7 @@ local function AddonLoaded(_, _, name)
 end
 
 local function OnMerchantShow()
+	GearHelper:BenchmarkCountFuncCall("OnMerchantShow")
 	gagne = 0
 	if GearHelper.db.profile.sellGreyItems then
 		for bag = 0, 4 do
@@ -100,6 +102,7 @@ end
 -- 	print("On a appelé posedot")
 -- end
 local function PlayerEnteringWorld()
+	GearHelper:BenchmarkCountFuncCall("PlayerEnteringWorld")
 	local used = false
 	for i = 1, NUM_CHAT_WINDOWS do
 		local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
@@ -158,6 +161,7 @@ local function PlayerEnteringWorld()
 end
 
 local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgAddon")
 	if prefixMessage ~= GearHelperVars.prefixAddon then
 		do
 			return
@@ -193,6 +197,7 @@ local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
 end
 
 local function ItemPush(_, _, bag)
+	GearHelper:BenchmarkCountFuncCall("ItemPush")
 	if not GearHelper.db.profile.autoEquipLooted.actual then
 		do
 			return
@@ -213,6 +218,7 @@ local function ItemPush(_, _, bag)
 end
 
 local function QuestComplete()
+	GearHelper:BenchmarkCountFuncCall("QuestComplete")
 	GearHelper.GetQuestRewardCoroutine =
 		coroutine.create(
 		function()
@@ -223,6 +229,7 @@ local function QuestComplete()
 end
 
 local function StartLootRoll(_, _, number)
+	GearHelper:BenchmarkCountFuncCall("StartLootRoll")
 	GearHelper.AutoGreedAndNeedCoroutine =
 		coroutine.create(
 		function()
@@ -233,6 +240,7 @@ local function StartLootRoll(_, _, number)
 end
 
 local function MerchantClosed()
+	GearHelper:BenchmarkCountFuncCall("MerchantClosed")
 	if not GearHelper.db.profile.sellGreyItems then
 		do
 			return
@@ -259,6 +267,13 @@ local function MerchantClosed()
 end
 
 local function BagUpdate()
+	GearHelper:BenchmarkCountFuncCall("BagUpdate")
+	if time() - lastBagUpdateEvent < 2 then
+		return
+	end
+
+	lastBagUpdateEvent = time()
+
 	if not GearHelperVars.charInventory["MainHand"] then
 		do
 			return
@@ -276,6 +291,7 @@ local function BagUpdate()
 end
 
 local function ActiveTalentGroupChanged()
+	GearHelper:BenchmarkCountFuncCall("ActiveTalentGroupChanged")
 	if not GearHelper.db.profile.autoEquipWhenSwitchSpe then
 		GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 		do
@@ -293,6 +309,7 @@ local function ActiveTalentGroupChanged()
 end
 
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgChannel")
 	if not GearHelper.db.profile.autoInvite or not msg then
 		GearHelper:showMessageSMN(channel, sender, msg)
 		do
@@ -312,6 +329,7 @@ local function ChatMsgChannel(_, _, msg, sender, lang, channel)
 end
 
 local function ChatMsgWhisper(_, _, msg, sender)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgWhisper")
 	if GearHelper.db.profile.autoInvite and msg ~= nil then
 		local playerIsNotMe = not string.find(sender, GetUnitName("player"))
 		if msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe and GetNumGroupMembers() == 5 then
@@ -327,58 +345,72 @@ local function ChatMsgWhisper(_, _, msg, sender)
 end
 
 local function ChatMsgLoot(_, _, message, language, sender, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgLoot")
 	GearHelper:CreateLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 end
 
 local function ChatMsgBattleground(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgBattleground")
 	GearHelper:showMessageSMN("BG", sender, msg)
 end
 
 local function ChatMsgBattlegroundLeader(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgBattlegroundLeader")
 	GearHelper:showMessageSMN("BG", sender, msg)
 end
 
 local function ChatMsgEmote(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgEmote")
 	GearHelper:showMessageSMN("Emote", sender, msg)
 end
 
 local function ChatMsgGuild(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgGuild")
 	GearHelper:showMessageSMN("Guild", sender, msg)
 end
 
 local function ChatMsgOfficer(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgOfficer")
 	GearHelper:showMessageSMN("Officer", sender, msg)
 end
 
 local function ChatMsgParty(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgParty")
 	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
 local function ChatMsgPartyLeader(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgPartyLeader")
 	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
 local function ChatMsgRaid(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgRaid")
 	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
 local function ChatMsgRaidLeader(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgRaidLeader")
 	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
 local function ChatMsgRaidWarning(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgRaidWarning")
 	GearHelper:showMessageSMN("Raid_warning", sender, msg)
 end
 
 local function ChatMsgSay(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgSay")
 	GearHelper:showMessageSMN("Say", sender, msg)
 end
 
 local function ChatMsgYell(_, _, msg, sender, lang, channel)
+	GearHelper:BenchmarkCountFuncCall("ChatMsgYell")
 	GearHelper:showMessageSMN("Yell", sender, msg)
 end
 
 local function UnitInventoryChanged(_, _, joueur)
+	GearHelper:BenchmarkCountFuncCall("UnitInventoryChanged")
 	if not GearHelper.db.profile.addonEnabled then
 		do
 			return
@@ -408,6 +440,7 @@ local function UnitInventoryChanged(_, _, joueur)
 end
 
 local function QuestTurnedIn()
+	GearHelper:BenchmarkCountFuncCall("QuestTurnedIn")
 	if not GearHelper.db.profile.autoEquipLooted.actual then
 		do
 			return
@@ -419,6 +452,7 @@ local function QuestTurnedIn()
 end
 
 local function GetItemInfoReceived(_, _, item)
+	GearHelper:BenchmarkCountFuncCall("GetItemInfoReceived")
 	if GearHelper.db.global.itemWaitList[item] then
 		local slotName = GearHelper.db.global.itemWaitList[item]
 		GearHelper.db.global.itemWaitList[item] = nil
@@ -444,17 +478,21 @@ local function GetItemInfoReceived(_, _, item)
 end
 
 local function ReadyCheck(_, _)
+	GearHelper:BenchmarkCountFuncCall("ReadyCheck")
 	local players = GetHomePartyInfo()
 end
 
 local function LfgUpdate(_, _)
+	GearHelper:BenchmarkCountFuncCall("LfgUpdate")
 	GearHelper:UpdateGHLfrButton()
 end
 
 local function PlayerLogin(_, _)
+	GearHelper:BenchmarkCountFuncCall("PlayerLogin")
 	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
 	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
 		local function LfrFrameShow(frame)
+			GearHelper:BenchmarkCountFuncCall("LfrFrameShow")
 			if not GearHelper.db.profile.bossesKilled then
 				do
 					return
@@ -468,6 +506,7 @@ local function PlayerLogin(_, _)
 			GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 		end
 		local function LfrFrameHide()
+			GearHelper:BenchmarkCountFuncCall("LfrFrameHide")
 			GearHelper:HideLfrButtons()
 			GearHelper:UnregisterEvent("LFG_UPDATE")
 		end
@@ -484,6 +523,7 @@ local function PlayerLogin(_, _)
 end
 
 local function InspectReady(_, _, target)
+	GearHelper:BenchmarkCountFuncCall("InspectReady")
 	if GearHelper.db.profile.inspectAin.waitingIlvl then ---------------- /GH AIN AVEC UN MESSAGE SPÉCIALE SI L'ILVL DE L'OBJET LOOT EST MOINS BON QUE CELUI ÉQUIPPÉ PAR CELUI QUI L'A LOOT
 		local itemLoot = GearHelper.db.profile.inspectAin.linkItemReceived
 		local itemLootTable = GearHelper:GetItemByLink(itemLoot)
@@ -558,6 +598,7 @@ local function InspectReady(_, _, target)
 end
 
 local function UpdateMouseOverUnit()
+	GearHelper:BenchmarkCountFuncCall("UpdateMouseOverUnit")
 	if not CanInspect("mouseover") then
 		do
 			return
@@ -573,6 +614,7 @@ local function UpdateMouseOverUnit()
 end
 
 local function ReadyCheck()
+	GearHelper:BenchmarkCountFuncCall("ReadyCheck")
 	if lfrCheckIsChecked then
 		ConfirmReadyCheck(1)
 		ReadyCheckFrame:Hide()

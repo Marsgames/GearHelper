@@ -5,52 +5,23 @@
 ### Notes-deDE: Manage your gear during your level up and after
 ## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
 ## Author:  Marsgames & Tempaxe
-## Version: 2.2
+## Version: @project-version@
 ## DefaultState: enabled
 
 
 ## X-Author-Faction: Horde
 ## X-Author-Server: (EU) Temple-Noir
-# /* ## X-License: */
 ## X-Credits: Big up
-# /* ## X-Localizations: */
-# /* ## X-Donate: */
 
 ## X-Category: Inventory
 # /* ## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU */
 # /* ## X-Website: */
 ## X-eMail: marsgamess@gmail.com
-## X-BugReport: https://wow.curseforge.com/projects/gearhelper/issues
+## X-BugReport: https://github.com/Marsgames/GearHelper/issues
 
 ## SavedVariables: GearHelperDB
 
-########## Libraries ##########
-############ Ace3 ############
-Libs\Ace3\LibStub\LibStub.lua
-Libs\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libs\Ace3\AceAddon-3.0\AceAddon-3.0.xml
-Libs\Ace3\AceEvent-3.0\AceEvent-3.0.xml
-Libs\Ace3\AceDB-3.0\AceDB-3.0.xml
-Libs\Ace3\AceLocale-3.0\AceLocale-3.0.xml
-Libs\Ace3\AceConsole-3.0\AceConsole-3.0.xml
-Libs\Ace3\AceGUI-3.0\AceGUI-3.0.xml
-Libs\Ace3\AceConfig-3.0\AceConfig-3.0.xml
-
-########### wowUnit ###########
-Libs\wowUnit\template.xml
-Libs\wowUnit\external_functions.lua
-Libs\wowUnit\core.lua
-Libs\wowUnit\frame.lua
-Libs\wowUnit\asserts.lua
-Libs\wowUnit\tests.lua
-
-
-########## Autre ##########
-Libs\LibDBIcon-1.0\LibDataBroker-1.1\LibDataBroker-1.1.lua
-Libs\LibDBIcon-1.0\LibDBIcon-1.0\LibDBIcon-1.0.lua
-Libs\LibBabble-Inventory-3.0\lib.xml
-Libs\LibAboutPanel\lib.xml
-Libs\LibRealmInfo\LibRealmInfo.lua
+embeds.xml
 
 ########## Localizations ##########
 Localizations\enUS.lua

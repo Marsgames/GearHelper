@@ -1,10 +1,12 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local function GetInvMsg()
+	GearHelper:BenchmarkCountFuncCall("GetInvMsg")
 	return GearHelper.db.profile.inviteMessage
 end
 
 local function GetMyNames()
+	GearHelper:BenchmarkCountFuncCall("GetMyNames")
 	if (GearHelper.db.global.myNames == {}) then
 		table.insert(GearHelper.db.global.myNames, GetUnitName("player") .. ",")
 	end
@@ -13,6 +15,7 @@ local function GetMyNames()
 end
 
 local function GetStatCW(info, stat, bool)
+	GearHelper:BenchmarkCountFuncCall("GetStatCW")
 	if bool then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		return tostring(GearHelper.db.global.templates[(currentSpec)]["NOX"][stat])
@@ -27,6 +30,7 @@ local function GetStatCW(info, stat, bool)
 end
 
 local function SetStatCW(info, val, stat)
+	GearHelper:BenchmarkCountFuncCall("SetStatCW")
 	if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
 		GearHelper.db.profile.CW[info[1]][stat] = (tonumber(val) / 100) * 50
 		return tostring(GearHelper.db.profile.CW[info[1]][stat])
@@ -37,6 +41,7 @@ local function SetStatCW(info, val, stat)
 end
 
 local function ValidateInputPattern(val, type, info)
+	GearHelper:BenchmarkCountFuncCall("ValidateInputPattern")
 	if type == "number" then
 		if string.match(val, "(%D+)") and string.len(val) ~= 0 then
 			return "Please use numbers only"
@@ -252,7 +257,7 @@ local ghOptionsTable = {
 }
 
 local ghSecondaryOptionsTable = {
-	name = "Options secondaires",
+	name = L["secondaryOptions"],
 	type = "group",
 	childGroups = "select",
 	args = {
@@ -447,6 +452,7 @@ local ghSecondaryOptionsTable = {
 }
 
 local function DeleteTemplate(info)
+	GearHelper:BenchmarkCountFuncCall("DeleteTemplate")
 	local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(L["customWeights"], "dialog", "GearHelper-1.0")
 
 	configTable.args.TemplateSelection.values[info[1]] = nil
@@ -459,6 +465,7 @@ local function DeleteTemplate(info)
 end
 
 local function CreateNewTemplate(templateName)
+	GearHelper:BenchmarkCountFuncCall("CreateNewTemplate")
 	for _, v in pairs(GearHelper.db.profile.CW) do
 		if (v.Name == templateName) then
 			return
@@ -1070,6 +1077,7 @@ GearHelper.cwTable = {
 }
 
 function GearHelper:BuildCWTable()
+	GearHelper:BenchmarkCountFuncCall("GearHelper:BuildCWTable")
 	for _, v in pairs(self.db.profile.CW) do
 		if (v.Name ~= nil) then
 			local newGroup = {
@@ -1378,17 +1386,111 @@ local aboutTable = {
 			desc = "Click then ctrl + A to select and ctrl + C to copy",
 			type = "input",
 			get = function()
-				return "|cFF4477c9https://wow.curseforge.com/projects/gearhelper/issues"
+				return "|cFF4477c9https://github.com/Marsgames/GearHelper/issues"
 			end,
 			width = "double"
 		}
 	}
 }
 
+local thanksTable = {
+	name = L["thanksPanel"],
+	type = "group",
+	args = {
+		name1 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 Nirek |r - Bug report and bug fix",
+			type = "description"
+		},
+		name2 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 titaniumcoder |r - Bug report and bug fix",
+			type = "description"
+		},
+		name3 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 deathcore01 |r - Bug report + DE translation",
+			type = "description"
+		},
+		name4 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 Ricosoft |r - DE translation",
+			type = "description"
+		},
+		name5 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 gOOvER |r - DE translation",
+			type = "description"
+		},
+		name6 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 yasen |r - ZH translation",
+			type = "description"
+		},
+		name7 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 ArnosEmpero |r - Bug report",
+			type = "description"
+		},
+		name8 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 Schwoops |r - Bug report",
+			type = "description"
+		},
+		name9 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 666cursed666 |r - Bug report",
+			type = "description"
+		},
+		name10 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 xevilgrin |r - Bug report",
+			type = "description"
+		},
+		name11 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 Comicus |r - Bug report",
+			type = "description"
+		},
+		name12 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 Merxion |r - Bug report",
+			type = "description"
+		},
+		name13 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 treyer75 |r - Bug report",
+			type = "description"
+		},
+		name14 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 canlo21 |r - Bug report",
+			type = "description"
+		},
+		name15 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 Veritias |r - Bug report",
+			type = "description"
+		},
+		name16 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 aresyyywang |r - Bug report",
+			type = "description"
+		},
+		name17 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 Seanross19 |r - Bug report",
+			type = "description"
+		}
+	}
+}
+
 LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
-LibStub("AceConfig-3.0"):RegisterOptionsTable("Options secondaires", ghSecondaryOptionsTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable(L["secondaryOptions"], ghSecondaryOptionsTable)
 LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable(L["thanksPanel"], thanksTable)
 GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Options secondaires", "Options secondaires", "GearHelper")
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["secondaryOptions"], L["secondaryOptions"], "GearHelper")
 GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
 LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["thanksPanel"], L["thanksPanel"], "GearHelper")

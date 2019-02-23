@@ -52,6 +52,15 @@ local slashCmd = {
 	end,
 	test = function()
 		GearHelper:SlashTest()
+	end,
+	benchmark = function()
+		GearHelper:SlashBenchmark()
+	end,
+	benchmarkCountResult = function()
+		GearHelper:SlashBenchmarkCountResult()
+	end,
+	benchmarkResetCountResult = function()
+		GearHelper:SlashBenchmarkResetCountResult()
 	end
 }
 
