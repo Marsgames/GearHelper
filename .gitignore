@@ -99,10 +99,8 @@ Temporary Items
 
 ### RD ###
 Changelog.docx
-Errors/
-Info.docx
+Infos.docx
 removeUnused
-Libs/
 
 
 # End of https://www.gitignore.io/api/git,lua,svn,macos,visualstudiocode
