@@ -460,6 +460,12 @@ local function GetItemsByEquipLoc(equipLoc)
 	GearHelper:BenchmarkCountFuncCall("GetItemsByEquipLoc")
 	local result = {}
 
+	local slotEquip = GearHelper.itemSlot[equipLoc]
+
+	for _,v in pairs(slotEquip) do
+		result[v] = GearHelperVars.charInventory[v]
+	end
+	--[[
 	if equipLoc == "INVTYPE_TRINKET" then
 		result["Trinket0"] = GearHelperVars.charInventory["Trinket0"]
 		result["Trinket1"] = GearHelperVars.charInventory["Trinket1"]
@@ -470,16 +476,15 @@ local function GetItemsByEquipLoc(equipLoc)
 		result["MainHand"] = GearHelperVars.charInventory["MainHand"]
 		result["SecondaryHand"] = GearHelperVars.charInventory["SecondaryHand"]
 	else
-		result[GearHelper.itemSlot[equipLoc]] = GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]]
-	end
+		result[GearHelper.itemSlot[equipLoc]]-- = GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]]
+	--end
 
 	return result
 end
 
 local function ShouldDisplayNotEquippable(subType)
 	if GearHelper.db.profile.computeNotEquippable == true then
-		local equippableTypes = GearHelper:GetEquippableTypes()
-		return GearHelper:IsValueInTable(equippableTypes, subType)
+		return GearHelper:IsValueInTable(GearHelper:GetEquippableTypes(), subType)
 	end
 
 	return false
@@ -908,44 +913,8 @@ function GearHelper:LinesToAddToTooltip(result)
 	return linesToAdd
 end
 
-local ModifyTooltip = function(self, ...)
-	if not GearHelper.db or not GearHelper.db.profile.addonEnabled then
-		return
-	end
-
-	local _, itemLink = self:GetItem()
-	local status, err = pcall(ShouldBeCompared, itemLink)
-
-
-	if not status and err == GHExceptionAlreadyEquipped then
-		print("Already equipped") --TODO : Display already equipped instead
-		return
-	elseif not status and string.match(err,GHExceptionNotEquippable) then
-		local item = GearHelper:GetItemByLink(itemLink)
-
-		if ShouldDisplayNotEquippable(item.subType) then
-			print("Add not equippable line")
-		end
-
-		return
-	elseif not status and err == GHExceptionNotEquippable then
-		print("Not equippable "..itemLink)
-		return
-	elseif not status then
-		print(err)
-		print("Error "..itemLink)
-		return
-	end
-
-	--worst
-	--equipped 
-	--egal 
-	--better 
-	local item = GearHelper:GetItemByLink(itemLink)
-
-	local result = GearHelper:NewWeightCalculation(item)
-	local linesToAdd = GearHelper:LinesToAddToTooltip(result)
-	_, _, _, _, itemId = string.find(item.itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+local function GetDropInfo(linesToAdd, itemLink)
+	_, _, _, _, itemId = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 
 	if GearHelper.itemsDropRate[itemId] ~= nil then
 		table.insert(linesToAdd, L["DropRate"] .. GearHelper.itemsDropRate[itemId]["Rate"] .. "%")
@@ -955,6 +924,53 @@ local ModifyTooltip = function(self, ...)
 		table.insert(linesToAdd, L["DropBy"] .. GearHelper.itemsDropRate[itemId]["Drop"])
 	end
 
+end
+
+local function IsItemEquipLocValid(equipLoc)
+	if equipLoc ~= nil and equipLoc ~= "" then
+		return true
+	end
+	return false
+end
+
+local ModifyTooltip = function(self, ...)
+	if not GearHelper.db or not GearHelper.db.profile.addonEnabled then
+		return
+	end
+
+	local _, itemLink = self:GetItem()
+	local status, err = pcall(ShouldBeCompared, itemLink)
+	local linesToAdd = {}
+
+	if not status and err == GHExceptionAlreadyEquipped then
+		table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
+	elseif not status and string.match(err, GHExceptionNotEquippable) then
+		local item = GearHelper:GetItemByLink(itemLink)
+
+		if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
+			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
+			self:SetBackdropBorderColor(255, 0, 0)
+		end
+	elseif not status then
+		return
+	elseif status then
+		local item = GearHelper:GetItemByLink(itemLink)
+		local result = GearHelper:NewWeightCalculation(item)
+		for _,v in pairs(result) do
+			if math.floor(v) == 0 then
+				self:SetBackdropBorderColor(255, 255, 0)
+			elseif math.floor(v) > 0 then
+				print(itemLink .. " " .. v)
+				self:SetBackdropBorderColor(0, 255, 150)
+			else
+				self:SetBackdropBorderColor(255, 0, 0)
+			end
+		end
+		linesToAdd = GearHelper:LinesToAddToTooltip(result)
+	end
+
+	 GetDropInfo(linesToAdd, itemLink)
+	
 	if linesToAdd then
 		--[[if (result[1] == -30 or result[1] == -10 or GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id)) then
 			self:SetBackdropBorderColor(255, 0, 0) -- Rouge

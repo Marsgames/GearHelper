@@ -297,6 +297,23 @@ function GearHelper:FindHighestStatInTemplate()
 	return maxK
 end
 
+local function GetColor(name)
+	GearHelper:BenchmarkCountFuncCall("GetColor")
+
+	local colorList = {}
+	colorList.yellow = "|cFFFFFF00"
+	colorList.lightgreen = "|cFF00FF00"
+	colorList.green = "|cFF1bad1b"
+	colorList.lightred = "|cFFFF0000"
+	colorList.red = "|cFFb51b1b"
+	colorList.pink = "|cFFFF1493"
+	colorList.better = "|cFF00FF96"
+	colorList.white = "|cFFFFFFFF"
+	colorList.black = "|cFF000000"
+
+	return colorList[name:lower()]
+end
+
 function GearHelper:ColorizeString(text, color)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:ColorizeString")
 	local colorList = {}
@@ -310,8 +327,8 @@ function GearHelper:ColorizeString(text, color)
 	colorList.white = "|cFFFFFFFF"
 	colorList.black = "|cFF000000"
 
-	if colorList[color:lower()] ~= nil then
-		return colorList[color:lower()] .. text
+	if GetColor(color) ~= nil then
+		return GetColor(color) .. text
 	else
 		return text
 	end
