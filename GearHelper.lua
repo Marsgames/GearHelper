@@ -972,22 +972,6 @@ local ModifyTooltip = function(self, ...)
 	 GetDropInfo(linesToAdd, itemLink)
 	
 	if linesToAdd then
-		--[[if (result[1] == -30 or result[1] == -10 or GearHelper.db.profile.computeNotEquippable == true and result[1] == -20 and IsEquippableItem(item.id)) then
-			self:SetBackdropBorderColor(255, 0, 0) -- Rouge
-		elseif result[1] == 0 or result[1] == -60 then
-			self:SetBackdropBorderColor(255, 255, 0) -- Jaune
-		elseif result[1] == -50 or result[1] > 0 then
-			self:SetBackdropBorderColor(0, 255, 150) -- "LightGreen"
-		end
-
-		if #result == 2 then
-			if result[2] == 0 then
-				self:SetBackdropBorderColor(255, 255, 0) -- Jaune
-			elseif result[2] == -50 or result[2] > 0 then
-				self:SetBackdropBorderColor(0, 255, 150) -- "LightGreen"
-			end
-		end]]
-
 		for _, v in pairs(linesToAdd) do
 			self:AddLine(v)
 		end
