@@ -14,8 +14,6 @@
 ## X-Credits: Big up
 
 ## X-Category: Inventory
-# /* ## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU */
-# /* ## X-Website: */
 ## X-eMail: marsgamess@gmail.com
 ## X-BugReport: https://github.com/Marsgames/GearHelper/issues
 
