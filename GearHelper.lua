@@ -381,7 +381,7 @@ function GearHelper:ScanCharacter()
 	if GearHelperVars.charInventory["MainHand"] ~= -2 and GearHelperVars.charInventory["MainHand"] ~= 0 then
 		local _, _, _, itemEquipLocWeapon = GetItemInfoInstant(GearHelperVars.charInventory["MainHand"])
 
-		if itemEquipLocWeapon == "INVTYPE_2HWEAPON" or itemEquipLocWeapon == "INVTYPE_RANGED" then
+		if string.match(itemEquipLocWeapon, "INVTYPE_2HWEAPON") or string.match(itemEquipLocWeapon, "INVTYPE_RANGED") then
 			GearHelperVars.charInventory["SecondaryHand"] = -1
 		end
 	end
@@ -460,24 +460,9 @@ local function GetItemsByEquipLoc(equipLoc)
 	GearHelper:BenchmarkCountFuncCall("GetItemsByEquipLoc")
 	local result = {}
 
-	local slotEquip = GearHelper.itemSlot[equipLoc]
-
-	for _,v in pairs(slotEquip) do
+	for k, v in ipairs(GearHelper.itemSlot[equipLoc]) do
 		result[v] = GearHelperVars.charInventory[v]
-	end
-	--[[
-	if equipLoc == "INVTYPE_TRINKET" then
-		result["Trinket0"] = GearHelperVars.charInventory["Trinket0"]
-		result["Trinket1"] = GearHelperVars.charInventory["Trinket1"]
-	elseif equipLoc == "INVTYPE_FINGER" then
-		result["Finger0"] = GearHelperVars.charInventory["Finger0"]
-		result["Finger1"] = GearHelperVars.charInventory["Finger1"]
-	elseif equipLoc == "INVTYPE_WEAPON" or equipLoc == "INVTYPE_RANGED" or equipLoc == "INVTYPE_2HWEAPON" then
-		result["MainHand"] = GearHelperVars.charInventory["MainHand"]
-		result["SecondaryHand"] = GearHelperVars.charInventory["SecondaryHand"]
-	else
-		result[GearHelper.itemSlot[equipLoc]]-- = GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]]
-	--end
+	end 
 
 	return result
 end
@@ -503,7 +488,6 @@ local function ShouldBeCompared(itemLink)
 	end
 
 	if not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink)) then
-		error("This item is not equippable")
 		error(GHExceptionNotEquippable)
 	end
 
@@ -522,7 +506,13 @@ function GearHelper:IsItemBetter(itemLink)
 
 	item = self:GetItemByLink(itemLink)
 
-	for _, result in pairs(self:NewWeightCalculation(item)) do
+	local status, res = pcall(GearHelper.NewWeightCalculation, self, item)
+
+	if not status then
+		return false
+	end
+
+	for _, result in pairs(res) do
 		if result > 0 then
 			return true
 		end
@@ -625,6 +615,7 @@ end
 
 function GearHelper:GetItemByLink(itemLink)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:GetItemByLink")
+
 	local item = GearHelper:GetItemFromCache(itemLink)
 
 	if not item then
@@ -645,7 +636,7 @@ function GearHelper:NewWeightCalculation(item)
 
 	local result = {}
 
-	if self:IsInventoryInCache() == false then
+	if GearHelper:IsInventoryInCache() == false then
 		error(GHExceptionInventoryNotCached)
 	end
 
@@ -656,7 +647,7 @@ function GearHelper:NewWeightCalculation(item)
 			if equippedItemLink == 0 then
 				result[slot] = ApplyTemplateToDelta(item)
 			else
-				equippedItem = self:GetItemByLink(equippedItemLink)
+				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
 				result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			end
 		end
@@ -664,8 +655,11 @@ function GearHelper:NewWeightCalculation(item)
 		for slot, equippedItemLink in pairs(equippedItems) do
 			if equippedItemLink == 0 then
 				result[slot] = ApplyTemplateToDelta(item)
+			elseif equippedItemLink == -1 then
+				equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
+				result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			else
-				equippedItem = self:GetItemByLink(equippedItemLink)
+				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
 				result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			end
 		end
@@ -673,13 +667,13 @@ function GearHelper:NewWeightCalculation(item)
 		if tonumber(equippedItems["MainHand"]) and tonumber(equippedItems["SecondaryHand"]) then
 			result["MainHand"] = ApplyTemplateToDelta(item)
 		elseif tonumber(equippedItems["MainHand"]) then
-			equippedItem = self:GetItemByLink(equippedItems["SecondaryHand"])
+			equippedItem = GearHelper:GetItemByLink(equippedItems["SecondaryHand"])
 			result["SecondaryHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 		elseif tonumber(equippedItems["SecondaryHand"]) then
-			equippedItem = self:GetItemByLink(equippedItems["MainHand"])
+			equippedItem = GearHelper:GetItemByLink(equippedItems["MainHand"])
 			result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 		else
-			local combinedItems = self:CombineTwoItems(self:GetItemByLink(equippedItems["MainHand"]), self:GetItemByLink(equippedItems["SecondaryHand"]))
+			local combinedItems = GearHelper:CombineTwoItems(GearHelper:GetItemByLink(equippedItems["MainHand"]), self:GetItemByLink(equippedItems["SecondaryHand"]))
 			result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, combinedItems)
 		end
 	else
@@ -687,7 +681,7 @@ function GearHelper:NewWeightCalculation(item)
 			if equippedItemLink == 0 then
 				result[slot] = ApplyTemplateToDelta(item)
 			else
-				equippedItem = self:GetItemByLink(equippedItemLink)
+				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
 				result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			end
 		end
@@ -955,18 +949,20 @@ local ModifyTooltip = function(self, ...)
 		return
 	elseif status then
 		local item = GearHelper:GetItemByLink(itemLink)
-		local result = GearHelper:NewWeightCalculation(item)
-		for _,v in pairs(result) do
-			if math.floor(v) == 0 then
-				self:SetBackdropBorderColor(255, 255, 0)
-			elseif math.floor(v) > 0 then
-				print(itemLink .. " " .. v)
-				self:SetBackdropBorderColor(0, 255, 150)
-			else
-				self:SetBackdropBorderColor(255, 0, 0)
+		local weightCalStatus, res = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
+
+		if weightCalStatus then
+			for _,v in pairs(res) do
+				if math.floor(v) == 0 then
+					self:SetBackdropBorderColor(255, 255, 0)
+				elseif math.floor(v) > 0 then
+					self:SetBackdropBorderColor(0, 255, 150)
+				else
+					self:SetBackdropBorderColor(255, 0, 0)
+				end
 			end
+			linesToAdd = GearHelper:LinesToAddToTooltip(res)
 		end
-		linesToAdd = GearHelper:LinesToAddToTooltip(result)
 	end
 
 	 GetDropInfo(linesToAdd, itemLink)

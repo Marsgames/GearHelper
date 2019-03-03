@@ -319,6 +319,8 @@ L["IsEquipable"] = {
 	-- War
 	["WARRIOR"] = {
 		["Plaque"] = BT["Plate"],
+		["Maille"] = BT["Mail"],
+		["Cuir"] = BT["Leather"],
 		["Bouclier"] = BT["Shield"],
 		["Boucliers"] = BT["Shields"],
 		["Dague"] = BT["Dagger"],
@@ -333,12 +335,25 @@ L["IsEquipable"] = {
 		["Baton"] = BT["Staff"],
 		["Batons"] = BT["Staves"],
 		["Hache2H"] = BT["Two-Handed Axes"],
-		["Epee2H"] = BT["Two-Handed Swords"]
+		["Epee2H"] = BT["Two-Handed Swords"],
+		["Mace2H"] = BT["Two-Handed Maces"],
+		["Jet"] = BT["Thrown"],
+		["Arbalete"] = BT["Crossbow"],
+		["Arbaletes"] = BT["Crossbows"],
+		["Arc"] = BT["Bow"],
+		["Arcs"] = BT["Bows"],
+		["TenuMainGauche"] = BT["Held in Off-Hand"],
+		["MainGauche"] = BT["Off Hand"],
+		["UneMain"] = BT["One-Hand"],
+		["Holdable"] = BT["Miscellaneous"],
+		["Gun"] = BT["Gun"],
+		["ArmeAFeus"] = BT["Guns"]
 	},
 	-- Pala
 	["PALADIN"] = {
 		["Plaque"] = BT["Plate"],
 		["Maille"] = BT["Mail"],
+		["Cuir"] = BT["Leather"],
 		["Bouclier"] = BT["Shield"],
 		["Boucliers"] = BT["Shields"],
 		["Masse1H"] = BT["One-Handed Maces"],
@@ -349,16 +364,17 @@ L["IsEquipable"] = {
 		["Epee2H"] = BT["Two-Handed Swords"],
 		["Hast"] = BT["Polearm"],
 		["Hasts"] = BT["Polearms"],
-		["Holdable"] = BT["Miscellaneous"]
+		["Holdable"] = BT["Miscellaneous"],
+		["UneMain"] = BT["One-Hand"],
 	},
 	-- Chassou
 	["HUNTER"] = {
 		["Maille"] = BT["Mail"],
 		["Arc"] = BT["Bow"],
-		["Arc"] = BT["Bows"],
+		["Arcs"] = BT["Bows"],
 		["Arbalete"] = BT["Crossbow"],
 		["Arbaletes"] = BT["Crossbows"],
-		["ArmeAFeu"] = BT["Guns"],
+		["ArmeAFeus"] = BT["Guns"],
 		["Hast"] = BT["Polearm"],
 		["Hasts"] = BT["Polearms"]
 	},

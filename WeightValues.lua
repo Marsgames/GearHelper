@@ -16,11 +16,11 @@ GearHelper.itemSlot = {
 	INVTYPE_CLOAK = {"Back"}, 
 	INVTYPE_SHIELD = {"SecondaryHand"}, 
 	INVTYPE_WEAPON = {"MainHand", "SecondaryHand"}, 
-	INVTYPE_2HWEAPON = {"MainHand"}, 
+	INVTYPE_2HWEAPON = {"MainHand", "SecondaryHand"}, 
 	INVTYPE_WEAPONMAINHAND = {"MainHand"}, 
 	INVTYPE_WEAPONOFFHAND = {"SecondaryHand"}, 
 	INVTYPE_HOLDABLE = {"SecondaryHand"}, 
-	INVTYPE_RANGED = {"MainHand"}, 
+	INVTYPE_RANGED = {"MainHand", "SecondaryHand"}, 
 	INVTYPE_RANGEDRIGHT = {"MainHand"}
 }
 
