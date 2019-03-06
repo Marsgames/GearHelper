@@ -201,6 +201,7 @@ function GearHelper:ResetConfig()
 end
 
 function GearHelper:OnEnable()
+	
 	GearHelper:BenchmarkCountFuncCall("GearHelper:OnEnable")
 	if not self.db.profile.addonEnabled then
 		print(self:ColorizeString(L["Addon"], "LightGreen") .. self:ColorizeString(L["DeactivatedRed"], "LightRed"))
@@ -459,8 +460,24 @@ local waitFrame = nil
 local function GetItemsByEquipLoc(equipLoc)
 	GearHelper:BenchmarkCountFuncCall("GetItemsByEquipLoc")
 	local result = {}
+	local equipSlot = {}
 
-	for k, v in ipairs(GearHelper.itemSlot[equipLoc]) do
+	if equipLoc == "INVTYPE_WEAPON" then
+		local _, myClass = UnitClass("player")
+		local playerSpec = GetSpecializationInfo(GetSpecialization())
+		local equipLocByClass = GearHelper.itemSlot[equipLoc][myClass]
+
+		if equipLocByClass[tostring(playerSpec)] == nil then
+			equipSlot = equipLocByClass
+		else
+			equipSlot = equipLocByClass[tostring(playerSpec)]
+		end
+	else
+		equipSlot = GearHelper.itemSlot[equipLoc]
+	end
+
+	for k, v in ipairs(equipSlot) do
+		print(v)
 		result[v] = GearHelperVars.charInventory[v]
 	end 
 
