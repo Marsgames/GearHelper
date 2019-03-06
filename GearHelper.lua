@@ -477,7 +477,6 @@ local function GetItemsByEquipLoc(equipLoc)
 	end
 
 	for k, v in ipairs(equipSlot) do
-		print(v)
 		result[v] = GearHelperVars.charInventory[v]
 	end 
 
