@@ -1,8 +1,8 @@
 -- https://mothereff.in/lua-minifier
 -- Memory footprint 12048.4 k
--- TODO Replace error code by proper exception
 -- TODO extract player inventory related function to an independant lib
 -- TODO Move functions in split files
+-- TODO check war item SetHyperlink in tooltip fail
 
 -- #errors : 01
 
@@ -1149,50 +1149,6 @@ function GearHelper:GetQuestReward()
 			do
 				return
 			end
-		end
-	end
-end
-
-function GearHelper:AutoGreedAndNeed(number)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:AutoGreedAndNeed")
-	if not GearHelper.db.profile.autoNeed and not GearHelper.db.profile.autoGreed then
-		do
-			return
-		end
-	end
-
-	local link, name, _, _, _, canNeed, canGreed = GetLootRollItemInfo(number)
-	local itemTable = GearHelper:GetItemByLink(link)
-	local itemType = itemTable.type
-	local itemSubType = itemTable.subType
-
-	local weightCalcResult = GearHelper:IsItemBetter(link, "ItemLink")
-
-	if canNeed then
-		if GearHelper.db.profile.autoNeed then
-			if itemType == L["armor"] or itemType == L["weapon"] then
-				if (weightCalcResult[1] ~= nil and weightCalcResult[1] > 0) or (weightCalcResult[2] ~= nil and weightCalcResult[2] > 0) then
-					ConfirmLootRoll(number, 1)
-					UIErrorsFrame:AddMessage(L["iNeededOn"] .. name, 0.0, 1.0, 0.0, 150) -----------          DEBUG MODE        -----------
-				elseif GearHelper.db.profile.autoGreed then
-					ConfirmLootRoll(number, 2)
-				end
-			end
-		else
-			do
-				return
-			end
-		end
-	elseif canGreed then
-		if GearHelper.db.profile.autoGreed then
-			for _, v in pairs(L["TypeToNotNeed"]) do
-				if itemType == v or itemSubType == v then
-					do
-						return
-					end
-				end
-			end
-			ConfirmLootRoll(number, 2)
 		end
 	end
 end
