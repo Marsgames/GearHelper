@@ -457,9 +457,8 @@ end
 local waitTable = {}
 local waitFrame = nil
 
-local function GetItemsByEquipLoc(equipLoc)
-	GearHelper:BenchmarkCountFuncCall("GetItemsByEquipLoc")
-	local result = {}
+local function GetSlotsByEquipLoc(equipLoc)
+	GearHelper:BenchmarkCountFuncCall("GetSlotsByEquipLoc")
 	local equipSlot = {}
 
 	if equipLoc == "INVTYPE_WEAPON" then
@@ -475,6 +474,14 @@ local function GetItemsByEquipLoc(equipLoc)
 	else
 		equipSlot = GearHelper.itemSlot[equipLoc]
 	end
+
+	return equipSlot
+end
+
+local function GetItemsByEquipLoc(equipLoc)
+	GearHelper:BenchmarkCountFuncCall("GetItemsByEquipLoc")
+	local result = {}
+	local equipSlot = GetSlotsByEquipLoc(equipLoc)
 
 	for k, v in ipairs(equipSlot) do
 		result[v] = GearHelperVars.charInventory[v]
@@ -509,6 +516,8 @@ local function ShouldBeCompared(itemLink)
 
 	return true
 end
+
+
 
 function GearHelper:IsItemBetter(itemLink)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsItemBetter")
@@ -702,7 +711,7 @@ function GearHelper:NewWeightCalculation(item)
 			end
 		end
 	end
-	
+
 	return result
 end
 
@@ -710,7 +719,7 @@ function GearHelper:equipItem(inThisBag)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:equipItem")
 	local bagToEquip = inThisBag or 0
 	local _, typeInstance, difficultyIndex = GetInstanceInfo()
-
+	print("equipItem")
 	waitEquipFrame = CreateFrame("Frame")
 	waitEquipTimer = time()
 	waitEquipFrame:Hide()
@@ -722,56 +731,28 @@ function GearHelper:equipItem(inThisBag)
 					return
 				end
 			end
-			-- if time() > waitEquipTimer + 0.5 then
-			if typeInstance ~= "pvp" and tostring(difficultyIndex) ~= "24" then
-				-- if numBag == nil then numBag = 0 end
-				for slot = 1, GetContainerNumSlots(bagToEquip) do
-					local itemLink = GetContainerItemLink(bagToEquip, slot)
-					if itemLink ~= nil then
-						local weightCalcResult = GearHelper:IsItemBetter(itemLink, "ItemLink")
-						if weightCalcResult == -1010 then
-							do
-								return
-							end
-						else
-							if not InCombatLockdown and weightCalcResult[1] ~= nil and weightCalcResult[1] > 0 or weightCalcResult[2] ~= nil and weightCalcResult[2] > 0 then
-								local table = GearHelper:GetItemByLink(itemLink)
-								local itemEquipLoc = table["equipLoc"]
-								local name = table["name"]
-								if itemEquipLoc == "INVTYPE_TRINKET" then
-									if weightCalcResult[1] > weightCalcResult[2] then
-										EquipItemByName(name, 13)
-									else
-										EquipItemByName(name, 14)
-									end
-								elseif itemEquipLoc == "INVTYPE_FINGER" then
-									if weightCalcResult[1] > weightCalcResult[2] then
-										EquipItemByName(name, 11)
-									else
-										EquipItemByName(name, 12)
-									end
-								elseif itemEquipLoc == "INVTYPE_WEAPON" then
-									if weightCalcResult[1] > weightCalcResult[2] then
-										EquipItemByName(name, 16)
-									else
-										EquipItemByName(name, 17)
-									end
-								else
-									EquipItemByName(name)
-								end
-								GearHelper:ScanCharacter()
-								if GearHelper.db.profile.printWhenEquip then
-									print(itemLink .. L["equipVerbose"])
-								end
-							elseif InCombatLockdown() then
-								waitEquipTimer = time()
-								waitEquipFrame:Show()
+
+			if typeInstance == "pvp" or tostring(difficultyIndex) == "24"or InCombatLockdown() then
+				self:Hide()
+				return
+			end
+
+			for slot = 1, GetContainerNumSlots(bagToEquip) do
+				local itemLink = GetContainerItemLink(bagToEquip, slot)
+				if pcall(ShouldBeCompared, itemLink) then
+					local item = GearHelper:GetItemByLink(itemLink)
+					local status, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
+
+					if status then
+						for _,v in pairs(result) do
+							if v > 0 then
+								EquipItemByName(item.itemLink)
 							end
 						end
 					end
 				end
-				self:Hide()
 			end
+			self:Hide()
 		end
 	)
 	waitEquipFrame:Show()
