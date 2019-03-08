@@ -527,7 +527,6 @@ function GearHelper:IsItemBetter(itemLink)
 	if not pcall(ShouldBeCompared, itemLink) then
 		return false
 	end
-
 	item = self:GetItemByLink(itemLink)
 
 	local status, res = pcall(GearHelper.NewWeightCalculation, self, item)
@@ -577,7 +576,10 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 	end
 
 	tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
-	tip:SetOwner(WorldFrame, "ANCHOR_NONE")		
+	tip:SetOwner(WorldFrame, "ANCHOR_NONE")
+	if itemLink == -1 then
+		print(debugstack())
+	end
 	tip:SetHyperlink(itemLink)
 
 	item.levelRequired = 0
@@ -675,7 +677,7 @@ function GearHelper:NewWeightCalculation(item)
 				result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			end
 		end
-	elseif item.equipLoc == "INVTYPE_WEAPON" then
+	elseif item.equipLoc == "INVTYPE_WEAPON" or item.equipLoc == "INVTYPE_HOLDABLE" then
 		for slot, equippedItemLink in pairs(equippedItems) do
 			if equippedItemLink == 0 then
 				result[slot] = ApplyTemplateToDelta(item)
@@ -787,7 +789,7 @@ local function IsTargetValid(target)
 end
 
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:CreateLinkAskIfHeNeeds") ------------------------------------------------------------------
+	GearHelper:BenchmarkCountFuncCall("GearHelper:CreateLinkAskIfHeNeeds")
 	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
 	local target = target or GetUnitName("player")
 
@@ -1040,7 +1042,7 @@ function GearHelper:GetQuestReward()
 					table.insert(weightTable, highestResult)
 				end
 			end
-		end -- FIN DU FOR QUI PARSE TOUS LES ITEMS EN RECOMPENSE DE QUETE
+		end
 
 		local maxWeight = weightTable[1]
 		local keyWeight = 1
