@@ -3,6 +3,7 @@
 -- TODO extract player inventory related function to an independant lib
 -- TODO Move functions in split files
 -- TODO check war item SetHyperlink in tooltip fail
+-- TODO Expose more options to player
 
 -- #errors : 01
 
@@ -777,48 +778,31 @@ local function GetQualityFromColor(color)
 	end
 end
 
+local function IsTargetValid(target)
+	if target == nil or target == "" or target == GetUnitName("player") then
+		return false
+	end
+
+	return true
+end
+
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:CreateLinkAskIfHeNeeds") ------------------------------------------------------------------
 	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
 	local target = target or GetUnitName("player")
 
-	if debug ~= 1 then
-		if target == nil then
-			do
-				return
-			end
-		end
-		if target == GetUnitName("player") then
-			do
-				return
-			end
-		end
-		if target == "" then
-			do
-				return
-			end
-		end
-		if not GearHelper.db.profile.askLootRaid then
-			do
-				return
-			end
-		end
-		if string.find(string.lower(message), "bonus") then
-			do
-				return
-			end
-		end
+	if not GearHelper.db.profile.askLootRaid or not IsTargetValid(target) or string.find(string.lower(message), "bonus") then
+		return
 	end
 
-	local couleur = ""
-	local className, classFile, classID = UnitClass(target)
-	local tar
+	local couleur, tar = ""
+	local _, classFile = UnitClass(target)
+	local tar = ""
 
-	if classFile ~= nil and target ~= nil then
+	if classFile ~= nil then
 		tar = GearHelper:CouleurClasse(classFile) .. tostring(target) .. "|r"
-	else
-		tar = ""
 	end
+
 	local nameLink
 
 	local OldSetItemRef = SetItemRef
@@ -838,37 +822,18 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 	end
 
 	for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
-		local itemTable = GearHelper:GetItemByLink(itemLink)
-		local quality = GetQualityFromColor(itemTable.rarity)
+		if pcall(ShouldBeCompared, itemLink) then
+			local item = GearHelper:GetItemByLink(itemLink)
+			local quality = GetQualityFromColor(item.rarity)
 
-		if quality ~= nil and quality < 5 or debug == 1 then
-			nameLink = GearHelper:ReturnGoodLink(itemLink, target, tar)
+			if quality ~= nil and quality < 5 then
+				nameLink = GearHelper:ReturnGoodLink(itemLink, target, tar)
 
-			if debug ~= 1 then
-				local weightCalcResult = GearHelper:IsItemBetter(itemLink, "ItemLink")
-
-				if weightCalcResult ~= nil then
-					if #weightCalcResult == 1 then
-						if weightCalcResult[1] > 0 then
-							UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
-							print(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink)
-							PlaySound(5274, "Master")
-						end
-					else
-						if weightCalcResult[1] ~= nil and weightCalcResult[1] > 0 or weightCalcResult[2] ~= nil and weightCalcResult[2] > 0 then
-							UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
-							print(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink)
-							PlaySound(5274, "Master")
-						end
-					end
-				else
-					-- error("ERROR 01 : WeightCakcResult is nil in GearHelper.lua/CreateLinkAskIfHeNeeds line 880")
-					GearHelper:Print("WeightCalcResult nil")
+				if GearHelper:IsItemBetter(itemLink) then
+					UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
+					print(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink)
+					PlaySound(5274, "Master")
 				end
-			elseif debug == 1 then
-				UIErrorsFrame:AddMessage(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
-				print(GearHelper:ColorizeString(L["ask1"], "Yellow") .. nameLink .. GearHelper:ColorizeString(L["ask2"], "Yellow") .. itemLink)
-				PlaySound(5274, "Master")
 			end
 		end
 	end
@@ -903,6 +868,7 @@ function GearHelper:LinesToAddToTooltip(result)
 end
 
 local function GetDropInfo(linesToAdd, itemLink)
+	GearHelper:BenchmarkCountFuncCall("GetDropInfo")
 	_, _, _, _, itemId = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 
 	if GearHelper.itemsDropRate[itemId] ~= nil then
@@ -916,6 +882,7 @@ local function GetDropInfo(linesToAdd, itemLink)
 end
 
 local function IsItemEquipLocValid(equipLoc)
+	GearHelper:BenchmarkCountFuncCall("IsItemEquipLocValid")
 	if equipLoc ~= nil and equipLoc ~= "" then
 		return true
 	end
@@ -1026,55 +993,52 @@ end
 
 function GearHelper:GetQuestReward()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:GetQuestReward")
+	if not GearHelper.db.profile.autoAcceptQuestReward then 
+		return
+	end
+
 	local numQuestChoices = GetNumQuestChoices()
-	local name, link, typeI, subTypeI, itemSellPrice1
 	local isBetter = false
+
 	if numQuestChoices < 1 then
-		if GearHelper.db.profile.autoAcceptQuestReward then
-			GetQuestReward()
-		end
+		GetQuestReward()
 	elseif numQuestChoices == 1 then
-		if GearHelper.db.profile.autoAcceptQuestReward then
-			GetQuestReward(1)
-		end
+		GetQuestReward(1)
 	else
 		local weightTable = {}
 		local prixTable = {}
 		local altTable = {}
 
 		for i = 1, numQuestChoices do
-			local objetI = GetQuestItemLink("choice", i)
-			local itemTable = GearHelper:GetItemByLink(objetI)
-			name = itemTable.name
-			link = itemTable.itemLink
-			typeI = itemTable.type
-			itemSellPrice1 = itemTable.sellPrice
+			local item = GearHelper:GetItemByLink(GetQuestItemLink("choice", i))
 
-			if not GetItemInfo(objetI) then
-				GearHelper.idNilGetQuestReward = objetI
-				coroutine.yield()
+			if item.type ~= L["armor"] and item.type ~= L["weapon"] then
+				return
 			end
-			if typeI ~= L["armor"] and typeI ~= L["weapon"] then
-				GearHelper:Print("on stop pour : " .. typeI)
-				do
-					return
+
+			local status, res = pcall(GearHelper.NewWeightCalculation, self, item)
+
+			if status then
+				local tmpTable = {}
+				for _, result in pairs(res) do
+					if result > 0 then
+						table.insert(tmpTable, result)
+					end
 				end
-			end
-			local res = GearHelper:IsItemBetter(objetI, "ItemLink")
-			if res[1] ~= nil and res[1] > 0 or res[2] ~= nil and res[2] > 0 then
-				if res[1] > 0 then
-					table.insert(weightTable, res[1])
+
+				if GearHelper:CountArray(tmpTable) == 0 then
+					table.insert(weightTable, -10)
+					table.insert(prixTable, item.sellPrice)
+					table.insert(altTable, item.sellPrice, item.itemLink)
 				else
-					table.insert(weightTable, res[2])
+					local highestResult = 0
+					for _,v in ipairs(tmpTable) do
+						if v > highestResult then
+							highestResult = v
+						end
+					end
+					table.insert(weightTable, highestResult)
 				end
-				if res[1] == -1010 or res[2] == -1010 then
-					GearHelper:Print("On a un -1010 dans GetQuestReward")
-				end
-			else
-				table.insert(weightTable, -10)
-
-				table.insert(prixTable, itemSellPrice1)
-				table.insert(altTable, itemSellPrice1, objetI)
 			end
 		end -- FIN DU FOR QUI PARSE TOUS LES ITEMS EN RECOMPENSE DE QUETE
 
@@ -1139,10 +1103,7 @@ function GearHelper:GetQuestReward()
 				xDif = xDif + 11
 			end
 
-			if GearHelper.db.profile.autoAcceptQuestReward then
-				local objetI = GetQuestItemLink("choice", keyPrix)
-				print("On prend " .. objetI)
-			end
+			local objetI = GetQuestItemLink("choice", keyPrix)
 
 			do
 				return
