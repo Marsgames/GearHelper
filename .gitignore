@@ -98,8 +98,7 @@ Temporary Items
 !.vscode/extensions.json
 
 ### RD ###
-Changelog.docx
-Infos.docx
+*.docx
 removeUnused
 
 
