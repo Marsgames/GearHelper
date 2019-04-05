@@ -66,7 +66,7 @@ end
 
 function GearHelper:IsEquippableByMe(item)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEquippableByMe")
-	local isItMadeForMe = false
+	local isEquippable = false
 
 	if not IsEquippableItem(item.id) or string.match(item.itemLink, "battlepet") then
 		return false
@@ -74,128 +74,49 @@ function GearHelper:IsEquippableByMe(item)
 
 	local myLevel = UnitLevel("player")
 	local _, myClass = UnitClass("player")
-	local currentSpec = GetSpecialization()
-	local playerSpec = GetSpecializationInfo(currentSpec)
+	local playerSpec = GetSpecializationInfo(GetSpecialization())
 
-	if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" then
-		--Is it a common item shared by all classes ?
-		isItMadeForMe = false
+	if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" or item.equipLoc == "INVTYPE_TABARD" or item.equipLoc == "INVTYPE_BODY" then
+		return false
 	elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or item.subType == L.IsEquipable.PRIEST.Tissu then
-		--Is it an artifact weapon ?
-		isItMadeForMe = true
+		isEquippable = true
 	elseif item.rarity == "e6cc80" then
 		if type(L.Artifact[tostring(playerSpec)]) == "string" then
 			if tostring(item.id) == L.Artifact[tostring(playerSpec)] then
-				isItMadeForMe = true
+				isEquippable = true
 			end
 		else
 			table.foreach(
 				L.Artifact[tostring(playerSpec)],
 				function(_, v)
 					if tostring(item.id) == v then
-						isItMadeForMe = true
+						isEquippable = true
 					end
 				end
 			)
 		end
-	elseif item.equipLoc == "INVTYPE_TABARD" or item.equipLoc == "INVTYPE_BODY" then -- Do not consider as equippable because they have no stats and we dont store them in charInventory
-		isItMadeForMe = false
 	else
-		--Is it an item that i can equip with my character ?
 		table.foreach(
 			L.IsEquipable[tostring(myClass)],
 			function(_, v)
 				if item.subType == v then
-					isItMadeForMe = true
+					isEquippable = true
 				end
 			end
 		)
 	end
-	return isItMadeForMe
+	return isEquippable
 end
 
-function GearHelper:IsSlotEmpty(equipLoc)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:IsSlotEmpty")
+function GearHelper:IsInventoryInCache()
+	GearHelper:BenchmarkCountFuncCall("GearHelper:IsInventoryInCache")
 	local result = {}
-	if equipLoc == "INVTYPE_TRINKET" then
-		--Item not cached yet
-		if GearHelperVars.charInventory["Trinket0"] == -2 or GearHelperVars.charInventory["Trinket1"] == -2 then
-			return nil
-		end
-
-		if GearHelperVars.charInventory["Trinket0"] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-
-		if GearHelperVars.charInventory["Trinket1"] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-	elseif equipLoc == "INVTYPE_FINGER" then
-		--Item not cached yet
-		if GearHelperVars.charInventory["Finger0"] == -2 or GearHelperVars.charInventory["Finger1"] == -2 then
-			return nil
-		end
-		if GearHelperVars.charInventory["Finger0"] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-
-		if GearHelperVars.charInventory["Finger1"] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-	elseif equipLoc == "INVTYPE_WEAPON" then
-		if GearHelperVars.charInventory["MainHand"] == -2 or GearHelperVars.charInventory["SecondaryHand"] == -2 then
-			return nil
-		end
-
-		if GearHelperVars.charInventory["MainHand"] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-
-		if GearHelperVars.charInventory["SecondaryHand"] == 0 or GearHelperVars.charInventory["SecondaryHand"] == -1 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-	elseif equipLoc == "INVTYPE_RANGED" or equipLoc == "INVTYPE_2HWEAPON" then
-		--Item not cached yet
-		if GearHelperVars.charInventory["MainHand"] == -2 or GearHelperVars.charInventory["SecondaryHand"] == -2 then
-			return nil
-		end
-		--If MainHand is empty
-		if GearHelperVars.charInventory["MainHand"] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-
-		if GearHelperVars.charInventory["SecondaryHand"] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
-		end
-	else
-		--Item not cached yet
-		if GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]] == -2 then
-			return nil
-		end
-
-		if GearHelperVars.charInventory[GearHelper.itemSlot[equipLoc]] == 0 then
-			table.insert(result, true)
-		else
-			table.insert(result, false)
+	for _,v in pairs(GearHelperVars.charInventory) do
+		if tonumber(v) == -2 then
+			return false
 		end
 	end
-	return result
+	return true
 end
 
 function GearHelper:IsInTable(array, data)
@@ -211,6 +132,15 @@ function GearHelper:IsInTable(array, data)
 		end
 	)
 	return result
+end
+
+function GearHelper:IsValueInTable(tab, val)
+	for _, v in pairs(tab) do
+		if val == v then
+			return true
+		end
+	end
+	return false
 end
 
 function GearHelper:IsEmptyTable(maTable)
@@ -257,6 +187,40 @@ function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 	return delta
 end
 
+local function AddStatToTab(item, tab)
+	for k, v in pairs(item) do
+		if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
+			if tab[k] == nil then 
+				tab[k] = tonumber(v)
+			else
+				tab[k] = tonumber(v) + tonumber(tab[k])
+			end
+		end
+	end
+
+	return tab
+end
+
+function GearHelper:CombineTwoItems(first, second)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:CombineTwoItems")
+
+	return AddStatToTab(second, AddStatToTab(first, {}))
+end
+
+local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
+	local mergedArrays = {}
+	for _, array in pairs(arraysOfEquippableByClasses) do
+		for k, v in pairs(array) do
+			mergedArrays[k] = v
+		end
+	end
+	return mergedArrays
+end
+
+function GearHelper:GetEquippableTypes()
+	return CombineArraysOfEquippableTypes(L.IsEquipable)
+end
+
 function GearHelper:GetGemValue()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:GetGemValue")
 	local _, gemItemLink = GetItemInfo("151585")
@@ -299,42 +263,55 @@ function GearHelper:CouleurClasse(classFileName)
 	return "|c" .. color.colorStr
 end
 
-function GearHelper:FindHighestStatInTemplate()
-	GearHelper:BenchmarkCountFuncCall("GearHelper:FindHighestStatInTemplate")
+local function GetActiveTemplate()
 	if GearHelper.db.profile.weightTemplate == "NOX" then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
-		if GearHelper.db.global.templates[currentSpec]["NOX"] ~= nil then
-			local maxV = 0
-			local maxK = "Nothing"
-			for k, v in pairs(GearHelper.db.global.templates[currentSpec]["NOX"]) do
-				if tonumber(v) > maxV then
-					maxV = v
-					maxK = k
-				end
-			end
-
-			return maxK
-		else
-			return nil
+		if GearHelper.db.global.templates[currentSpec]["NOX"] == nil then
+			error(GHExceptionMissingNoxTemplate)
 		end
+
+		return GearHelper.db.global.templates[currentSpec]["NOX"]
 	else
 		if GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate] ~= nil then
-			local maxV = 0
-			local maxK = "Nothing"
-			for k, v in pairs(GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]) do
-				if tonumber(v) then
-					if v > maxV then
-						maxV = v
-						maxK = k
-					end
-				end
-			end
+			error(GHExceptionMissingCustomTemplate)
+		end
 
-			return maxK
-		else
-			return nil
+		return GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]
+	end
+end
+
+function GearHelper:FindHighestStatInTemplate()
+	GearHelper:BenchmarkCountFuncCall("GearHelper:FindHighestStatInTemplate")
+
+	local template = GetActiveTemplate()
+	local maxV = 0
+	local maxK = template[0]
+
+	for k, v in pairs(template) do
+		if tonumber(v) > maxV then
+			maxV = v
+			maxK = k
 		end
 	end
+
+	return maxK
+end
+
+local function GetColor(name)
+	GearHelper:BenchmarkCountFuncCall("GetColor")
+
+	local colorList = {}
+	colorList.yellow = "|cFFFFFF00"
+	colorList.lightgreen = "|cFF00FF00"
+	colorList.green = "|cFF1bad1b"
+	colorList.lightred = "|cFFFF0000"
+	colorList.red = "|cFFb51b1b"
+	colorList.pink = "|cFFFF1493"
+	colorList.better = "|cFF00FF96"
+	colorList.white = "|cFFFFFFFF"
+	colorList.black = "|cFF000000"
+
+	return colorList[name:lower()]
 end
 
 function GearHelper:ColorizeString(text, color)
@@ -350,8 +327,8 @@ function GearHelper:ColorizeString(text, color)
 	colorList.white = "|cFFFFFFFF"
 	colorList.black = "|cFF000000"
 
-	if colorList[color:lower()] ~= nil then
-		return colorList[color:lower()] .. text
+	if GetColor(color) ~= nil then
+		return GetColor(color) .. text
 	else
 		return text
 	end
@@ -433,4 +410,12 @@ function GearHelper:CountingSort(f)
 			count[i] = count[i] - 1
 		end
 	end
+end
+
+function GearHelper:CountArray(tab)
+	local count = 0
+	for _,_ in pairs(tab) do
+		count = count + 1
+	end
+	return count
 end

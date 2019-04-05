@@ -1,28 +1,17 @@
-lightweight tag c45764e7ff26bd20a0146b634655f78bc4c5f2c2 2.2.5
-Author:	GitHub <noreply@github.com>
-Date:	Wed Feb 27 20:03:30 2019 +0100
+- Add spécial thanks page
 
-commit 0a40818127d54523cf1443b3230e16978f525361
-Author: Raphael Daumas <raphdaumas@hotmail.fr>
-Date:   Tue Feb 26 09:19:52 2019 +0100
+- Update WeightValues
 
-    update toc
+- Fix holdable weapons
+- Fix 2H weapons calculation
+- Fix class / spec main weapon
+- Fix some issues
 
-commit 0a40818127d54523cf1443b3230e16978f525361
-Author: Raphael Daumas <raphdaumas@hotmail.fr>
-Date:   Tue Feb 26 09:19:52 2019 +0100
+- Remove auto need & greed
+- Remove undesired points
 
-    update toc
-
-commit 0a40818127d54523cf1443b3230e16978f525361
-Author: Raphael Daumas <raphdaumas@hotmail.fr>
-Date:   Tue Feb 26 09:19:52 2019 +0100
-
-    update toc
-
-commit 3481acfc97663e4f3efbc661f41f1f77f3408ba6
-Author: Mantisis <170255@supinfo.com>
-Date:   Sat Feb 23 21:57:30 2019 +0100
-
-    Delete removeUnused
-
+- Refacto of IsItemBetter func
+- Refacto of QuestReward func
+- Refacto of AskIfHeNeeds func
+- Refacto of EquipItem func
+- Refacto of NewWeightCalculation func

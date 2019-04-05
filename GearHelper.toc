@@ -5,7 +5,7 @@
 ### Notes-deDE: Manage your gear during your level up and after
 ## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
 ## Author:  Marsgames & Tempaxe
-## Version: 2.2.5
+## Version: @project-version@
 ## DefaultState: enabled
 
 
@@ -35,6 +35,7 @@ Localizations\esES.lua
 Localizations\zhTW.lua
 
 ########## Addon ##########
+GH_Exceptions.lua
 GearHelper.lua
 WeightValues.lua
 Commands\GH_SlashMethods.lua
