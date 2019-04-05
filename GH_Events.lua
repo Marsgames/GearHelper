@@ -228,17 +228,6 @@ local function QuestComplete()
 	coroutine.resume(GearHelper.GetQuestRewardCoroutine)
 end
 
-local function StartLootRoll(_, _, number)
-	GearHelper:BenchmarkCountFuncCall("StartLootRoll")
-	GearHelper.AutoGreedAndNeedCoroutine =
-		coroutine.create(
-		function()
-			GearHelper:AutoGreedAndNeed(number)
-		end
-	)
-	coroutine.resume(GearHelper.AutoGreedAndNeedCoroutine)
-end
-
 local function MerchantClosed()
 	GearHelper:BenchmarkCountFuncCall("MerchantClosed")
 	if not GearHelper.db.profile.sellGreyItems then
@@ -465,11 +454,6 @@ local function GetItemInfoReceived(_, _, item)
 				coroutine.resume(GearHelper.GetQuestRewardCoroutine)
 			end
 		end
-		if GearHelper.idNilAutoGreedAndNeed ~= nil then
-			if item == GearHelper.idNilAutoGreedAndNeed then
-				coroutine.resume(GearHelper.AutoGreedAndNeedCoroutine)
-			end
-		end
 	end
 
 	if (InspectPaperDollItemsFrame) then
@@ -629,7 +613,6 @@ GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
 GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
 GearHelper:RegisterEvent("ITEM_PUSH", ItemPush, ...)
 GearHelper:RegisterEvent("QUEST_COMPLETE", QuestComplete)
-GearHelper:RegisterEvent("START_LOOT_ROLL", StartLootRoll, ...)
 GearHelper:RegisterEvent("MERCHANT_CLOSED", MerchantClosed)
 GearHelper:RegisterEvent("BAG_UPDATE", BagUpdate)
 GearHelper:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", ActiveTalentGroupChanged)

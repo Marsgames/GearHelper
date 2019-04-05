@@ -35,6 +35,7 @@ Localizations\esES.lua
 Localizations\zhTW.lua
 
 ########## Addon ##########
+GH_Exceptions.lua
 GearHelper.lua
 WeightValues.lua
 Commands\GH_SlashMethods.lua
