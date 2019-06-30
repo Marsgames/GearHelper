@@ -98,7 +98,7 @@ local rawValues = {
 	},
 	-- MAGE FIRE --
 	["63"] = {
-		["NOX"] = "Intellect [7.54] > Mastery [6.04] > Versatility [4.54] > Haste [3.04] > Crit [1.54]"
+		["NOX"] = "Intellect [7.58] > Mastery [6.08] > Versatility [4.58] > Haste [3.08] > Crit [1.58]"
 	},
 	-- MAGE FROST --
 	["64"] = {
@@ -162,7 +162,7 @@ local rawValues = {
 	},
 	-- HUNTER MARKSMANSHIP --
 	["254"] = {
-		["NOX"] = "Agility [7.52] > Mastery [6.02] > Haste [4.52] > Crit [3.02] > Versatility [1.52]"
+		["NOX"] = "Agility [7.56] > Mastery [6.06] > Haste [4.56] > Crit [3.06] > Versatility [1.56]"
 	},
 	-- HUNTER SURVIVAL --
 	["255"] = {
@@ -218,7 +218,7 @@ local rawValues = {
 	},
 	-- MONK BREWMASTER --
 	["268"] = {
-		["NOX"] = "Stamina [9.01] > Agility [7.51] > Crit [6.01] = Versatility [6.01] > Mastery [4.51] > Haste [3.01]"
+		["NOX"] = "Stamina [9.07] > Agility [7.57] > Crit [6.07] = Versatility [6.07] > Mastery [4.57] > Haste [3.07]"
 	},
 	-- MONK WINDWALKER --
 	["269"] = {

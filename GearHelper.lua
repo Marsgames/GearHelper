@@ -572,7 +572,7 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 		error(GHExceptionInvalidItemLink)
 	end
 
-	if string.match(itemLink, "battlepet") then
+	if string.find(itemLink, "battlepet") then -- @todo : doesn't this needs to be localized ???
 		error(GHExceptionInvalidItem)
 	end
 
@@ -734,7 +734,7 @@ function GearHelper:equipItem(inThisBag)
 				end
 			end
 
-			if typeInstance == "pvp" or tostring(difficultyIndex) == "24" or InCombatLockdown() then
+			if "pvp" == typeInstance or "24" == tostring(difficultyIndex) or InCombatLockdown() then
 				self:Hide()
 				return
 			end

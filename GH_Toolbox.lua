@@ -144,6 +144,15 @@ function GearHelper:IsValueInTable(tab, val)
 end
 -------------------------
 
+function GearHelper:IsValueInTable(tab, val)
+	for _, v in pairs(tab) do
+		if val == v then
+			return true
+		end
+	end
+	return false
+end
+
 function GearHelper:IsEmptyTable(maTable)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEmptyTable")
 	return (next(maTable) == nil)
