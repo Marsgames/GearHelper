@@ -200,7 +200,6 @@ function GearHelper:ResetConfig()
 end
 
 function GearHelper:OnEnable()
-	
 	GearHelper:BenchmarkCountFuncCall("GearHelper:OnEnable")
 	if not self.db.profile.addonEnabled then
 		print(self:ColorizeString(L["Addon"], "LightGreen") .. self:ColorizeString(L["DeactivatedRed"], "LightRed"))
@@ -484,7 +483,7 @@ local function GetItemsByEquipLoc(equipLoc)
 
 	for k, v in ipairs(equipSlot) do
 		result[v] = GearHelperVars.charInventory[v]
-	end 
+	end
 
 	return result
 end
@@ -496,7 +495,6 @@ local function ShouldDisplayNotEquippable(subType)
 
 	return false
 end
-
 
 local function ShouldBeCompared(itemLink)
 	if not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r") then
@@ -515,8 +513,6 @@ local function ShouldBeCompared(itemLink)
 
 	return true
 end
-
-
 
 function GearHelper:IsItemBetter(itemLink)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsItemBetter")
@@ -596,7 +592,7 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 
 	for i = 2, tip:NumLines() do
 		local text = _G["myTooltipFromTemplateTextLeft" .. i]:GetText()
-	
+
 		if text then
 			if string.find(text, L["Tooltip"].ItemLevel) then
 				for word in string.gmatch(text, "(%d+)") do
@@ -733,7 +729,7 @@ function GearHelper:equipItem(inThisBag)
 				end
 			end
 
-			if typeInstance == "pvp" or tostring(difficultyIndex) == "24"or InCombatLockdown() then
+			if typeInstance == "pvp" or tostring(difficultyIndex) == "24" or InCombatLockdown() then
 				self:Hide()
 				return
 			end
@@ -745,7 +741,7 @@ function GearHelper:equipItem(inThisBag)
 					local status, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
 
 					if status then
-						for _,v in pairs(result) do
+						for _, v in pairs(result) do
 							if v > 0 then
 								EquipItemByName(item.itemLink)
 							end
@@ -780,8 +776,9 @@ local function GetQualityFromColor(color)
 	end
 end
 
+-- Return false if the string passed in parameter is nil, empty or contains player name otherwise return true
 local function IsTargetValid(target)
-	if target == nil or target == "" or target == GetUnitName("player") then
+	if nil == target or "" == target or string.find(target, GetUnitName("player")) then
 		return false
 	end
 
@@ -846,7 +843,7 @@ function GearHelper:LinesToAddToTooltip(result)
 	local linesToAdd = {}
 
 	if GearHelper:CountArray(result) == 1 then
-		for _,v in pairs(result) do
+		for _, v in pairs(result) do
 			if v < 0 then
 				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
 			elseif math.floor(v) == 0 then
@@ -858,7 +855,7 @@ function GearHelper:LinesToAddToTooltip(result)
 	elseif GearHelper:CountArray(result) == 2 then
 		for slot, weight in pairs(result) do
 			if weight < 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " ".. slot)
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. slot)
 			elseif math.floor(weight) == 0 then
 				table.insert(linesToAdd, L["itemEgala"] .. " " .. slot)
 			elseif math.floor(weight) > 0 then
@@ -880,7 +877,6 @@ local function GetDropInfo(linesToAdd, itemLink)
 		end
 		table.insert(linesToAdd, L["DropBy"] .. GearHelper.itemsDropRate[itemId]["Drop"])
 	end
-
 end
 
 local function IsItemEquipLocValid(equipLoc)
@@ -916,7 +912,7 @@ local ModifyTooltip = function(self, ...)
 		local weightCalStatus, res = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
 
 		if weightCalStatus then
-			for _,v in pairs(res) do
+			for _, v in pairs(res) do
 				if math.floor(v) == 0 then
 					self:SetBackdropBorderColor(255, 255, 0)
 				elseif math.floor(v) > 0 then
@@ -929,8 +925,8 @@ local ModifyTooltip = function(self, ...)
 		end
 	end
 
-	 GetDropInfo(linesToAdd, itemLink)
-	
+	GetDropInfo(linesToAdd, itemLink)
+
 	if linesToAdd then
 		for _, v in pairs(linesToAdd) do
 			self:AddLine(v)
@@ -995,7 +991,7 @@ end
 
 function GearHelper:GetQuestReward()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:GetQuestReward")
-	if not GearHelper.db.profile.autoAcceptQuestReward then 
+	if not GearHelper.db.profile.autoAcceptQuestReward then
 		return
 	end
 
@@ -1034,7 +1030,7 @@ function GearHelper:GetQuestReward()
 					table.insert(altTable, item.sellPrice, item.itemLink)
 				else
 					local highestResult = 0
-					for _,v in ipairs(tmpTable) do
+					for _, v in ipairs(tmpTable) do
 						if v > highestResult then
 							highestResult = v
 						end

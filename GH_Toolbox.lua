@@ -119,6 +119,7 @@ function GearHelper:IsInventoryInCache()
 	return true
 end
 
+-------------------------- C'EST LA MËME FONCTION QU'EN DESSOUS ?!
 function GearHelper:IsInTable(array, data)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsInTable")
 	local result = false
@@ -133,7 +134,6 @@ function GearHelper:IsInTable(array, data)
 	)
 	return result
 end
-
 function GearHelper:IsValueInTable(tab, val)
 	for _, v in pairs(tab) do
 		if val == v then
@@ -142,6 +142,7 @@ function GearHelper:IsValueInTable(tab, val)
 	end
 	return false
 end
+-------------------------
 
 function GearHelper:IsEmptyTable(maTable)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEmptyTable")
