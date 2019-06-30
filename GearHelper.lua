@@ -4,6 +4,11 @@
 -- TODO Move functions in split files
 -- TODO check war item SetHyperlink in tooltip fail
 -- TODO Expose more options to player
+-- TODO : Repair GH :
+-- 			- Sur mon Elfe du Vide Priest : Gants tissus n'affichent pas de message "est mieux" / "est moins bien"
+--			- Sur le démo : Pas de message sur poignets tissu, bottes tissu, tête tissu, bâton, cou, tenu(e) en main gauche, dague, dos, baguette, canne a pêche
+--				-- ça n'a l'air d'apparaitre que sur les bijoux et les doigts -- apparait sur les arc (cet item est moins bien)
+-- TODO : Replace message "This item is worst than" by "This item cannot be eqquiped" on items that you can't eqquip (eg : on warlock --> shield)
 
 -- #errors : 01
 
@@ -785,6 +790,7 @@ local function IsTargetValid(target)
 	return true
 end
 
+-- Create a cliquable link from the name of a player that will be used for whisper to a player
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:CreateLinkAskIfHeNeeds")
 	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
@@ -954,6 +960,7 @@ GameTooltip:HookScript(
 	end
 )
 
+-- Whisper to player a message asking him if he needs the item he just loots
 function GearHelper:askIfHeNeed(link, sendTo)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:askIfHeNeed")
 	local className, classFile, classID = UnitClass(sendTo)
@@ -989,6 +996,7 @@ function GearHelper:askIfHeNeed(link, sendTo)
 	StaticPopup_Show("AskIfHeNeed")
 end
 
+-- Overlay buttons needs to be rework, because they don't seems to work
 function GearHelper:GetQuestReward()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:GetQuestReward")
 	if not GearHelper.db.profile.autoAcceptQuestReward then
