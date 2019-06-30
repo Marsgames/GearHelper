@@ -158,30 +158,6 @@ local ghOptionsTable = {
 			type = "group",
 			inline = true,
 			args = {
-				autoGreed = {
-					order = 2,
-					name = L["autoGreed"],
-					desc = L["UIGHCheckBoxAutoGreed"],
-					type = "toggle",
-					set = function(_, val)
-						GearHelper.db.profile.autoGreed = val
-					end,
-					get = function()
-						return GearHelper.db.profile.autoGreed
-					end
-				},
-				autoNeed = {
-					order = 3,
-					name = L["autoNeed"],
-					desc = L["UIGHCheckBoxAutoNeed"],
-					type = "toggle",
-					set = function(_, val)
-						GearHelper.db.profile.autoNeed = val
-					end,
-					get = function()
-						return GearHelper.db.profile.autoNeed
-					end
-				},
 				autoEquipLootedStuff = {
 					order = 4,
 					name = L["autoEquipLootedStuff"],
