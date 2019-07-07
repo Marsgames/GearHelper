@@ -260,9 +260,7 @@ local function BagUpdate()
 	if time() - lastBagUpdateEvent < 2 then
 		return
 	end
-
 	lastBagUpdateEvent = time()
-
 	if not GearHelperVars.charInventory["MainHand"] then
 		do
 			return
@@ -273,7 +271,6 @@ local function BagUpdate()
 			return
 		end
 	end
-
 	-- Random check to verify that charInventory is initialized because BagUpdate is fired before PlayerEnteringWorld
 	GearHelper:ScanCharacter()
 	GearHelper:poseDot()
