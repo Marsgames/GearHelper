@@ -1,0 +1,106 @@
+lightweight tag 8dbebf3888878855f50b18949fd33675b0b32cdd 2.3
+Author:	GitHub <noreply@github.com>
+Date:	Fri Apr 5 16:51:07 2019 +0200
+
+commit e4e143b26587537b755ab49de4522c30f3e26e0e
+Author: Raphael Daumas <raphdaumas@hotmail.fr>
+Date:   Mon Mar 18 13:13:17 2019 +0100
+
+    Update WeightValues.lua
+
+commit e4e143b26587537b755ab49de4522c30f3e26e0e
+Author: Raphael Daumas <raphdaumas@hotmail.fr>
+Date:   Mon Mar 18 13:13:17 2019 +0100
+
+    Update WeightValues.lua
+
+commit e4e143b26587537b755ab49de4522c30f3e26e0e
+Author: Raphael Daumas <raphdaumas@hotmail.fr>
+Date:   Mon Mar 18 13:13:17 2019 +0100
+
+    Update WeightValues.lua
+
+commit e4e143b26587537b755ab49de4522c30f3e26e0e
+Author: Raphael Daumas <raphdaumas@hotmail.fr>
+Date:   Mon Mar 18 13:13:17 2019 +0100
+
+    Update WeightValues.lua
+
+commit 60310e60a920af5de86337bee2e7a6cb173517b9
+Author: Mantisis <170255@supinfo.com>
+Date:   Fri Mar 8 21:55:19 2019 +0100
+
+    Fix holdable weapons
+
+commit 3989db2c95c08dbc56a380e18daec1142f090121
+Author: Mantisis <170255@supinfo.com>
+Date:   Fri Mar 8 21:36:21 2019 +0100
+
+    Refacto QuestReward and AskNeed
+
+commit 91466d7821c5135310cc978c78706cd39ae13170
+Author: Mantisis <170255@supinfo.com>
+Date:   Thu Mar 7 22:37:44 2019 +0100
+
+    remove greed and need options
+
+commit f60e245cd90214ad5cde7ca6fe5e4e507438e652
+Author: Mantisis <170255@supinfo.com>
+Date:   Thu Mar 7 22:30:06 2019 +0100
+
+    Remove auto need & greed
+
+commit b3f6a4647d08c13f2d2c8fed78ca3b427c485ce6
+Author: Mantisis <170255@supinfo.com>
+Date:   Thu Mar 7 21:17:28 2019 +0100
+
+    equipItem refacto
+
+commit dfbad8c27ccd684d2d7bd22ff300150086a19d60
+Author: Mantisis <170255@supinfo.com>
+Date:   Wed Mar 6 23:29:16 2019 +0100
+
+    Remove print
+
+commit b59dc8922f1cd336d194b91e8b7c11d3b272a834
+Author: Mantisis <170255@supinfo.com>
+Date:   Wed Mar 6 23:25:44 2019 +0100
+
+    Handle main weapon by class and spec
+
+commit 5762a5ce9d785cff6bfa2a00b66663d73cab1348
+Author: Mantisis <170255@supinfo.com>
+Date:   Sun Mar 3 01:19:04 2019 +0100
+
+    Fix 2H weapon calculation
+
+commit 5762a5ce9d785cff6bfa2a00b66663d73cab1348
+Author: Mantisis <170255@supinfo.com>
+Date:   Sun Mar 3 01:19:04 2019 +0100
+
+    Fix 2H weapon calculation
+
+commit 0c17c19352d244ccbb2ace8e343e868d476e5e87
+Author: Raphael Daumas <raphdaumas@hotmail.fr>
+Date:   Fri Mar 1 09:25:59 2019 +0100
+
+    Update .gitignore
+
+commit 80135beeed649b6d2ea34af2555dfc6c5140f5c8
+Author: Mantisis <170255@supinfo.com>
+Date:   Wed Feb 27 23:27:19 2019 +0100
+
+    Align content and remove comments
+
+commit 437c1404cb39fa161193d0a954f29f0363c47c52
+Author: Mantisis <170255@supinfo.com>
+Date:   Wed Feb 27 22:58:33 2019 +0100
+
+    Add back color, tooltip lines etc..
+
+commit 06533b559e8d755e12637919e7b86af1dc77c28b
+Author: Mantisis <170255@supinfo.com>
+Date:   Wed Feb 27 20:55:26 2019 +0100
+
+    Refacto newweightcalc
+
