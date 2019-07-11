@@ -721,7 +721,6 @@ function GearHelper:equipItem(inThisBag)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:equipItem")
 	local bagToEquip = inThisBag or 0
 	local _, typeInstance, difficultyIndex = GetInstanceInfo()
-	print("equipItem")
 	waitEquipFrame = CreateFrame("Frame")
 	waitEquipTimer = time()
 	waitEquipFrame:Hide()
@@ -906,9 +905,8 @@ local ModifyTooltip = function(self, ...)
 		table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
 	elseif not status and string.match(err, GHExceptionNotEquippable) then
 		local item = GearHelper:GetItemByLink(itemLink)
-
 		if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
-			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
+			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
 			self:SetBackdropBorderColor(255, 0, 0)
 		end
 	elseif not status then
@@ -916,6 +914,12 @@ local ModifyTooltip = function(self, ...)
 	elseif status then
 		local item = GearHelper:GetItemByLink(itemLink)
 		local weightCalStatus, res = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
+
+		if (true ~= weightCalStatus and true ~= res) then
+			GearHelper:Print('-----------------("if (true ~= weightCalStatus and true ~= res) then")-----------------')
+			GearHelper:Print("weigetCalStatus : " .. tostring(weightCalStatus))
+			GearHelper:Print("WeightCalStatus res : " .. tostring(res))
+		end
 
 		if weightCalStatus then
 			for _, v in pairs(res) do

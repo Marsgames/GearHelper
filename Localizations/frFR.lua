@@ -131,7 +131,7 @@ L["lfrCheckButtonTooltip"] = 'Cochez cette case pour répondre automatiquement "
 L["secondaryOptions"] = "Options secondaires"
 L["thanksPanel"] = "Remerciements"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
-
+L["itemNotEquippable"] = "Cet item n'est pas équipable"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
