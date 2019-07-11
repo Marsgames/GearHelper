@@ -721,7 +721,7 @@ function GearHelper:equipItem(inThisBag)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:equipItem")
 	local bagToEquip = inThisBag or 0
 	local _, typeInstance, difficultyIndex = GetInstanceInfo()
-	print("equipItem")
+	-- print("equipItem")
 	waitEquipFrame = CreateFrame("Frame")
 	waitEquipTimer = time()
 	waitEquipFrame:Hide()
@@ -902,22 +902,28 @@ local ModifyTooltip = function(self, ...)
 	local status, err = pcall(ShouldBeCompared, itemLink)
 	local linesToAdd = {}
 
+	print("status : " .. tostring(status))
+	print("err : " .. tostring(err))
+
 	if not status and err == GHExceptionAlreadyEquipped then
 		table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
 	elseif not status and string.match(err, GHExceptionNotEquippable) then
 		local item = GearHelper:GetItemByLink(itemLink)
-
 		if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
-			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
+			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
 			self:SetBackdropBorderColor(255, 0, 0)
 		end
 	elseif not status then
 		return
 	elseif status then
+		print("1")
 		local item = GearHelper:GetItemByLink(itemLink)
+		print("2")
 		local weightCalStatus, res = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
+		print("3")
 
 		if weightCalStatus then
+			print("4")
 			for _, v in pairs(res) do
 				if math.floor(v) == 0 then
 					self:SetBackdropBorderColor(255, 255, 0)
@@ -927,13 +933,18 @@ local ModifyTooltip = function(self, ...)
 					self:SetBackdropBorderColor(255, 0, 0)
 				end
 			end
+			print("5")
 			linesToAdd = GearHelper:LinesToAddToTooltip(res)
+			print("6")
 		end
 	end
 
+	print("7")
 	GetDropInfo(linesToAdd, itemLink)
+	print("8")
 
 	if linesToAdd then
+		print("9")
 		for _, v in pairs(linesToAdd) do
 			self:AddLine(v)
 		end
