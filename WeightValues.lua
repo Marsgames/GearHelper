@@ -1,27 +1,56 @@
 GearHelper.itemSlot = {
-	INVTYPE_AMMO = "Ammo",
-	INVTYPE_HEAD = "Head",
-	INVTYPE_NECK = "Neck",
-	INVTYPE_SHOULDER = "Shoulder",
-	INVTYPE_BODY = "Body",
-	INVTYPE_CHEST = "Chest",
-	INVTYPE_ROBE = "Chest",
-	INVTYPE_WAIST = "Waist",
-	INVTYPE_LEGS = "Legs",
-	INVTYPE_FEET = "Feet",
-	INVTYPE_WRIST = "Wrist",
-	INVTYPE_HAND = "Hands",
+	INVTYPE_AMMO = {"Ammo"},
+	INVTYPE_HEAD = {"Head"},
+	INVTYPE_NECK = {"Neck"},
+	INVTYPE_SHOULDER = {"Shoulder"},
+	INVTYPE_BODY = {"Body"},
+	INVTYPE_CHEST = {"Chest"},
+	INVTYPE_ROBE = {"Chest"},
+	INVTYPE_WAIST = {"Waist"},
+	INVTYPE_LEGS = {"Legs"},
+	INVTYPE_FEET = {"Feet"},
+	INVTYPE_WRIST = {"Wrist"},
+	INVTYPE_HAND = {"Hands"},
 	INVTYPE_FINGER = {"Finger0", "Finger1"},
 	INVTYPE_TRINKET = {"Trinket0", "Trinket1"},
-	INVTYPE_CLOAK = "Back",
-	INVTYPE_SHIELD = "SecondaryHand",
-	INVTYPE_WEAPON = {"MainHand", "SecondaryHand"},
-	INVTYPE_2HWEAPON = "MainHand",
-	INVTYPE_WEAPONMAINHAND = "MainHand",
-	INVTYPE_WEAPONOFFHAND = "SecondaryHand",
-	INVTYPE_HOLDABLE = "SecondaryHand",
-	INVTYPE_RANGED = "MainHand",
-	INVTYPE_RANGEDRIGHT = "MainHand"
+	INVTYPE_CLOAK = {"Back"},
+	INVTYPE_SHIELD = {"SecondaryHand"},
+	INVTYPE_WEAPON = {
+		WARRIOR = {
+			["72"] = {"MainHand", "SecondaryHand"},
+			["71"] = {"MainHand"},
+			["73"] = {"MainHand"}
+		},
+		SHAMAN = {
+			["263"] = {"MainHand", "SecondaryHand"},
+			["262"] = {"MainHand"},
+			["264"] = {"MainHand"}
+		},
+		HUNTER = {"MainHand"},
+		DEATHKNIGHT = {
+			["251"] = {"MainHand", "SecondaryHand"},
+			["252"] = {"MainHand"},
+			["253"] = {"MainHand"}
+		},
+		ROGUE = {"MainHand", "SecondaryHand"},
+		DEMONHUNTER = {"MainHand", "SecondaryHand"},
+		DRUID = {"MainHand"},
+		MONK = {"MainHand"},
+		WARLOCK = {"MainHand"},
+		MAGE = {
+			["269"] = {"MainHand", "SecondaryHand"},
+			["268"] = {"MainHand"},
+			["270"] = {"MainHand"}
+		},
+		PRIEST = {"MainHand"},
+		PALADIN = {"MainHand"}
+	},
+	INVTYPE_2HWEAPON = {"MainHand", "SecondaryHand"},
+	INVTYPE_WEAPONMAINHAND = {"MainHand"},
+	INVTYPE_WEAPONOFFHAND = {"SecondaryHand"},
+	INVTYPE_HOLDABLE = {"SecondaryHand"},
+	INVTYPE_RANGED = {"MainHand", "SecondaryHand"},
+	INVTYPE_RANGEDRIGHT = {"MainHand"}
 }
 
 local function ParseDefaultValues(rawValues, specID, templateID)
