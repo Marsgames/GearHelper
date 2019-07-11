@@ -1,11 +1,11 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: |cFF00FF00GearHelper|r
 ## Notes: Un addon qui permet de choisir pour vous le stuff le plus approprié à votre classe / spé
 ## Notes-enUS: Manage your gear during your level up and after
 ### Notes-deDE: Manage your gear during your level up and after
 ## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
 ## Author:  Marsgames & Tempaxe
-## Version: 2.4
+## Version: 2.5
 ## DefaultState: enabled
 
 

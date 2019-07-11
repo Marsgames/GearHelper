@@ -173,7 +173,7 @@ L["lfrCheckButtonTooltip"] = "Check this box to auto accept ready check when you
 L["secondaryOptions"] = "Secondary options"
 L["thanksPanel"] = "Thanks"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
-
+L["itemNotEquippable"] = "This item is not equippable"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
