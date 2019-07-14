@@ -24,7 +24,7 @@ function GearHelper:GetBenchmarkResult(type)
 end
 
 function GearHelper:BenchmarkCountFuncCall(funcName)
-	if GearHelper:GetBenchmarkMode() == false then
+	if (false == GearHelper:GetBenchmarkMode()) then
 		return
 	end
 

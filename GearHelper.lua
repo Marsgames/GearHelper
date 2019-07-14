@@ -1021,7 +1021,6 @@ function GearHelper:GetQuestReward()
 	elseif GearHelper.db.profile.autoAcceptQuestReward and numQuestChoices == 1 then
 		GetQuestReward(1)
 	else
-		print("1")
 		local weightTable = {}
 		local prixTable = {}
 		local altTable = {}
@@ -1089,6 +1088,7 @@ function GearHelper:GetQuestReward()
 		local xDif = 0
 		if maxWeight > 0 and not isBetter then
 			local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
+			-- table.insert(GearHelper.ButtonQuestReward, button)
 
 			if button.overlay then
 				button.overlay:SetShown(false)
@@ -1106,7 +1106,13 @@ function GearHelper:GetQuestReward()
 
 			if GearHelper.db.profile.autoAcceptQuestReward then
 				local objetI = GetQuestItemLink("choice", keyWeight)
-				print("On prend " .. objetI)
+				-- print("On prend " .. objetI)
+				GetQuestReward(keyWeight)
+
+				if button.overlay then
+					button.overlay:SetShown(false)
+					button.overlay = nil
+				end
 			end
 			isBetter = true
 		else
