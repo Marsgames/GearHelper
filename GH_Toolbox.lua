@@ -111,7 +111,7 @@ end
 function GearHelper:IsInventoryInCache()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsInventoryInCache")
 	local result = {}
-	for _,v in pairs(GearHelperVars.charInventory) do
+	for _, v in pairs(GearHelperVars.charInventory) do
 		if tonumber(v) == -2 then
 			return false
 		end
@@ -200,7 +200,7 @@ end
 local function AddStatToTab(item, tab)
 	for k, v in pairs(item) do
 		if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
-			if tab[k] == nil then 
+			if tab[k] == nil then
 				tab[k] = tonumber(v)
 			else
 				tab[k] = tonumber(v) + tonumber(tab[k])
@@ -402,30 +402,34 @@ end
 
 function GearHelper:CountingSort(f)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:CountingSort")
-	local min, max = math.min(unpack(f)), math.max(unpack(f))
-	local count = {}
-	for i = min, max do
-		count[i] = 0
-	end
+	-- local min, max = math.min(unpack(f)), math.max(unpack(f))
+	-- local count = {}
+	-- for i = min, max do
+	-- 	count[i] = 0
+	-- end
 
-	for i = 1, #f do
-		count[f[i]] = count[f[i]] + 1
-	end
+	-- for i = 1, #f do
+	-- 	count[f[i]] = count[f[i]] + 1
+	-- end
 
-	local z = 1
-	for i = min, max do
-		while count[i] > 0 do
-			f[z] = i
-			z = z + 1
-			count[i] = count[i] - 1
-		end
-	end
+	-- local z = 1
+	-- for i = min, max do
+	-- 	while count[i] > 0 do
+	-- 		f[z] = i
+	-- 		z = z + 1
+	-- 		count[i] = count[i] - 1
+	-- 	end
+	-- end
+
+	table.sort(f)
 end
 
 function GearHelper:CountArray(tab)
 	local count = 0
-	for _,_ in pairs(tab) do
+	for _, _ in pairs(tab) do
 		count = count + 1
 	end
 	return count
+
+	-- return table.getn(tab)
 end

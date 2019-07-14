@@ -113,7 +113,7 @@ local ghOptionsTable = {
 					order = 1,
 					name = "Debug",
 					hidden = function()
-						if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then
+						if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Faerlia" then
 							return true
 						end
 					end,

@@ -504,16 +504,19 @@ end
 local function ShouldBeCompared(itemLink)
 	if not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r") then
 		error(GHExceptionInvalidItemLink)
+	-- return GHExceptionInvalidItemLink
 	end
 
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
 	if IsEquippedItem(id) then
-		error(GHExceptionAlreadyEquipped)
+		return error(GHExceptionAlreadyEquipped)
+	-- return GHExceptionAlreadyEquipped
 	end
 
 	if not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink)) then
 		error(GHExceptionNotEquippable)
+	-- return GHExceptionNotEquippable
 	end
 
 	return true
@@ -893,32 +896,38 @@ local function IsItemEquipLocValid(equipLoc)
 end
 
 local ModifyTooltip = function(self, ...)
+	-- local pcallWorked, err = pcall() -- if no error : pcallWorked == true and err == nil
+	--									-- if error : pcallWorked == false and err == "some error"
 	if not GearHelper.db or not GearHelper.db.profile.addonEnabled then
 		return
 	end
 
 	local _, itemLink = self:GetItem()
-	local status, err = pcall(ShouldBeCompared, itemLink)
+	local pcallWorked, err = pcall(ShouldBeCompared, itemLink)
 	local linesToAdd = {}
 
-	if not status and err == GHExceptionAlreadyEquipped then
+	if (false == pcallWorked and GHExceptionAlreadyEquipped ~= err and not string.find(tostring(err), GHExceptionNotEquippable)) then
+		GearHelper:Print("-----------------(pcall ShouldBeCompared false)-----------------")
+		GearHelper:Print("error : " .. tostring(res))
+	end
+
+	if not pcallWorked and err == GHExceptionAlreadyEquipped then
 		table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
-	elseif not status and string.match(err, GHExceptionNotEquippable) then
+	elseif not pcallWorked and string.find(tostring(err), GHExceptionNotEquippable) then
 		local item = GearHelper:GetItemByLink(itemLink)
 		if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
 			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
 			self:SetBackdropBorderColor(255, 0, 0)
 		end
-	elseif not status then
+	elseif not pcallWorked then
 		return
-	elseif status then
+	elseif pcallWorked then
 		local item = GearHelper:GetItemByLink(itemLink)
 		local weightCalStatus, res = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
 
-		if (true ~= weightCalStatus and true ~= res) then
-			GearHelper:Print('-----------------("if (true ~= weightCalStatus and true ~= res) then")-----------------')
-			GearHelper:Print("weigetCalStatus : " .. tostring(weightCalStatus))
-			GearHelper:Print("WeightCalStatus res : " .. tostring(res))
+		if (false == weightCalStatus) then -- and true ~= res) then
+			GearHelper:Print("-----------------(pcall NewWeightCalculation false)-----------------")
+			GearHelper:Print("error / res : " .. tostring(res))
 		end
 
 		if weightCalStatus then
@@ -1003,18 +1012,16 @@ end
 -- Overlay buttons needs to be rework, because they don't seems to work
 function GearHelper:GetQuestReward()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:GetQuestReward")
-	if not GearHelper.db.profile.autoAcceptQuestReward then
-		return
-	end
 
 	local numQuestChoices = GetNumQuestChoices()
 	local isBetter = false
 
-	if numQuestChoices < 1 then
+	if GearHelper.db.profile.autoAcceptQuestReward and numQuestChoices < 1 then
 		GetQuestReward()
-	elseif numQuestChoices == 1 then
+	elseif GearHelper.db.profile.autoAcceptQuestReward and numQuestChoices == 1 then
 		GetQuestReward(1)
 	else
+		print("1")
 		local weightTable = {}
 		local prixTable = {}
 		local altTable = {}
@@ -1027,6 +1034,11 @@ function GearHelper:GetQuestReward()
 			end
 
 			local status, res = pcall(GearHelper.NewWeightCalculation, self, item)
+			if (false == status) then
+				GearHelper:Print('-----------------("if (true ~= status and true ~= res) then")-----------------')
+				GearHelper:Print("status : " .. tostring(status))
+				GearHelper:Print("status res : " .. tostring(res))
+			end
 
 			if status then
 				local tmpTable = {}
@@ -1057,14 +1069,14 @@ function GearHelper:GetQuestReward()
 		local maxPrix = prixTable[1]
 		local keyPrix = 1
 
-		for i = 1, #weightTable do
+		for i = 1, table.getn(weightTable) do
 			if weightTable[i] > maxWeight then
 				maxWeight = weightTable[i]
 				keyWeight = i
 			end
 		end
 
-		for i = 1, #prixTable do
+		for i = 1, table.getn(prixTable) do
 			if prixTable[i] > maxPrix then
 				maxPrix = prixTable[i]
 				keyPrix = i
@@ -1072,7 +1084,7 @@ function GearHelper:GetQuestReward()
 		end
 
 		local prixTriee = prixTable
-		GearHelper:CountingSort(prixTriee)
+		table.sort(prixTriee)
 
 		local xDif = 0
 		if maxWeight > 0 and not isBetter then
