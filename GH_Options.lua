@@ -96,7 +96,7 @@ local ghOptionsTable = {
 					set = function(_, val)
 						GearHelper.db.profile.addonEnabled = val
 						if val == false then
-							PlaySoundFile("sound\\Creature\\Malfurion_Stormrage\\VO_703_Malfurion_Stormrage_37.ogg", "MASTER")
+							PlaySoundFile(67898, "MASTER")
 						end
 						---------- A ETUDIER --------
 						local icon = LibStub("LibDBIcon-1.0")
