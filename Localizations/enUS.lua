@@ -174,6 +174,10 @@ L["secondaryOptions"] = "Secondary options"
 L["thanksPanel"] = "Thanks"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 L["itemNotEquippable"] = "This item is not equippable"
+L["helpConfig"] = "config - Open the config panel"
+L["helpVersion"] = "version - Print your actual version of GH"
+L["helpCW"] = "cw - Open the Custom Weights panel"
+L["helpDebug"] = "debug - Enable the debug print mode"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
@@ -365,7 +369,7 @@ L["IsEquipable"] = {
 		["Hast"] = BT["Polearm"],
 		["Hasts"] = BT["Polearms"],
 		["Holdable"] = BT["Miscellaneous"],
-		["UneMain"] = BT["One-Hand"],
+		["UneMain"] = BT["One-Hand"]
 	},
 	-- Chassou
 	["HUNTER"] = {

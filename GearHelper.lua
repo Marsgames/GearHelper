@@ -58,7 +58,7 @@ local defaultsOptions = {
 		ItemCache = {},
 		itemWaitList = {},
 		myNames = "",
-		buildVersion = 6,
+		buildVersion = 7,
 		equipLocInspect = {}
 	}
 }
