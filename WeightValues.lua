@@ -28,20 +28,16 @@ GearHelper.itemSlot = {
 		},
 		HUNTER = {"MainHand"},
 		DEATHKNIGHT = {
-			["251"] = {"MainHand", "SecondaryHand"},
-			["252"] = {"MainHand"},
-			["253"] = {"MainHand"}
+			["250"] = {"MainHand", "SecondaryHand"},
+			["251"] = {"MainHand"},
+			["252"] = {"MainHand"}
 		},
 		ROGUE = {"MainHand", "SecondaryHand"},
 		DEMONHUNTER = {"MainHand", "SecondaryHand"},
 		DRUID = {"MainHand"},
 		MONK = {"MainHand"},
 		WARLOCK = {"MainHand"},
-		MAGE = {
-			["269"] = {"MainHand", "SecondaryHand"},
-			["268"] = {"MainHand"},
-			["270"] = {"MainHand"}
-		},
+		MAGE = {"MainHand"},
 		PRIEST = {"MainHand"},
 		PALADIN = {"MainHand"}
 	},
