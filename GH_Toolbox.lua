@@ -145,12 +145,15 @@ end
 -------------------------
 
 function GearHelper:IsValueInTable(tab, val)
-	for _, v in pairs(tab) do
-		if val == v then
-			return true
-		end
-	end
-	return false
+	-- for _, v in pairs(tab) do
+	-- 	if val == v then
+	-- 		return true
+	-- 	end
+	-- end
+	-- return false
+
+	-- Blizzard function
+	return tContains(tab, val)
 end
 
 function GearHelper:IsEmptyTable(maTable)
@@ -274,26 +277,35 @@ function GearHelper:CouleurClasse(classFileName)
 end
 
 local function GetActiveTemplate()
+	local returnValue
+
 	if GearHelper.db.profile.weightTemplate == "NOX" then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		if GearHelper.db.global.templates[currentSpec]["NOX"] == nil then
 			error(GHExceptionMissingNoxTemplate)
 		end
 
-		return GearHelper.db.global.templates[currentSpec]["NOX"]
+		returnValue = GearHelper.db.global.templates[currentSpec]["NOX"]
 	else
 		if GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate] ~= nil then
 			error(GHExceptionMissingCustomTemplate)
 		end
 
-		return GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]
+		returnValue = GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]
 	end
+
+	return returnValue
 end
 
 function GearHelper:FindHighestStatInTemplate()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:FindHighestStatInTemplate")
 
 	local template = GetActiveTemplate()
+
+	-- if (nil == template) then
+	-- 	error("template is nil line")
+	-- end
+
 	local maxV = 0
 	local maxK = template[0]
 
@@ -429,6 +441,9 @@ function GearHelper:CountArray(tab)
 	for _, _ in pairs(tab) do
 		count = count + 1
 	end
+
+	-- GearHelper:Print("CountArray : " .. count .. "   - #() : " .. #(tab))
+
 	return count
 
 	-- return table.getn(tab)
