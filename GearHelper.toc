@@ -5,7 +5,7 @@
 ### Notes-deDE: Manage your gear during your level up and after
 ## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
 ## Author:  Marsgames & Tempaxe
-## Version: 2.6
+## Version: 2.7
 ## DefaultState: enabled
 
 
