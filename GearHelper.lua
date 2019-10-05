@@ -571,7 +571,7 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 	local tip = ""
 	local item = {}
 
-	if not itemLink then
+	if not itemLink or itemLink == -1 then
 		error(GHExceptionInvalidItemLink)
 	end
 
@@ -581,9 +581,7 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 
 	tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
 	tip:SetOwner(WorldFrame, "ANCHOR_NONE")
-	if itemLink == -1 then
-		print(debugstack())
-	end
+	
 	tip:SetHyperlink(itemLink)
 
 	item.levelRequired = 0
