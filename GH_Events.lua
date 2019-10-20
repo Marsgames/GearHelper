@@ -322,7 +322,7 @@ local function QuestDetail()
 	table.sort(prixTriee)
 
 	local xDif = 0
-	if maxWeight > 0 and not isBetter then
+	if nil ~= maxWeight and maxWeight > 0 and not isBetter then
 		local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
 		-- GearHelper.ButtonQuestReward = {}
 		-- table.insert(GearHelper.ButtonQuestReward, button)
