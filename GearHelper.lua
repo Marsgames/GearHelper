@@ -58,7 +58,7 @@ local defaultsOptions = {
 		ItemCache = {},
 		itemWaitList = {},
 		myNames = "",
-		buildVersion = 6,
+		buildVersion = 7,
 		equipLocInspect = {}
 	}
 }
@@ -926,6 +926,7 @@ local ModifyTooltip = function(self, ...)
 		if (false == weightCalStatus) then -- and true ~= res) then
 			GearHelper:Print("-----------------(pcall NewWeightCalculation false)-----------------")
 			GearHelper:Print("error / res : " .. tostring(res))
+			error(res)
 		end
 
 		if weightCalStatus then
@@ -1141,30 +1142,35 @@ end
 function GearHelper:CreateLfrButtons(frameParent)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:CreateLfrButtons")
 	local nbInstance = GetNumRFDungeons()
-	local scale = min(480 / ((nbInstance - 6) * 24), 1) --> Ajuste la taille des boutons en fonction de leur nombre
+	local scale = min(480 / ((nbInstance - 6) * 24), 1) --> Adjust size of buttons depending on number of buttons | Ajuste la taille des boutons en fonction de leur nombre
 
+	-- On crée GHLfrButtons qui va stocker les boutons
 	if not frameParent.GHLfrButtons then
 		frameParent.GHLfrButtons = {}
 	end
+
 	local buttons = frameParent.GHLfrButtons
 
 	for i = 1, nbInstance do
 		local id, name = GetRFDungeonInfo(i)
-		local dispo, dispoPourJoueur = IsLFGDungeonJoinable(id)
-		local nbBoss = GetLFGDungeonNumEncounters(id)
+		local available, availableForPlayer = IsLFGDungeonJoinable(id)
+		--local bossCount = GetLFGDungeonNumEncounters(id)
 
 		-- Only make a button if there's data for it, and it hasn't been already made. This gets called multiple times so it updates correctly when you open up more raids
-		if dispo and dispoPourJoueur and not buttons[id] and nbBoss then
+		-- if available and availableForPlayer and bossCount then
+		if (not buttons[id] and availableForPlayer) then
 			local button = CreateFrame("CheckButton", frameParent:GetName() .. "GHLfrButtons" .. tostring(id), frameParent, "SpellBookSkillLineTabTemplate")
 
 			if frameParent.lastButton then
 				button:SetPoint("TOPLEFT", frameParent.lastButton, "BOTTOMLEFT", 0, -15)
 			else
 				local x = 3
-				-- SocialTabs compatibility
-				if IsAddOnLoaded("SocialTabs") then
-					x = x + ceil(32 / scale)
-				end
+
+				-- Not sure it's necessary
+				-- -- SocialTabs compatibility
+				-- if IsAddOnLoaded("SocialTabs") then
+				-- 	x = x + ceil(32 / scale)
+				-- end
 
 				button:SetPoint("TOPLEFT", frameParent, "TOPRIGHT", x, -50)
 			end
@@ -1221,6 +1227,7 @@ function GearHelper:CreateLfrButtons(frameParent)
 			)
 			button.checked = false
 		end
+
 		if (buttons[id]) then
 			local button = _G[frameParent:GetName() .. "GHLfrButtons" .. tostring(id)]
 			button:Show()
@@ -1230,34 +1237,44 @@ end
 
 function GearHelper:UpdateButtonsAndTooltips(frameParent)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:UpdateButtonsAndTooltips")
+
 	local buttons = frameParent.GHLfrButtons
 
 	for id, button in pairs(buttons) do
-		local bossTues = 0
+		local bossKilled = 0
 		local index = 0
-		local nbBoss = GetLFGDungeonNumEncounters(id)
+		local bossCount = GetLFGDungeonNumEncounters(id)
 
 		-- Pour chaque raid on récupère le nombre de boss tués, et on ajoute le text "boss mort" ou "boss vivant"
 		local tooltip = {{text = button.dungeonName}}
-		for i = index, nbBoss do
+		for i = index, bossCount do
 			local textBoss = ""
 			local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
 
-			if isDead and bossName ~= nil then
+			if (isDead and bossName) then
 				textBoss = GearHelper:ColorizeString(bossName, "Red") .. GearHelper:ColorizeString(" " .. L["isDead"], "LightRed")
-				bossTues = bossName and bossTues + 1
-			elseif not isDead and bossName then
+				bossKilled = bossKilled + 1
+				if (bossName == "Commandant abyssal Sivara") then
+					print("on est dans le if de Commandant abyssal. Normalement bosskilled + 1 maintenant")
+				end
+			elseif (not isDead and bossName) then
 				textBoss = GearHelper:ColorizeString(bossName, "Green") .. GearHelper:ColorizeString(" " .. L["isAlive"], "LightGreen")
 			end
 			table.insert(tooltip, textBoss)
+
+			if (bossName == "Commandant abyssal Sivara") then
+				print(tostring(bossName) .. " isDead : " .. tostring(isDead))
+				print("bossKilled : " .. bossKilled)
+			end
 		end
 
 		-- Implémente le couleur + le text des boutons
+		button.tooltip = nil
 		button.tooltip = tooltip
-		local result = bossTues .. "/" .. nbBoss
-		if (bossTues == nbBoss) then
+		local result = bossKilled .. "/" .. bossCount
+		if (bossKilled == bossCount) then
 			result = GearHelper:ColorizeString(result, "LightRed")
-		elseif (bossTues == 0) then
+		elseif (bossKilled == 0) then
 			result = GearHelper:ColorizeString(result, "LightGreen")
 		else
 			result = GearHelper:ColorizeString(result, "Yellow")
@@ -1305,9 +1322,9 @@ end
 function GearHelper:UpdateGHLfrButton()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:UpdateGHLfrButton")
 	if not RaidFinderQueueFrame.GHLfrButtons then
-		do
-			return
-		end
+		-- do
+		return
+	-- end
 	end
 
 	for id, button in pairs(RaidFinderQueueFrame.GHLfrButtons) do
@@ -1325,6 +1342,7 @@ end
 function GearHelper:HideLfrButtons()
 	GearHelper:BenchmarkCountFuncCall("GearHelper:HideLfrButtons")
 	local nbInstance = GetNumRFDungeons()
+
 	for i = 1, nbInstance do
 		local id, name = GetRFDungeonInfo(i)
 		if _G["RaidFinderQueueFrameGHLfrButtons" .. id] then

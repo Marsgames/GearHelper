@@ -5,6 +5,40 @@ local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
 -- waitingIDTable = waitingIDTable
 
+--------------------------------- Functions ---------------------------------
+-- This function handle the BossesKilled function. It's called in PlayerLogin event.
+local function BossesKilledFunctions()
+	-- When the LFR fram shows up
+	local function LfrFrameShow(frame)
+		GearHelper:BenchmarkCountFuncCall("LfrFrameShow")
+		if not GearHelper.db.profile.bossesKilled then
+			do
+				return
+			end
+		end
+
+		GearHelper:CreateLfrButtons(frame)
+		GearHelper:UpdateButtonsAndTooltips(frame)
+		GearHelper:UpdateGHLfrButton()
+		GearHelper:UpdateSelecCursor()
+		GearHelper:RegisterEvent("LFG_UPDATE")
+		GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+	end
+
+	-- When the LFR frame is closed
+	local function LfrFrameHide()
+		GearHelper:BenchmarkCountFuncCall("LfrFrameHide")
+		GearHelper:HideLfrButtons()
+		GearHelper:UnregisterEvent("LFG_UPDATE")
+	end
+
+	RaidFinderQueueFrame:HookScript("OnShow", LfrFrameShow)
+	RaidFinderQueueFrame:HookScript("OnHide", LfrFrameHide)
+	hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelecCursor)
+end
+-----------------------------------------------------------------------------
+----------------------------------- Events ----------------------------------
+
 local function AddonLoaded(_, _, name)
 	GearHelper:BenchmarkCountFuncCall("AddonLoaded")
 	if GearHelper.db.global.templates == nil then
@@ -232,7 +266,9 @@ local function QuestFinished()
 	GearHelper:BenchmarkCountFuncCall("QuestFinished")
 
 	if (nil == GearHelper.ButtonQuestReward) then
-		return
+		do
+			return
+		end
 	end
 
 	table.foreach(
@@ -258,14 +294,18 @@ local function QuestDetail()
 	local isBetter = false
 
 	if (0 == numQuestChoices) then
-		return
+		do
+			return
+		end
 	end
 
 	for i = 1, numQuestChoices do
 		local item = GearHelper:GetItemByLink(GetQuestItemLink("choice", i))
 
 		if item.type ~= L["armor"] and item.type ~= L["weapon"] then
-			return
+			do
+				return
+			end
 		end
 
 		local status, res = pcall(GearHelper.NewWeightCalculation, self, item)
@@ -362,7 +402,9 @@ local function QuestDetail()
 		local objetI = GetQuestItemLink("choice", keyPrix)
 
 		-- do
-		return
+		do
+			return
+		end
 	end
 end
 
@@ -396,7 +438,9 @@ end
 local function BagUpdate()
 	GearHelper:BenchmarkCountFuncCall("BagUpdate")
 	if time() - lastBagUpdateEvent < 2 then
-		return
+		do
+			return
+		end
 	end
 	lastBagUpdateEvent = time()
 	if not GearHelperVars.charInventory["MainHand"] then
@@ -610,29 +654,7 @@ local function PlayerLogin(_, _)
 	GearHelper:BenchmarkCountFuncCall("PlayerLogin")
 	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
 	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
-		local function LfrFrameShow(frame)
-			GearHelper:BenchmarkCountFuncCall("LfrFrameShow")
-			if not GearHelper.db.profile.bossesKilled then
-				do
-					return
-				end
-			end
-			GearHelper:CreateLfrButtons(frame)
-			GearHelper:UpdateButtonsAndTooltips(frame)
-			GearHelper:UpdateGHLfrButton()
-			GearHelper:UpdateSelecCursor()
-			GearHelper:RegisterEvent("LFG_UPDATE")
-			GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
-		end
-		local function LfrFrameHide()
-			GearHelper:BenchmarkCountFuncCall("LfrFrameHide")
-			GearHelper:HideLfrButtons()
-			GearHelper:UnregisterEvent("LFG_UPDATE")
-		end
-
-		RaidFinderQueueFrame:HookScript("OnShow", LfrFrameShow)
-		RaidFinderQueueFrame:HookScript("OnHide", LfrFrameHide)
-		hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelecCursor)
+		BossesKilledFunctions()
 	end
 
 	-- Si la page du personnage s'affiche, on affiche l'ilvl
@@ -742,6 +764,10 @@ local function ReadyCheck()
 	end
 end
 
+-- local function UpdateInstanceInfo()
+-- 	print("UpdateInstanceInfo called (un boss vient d'être tué ?")
+-- end
+
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
@@ -774,3 +800,4 @@ GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
 GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
+-- GearHelper:RegisterEvent("UPDATE_INSTANCE_INFO", UpdateInstanceInfo)

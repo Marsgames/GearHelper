@@ -4,19 +4,19 @@ function GearHelper:SlashDisplayHelp()
     GearHelper:Print("state - Display the addon status")
     GearHelper:Print("list - Run a scanBag + scanCharacter")
     print(L["helpConfig"])
+    print(L["helpCW"])
     print(L["helpVersion"])
     GearHelper:Print("im 'newMsg' - Change the auto invite token by newMsg")
     GearHelper:Print("createItemLink - Generate a fake itemLink")
-    GearHelper:Print("debug - Enable the debug print mode")
+    print(L["helpDebug"])
     GearHelper:Print("askLoot - Enable the feature (auto ask for loot)")
     GearHelper:Print("dot - Enable the dot on better items icons")
     GearHelper:Print("suppDot - Disable the dot on better items icons")
-    print(L["helpCw"])
     GearHelper:Print("ain - Test the ask if needed function")
     GearHelper:Print("reset - Reset GearHelper")
     GearHelper:Print("resetCache - Clear the GearHelper cache")
     GearHelper:Print("printCache - Print the GearHelper cache")
-    GearHelper:Print("test - run unit tests")
+    -- GearHelper:Print("test - run unit tests")
 end
 
 function GearHelper:SlashPrintCache()
@@ -150,8 +150,8 @@ function GearHelper:SlashBenchmarkCountResult()
         return
     end
 
-    for k,v in pairs(GearHelper:GetBenchmarkResult("Count")) do
-        print(k.." -> "..v)
+    for k, v in pairs(GearHelper:GetBenchmarkResult("Count")) do
+        print(k .. " -> " .. v)
     end
 end
 
