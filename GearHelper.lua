@@ -573,15 +573,17 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 
 	if not itemLink or itemLink == -1 then
 		error(GHExceptionInvalidItemLink)
+		return
 	end
 
 	if string.find(itemLink, "battlepet") then -- @todo : doesn't this needs to be localized ???
 		error(GHExceptionInvalidItem)
+		return
 	end
 
 	tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
 	tip:SetOwner(WorldFrame, "ANCHOR_NONE")
-	
+
 	tip:SetHyperlink(itemLink)
 
 	item.levelRequired = 0
