@@ -127,7 +127,7 @@ L["UIGlobalComputeNotEquippableDescription"] = 'Show "This item is worst than yo
 L["UICWasPercentage"] = "Value in percentage"
 L["UICWasPercentageDescription"] = "Describe the importance of each statistic by a number representing a percentage, the sum of the values ​​must be 100"
 L["UIWhisperAlert"] = "Whisper Alert"
-L["UIWhisperAlertDesc"] = "PLay a sound when you're whispered"
+L["UIWhisperAlertDesc"] = "Play a sound when you're whispered"
 L["UISayMyName"] = "Say my name"
 L["UISayMyNameDesc"] = "Show an alert with sound when someone call your name"
 L["UIMyNames"] = "Names"
@@ -172,12 +172,13 @@ L["lfrCheckButtonText"] = "Auto accept rdy check"
 L["lfrCheckButtonTooltip"] = "Check this box to auto accept ready check when you are in LFR"
 L["secondaryOptions"] = "Secondary options"
 L["thanksPanel"] = "Thanks"
--------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 L["itemNotEquippable"] = "This item is not equippable"
 L["helpConfig"] = "config - Open the config panel"
 L["helpVersion"] = "version - Print your actual version of GH"
 L["helpCW"] = "cw - Open the Custom Weights panel"
 L["helpDebug"] = "debug - Enable the debug print mode"
+-------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
+
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 

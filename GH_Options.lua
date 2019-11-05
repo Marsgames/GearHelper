@@ -1472,6 +1472,11 @@ local thanksTable = {
 			fontSize = "medium",
 			name = "        |cFFFFFF00 NaomiErin |r - Bug report",
 			type = "description"
+		},
+		name21 = {
+			fontSize = "medium",
+			name = "        |cFFFFFF00 CeloSG |r - Bug report + DE translation",
+			type = "description"
 		}
 	}
 }

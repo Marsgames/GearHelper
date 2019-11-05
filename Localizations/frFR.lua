@@ -130,12 +130,13 @@ L["lfrCheckButtonText"] = "Accepter auto rdy check"
 L["lfrCheckButtonTooltip"] = 'Cochez cette case pour répondre automatiquement "prêt" en LFR lors de l\'appel'
 L["secondaryOptions"] = "Options secondaires"
 L["thanksPanel"] = "Remerciements"
--------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
 L["itemNotEquippable"] = "Cet item n'est pas équipable"
 L["helpConfig"] = "config - Affiche le panneau de configuration"
 L["helpVersion"] = "version - Affiche votre version actuelle de GH"
 L["helpCW"] = "cw - Affiche le panneau des Custom Weights"
 L["helpDebug"] = "debug - Active le mode 'debug' de GH"
+-------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE --------------------------
+
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
