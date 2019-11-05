@@ -445,11 +445,16 @@ local function ApplyTemplateToDelta(delta)
 	end
 
 	for k, v in pairs(delta) do
-		if L.Tooltip.Stat[k] ~= nil and v ~= 0 then
-			if GetStatFromTemplate(k) ~= 0 then
+		if (k ~= nil and v ~= nil and L.Tooltip.Stat[k] ~= nil and v >= 0) then
+			if (GetStatFromTemplate(k) ~= nil and GetStatFromTemplate(k) ~= 0) then
 				valueItem = valueItem + GetStatFromTemplate(k) * v
 			else
-				valueItem = valueItem + GearHelper.db.profile.defaultWeightForStat * v
+				if (GearHelper.db.profile.defaultWeightForStat == nil) then
+					error("Error0001:\n\nGearHelper.db.profile.defaultWeightForStat == nil\n\n~*~*~*~*~*~*~*~*~*~* PLEASE FILL A BUG REPORT @ https://github.com/Marsgames/GearHelper/issues *~*~*~*~*~*~*~*~*~*~\n\nPlease provide your class, your specialization and either if you’re using custom stats weights or the defaults ones")
+					return
+				else
+					valueItem = valueItem + GearHelper.db.profile.defaultWeightForStat * v
+				end
 			end
 		end
 	end
