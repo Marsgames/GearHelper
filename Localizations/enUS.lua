@@ -298,7 +298,7 @@ local BT = BabbleI:GetLookupTable()
 L["armor"] = BT["Armor"]
 L["weapon"] = BT["Weapon"]
 L["divers"] = BT["Miscellaneous"]
-L["cannapeche"] = BT["Fishing Poles"]
+L["cannapeche"] = BT["Fishing Poles"] -- supprimer le doublon ?
 L["monture"] = BT["Mount"]
 L["mascotte"] = BT["Companion Pets"]
 L["TypeToNotNeed"] = {
@@ -317,10 +317,13 @@ L["TypeToNotNeed"] = {
 	["quete"] = BT["Quest"],
 	["cle"] = BT["Key"],
 	["monture"] = BT["Mount"],
-	["mascotte"] = BT["Companion Pets"]
+	["mascotte"] = BT["Companion Pets"],
+	["cosmetique"] = BT["Cosmetic"],
+	["elixir"] = BT["Elixir"],
+	["cannapeche"] = BT["Fishing Poles"]
 }
 
-L["IsEquipable"] = {
+L["IsEquippable"] = {
 	-- War
 	["WARRIOR"] = {
 		["Plaque"] = BT["Plate"],
