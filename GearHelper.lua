@@ -5,10 +5,8 @@
 -- TODO check war item SetHyperlink in tooltip fail
 -- TODO Expose more options to player
 -- TODO : Repair GH :
--- 			- Sur mon Elfe du Vide Priest : Gants tissus n'affichent pas de message "est mieux" / "est moins bien"
---			- Sur le démo : Pas de message sur poignets tissu, bottes tissu, tête tissu, bâton, cou, tenu(e) en main gauche, dague, dos, baguette, canne a pêche
---				-- ça n'a l'air d'apparaitre que sur les bijoux et les doigts -- apparait sur les arc (cet item est moins bien)
--- TODO : Replace message "This item is worst than" by "This item cannot be eqquiped" on items that you can't eqquip (eg : on warlock --> shield)
+-- 			- Quand on n'active pas le calcul d'ilvl, rien ne semble fonctionner correctement
+--			- La prise en compte des châsses ne semble pas changer grand chose
 
 -- #errors : 01
 
@@ -521,10 +519,10 @@ local function ShouldBeCompared(itemLink)
 
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
-	if IsEquippedItem(id) then
-		error(GHExceptionAlreadyEquipped)
-	-- return GHExceptionAlreadyEquipped
-	end
+	-- if IsEquippedItem(id) then
+	-- 	error(GHExceptionAlreadyEquipped)
+	-- -- return GHExceptionAlreadyEquipped
+	-- end
 
 	if not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink)) then
 		error(GHExceptionNotEquippable)
@@ -864,22 +862,27 @@ function GearHelper:LinesToAddToTooltip(result)
 
 	if GearHelper:CountArray(result) == 1 then
 		for _, v in pairs(result) do
-			if v < 0 then
+			local flooredValue = math.floor(v)
+			if (flooredValue < 0) then
 				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
-			elseif math.floor(v) == 0 then
+			elseif (flooredValue > 0) then
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThanGeneral"], "Better") .. flooredValue)
+			else
 				table.insert(linesToAdd, L["itemEgal"])
-			elseif math.floor(v) > 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThanGeneral"], "Better") .. math.floor(v))
 			end
 		end
 	elseif GearHelper:CountArray(result) == 2 then
 		for slot, weight in pairs(result) do
-			if weight < 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. slot)
-			elseif math.floor(weight) == 0 then
-				table.insert(linesToAdd, L["itemEgala"] .. " " .. slot)
-			elseif math.floor(weight) > 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " " .. slot .. " " .. L["itemBetterThan2"] .. math.floor(weight))
+			local slotId = GetInventorySlotInfo(slot .. "Slot")
+			local itemLink = GearHelper:GetEquippedItemLink(slotId, slot)
+
+			local flooredValue = math.floor(weight)
+			if (flooredValue < 0) then
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. itemLink)
+			elseif (flooredValue > 0) then
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " " .. itemLink .. " " .. GearHelper:ColorizeString(L["itemBetterThan2"], "Better") .. flooredValue)
+			else
+				table.insert(linesToAdd, L["itemEgala"] .. " " .. itemLink)
 			end
 		end
 	end
@@ -917,51 +920,50 @@ local ModifyTooltip = function(self, ...)
 	local _, itemLink = self:GetItem()
 	local shouldBeCompared, err = pcall(ShouldBeCompared, itemLink)
 	local linesToAdd = {}
+	local isItemEquipped = IsEquippedItem(itemLink)
 
-	if (not shouldBeCompared) then
-		if (string.find(tostring(err), GHExceptionAlreadyEquipped)) then
-			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
-		end
+	if (not isItemEquipped) then
+		if (not shouldBeCompared) then
+			if (string.find(tostring(err), GHExceptionNotEquippable)) then
+				-- Show message only on equippable items
+				local item = GearHelper:GetItemByLink(itemLink)
 
-		if (string.find(tostring(err), GHExceptionNotEquippable)) then
-			-- Show message only on equippable items
-			local item = GearHelper:GetItemByLink(itemLink)
-
-			-- print("subtype : " .. tostring(item.subType))
-			if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
-				-- if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
-				self:SetBackdropBorderColor(255, 0, 0)
-			end
-		end
-	else
-		-- end
-		local item = GearHelper:GetItemByLink(itemLink)
-		local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
-
-		-- N'est pas censé arriver
-		-- if (not weightCalcGotResult) then -- and true ~= result) then
-		-- 	GearHelper:Print("-----------------(pcall NewWeightCalculation false)-----------------")
-		-- 	GearHelper:Print("error / result : " .. tostring(result))
-		-- 	error(result)
-		-- else
-		if (type(result) == "table") then
-			for _, v in pairs(result) do
-				local floorValue = math.floor(v)
-
-				if (floorValue > 0) then
-					self:SetBackdropBorderColor(0, 255, 150)
-				elseif (floorValue < 0) then
+				-- print("subtype : " .. tostring(item.subType))
+				if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
+					-- if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
 					self:SetBackdropBorderColor(255, 0, 0)
-				else
-					self:SetBackdropBorderColor(255, 255, 0)
 				end
 			end
 		else
-			-- Got an error with warlock when showing tooltip of left hand Illidan's Warglaive of Azzinoth
-			-- print("result : " .. tostring(result))
+			-- end
+			local item = GearHelper:GetItemByLink(itemLink)
+			local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
+
+			-- N'est pas censé arriver
+			if (not weightCalcGotResult) then -- and true ~= result) then
+				error(result)
+			end
+
+			if (type(result) == "table") then
+				for _, v in pairs(result) do
+					local floorValue = math.floor(v)
+
+					if (floorValue < 0) then
+						self:SetBackdropBorderColor(255, 0, 0)
+					else
+						self:SetBackdropBorderColor(0, 255, 150)
+					end
+				end
+			else
+				-- Got an error with warlock when showing tooltip of left hand Illidan's Warglaive of Azzinoth
+				-- print("result : " .. tostring(result))
+			end
+			linesToAdd = GearHelper:LinesToAddToTooltip(result)
 		end
-		linesToAdd = GearHelper:LinesToAddToTooltip(result)
+	else
+		self:SetBackdropBorderColor(255, 255, 0)
+		table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
 	end
 
 	-- Add droprate to tooltip
@@ -1012,7 +1014,7 @@ function GearHelper:askIfHeNeed(link, sendTo)
 				unitLocale = "enUS"
 			end
 			local theSource = "demande4" .. unitLocale
-			local theSource2 = "demande4" .. unitLocale .. "2"
+			local theSource2 = theSource .. "2"
 			local msg = L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
 			local rep = "rep" .. unitLocale
 			local rep2 = "rep" .. unitLocale .. "2"
