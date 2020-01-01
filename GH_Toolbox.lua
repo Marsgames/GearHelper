@@ -64,6 +64,7 @@ function GearHelper:SiObjetGris(itemID)
 	end
 end
 
+-- TODO: Rework this function
 function GearHelper:IsEquippableByMe(item)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEquippableByMe")
 	local isEquippable = false
@@ -78,7 +79,7 @@ function GearHelper:IsEquippableByMe(item)
 
 	if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" or item.equipLoc == "INVTYPE_TABARD" or item.equipLoc == "INVTYPE_BODY" then
 		return false
-	elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or item.subType == L.IsEquipable.PRIEST.Tissu then
+	elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or item.subType == L.IsEquippable.PRIEST.Tissu then
 		isEquippable = true
 	elseif item.rarity == "e6cc80" then
 		if type(L.Artifact[tostring(playerSpec)]) == "string" then
@@ -97,7 +98,7 @@ function GearHelper:IsEquippableByMe(item)
 		end
 	else
 		table.foreach(
-			L.IsEquipable[tostring(myClass)],
+			L.IsEquippable[tostring(myClass)],
 			function(_, v)
 				if item.subType == v then
 					isEquippable = true
@@ -122,19 +123,23 @@ end
 -------------------------- C'EST LA MËME FONCTION QU'EN DESSOUS ?!
 function GearHelper:IsInTable(array, data)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsInTable")
-	local result = false
-	table.foreach(
-		array,
-		function(k, _)
-			local ret = strmatch(array[k], data)
-			if ret ~= nil then
-				result = true
-			end
-		end
-	)
-	return result
+	-- local result = false
+	-- table.foreach(
+	-- 	array,
+	-- 	function(k, _)
+	-- 		local ret = strmatch(array[k], tostring(data))
+	-- 		if ret ~= nil then
+	-- 			result = true
+	-- 		end
+	-- 	end
+	-- )
+	-- return result
+
+	return GearHelper:IsValueInTable(tab, val)
 end
 function GearHelper:IsValueInTable(tab, val)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:IsValueInTable")
+
 	for _, v in pairs(tab) do
 		if val == v then
 			return true
@@ -143,18 +148,6 @@ function GearHelper:IsValueInTable(tab, val)
 	return false
 end
 -------------------------
-
-function GearHelper:IsValueInTable(tab, val)
-	-- for _, v in pairs(tab) do
-	-- 	if val == v then
-	-- 		return true
-	-- 	end
-	-- end
-	-- return false
-
-	-- Blizzard function
-	return tContains(tab, val)
-end
 
 function GearHelper:IsEmptyTable(maTable)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEmptyTable")
@@ -231,7 +224,7 @@ local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
 end
 
 function GearHelper:GetEquippableTypes()
-	return CombineArraysOfEquippableTypes(L.IsEquipable)
+	return CombineArraysOfEquippableTypes(L.IsEquippable)
 end
 
 function GearHelper:GetGemValue()
@@ -437,6 +430,10 @@ function GearHelper:CountingSort(f)
 end
 
 function GearHelper:CountArray(tab)
+	if (type(tab) ~= "table") then
+		return 0
+	end
+
 	local count = 0
 	for _, _ in pairs(tab) do
 		count = count + 1

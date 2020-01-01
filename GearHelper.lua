@@ -499,14 +499,21 @@ local function GetItemsByEquipLoc(equipLoc)
 end
 
 local function ShouldDisplayNotEquippable(subType)
+	-- Avoid messages on cometics, junk, elixir, and other non wanted items
+	if (GearHelper:IsValueInTable(L["TypeToNotNeed"], subType)) then
+		return false
+	end
+
 	if GearHelper.db.profile.computeNotEquippable == true then
-		return GearHelper:IsValueInTable(GearHelper:GetEquippableTypes(), subType)
+		return GearHelper:IsValueInTable(GearHelper:GetEquippableTypes(), tostring(subType))
 	end
 
 	return false
 end
 
 local function ShouldBeCompared(itemLink)
+	-- Return an error that will be catch by a pcall
+
 	if not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r") then
 		error(GHExceptionInvalidItemLink)
 	-- return GHExceptionInvalidItemLink
@@ -515,13 +522,13 @@ local function ShouldBeCompared(itemLink)
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
 	if IsEquippedItem(id) then
-		return error(GHExceptionAlreadyEquipped)
+		error(GHExceptionAlreadyEquipped)
 	-- return GHExceptionAlreadyEquipped
 	end
 
 	if not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink)) then
 		error(GHExceptionNotEquippable)
-	-- return GHExceptionNotEquippable
+	-- error("\nError001 in ShouldBeCompared\nitemLink : " .. itemLink .. "\nid : " .. id .. "\n\n" .. GHExceptionNotEquippable)
 	end
 
 	return true
@@ -533,13 +540,13 @@ function GearHelper:IsItemBetter(itemLink)
 	local itemEquipped = nil
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
-	if not pcall(ShouldBeCompared, itemLink) then
+	local shouldBeCompared, err = pcall(ShouldBeCompared, itemLink)
+	if (not shouldBeCompared) then
 		return false
 	end
 	item = self:GetItemByLink(itemLink)
 
 	local status, res = pcall(GearHelper.NewWeightCalculation, self, item)
-
 	if not status then
 		return false
 	end
@@ -881,7 +888,7 @@ end
 
 local function GetDropInfo(linesToAdd, itemLink)
 	GearHelper:BenchmarkCountFuncCall("GetDropInfo")
-	_, _, _, _, itemId = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+	_, _, _, _, itemId = string.find(tostring(itemLink), "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 
 	if GearHelper.itemsDropRate[itemId] ~= nil then
 		table.insert(linesToAdd, L["DropRate"] .. GearHelper.itemsDropRate[itemId]["Rate"] .. "%")
@@ -901,55 +908,63 @@ local function IsItemEquipLocValid(equipLoc)
 end
 
 local ModifyTooltip = function(self, ...)
-	-- local pcallWorked, err = pcall() -- if no error : pcallWorked == true and err == nil
-	--									-- if error : pcallWorked == false and err == "some error"
+	-- local pCallWorked, err = pcall(anyFunction) 	-- if no error : pCallWorked == true and err == nil
+	--												-- if error : pCallWorked == false and err == "some error"
 	if not GearHelper.db or not GearHelper.db.profile.addonEnabled then
 		return
 	end
 
 	local _, itemLink = self:GetItem()
-	local pcallWorked, err = pcall(ShouldBeCompared, itemLink)
+	local shouldBeCompared, err = pcall(ShouldBeCompared, itemLink)
 	local linesToAdd = {}
 
-	if (false == pcallWorked and GHExceptionAlreadyEquipped ~= err and not string.find(tostring(err), GHExceptionNotEquippable)) then
-		GearHelper:Print("-----------------(pcall ShouldBeCompared false)-----------------")
-		GearHelper:Print("error : " .. tostring(res))
-	end
-
-	if not pcallWorked and err == GHExceptionAlreadyEquipped then
-		table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
-	elseif not pcallWorked and string.find(tostring(err), GHExceptionNotEquippable) then
-		local item = GearHelper:GetItemByLink(itemLink)
-		if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
-			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
-			self:SetBackdropBorderColor(255, 0, 0)
-		end
-	elseif not pcallWorked then
-		return
-	elseif pcallWorked then
-		local item = GearHelper:GetItemByLink(itemLink)
-		local weightCalStatus, res = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
-
-		if (false == weightCalStatus) then -- and true ~= res) then
-			GearHelper:Print("-----------------(pcall NewWeightCalculation false)-----------------")
-			GearHelper:Print("error / res : " .. tostring(res))
-			error(res)
+	if (not shouldBeCompared) then
+		if (string.find(tostring(err), GHExceptionAlreadyEquipped)) then
+			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
 		end
 
-		if weightCalStatus then
-			for _, v in pairs(res) do
-				if math.floor(v) == 0 then
-					self:SetBackdropBorderColor(255, 255, 0)
-				elseif math.floor(v) > 0 then
+		if (string.find(tostring(err), GHExceptionNotEquippable)) then
+			-- Show message only on equippable items
+			local item = GearHelper:GetItemByLink(itemLink)
+
+			-- print("subtype : " .. tostring(item.subType))
+			if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
+				-- if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
+				self:SetBackdropBorderColor(255, 0, 0)
+			end
+		end
+	else
+		-- end
+		local item = GearHelper:GetItemByLink(itemLink)
+		local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
+
+		-- N'est pas censé arriver
+		-- if (not weightCalcGotResult) then -- and true ~= result) then
+		-- 	GearHelper:Print("-----------------(pcall NewWeightCalculation false)-----------------")
+		-- 	GearHelper:Print("error / result : " .. tostring(result))
+		-- 	error(result)
+		-- else
+		if (type(result) == "table") then
+			for _, v in pairs(result) do
+				local floorValue = math.floor(v)
+
+				if (floorValue > 0) then
 					self:SetBackdropBorderColor(0, 255, 150)
-				else
+				elseif (floorValue < 0) then
 					self:SetBackdropBorderColor(255, 0, 0)
+				else
+					self:SetBackdropBorderColor(255, 255, 0)
 				end
 			end
-			linesToAdd = GearHelper:LinesToAddToTooltip(res)
+		else
+			-- Got an error with warlock when showing tooltip of left hand Illidan's Warglaive of Azzinoth
+			-- print("result : " .. tostring(result))
 		end
+		linesToAdd = GearHelper:LinesToAddToTooltip(result)
 	end
 
+	-- Add droprate to tooltip
 	GetDropInfo(linesToAdd, itemLink)
 
 	if linesToAdd then
