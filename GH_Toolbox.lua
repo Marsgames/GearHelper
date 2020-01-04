@@ -272,7 +272,12 @@ end
 local function GetActiveTemplate()
 	local returnValue
 
-	if GearHelper.db.profile.weightTemplate == "NOX" then
+	-- Can occurs if you select CustomTemplate but you did not set a template
+	if (nil == GearHelper.db.profile.weightTemplate or "" == GearHelper.db.profile.weightTemplate) then
+		GearHelper.db.profile.weightTemplate = "NOX"
+	end
+
+	if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		if GearHelper.db.global.templates[currentSpec]["NOX"] == nil then
 			error(GHExceptionMissingNoxTemplate)
@@ -295,9 +300,9 @@ function GearHelper:FindHighestStatInTemplate()
 
 	local template = GetActiveTemplate()
 
-	-- if (nil == template) then
-	-- 	error("template is nil line")
-	-- end
+	if (nil == template) then
+		error("template is nil line")
+	end
 
 	local maxV = 0
 	local maxK = template[0]

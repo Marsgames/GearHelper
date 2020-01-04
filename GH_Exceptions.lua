@@ -6,4 +6,4 @@ GHExceptionInvalidItemLink = "ItemLink is not valid"
 
 GHExceptionNotEquippable = "This item is not equippable"
 
-GHExceptionAlreadyEquipped = "This item is already equipped"
+-- GHExceptionAlreadyEquipped = "This item is already equipped"
