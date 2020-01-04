@@ -5,10 +5,8 @@
 -- TODO check war item SetHyperlink in tooltip fail
 -- TODO Expose more options to player
 -- TODO : Repair GH :
--- 			- Sur mon Elfe du Vide Priest : Gants tissus n'affichent pas de message "est mieux" / "est moins bien"
---			- Sur le démo : Pas de message sur poignets tissu, bottes tissu, tête tissu, bâton, cou, tenu(e) en main gauche, dague, dos, baguette, canne a pêche
---				-- ça n'a l'air d'apparaitre que sur les bijoux et les doigts -- apparait sur les arc (cet item est moins bien)
--- TODO : Replace message "This item is worst than" by "This item cannot be eqquiped" on items that you can't eqquip (eg : on warlock --> shield)
+-- 			- Quand on n'active pas le calcul d'ilvl, rien ne semble fonctionner correctement
+--			- La prise en compte des châsses ne semble pas changer grand chose
 
 -- #errors : 01
 
@@ -20,6 +18,8 @@ local waitAnswerFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
 local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
+-- local waitTable = {}
+-- local waitFrame = nil
 local updateAddonReminderCount = 3
 local defaultsOptions = {
 	profile = {
@@ -310,7 +310,6 @@ local function computeAskTime(frame, elapsed)
 	askTime = nil
 	frame:Hide()
 end
-
 waitAnswerFrame:SetScript("OnUpdate", computeAskTime)
 
 local function delayBetweenEquip(frame)
@@ -324,7 +323,6 @@ local function delayBetweenEquip(frame)
 	end
 	frame:Hide()
 end
-
 GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 local function delayNilFrame(frame)
@@ -337,7 +335,6 @@ local function delayNilFrame(frame)
 	setDefault()
 	frame:Hide()
 end
-
 waitNilFrame:SetScript("OnUpdate", delayNilFrame)
 
 function GearHelper:GetEquippedItemLink(slotID, slotName)
@@ -383,6 +380,7 @@ function GearHelper:ScanCharacter()
 	GearHelperVars.charInventory["SecondaryHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
 	if GearHelperVars.charInventory["MainHand"] ~= -2 and GearHelperVars.charInventory["MainHand"] ~= 0 then
+		-- TODO: Why doesn't we use GH:GetItemInfo ?
 		local _, _, _, itemEquipLocWeapon = GetItemInfoInstant(GearHelperVars.charInventory["MainHand"])
 
 		if string.match(itemEquipLocWeapon, "INVTYPE_2HWEAPON") or string.match(itemEquipLocWeapon, "INVTYPE_RANGED") then
@@ -419,7 +417,13 @@ end
 
 local function GetStatFromTemplate(stat)
 	GearHelper:BenchmarkCountFuncCall("GetStatFromTemplate")
-	if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
+	if (nil == GearHelper.db.profile.weightTemplate) then
+		GearHelper:Print("WeightTemplate was nil, new value is NOX")
+		GearHelper.db.profile.weightTemplate = "NOX"
+	end
+
+	if (GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault") then
+		-- Afficher le contenu pour voir
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		if GearHelper.db.global.templates[currentSpec]["NOX"][stat] ~= nil then
 			return GearHelper.db.global.templates[currentSpec]["NOX"][stat]
@@ -436,16 +440,22 @@ local function ApplyTemplateToDelta(delta)
 	local valueItem = 0
 	local mainStat = GearHelper:FindHighestStatInTemplate()
 
+	-- Vérifier la fonctin GetGemValue()
 	if GearHelper.db.profile.includeSocketInCompute == true then
 		valueItem = delta.nbGem * GearHelper:GetGemValue() * GetStatFromTemplate(mainStat)
 	end
 
 	if GearHelper.db.profile.iLvlOption == true then
+		if (GearHelper.db.profile.iLvlWeight == nil or GearHelper.db.profile.iLvlWeight == "") then
+			GearHelper.db.profile.iLvlWeight = 10
+		end
+
 		valueItem = valueItem + delta.iLvl * GearHelper.db.profile.iLvlWeight
 	end
 
+	local iter = 0
 	for k, v in pairs(delta) do
-		if (k ~= nil and v ~= nil and L.Tooltip.Stat[k] ~= nil and v >= 0) then
+		if (k ~= nil and v ~= nil and L.Tooltip.Stat[k] ~= nil) then -- or v < 0) then
 			if (GetStatFromTemplate(k) ~= nil and GetStatFromTemplate(k) ~= 0) then
 				valueItem = valueItem + GetStatFromTemplate(k) * v
 			else
@@ -461,9 +471,6 @@ local function ApplyTemplateToDelta(delta)
 
 	return valueItem
 end
-
-local waitTable = {}
-local waitFrame = nil
 
 local function GetSlotsByEquipLoc(equipLoc)
 	GearHelper:BenchmarkCountFuncCall("GetSlotsByEquipLoc")
@@ -491,6 +498,7 @@ local function GetItemsByEquipLoc(equipLoc)
 	local result = {}
 	local equipSlot = GetSlotsByEquipLoc(equipLoc)
 
+	-- TODO: si on remplace ça par Result[v] = true, on peut faire une recherche dans la table avec un if (Result[v]) then, ce qui evite de faire un foreach avec la fonction IsValueInTablr
 	for k, v in ipairs(equipSlot) do
 		result[v] = GearHelperVars.charInventory[v]
 	end
@@ -560,6 +568,7 @@ function GearHelper:IsItemBetter(itemLink)
 	return false
 end
 
+-- TODO: this function only return gems if there are on the item ?!
 local function GetNumberOfGemsFromTooltip()
 	GearHelper:BenchmarkCountFuncCall("GetNumberOfGemsFromTooltip")
 	local n = 0
@@ -575,6 +584,7 @@ local function GetNumberOfGemsFromTooltip()
 		end
 	end
 
+	-- GearHelper:Print("Test nb of gems : " .. n)
 	return tonumber(n)
 end
 
@@ -588,7 +598,7 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 		return
 	end
 
-	if string.find(itemLink, "battlepet") then -- @todo : doesn't this needs to be localized ???
+	if string.find(itemLink, L["mascotte"]) then
 		error(GHExceptionInvalidItem)
 		return
 	end
@@ -670,6 +680,7 @@ end
 
 local function ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 	local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
+
 	return ApplyTemplateToDelta(delta)
 end
 
@@ -719,8 +730,9 @@ function GearHelper:NewWeightCalculation(item)
 			result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, combinedItems)
 		end
 	else
+		-- Why is there a for loop ?
 		for slot, equippedItemLink in pairs(equippedItems) do
-			if equippedItemLink == 0 then
+			if equippedItemLink == 0 then -- 0 if no item is equipped
 				result[slot] = ApplyTemplateToDelta(item)
 			else
 				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
@@ -732,6 +744,7 @@ function GearHelper:NewWeightCalculation(item)
 	return result
 end
 
+-- TODO: Rework this function
 function GearHelper:equipItem(inThisBag)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:equipItem")
 	local bagToEquip = inThisBag or 0
@@ -792,6 +805,8 @@ local function GetQualityFromColor(color)
 		return 6
 	elseif (color == "00ccff") then
 		return 7
+	else
+		error("Color " .. color .. " is not a possible choice")
 	end
 end
 
@@ -864,22 +879,27 @@ function GearHelper:LinesToAddToTooltip(result)
 
 	if GearHelper:CountArray(result) == 1 then
 		for _, v in pairs(result) do
-			if v < 0 then
+			local flooredValue = math.floor(v)
+			if (flooredValue < 0) then
 				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
-			elseif math.floor(v) == 0 then
+			elseif (flooredValue > 0) then
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThanGeneral"], "Better") .. flooredValue)
+			else
 				table.insert(linesToAdd, L["itemEgal"])
-			elseif math.floor(v) > 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThanGeneral"], "Better") .. math.floor(v))
 			end
 		end
 	elseif GearHelper:CountArray(result) == 2 then
 		for slot, weight in pairs(result) do
-			if weight < 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. slot)
-			elseif math.floor(weight) == 0 then
-				table.insert(linesToAdd, L["itemEgala"] .. " " .. slot)
-			elseif math.floor(weight) > 0 then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " " .. slot .. " " .. L["itemBetterThan2"] .. math.floor(weight))
+			local slotId = GetInventorySlotInfo(slot .. "Slot")
+			local itemLink = GearHelper:GetEquippedItemLink(slotId, slot)
+
+			local flooredValue = math.floor(weight)
+			if (flooredValue < 0) then
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. itemLink)
+			elseif (flooredValue > 0) then
+				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemBetterThan"], "Better") .. " " .. itemLink .. " " .. GearHelper:ColorizeString(L["itemBetterThan2"], "Better") .. flooredValue)
+			else
+				table.insert(linesToAdd, L["itemEgala"] .. " " .. itemLink)
 			end
 		end
 	end
@@ -917,51 +937,50 @@ local ModifyTooltip = function(self, ...)
 	local _, itemLink = self:GetItem()
 	local shouldBeCompared, err = pcall(ShouldBeCompared, itemLink)
 	local linesToAdd = {}
+	local isItemEquipped = IsEquippedItem(itemLink)
 
-	if (not shouldBeCompared) then
-		if (string.find(tostring(err), GHExceptionAlreadyEquipped)) then
-			table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
-		end
+	if (not isItemEquipped) then
+		if (not shouldBeCompared) then
+			if (string.find(tostring(err), GHExceptionNotEquippable)) then
+				-- Show message only on equippable items
+				local item = GearHelper:GetItemByLink(itemLink)
 
-		if (string.find(tostring(err), GHExceptionNotEquippable)) then
-			-- Show message only on equippable items
-			local item = GearHelper:GetItemByLink(itemLink)
-
-			-- print("subtype : " .. tostring(item.subType))
-			if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
-				-- if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
-				table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
-				self:SetBackdropBorderColor(255, 0, 0)
-			end
-		end
-	else
-		-- end
-		local item = GearHelper:GetItemByLink(itemLink)
-		local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
-
-		-- N'est pas censé arriver
-		-- if (not weightCalcGotResult) then -- and true ~= result) then
-		-- 	GearHelper:Print("-----------------(pcall NewWeightCalculation false)-----------------")
-		-- 	GearHelper:Print("error / result : " .. tostring(result))
-		-- 	error(result)
-		-- else
-		if (type(result) == "table") then
-			for _, v in pairs(result) do
-				local floorValue = math.floor(v)
-
-				if (floorValue > 0) then
-					self:SetBackdropBorderColor(0, 255, 150)
-				elseif (floorValue < 0) then
+				-- print("subtype : " .. tostring(item.subType))
+				if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
+					-- if IsItemEquipLocValid(item.equipLoc) and ShouldDisplayNotEquippable(item.subType) then
+					table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
 					self:SetBackdropBorderColor(255, 0, 0)
-				else
-					self:SetBackdropBorderColor(255, 255, 0)
 				end
 			end
 		else
-			-- Got an error with warlock when showing tooltip of left hand Illidan's Warglaive of Azzinoth
-			-- print("result : " .. tostring(result))
+			-- end
+			local item = GearHelper:GetItemByLink(itemLink)
+			local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
+
+			-- N'est pas censé arriver
+			if (not weightCalcGotResult) then
+				error(result)
+			end
+
+			if (type(result) == "table") then
+				for _, v in pairs(result) do
+					local floorValue = math.floor(v)
+
+					if (floorValue < 0) then
+						self:SetBackdropBorderColor(255, 0, 0)
+					else
+						self:SetBackdropBorderColor(0, 255, 150)
+					end
+				end
+			else
+				-- Got an error with warlock when showing tooltip of left hand Illidan's Warglaive of Azzinoth
+				-- print("result : " .. tostring(result))
+			end
+			linesToAdd = GearHelper:LinesToAddToTooltip(result)
 		end
-		linesToAdd = GearHelper:LinesToAddToTooltip(result)
+	else
+		self:SetBackdropBorderColor(255, 255, 0)
+		table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
 	end
 
 	-- Add droprate to tooltip
@@ -1012,7 +1031,7 @@ function GearHelper:askIfHeNeed(link, sendTo)
 				unitLocale = "enUS"
 			end
 			local theSource = "demande4" .. unitLocale
-			local theSource2 = "demande4" .. unitLocale .. "2"
+			local theSource2 = theSource .. "2"
 			local msg = L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
 			local rep = "rep" .. unitLocale
 			local rep2 = "rep" .. unitLocale .. "2"
