@@ -18,6 +18,8 @@ local waitAnswerFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
 local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
+-- local waitTable = {}
+-- local waitFrame = nil
 local updateAddonReminderCount = 3
 local defaultsOptions = {
 	profile = {
@@ -308,7 +310,6 @@ local function computeAskTime(frame, elapsed)
 	askTime = nil
 	frame:Hide()
 end
-
 waitAnswerFrame:SetScript("OnUpdate", computeAskTime)
 
 local function delayBetweenEquip(frame)
@@ -322,7 +323,6 @@ local function delayBetweenEquip(frame)
 	end
 	frame:Hide()
 end
-
 GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 local function delayNilFrame(frame)
@@ -335,7 +335,6 @@ local function delayNilFrame(frame)
 	setDefault()
 	frame:Hide()
 end
-
 waitNilFrame:SetScript("OnUpdate", delayNilFrame)
 
 function GearHelper:GetEquippedItemLink(slotID, slotName)
@@ -381,6 +380,7 @@ function GearHelper:ScanCharacter()
 	GearHelperVars.charInventory["SecondaryHand"] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
 	if GearHelperVars.charInventory["MainHand"] ~= -2 and GearHelperVars.charInventory["MainHand"] ~= 0 then
+		-- TODO: Why doesn't we use GH:GetItemInfo ?
 		local _, _, _, itemEquipLocWeapon = GetItemInfoInstant(GearHelperVars.charInventory["MainHand"])
 
 		if string.match(itemEquipLocWeapon, "INVTYPE_2HWEAPON") or string.match(itemEquipLocWeapon, "INVTYPE_RANGED") then
@@ -417,7 +417,13 @@ end
 
 local function GetStatFromTemplate(stat)
 	GearHelper:BenchmarkCountFuncCall("GetStatFromTemplate")
-	if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
+	if (nil == GearHelper.db.profile.weightTemplate) then
+		GearHelper:Print("WeightTemplate was nil, new value is NOX")
+		GearHelper.db.profile.weightTemplate = "NOX"
+	end
+
+	if (GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault") then
+		-- Afficher le contenu pour voir
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		if GearHelper.db.global.templates[currentSpec]["NOX"][stat] ~= nil then
 			return GearHelper.db.global.templates[currentSpec]["NOX"][stat]
@@ -434,16 +440,22 @@ local function ApplyTemplateToDelta(delta)
 	local valueItem = 0
 	local mainStat = GearHelper:FindHighestStatInTemplate()
 
+	-- Vérifier la fonctin GetGemValue()
 	if GearHelper.db.profile.includeSocketInCompute == true then
 		valueItem = delta.nbGem * GearHelper:GetGemValue() * GetStatFromTemplate(mainStat)
 	end
 
 	if GearHelper.db.profile.iLvlOption == true then
+		if (GearHelper.db.profile.iLvlWeight == nil or GearHelper.db.profile.iLvlWeight == "") then
+			GearHelper.db.profile.iLvlWeight = 10
+		end
+
 		valueItem = valueItem + delta.iLvl * GearHelper.db.profile.iLvlWeight
 	end
 
+	local iter = 0
 	for k, v in pairs(delta) do
-		if (k ~= nil and v ~= nil and L.Tooltip.Stat[k] ~= nil and v >= 0) then
+		if (k ~= nil and v ~= nil and L.Tooltip.Stat[k] ~= nil) then -- or v < 0) then
 			if (GetStatFromTemplate(k) ~= nil and GetStatFromTemplate(k) ~= 0) then
 				valueItem = valueItem + GetStatFromTemplate(k) * v
 			else
@@ -459,9 +471,6 @@ local function ApplyTemplateToDelta(delta)
 
 	return valueItem
 end
-
-local waitTable = {}
-local waitFrame = nil
 
 local function GetSlotsByEquipLoc(equipLoc)
 	GearHelper:BenchmarkCountFuncCall("GetSlotsByEquipLoc")
@@ -489,6 +498,7 @@ local function GetItemsByEquipLoc(equipLoc)
 	local result = {}
 	local equipSlot = GetSlotsByEquipLoc(equipLoc)
 
+	-- TODO: si on remplace ça par Result[v] = true, on peut faire une recherche dans la table avec un if (Result[v]) then, ce qui evite de faire un foreach avec la fonction IsValueInTablr
 	for k, v in ipairs(equipSlot) do
 		result[v] = GearHelperVars.charInventory[v]
 	end
@@ -519,10 +529,10 @@ local function ShouldBeCompared(itemLink)
 
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
-	-- if IsEquippedItem(id) then
-	-- 	error(GHExceptionAlreadyEquipped)
-	-- -- return GHExceptionAlreadyEquipped
-	-- end
+	if IsEquippedItem(id) then
+		error(GHExceptionAlreadyEquipped)
+	-- return GHExceptionAlreadyEquipped
+	end
 
 	if not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink)) then
 		error(GHExceptionNotEquippable)
@@ -558,6 +568,7 @@ function GearHelper:IsItemBetter(itemLink)
 	return false
 end
 
+-- TODO: this function only return gems if there are on the item ?!
 local function GetNumberOfGemsFromTooltip()
 	GearHelper:BenchmarkCountFuncCall("GetNumberOfGemsFromTooltip")
 	local n = 0
@@ -573,6 +584,7 @@ local function GetNumberOfGemsFromTooltip()
 		end
 	end
 
+	-- GearHelper:Print("Test nb of gems : " .. n)
 	return tonumber(n)
 end
 
@@ -586,7 +598,7 @@ function GearHelper:BuildItemFromTooltip(itemLink)
 		return
 	end
 
-	if string.find(itemLink, "battlepet") then -- @todo : doesn't this needs to be localized ???
+	if string.find(itemLink, L["mascotte"]) then
 		error(GHExceptionInvalidItem)
 		return
 	end
@@ -668,6 +680,7 @@ end
 
 local function ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 	local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
+
 	return ApplyTemplateToDelta(delta)
 end
 
@@ -717,8 +730,9 @@ function GearHelper:NewWeightCalculation(item)
 			result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, combinedItems)
 		end
 	else
+		-- Why is there a for loop ?
 		for slot, equippedItemLink in pairs(equippedItems) do
-			if equippedItemLink == 0 then
+			if equippedItemLink == 0 then -- 0 if no item is equipped
 				result[slot] = ApplyTemplateToDelta(item)
 			else
 				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
@@ -730,6 +744,7 @@ function GearHelper:NewWeightCalculation(item)
 	return result
 end
 
+-- TODO: Rework this function
 function GearHelper:equipItem(inThisBag)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:equipItem")
 	local bagToEquip = inThisBag or 0
@@ -790,6 +805,8 @@ local function GetQualityFromColor(color)
 		return 6
 	elseif (color == "00ccff") then
 		return 7
+	else
+		error("Color " .. color .. " is not a possible choice")
 	end
 end
 
@@ -941,7 +958,7 @@ local ModifyTooltip = function(self, ...)
 			local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
 
 			-- N'est pas censé arriver
-			if (not weightCalcGotResult) then -- and true ~= result) then
+			if (not weightCalcGotResult) then
 				error(result)
 			end
 
