@@ -303,7 +303,13 @@ local ModifyTooltip = function(self, ...)
 	end
 
 	local _, itemLink = self:GetItem()
-	local shouldBeCompared, err = pcall(GearHelper.ShouldBeCompared, itemLink)
+
+
+	-- Do not ask me why, but itemLink is the 2nd parameter IN __THIS__ CASE
+	-- Somthing to do with the difference between GearHelper:Sommething() and GearHelper.Something
+	-- https://stackoverflow.com/questions/29047541/how-to-pass-arguments-to-a-function-within-a-table (find the solution after this (non related ?) "solution")
+	local shouldBeCompared, err = pcall(GearHelper.ShouldBeCompared, nil, itemLink)
+
 	local linesToAdd = {}
 	local isItemEquipped = IsEquippedItem(itemLink)
 

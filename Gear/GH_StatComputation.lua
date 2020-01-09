@@ -25,9 +25,11 @@ function GearHelper:IsItemBetter(itemLink)
 end
 
 function GearHelper:ShouldBeCompared(itemLink)
-	self:BenchmarkCountFuncCall("GearHelper:ShouldBeCompared")
+	GearHelper:BenchmarkCountFuncCall("GearHelper:ShouldBeCompared")
 
-	if not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r") then
+	print("itemLinkShouldBeCompared : " .. tostring(itemLink))
+
+	if (not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r")) then
 		error(GHExceptionInvalidItemLink)
 	end
 
@@ -37,7 +39,7 @@ function GearHelper:ShouldBeCompared(itemLink)
 		error(GHExceptionAlreadyEquipped)
 	end
 
-	if not self:IsEquippableByMe(self:GetItemByLink(itemLink)) then
+	if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink))) then
 		error(GHExceptionNotEquippable)
 	end
 
@@ -103,7 +105,7 @@ function GearHelper:NewWeightCalculation(item)
 		error(GHExceptionInventoryNotCached)
 	end
 
-	local equippedItems = GetItemsByEquipLoc(item.equipLoc)
+	local equippedItems = GearHelper:GetItemsByEquipLoc(item.equipLoc)
 
 	if item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_FINGER" then
 		for slot, equippedItemLink in pairs(equippedItems) do

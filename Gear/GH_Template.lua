@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 local function GetStatFromTemplate(stat)
 	GearHelper:BenchmarkCountFuncCall("GetStatFromTemplate")
 	if (nil == GearHelper.db.profile.weightTemplate) then
