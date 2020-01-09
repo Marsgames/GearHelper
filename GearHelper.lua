@@ -103,6 +103,40 @@ local function nilTableValues(tableToReset)
 	end
 end
 
+local function InitEquipLocInspect()
+	GearHelper:BenchmarkCountFuncCall("InitEquipLocInspect")
+	GearHelper.db.global.equipLocInspect["INVTYPE_HEAD"] = 1
+	GearHelper.db.global.equipLocInspect["INVTYPE_NECK"] = 2
+	GearHelper.db.global.equipLocInspect["INVTYPE_SHOULDER"] = 3
+	GearHelper.db.global.equipLocInspect["INVTYPE_BACK"] = 15
+	GearHelper.db.global.equipLocInspect["INVTYPE_CLOAK"] = 15
+	GearHelper.db.global.equipLocInspect["INVTYPE_CHEST"] = 5
+	GearHelper.db.global.equipLocInspect["INVTYPE_ROBE"] = 5
+	GearHelper.db.global.equipLocInspect["INVTYPE_BODY"] = 4
+	GearHelper.db.global.equipLocInspect["INVTYPE_TABARD"] = 19
+	GearHelper.db.global.equipLocInspect["INVTYPE_WRIST"] = 9
+	GearHelper.db.global.equipLocInspect["INVTYPE_MAINHAND"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_RANGED"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPONMAINHAND"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_2HWEAPON"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON0"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON1"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_RANGEDRIGHT"] = 16
+	GearHelper.db.global.equipLocInspect["INVTYPE_HAND"] = 10
+	GearHelper.db.global.equipLocInspect["INVTYPE_WAIST"] = 6
+	GearHelper.db.global.equipLocInspect["INVTYPE_LEGS"] = 7
+	GearHelper.db.global.equipLocInspect["INVTYPE_FEET"] = 8
+	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER"] = 11
+	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER0"] = 11
+	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER1"] = 12
+	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET"] = 13
+	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET0"] = 13
+	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET1"] = 14
+	GearHelper.db.global.equipLocInspect["INVTYPE_SECONDARYHAND"] = 17
+	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPONOFFHAND"] = 17
+end
+
 function GearHelper:ResetConfig()
 	self:BenchmarkCountFuncCall("GearHelper:ResetConfig")
 	nilTableValues(self.db.profile)
@@ -1264,38 +1298,4 @@ end
 function GearHelper:ResetCache()
 	self:BenchmarkCountFuncCall("GearHelper:ResetCache")
 	self.db.global.ItemCache = {}
-end
-
-local function InitEquipLocInspect()
-	GearHelper:BenchmarkCountFuncCall("InitEquipLocInspect")
-	GearHelper.db.global.equipLocInspect["INVTYPE_HEAD"] = 1
-	GearHelper.db.global.equipLocInspect["INVTYPE_NECK"] = 2
-	GearHelper.db.global.equipLocInspect["INVTYPE_SHOULDER"] = 3
-	GearHelper.db.global.equipLocInspect["INVTYPE_BACK"] = 15
-	GearHelper.db.global.equipLocInspect["INVTYPE_CLOAK"] = 15
-	GearHelper.db.global.equipLocInspect["INVTYPE_CHEST"] = 5
-	GearHelper.db.global.equipLocInspect["INVTYPE_ROBE"] = 5
-	GearHelper.db.global.equipLocInspect["INVTYPE_BODY"] = 4
-	GearHelper.db.global.equipLocInspect["INVTYPE_TABARD"] = 19
-	GearHelper.db.global.equipLocInspect["INVTYPE_WRIST"] = 9
-	GearHelper.db.global.equipLocInspect["INVTYPE_MAINHAND"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_RANGED"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPONMAINHAND"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_2HWEAPON"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON0"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPON1"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_RANGEDRIGHT"] = 16
-	GearHelper.db.global.equipLocInspect["INVTYPE_HAND"] = 10
-	GearHelper.db.global.equipLocInspect["INVTYPE_WAIST"] = 6
-	GearHelper.db.global.equipLocInspect["INVTYPE_LEGS"] = 7
-	GearHelper.db.global.equipLocInspect["INVTYPE_FEET"] = 8
-	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER"] = 11
-	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER0"] = 11
-	GearHelper.db.global.equipLocInspect["INVTYPE_FINGER1"] = 12
-	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET"] = 13
-	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET0"] = 13
-	GearHelper.db.global.equipLocInspect["INVTYPE_TRINKET1"] = 14
-	GearHelper.db.global.equipLocInspect["INVTYPE_SECONDARYHAND"] = 17
-	GearHelper.db.global.equipLocInspect["INVTYPE_WEAPONOFFHAND"] = 17
 end
