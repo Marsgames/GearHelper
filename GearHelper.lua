@@ -351,7 +351,7 @@ local ModifyTooltip = function(self, ...)
 	end
 
 	-- Add droprate to tooltip
-	GetDropInfo(linesToAdd, itemLink)
+	GearHelper:GetDropInfo(linesToAdd, itemLink)
 
 	if linesToAdd then
 		for _, v in pairs(linesToAdd) do

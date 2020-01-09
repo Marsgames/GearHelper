@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 -- TODO: this function only return gems if there are on the item ?!
 local function GetNumberOfGemsFromTooltip()
 	GearHelper:BenchmarkCountFuncCall("GetNumberOfGemsFromTooltip")

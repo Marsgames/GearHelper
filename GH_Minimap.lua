@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 local function OnMinimapTooltipShow(tooltip)
 	GearHelper:BenchmarkCountFuncCall("OnMinimapTooltipShow")
 	tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)

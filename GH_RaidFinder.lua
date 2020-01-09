@@ -128,28 +128,30 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 end
 
 function GearHelper:UpdateSelectCursor()
-	self:BenchmarkCountFuncCall("GearHelper:UpdateSelectCursor")
+	-- self == 2011
+	-- I don't know why, so I replace self by GearHelper
+	GearHelper:BenchmarkCountFuncCall("GearHelper:UpdateSelectCursor")
 
-	if not self.cursor then
+	if not GearHelper.cursor then
 		local cursor = GroupFinderFrame:CreateTexture("GHLfrCursor", "ARTWORK")
 		cursor:SetTexture("Interface\\Minimap\\MinimapArrow")
 		cursor:SetRotation(1.65)
 		cursor:SetSize(80, 80)
 		cursor:Hide()
-		self.cursor = cursor
+		GearHelper.cursor = cursor
 	end
 
 	local parentFrame = (RaidFinderQueueFrame ~= nil and RaidFinderQueueFrame:IsVisible() and RaidFinderQueueFrame or nil)
 	if (not parentFrame) then
-		self.cursor:Hide()
+		GearHelper.cursor:Hide()
 		return
 	end
 
 	if parentFrame.raid and parentFrame.GHLfrButtons[parentFrame.raid] then
 		local button = parentFrame.GHLfrButtons[parentFrame.raid]
-		self.cursor:SetParent(button)
-		self.cursor:SetPoint("LEFT", button, "RIGHT")
-		self.cursor:Show()
+		GearHelper.cursor:SetParent(button)
+		GearHelper.cursor:SetPoint("LEFT", button, "RIGHT")
+		GearHelper.cursor:Show()
 	end
 end
 

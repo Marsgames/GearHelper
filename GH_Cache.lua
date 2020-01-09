@@ -16,11 +16,11 @@ end
 function GearHelper:GetItemByLink(itemLink)
 	self:BenchmarkCountFuncCall("GearHelper:GetItemByLink")
 
-	local item = self:GetItemFromCache(itemLink)
+	local item = GetItemFromCache(itemLink)
 
 	if not item then
 		item = self:BuildItemFromTooltip(itemLink)
-		self:PutItemInCache(itemLink, item)
+		PutItemInCache(itemLink, item)
 	end
 
 	return item

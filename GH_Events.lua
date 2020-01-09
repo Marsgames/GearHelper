@@ -5,7 +5,8 @@ local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
 local waitSpeFrame = CreateFrame("Frame")
 
-GearHelperVars.waitSpeFrame:Hide()
+-- GearHelperVars.waitSpeFrame:Hide()
+waitSpeFrame:Hide()
 
 --------------------------------- Functions ---------------------------------
 -- This function handle the BossesKilled function. It's called in PlayerLogin event.
@@ -51,7 +52,8 @@ local function delayBetweenEquip(frame)
 	frame:Hide()
 end
 
-GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+-- GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 -----------------------------------------------------------------------------
 ----------------------------------- Events ----------------------------------
@@ -478,7 +480,8 @@ local function ActiveTalentGroupChanged()
 	end
 
 	GearHelperVars.waitSpeTimer = time()
-	GearHelperVars.waitSpeFrame:Show()
+	-- GearHelperVars.waitSpeFrame:Show()
+	waitSpeFrame:Show()
 	GearHelper:EquipItem(0)
 	GearHelper:EquipItem(1)
 	GearHelper:EquipItem(2)
@@ -616,7 +619,8 @@ local function QuestTurnedIn()
 	end
 
 	GearHelperVars.waitSpeTimer = time()
-	GearHelperVars.waitSpeFrame:Show()
+	-- GearHelperVars.waitSpeFrame:Show()
+	waitSpeFrame:Show()
 end
 
 local function GetItemInfoReceived(_, _, item)

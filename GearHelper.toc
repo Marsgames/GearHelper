@@ -58,4 +58,3 @@ Commands\GH_Slash.lua
 GH_Events.lua
 GH_Options.lua
 GH_Toolbox.lua
-items.lua
