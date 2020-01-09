@@ -358,7 +358,11 @@ local ghSecondaryOptionsTable = {
 					type = "input",
 					width = "full",
 					set = function(_, val)
-						GearHelper:setMyNames(val)
+						if not val then
+							return
+						end
+
+						GearHelper.db.global.myNames = tostring(val .. ",")
 					end,
 					get = function()
 						return GearHelper.db.global.myNames
@@ -377,7 +381,7 @@ local ghSecondaryOptionsTable = {
 							GearHelper:CreateLfrButtons(RaidFinderQueueFrame)
 							GearHelper:UpdateButtonsAndTooltips(RaidFinderQueueFrame)
 							GearHelper:UpdateGHLfrButton()
-							GearHelper:UpdateSelecCursor()
+							GearHelper:UpdateSelectCursor()
 							GearHelper:RegisterEvent("LFG_UPDATE")
 							GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 						end

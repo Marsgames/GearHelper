@@ -71,9 +71,9 @@ end
 
 function GearHelper:SlashDot()
     GearHelper:BuildCWTable()
-    GearHelper:sendAskVersion()
+    GearHelper:SendAskVersion()
     GearHelper:ScanCharacter()
-    GearHelper:poseDot()
+    GearHelper:SetDotOnIcons()
 end
 
 function GearHelper:SlashSuppDot()
@@ -90,7 +90,8 @@ function GearHelper:SlashAin()
 end
 
 function GearHelper:SlashReset()
-    GearHelper:setDefault()
+    self.db = nil
+	ReloadUI()
 end
 
 function GearHelper:SlashResetCache()

@@ -3,7 +3,9 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 local totalEarnedMoney = 0
 local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
--- waitingIDTable = waitingIDTable
+local waitSpeFrame = CreateFrame("Frame")
+
+GearHelperVars.waitSpeFrame:Hide()
 
 --------------------------------- Functions ---------------------------------
 -- This function handle the BossesKilled function. It's called in PlayerLogin event.
@@ -20,7 +22,7 @@ local function BossesKilledFunctions()
 		GearHelper:CreateLfrButtons(frame)
 		GearHelper:UpdateButtonsAndTooltips(frame)
 		GearHelper:UpdateGHLfrButton()
-		GearHelper:UpdateSelecCursor()
+		GearHelper:UpdateSelectCursor()
 		GearHelper:RegisterEvent("LFG_UPDATE")
 		GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 	end
@@ -34,8 +36,23 @@ local function BossesKilledFunctions()
 
 	RaidFinderQueueFrame:HookScript("OnShow", LfrFrameShow)
 	RaidFinderQueueFrame:HookScript("OnHide", LfrFrameHide)
-	hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelecCursor)
+	hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelectCursor)
 end
+
+local function delayBetweenEquip(frame)
+	GearHelper:BenchmarkCountFuncCall("delayBetweenEquip")
+	if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
+		return
+	end
+	for bag = 0, 4 do
+		numBag = bag
+		GearHelper:EquipItem()
+	end
+	frame:Hide()
+end
+
+GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+
 -----------------------------------------------------------------------------
 ----------------------------------- Events ----------------------------------
 
@@ -61,6 +78,7 @@ local function AddonLoaded(_, _, name)
 	end
 end
 
+-- TODO: Split that shit
 local function OnMerchantShow()
 	GearHelper:BenchmarkCountFuncCall("OnMerchantShow")
 	totalEarnedMoney = 0
@@ -147,10 +165,10 @@ local function PlayerEnteringWorld()
 
 	GearHelper:BuildCWTable()
 	if GearHelper.db.profile.addonEnabled == true then
-		GearHelper:sendAskVersion()
+		GearHelper:SendAskVersion()
 		GearHelper:ScanCharacter()
-		GearHelper:poseDot()
-		-- ContainerFrame1:HookScript("OnShow", Dot)
+		GearHelper:SetDotOnIcons()
+
 		if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
 			GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
 		end
@@ -167,7 +185,6 @@ local function PlayerEnteringWorld()
 				return
 			end
 		end
-		-- si le joueur est dans un groupe LFR afficher sous la minimap une case cochable permettant d'accepter automatiquement les appels
 
 		lfrCheckButton = lfrCheckButton_GlobalName or CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
 		lfrCheckButton:SetPoint("TOPRIGHT", -325, -50)
@@ -219,10 +236,10 @@ local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
 	if prefVersion == "answerVersion" then
 		local vVersion = message:sub(message:find(";") + 1, #message)
 		versionCible = vVersion
-		GearHelper:receiveAnswer(vVersion, sender)
+		GearHelper:ReceiveAnswer(vVersion, sender)
 	end
 	if prefVersion == "askVersion" then
-		GearHelper:sendAnswerVersion()
+		GearHelper:SendAnswerVersion()
 	end
 end
 
@@ -244,7 +261,7 @@ local function ItemPush(_, _, bag)
 	elseif bag == 20 then
 		theBag = 1
 	end
-	GearHelper:equipItem(theBag)
+	GearHelper:EquipItem(theBag)
 end
 
 local function QuestComplete()
@@ -276,10 +293,9 @@ local function QuestFinished()
 			end
 		end
 	)
-
-	print("Bola, on a fermé la fenetre")
 end
 
+-- TODO: Split that shit
 local function QuestDetail()
 	GearHelper:BenchmarkCountFuncCall("QuestDetail")
 
@@ -379,7 +395,6 @@ local function QuestDetail()
 
 		isBetter = true
 	else
-		-- end
 		local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyPrix]
 
 		if button.overlay then
@@ -397,7 +412,6 @@ local function QuestDetail()
 
 		local objetI = GetQuestItemLink("choice", keyPrix)
 
-		-- do
 		do
 			return
 		end
@@ -451,7 +465,7 @@ local function BagUpdate()
 	end
 	-- Random check to verify that charInventory is initialized because BagUpdate is fired before PlayerEnteringWorld
 	GearHelper:ScanCharacter()
-	GearHelper:poseDot()
+	GearHelper:SetDotOnIcons()
 end
 
 local function ActiveTalentGroupChanged()
@@ -465,11 +479,11 @@ local function ActiveTalentGroupChanged()
 
 	GearHelperVars.waitSpeTimer = time()
 	GearHelperVars.waitSpeFrame:Show()
-	GearHelper:equipItem(0)
-	GearHelper:equipItem(1)
-	GearHelper:equipItem(2)
-	GearHelper:equipItem(3)
-	GearHelper:equipItem(4)
+	GearHelper:EquipItem(0)
+	GearHelper:EquipItem(1)
+	GearHelper:EquipItem(2)
+	GearHelper:EquipItem(3)
+	GearHelper:EquipItem(4)
 end
 
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)
@@ -638,12 +652,11 @@ end
 
 local function PlayerLogin(_, _)
 	GearHelper:BenchmarkCountFuncCall("PlayerLogin")
-	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
+
 	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
 		BossesKilledFunctions()
 	end
 
-	-- Si la page du personnage s'affiche, on affiche l'ilvl
 	if (PaperDollItemsFrame) then
 		GearHelper:AddIlvlOnCharFrame()
 	end
@@ -741,17 +754,12 @@ local function ReadyCheck()
 	end
 end
 
--- local function UpdateInstanceInfo()
--- 	print("UpdateInstanceInfo called (un boss vient d'être tué ?")
--- end
-
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
 GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
 GearHelper:RegisterEvent("ITEM_PUSH", ItemPush, ...)
 GearHelper:RegisterEvent("QUEST_COMPLETE", QuestComplete)
--- GearHelper:RegisterEvent("QUEST_FINISHED", QuestFinished)
 GearHelper:RegisterEvent("QUEST_DETAIL", QuestDetail)
 GearHelper:RegisterEvent("MERCHANT_CLOSED", MerchantClosed)
 GearHelper:RegisterEvent("BAG_UPDATE", BagUpdate)
@@ -777,4 +785,3 @@ GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
 GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
--- GearHelper:RegisterEvent("UPDATE_INSTANCE_INFO", UpdateInstanceInfo)

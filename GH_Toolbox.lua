@@ -1,40 +1,5 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local GHBenchmarkedFuncCount = {}
-local BenchmarkMode = false
-
-function GearHelper:ResetBenchmark(type)
-	if type == "Count" then
-		GHBenchmarkedFuncCount = {}
-	end
-end
-
-function GearHelper:SwapBenchmarkMode()
-	BenchmarkMode = not BenchmarkMode
-end
-
-function GearHelper:GetBenchmarkMode()
-	return BenchmarkMode
-end
-
-function GearHelper:GetBenchmarkResult(type)
-	if type == "Count" then
-		return GHBenchmarkedFuncCount
-	end
-end
-
-function GearHelper:BenchmarkCountFuncCall(funcName)
-	if (false == GearHelper:GetBenchmarkMode()) then
-		return
-	end
-
-	if GHBenchmarkedFuncCount[funcName] == nil then
-		GHBenchmarkedFuncCount[funcName] = 0
-	end
-
-	GHBenchmarkedFuncCount[funcName] = GHBenchmarkedFuncCount[funcName] + 1
-end
-
 function GearHelper:Print(object)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:Print")
 	if object ~= nil then
@@ -340,4 +305,27 @@ function GearHelper:GetArraySize(tab)
 	end
 
 	return count
+end
+
+local function GetQualityFromColor(color)
+	GearHelper:BenchmarkCountFuncCall("GetQualityFromColor")
+	if (color == "9d9d9d") then
+		return 0
+	elseif (color == "ffffff") then
+		return 1
+	elseif (color == "1eff00") then
+		return 2
+	elseif (color == "0070dd") then
+		return 3
+	elseif (color == "a335ee") then
+		return 4
+	elseif (color == "ff8000") then
+		return 5
+	elseif (color == "e6cc80") then
+		return 6
+	elseif (color == "00ccff") then
+		return 7
+	else
+		error("Color " .. color .. " is not a possible choice")
+	end
 end
