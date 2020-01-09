@@ -4,7 +4,7 @@
 -- TODO Move functions in split files
 -- TODO check war item SetHyperlink in tooltip fail
 -- TODO Expose more options to player
--- TODO : Repair GH :
+-- TODO: Repair GH :
 -- 			- Quand on n'active pas le calcul d'ilvl, rien ne semble fonctionner correctement
 --			- La prise en compte des châsses ne semble pas changer grand chose
 
@@ -440,7 +440,7 @@ local function ApplyTemplateToDelta(delta)
 	local valueItem = 0
 	local mainStat = GearHelper:FindHighestStatInTemplate()
 
-	-- Vérifier la fonctin GetGemValue()
+	-- TODO: Check the GetGemValue() function
 	if GearHelper.db.profile.includeSocketInCompute == true then
 		valueItem = delta.nbGem * GearHelper:GetGemValue() * GetStatFromTemplate(mainStat)
 	end
@@ -524,19 +524,16 @@ local function ShouldBeCompared(itemLink)
 
 	if not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r") then
 		error(GHExceptionInvalidItemLink)
-	-- return GHExceptionInvalidItemLink
 	end
 
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
 	if IsEquippedItem(id) then
 		error(GHExceptionAlreadyEquipped)
-	-- return GHExceptionAlreadyEquipped
 	end
 
 	if not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink)) then
 		error(GHExceptionNotEquippable)
-	-- error("\nError001 in ShouldBeCompared\nitemLink : " .. itemLink .. "\nid : " .. id .. "\n\n" .. GHExceptionNotEquippable)
 	end
 
 	return true
@@ -834,7 +831,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 	local tar = ""
 
 	if classFile ~= nil then
-		tar = GearHelper:CouleurClasse(classFile) .. tostring(target) .. "|r"
+		tar = GearHelper:GetClassColor(classFile) .. tostring(target) .. "|r"
 	end
 
 	local nameLink
@@ -877,7 +874,7 @@ function GearHelper:LinesToAddToTooltip(result)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:LinesToAddToTooltip")
 	local linesToAdd = {}
 
-	if GearHelper:CountArray(result) == 1 then
+	if GearHelper:GetArraySize(result) == 1 then
 		for _, v in pairs(result) do
 			local flooredValue = math.floor(v)
 			if (flooredValue < 0) then
@@ -888,7 +885,7 @@ function GearHelper:LinesToAddToTooltip(result)
 				table.insert(linesToAdd, L["itemEgal"])
 			end
 		end
-	elseif GearHelper:CountArray(result) == 2 then
+	elseif GearHelper:GetArraySize(result) == 2 then
 		for slot, weight in pairs(result) do
 			local slotId = GetInventorySlotInfo(slot .. "Slot")
 			local itemLink = GearHelper:GetEquippedItemLink(slotId, slot)
@@ -1019,7 +1016,7 @@ function GearHelper:askIfHeNeed(link, sendTo)
 	local className, classFile, classID = UnitClass(sendTo)
 	local itemTable = GearHelper:GetItemByLink(link)
 	local itemLink = itemTable["itemLink"]
-	local lienPerso = tostring(GearHelper:CouleurClasse(classFile)) .. tostring(sendTo) .. "|r"
+	local lienPerso = tostring(GearHelper:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
 	StaticPopupDialogs["AskIfHeNeed"] = {
 		text = L["demande1"] .. lienPerso .. L["demande2"] .. itemLink .. " ?",
 		button1 = L["yes"],
@@ -1087,7 +1084,7 @@ function GearHelper:GetQuestReward()
 					end
 				end
 
-				if GearHelper:CountArray(tmpTable) == 0 then
+				if GearHelper:GetArraySize(tmpTable) == 0 then
 					table.insert(weightTable, -10)
 					table.insert(prixTable, item.sellPrice)
 					table.insert(altTable, item.sellPrice, item.itemLink)

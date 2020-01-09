@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local gagne = 0
+local totalEarnedMoney = 0
 local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
 -- waitingIDTable = waitingIDTable
@@ -63,17 +63,17 @@ end
 
 local function OnMerchantShow()
 	GearHelper:BenchmarkCountFuncCall("OnMerchantShow")
-	gagne = 0
+	totalEarnedMoney = 0
 	if GearHelper.db.profile.sellGreyItems then
 		for bag = 0, 4 do
 			for slot = 1, GetContainerNumSlots(bag) do
 				if GetContainerItemID(bag, slot) ~= nil then
 					local id = GetContainerItemID(bag, slot)
 					if id then
-						local result = GearHelper:SiObjetGris(id)
-						if result[1] then
+						local isValueAvailable, sellPrice = GearHelper:GetItemSellPrice(id)
+						if isValueAvailable then
 							UseContainerItem(bag, slot)
-							gagne = gagne + result[2]
+							totalEarnedMoney = totalEarnedMoney + sellPrice
 						end
 					end
 				end
@@ -123,7 +123,7 @@ local function OnMerchantShow()
 				if id then
 					local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
 					if vendorPrice ~= nil then
-						gagne = gagne + (vendorPrice * itemCount)
+						totalEarnedMoney = totalEarnedMoney + (vendorPrice * itemCount)
 					end
 				end
 			end
@@ -323,7 +323,7 @@ local function QuestDetail()
 				end
 			end
 
-			if GearHelper:CountArray(tmpTable) == 0 then
+			if GearHelper:GetArraySize(tmpTable) == 0 then
 				table.insert(weightTable, -10)
 				table.insert(prixTable, item.sellPrice)
 				table.insert(altTable, item.sellPrice, item.itemLink)
@@ -416,7 +416,7 @@ local function MerchantClosed()
 		end
 	end
 
-	local argentFin = 0
+	local moneyBag = 0
 	for bag = 0, 4 do
 		for slot = 1, GetContainerNumSlots(bag) do
 			if GetContainerItemID(bag, slot) ~= nil then
@@ -424,14 +424,14 @@ local function MerchantClosed()
 				local id = GetContainerItemID(bag, slot)
 				if id then
 					local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
-					argentFin = argentFin + (vendorPrice * itemCount)
+					moneyBag = moneyBag + (vendorPrice * itemCount)
 				end
 			end
 		end
 	end
-	if (gagne - argentFin > 0) then
-		print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"])
-		gagne = 0
+	if (totalEarnedMoney - moneyBag > 0) then
+		print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor((totalEarnedMoney - moneyBag) / 10000) .. L["dot"] .. math.floor(((totalEarnedMoney - moneyBag) % 10000) / 100) .. L["gold"])
+		totalEarnedMoney = 0
 	end
 end
 
@@ -517,62 +517,52 @@ local function ChatMsgLoot(_, _, message, language, sender, channelString, targe
 	GearHelper:CreateLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 end
 
-local function ChatMsgBattleground(_, _, msg, sender, lang, channel)
-	GearHelper:BenchmarkCountFuncCall("ChatMsgBattleground")
-	GearHelper:showMessageSMN("BG", sender, msg)
-end
-
-local function ChatMsgBattlegroundLeader(_, _, msg, sender, lang, channel)
-	GearHelper:BenchmarkCountFuncCall("ChatMsgBattlegroundLeader")
-	GearHelper:showMessageSMN("BG", sender, msg)
-end
-
-local function ChatMsgEmote(_, _, msg, sender, lang, channel)
+local function ChatMsgEmote(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgEmote")
 	GearHelper:showMessageSMN("Emote", sender, msg)
 end
 
-local function ChatMsgGuild(_, _, msg, sender, lang, channel)
+local function ChatMsgGuild(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgGuild")
 	GearHelper:showMessageSMN("Guild", sender, msg)
 end
 
-local function ChatMsgOfficer(_, _, msg, sender, lang, channel)
+local function ChatMsgOfficer(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgOfficer")
 	GearHelper:showMessageSMN("Officer", sender, msg)
 end
 
-local function ChatMsgParty(_, _, msg, sender, lang, channel)
+local function ChatMsgParty(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgParty")
 	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
-local function ChatMsgPartyLeader(_, _, msg, sender, lang, channel)
+local function ChatMsgPartyLeader(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgPartyLeader")
 	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
-local function ChatMsgRaid(_, _, msg, sender, lang, channel)
+local function ChatMsgRaid(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgRaid")
 	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
-local function ChatMsgRaidLeader(_, _, msg, sender, lang, channel)
+local function ChatMsgRaidLeader(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgRaidLeader")
 	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
-local function ChatMsgRaidWarning(_, _, msg, sender, lang, channel)
+local function ChatMsgRaidWarning(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgRaidWarning")
 	GearHelper:showMessageSMN("Raid_warning", sender, msg)
 end
 
-local function ChatMsgSay(_, _, msg, sender, lang, channel)
+local function ChatMsgSay(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgSay")
 	GearHelper:showMessageSMN("Say", sender, msg)
 end
 
-local function ChatMsgYell(_, _, msg, sender, lang, channel)
+local function ChatMsgYell(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgYell")
 	GearHelper:showMessageSMN("Yell", sender, msg)
 end
