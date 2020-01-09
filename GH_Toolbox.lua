@@ -255,7 +255,6 @@ local function GetActiveTemplate()
 	if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
 		local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
 		if GearHelper.db.global.templates[currentSpec]["NOX"] == nil then
-			-- TODO: Do all the exceptions
 			error(GHExceptionMissingNoxTemplate)
 		end
 

@@ -1,3 +1,4 @@
+-- TODO: Add \n\n~*~*~*~*~*~*~*~*~*~* PLEASE FILL A BUG REPORT @ https://github.com/Marsgames/GearHelper/issues *~*~*~*~*~*~*~*~*~*~\n\n to every exceptions
 GHExceptionMissingID = "Invalid or missing id"
 
 GHExceptionInvalidItem = "Unable to build item from tooltip"
@@ -17,3 +18,5 @@ GHExceptionMissingCustomTemplate = "Custom template is missing"
 GHExceptionTemplateIsNil = "Current active template is nil"
 
 GHExceptionParameterIsNotAnArray = "Invalid parameter, an array is expected"
+
+GHExceptionMissingDefaultWeight = "GearHelper.db.profile.defaultWeightForStat is nil"

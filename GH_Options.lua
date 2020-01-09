@@ -394,7 +394,7 @@ local ghSecondaryOptionsTable = {
 					set = function(_, val)
 						GearHelper.db.profile.ilvlCharFrame = val
 						if (val) then
-							GearHelper:AddIlvlOnCharFrame(true)
+							GearHelper:AddIlvlOnCharFrame()
 						else
 							GearHelper:HideIlvlOnCharFrame()
 						end
@@ -412,7 +412,7 @@ local ghSecondaryOptionsTable = {
 						GearHelper.db.profile.ilvlInspectFrame = val
 						if (val) then
 							if (InspectPaperDollItemsFrame and UnitGUID("target")) then
-								GearHelper:AddIlvlOnInspectFrame(UnitGUID("target"), true)
+								GearHelper:AddIlvlOnInspectFrame()
 							end
 						else
 							GearHelper:HideIlvlOnInspectFrame()

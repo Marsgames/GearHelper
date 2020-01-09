@@ -131,10 +131,6 @@ local function OnMerchantShow()
 	end
 end
 
--- local function Dot()
--- 	GearHelper:poseDot()
--- 	print("On a appelé posedot")
--- end
 local function PlayerEnteringWorld()
 	GearHelper:BenchmarkCountFuncCall("PlayerEnteringWorld")
 	local used = false
@@ -670,15 +666,6 @@ local function InspectReady(_, _, target)
 			local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped)
 			local itemEquippedIlvl = itemEquippedTable.iLvl
 			local itemLootIlvl = itemLootTable.iLvl
-
-			print("-------------")
-			print("item équippé par " .. GearHelper.db.profile.inspectAin.target .. " : " .. itemEquipped)
-			print("item reçu : " .. itemLoot)
-			if (itemEquippedIlvl >= itemLootIlvl) then
-				print("Vous pouvez essayer de demander cet objet")
-			else
-				print("L'item loot à un meilleur ilvl, + de chances de refus")
-			end
 		end
 
 		GearHelper.db.profile.inspectAin.waitingIlvl = false
@@ -687,9 +674,9 @@ local function InspectReady(_, _, target)
 		GearHelper.db.profile.inspectAin.target = nil
 
 		ClearInspectPlayer()
-	elseif (InspectPaperDollItemsFrame) then -------------------- AFFICHE L'ILVL DES ITEMS D'UN JOUEUR SUR LA FICHE D'INSPECTION
-		GearHelper:AddIlvlOnInspectFrame(target)
-	else ------------------- AFFICHE L'ILVL MOYEN D'UN MEC SUR SON TOOLTIP
+	elseif (InspectPaperDollItemsFrame) then
+		GearHelper:AddIlvlOnInspectFrame()
+	else
 		if not GameTooltip:IsVisible() then
 			do
 				return
