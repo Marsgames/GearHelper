@@ -91,11 +91,12 @@ end
 
 function GearHelper:SlashReset()
     self.db = nil
-	ReloadUI()
+    ReloadUI()
 end
 
 function GearHelper:SlashResetCache()
     GearHelper:ResetCache()
+    print("cache reseted")
 end
 
 function GearHelper:SlashDebug()

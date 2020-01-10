@@ -149,6 +149,9 @@ local function OnMerchantShow()
 			end
 		end
 	end
+
+	GearHelper:ScanCharacter()
+	GearHelper:SetDotOnIcons()
 end
 
 local function PlayerEnteringWorld()
@@ -264,6 +267,9 @@ local function ItemPush(_, _, bag)
 		theBag = 1
 	end
 	GearHelper:EquipItem(theBag)
+
+	GearHelper:ScanCharacter()
+	GearHelper:SetDotOnIcons()
 end
 
 local function QuestComplete()
@@ -487,6 +493,9 @@ local function ActiveTalentGroupChanged()
 	GearHelper:EquipItem(2)
 	GearHelper:EquipItem(3)
 	GearHelper:EquipItem(4)
+
+	GearHelper:ScanCharacter()
+	GearHelper:SetDotOnIcons()
 end
 
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)

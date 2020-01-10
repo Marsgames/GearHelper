@@ -41,8 +41,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 
 			frameParent.lastButton = button
 
-			-- I just realised a CheckButton might already have it's own FontString, but uh... whatever.
-			-- TODO: Do we let this comment ?
 			local number = button:CreateFontString(button:GetName() .. "Number", "OVERLAY", "SystemFont_Shadow_Huge3")
 			number:SetPoint("TOPLEFT", -4, 4)
 			number:SetPoint("BOTTOMRIGHT", 5, -5)

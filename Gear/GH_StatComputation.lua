@@ -4,7 +4,8 @@ function GearHelper:IsItemBetter(itemLink)
 	local itemEquipped = nil
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
-	local shouldBeCompared, err = pcall(self.ShouldBeCompared, itemLink)
+	-- See in GearHelper.lua/ModifyTooltip()
+	local shouldBeCompared, err = pcall(self.ShouldBeCompared, nil, itemLink)
 	if (not shouldBeCompared) then
 		return false
 	end
@@ -27,15 +28,13 @@ end
 function GearHelper:ShouldBeCompared(itemLink)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:ShouldBeCompared")
 
-	print("itemLinkShouldBeCompared : " .. tostring(itemLink))
-
 	if (not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r")) then
 		error(GHExceptionInvalidItemLink)
 	end
 
 	local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
-	if IsEquippedItem(id) then
+	if (IsEquippedItem(id)) then
 		error(GHExceptionAlreadyEquipped)
 	end
 
@@ -101,7 +100,9 @@ function GearHelper:NewWeightCalculation(item)
 
 	local result = {}
 
-	if self:IsInventoryInCache() == false then
+	if (self:IsInventoryInCache() == false) then
+		-- TODO: why don't we cached the inventory here ?
+		GearHelper:ScanCharacter() -- is this the function to cache the inventory ?
 		error(GHExceptionInventoryNotCached)
 	end
 

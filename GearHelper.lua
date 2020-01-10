@@ -257,6 +257,9 @@ end
 
 function GearHelper:SetDotOnIcons()
 	self:BenchmarkCountFuncCall("GearHelper:SetDotOnIcons")
+
+	-- local bag = 0
+	-- local slot = 2
 	for bag = 0, 4 do
 		for slot = 1, GetContainerNumSlots(bag) do
 			local myBag = bag + 1
@@ -269,7 +272,7 @@ function GearHelper:SetDotOnIcons()
 				button.overlay = nil
 			end
 
-			if itemLink and self:IsItemBetter(itemLink) and not button.overlay then
+			if (itemLink and self:IsItemBetter(itemLink) and not button.overlay) then
 				button.overlay = button:CreateTexture(nil, "OVERLAY")
 				button.overlay:SetSize(18, 18)
 				button.overlay:SetPoint("TOPLEFT")
@@ -303,7 +306,6 @@ local ModifyTooltip = function(self, ...)
 	end
 
 	local _, itemLink = self:GetItem()
-
 
 	-- Do not ask me why, but itemLink is the 2nd parameter IN __THIS__ CASE
 	-- Somthing to do with the difference between GearHelper:Sommething() and GearHelper.Something

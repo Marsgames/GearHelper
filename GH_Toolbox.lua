@@ -29,7 +29,7 @@ function GearHelper:IsEquippableByMe(item)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEquippableByMe")
 	local isEquippable = false
 
-	if not IsEquippableItem(item.id) or string.match(item.itemLink, "battlepet") then
+	if (not IsEquippableItem(item.id) or string.match(item.itemLink, L["mascotte"])) then
 		return false
 	end
 
