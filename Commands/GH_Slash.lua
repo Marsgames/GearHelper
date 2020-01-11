@@ -20,9 +20,9 @@ local slashCmd = {
 	createItemlink = function()
 		GearHelper:SlashCreateItemLink()
 	end,
-	askLoot = function()
-		GearHelper:SlashAskLoot()
-	end,
+	-- askLoot = function()
+	-- 	GearHelper:SlashAskLoot()
+	-- end,
 	dot = function()
 		GearHelper:SlashDot()
 	end,
@@ -61,6 +61,9 @@ local slashCmd = {
 	end,
 	benchmarkResetCountResult = function()
 		GearHelper:SlashBenchmarkResetCountResult()
+	end,
+	countCache = function()
+		GearHelper:SlashCountCache()
 	end
 }
 

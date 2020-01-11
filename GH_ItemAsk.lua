@@ -8,11 +8,15 @@ end
 
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 	self:BenchmarkCountFuncCall("GearHelper:CreateLinkAskIfHeNeeds")
-	local message = message or "|cff1eff00|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
+	-- local message = message or "|cffff8000|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
+	local message = message or "|cffff8000|Hitem:19019::::::::120:::::::|h[Thunderfury ma Gueule]|h|r"
+	-- local message = message or "|cffff8000|Hitem:30212::::::::120:::::::|h[Zeub zeub]|h|r"
 	local target = target or GetUnitName("player")
 
-	if not self.db.profile.askLootRaid or not IsTargetValid(target) or string.find(string.lower(message), "bonus") then
-		return
+	if (debug ~= 1) then
+		if not self.db.profile.askLootRaid or not IsTargetValid(target) or string.find(string.lower(message), "bonus") then
+			return
+		end
 	end
 
 	local couleur, tar = ""
@@ -42,19 +46,23 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 	end
 
 	for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
-		if pcall(self.ShouldBeCompared, itemLink) then
+		local shouldBeCompared, err = pcall(self.ShouldBeCompared, nil, itemLink)
+		if (shouldBeCompared) then
 			local item = self:GetItemByLink(itemLink)
-			local quality = GetQualityFromColor(item.rarity)
+			local quality = GearHelper:GetQualityFromColor(item.rarity)
 
 			if quality ~= nil and quality < 5 then
 				nameLink = self:ReturnGoodLink(itemLink, target, tar)
 
-				if self:IsItemBetter(itemLink) then
+				local isItemBetter = self:IsItemBetter(itemLink)
+				if (isItemBetter) then
 					UIErrorsFrame:AddMessage(self:ColorizeString(L["ask1"], "Yellow") .. nameLink .. self:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
 					print(self:ColorizeString(L["ask1"], "Yellow") .. nameLink .. self:ColorizeString(L["ask2"], "Yellow") .. itemLink)
 					PlaySound(5274, "Master")
 				end
 			end
+		else
+			error(err)
 		end
 	end
 end

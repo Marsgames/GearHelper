@@ -1,15 +1,17 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-function GearHelper:Print(object)
+function GearHelper:Print(object, tableOffset)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:Print")
-	if object ~= nil then
-		if GearHelper.db.profile.debug and type(object) == "table" then
-			foreach(object, print)
-		elseif GearHelper.db.profile.debug then
-			print(object)
+	if (GearHelper.db.profile.debug) then
+		if (object ~= nil) then
+			if type(object) == "table" then
+				foreach(object, print)
+			else
+				print(object)
+			end
+		else
+			print(tostring(nil))
 		end
-	else
-		print(tostring(nil))
 	end
 end
 
@@ -307,7 +309,7 @@ function GearHelper:GetArraySize(tab)
 	return count
 end
 
-local function GetQualityFromColor(color)
+function GearHelper:GetQualityFromColor(color)
 	GearHelper:BenchmarkCountFuncCall("GetQualityFromColor")
 	if (color == "9d9d9d") then
 		return 0
