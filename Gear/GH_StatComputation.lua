@@ -96,11 +96,11 @@ function GearHelper:EquipItem(inThisBag)
 end
 
 function GearHelper:NewWeightCalculation(item)
-	self:BenchmarkCountFuncCall("GearHelper:NewWeightCalculation")
+	GearHelper:BenchmarkCountFuncCall("GearHelper:NewWeightCalculation")
 
 	local result = {}
 
-	if (self:IsInventoryInCache() == false) then
+	if (GearHelper:IsInventoryInCache() == false) then
 		-- TODO: why don't we cached the inventory here ?
 		GearHelper:ScanCharacter() -- is this the function to cache the inventory ?
 		error(GHExceptionInventoryNotCached)
@@ -111,44 +111,44 @@ function GearHelper:NewWeightCalculation(item)
 	if item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_FINGER" then
 		for slot, equippedItemLink in pairs(equippedItems) do
 			if equippedItemLink == 0 then
-				result[slot] = self:ApplyTemplateToDelta(item)
+				result[slot] = GearHelper:ApplyTemplateToDelta(item)
 			else
-				equippedItem = self:GetItemByLink(equippedItemLink)
+				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
 				result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			end
 		end
 	elseif item.equipLoc == "INVTYPE_WEAPON" or item.equipLoc == "INVTYPE_HOLDABLE" then
 		for slot, equippedItemLink in pairs(equippedItems) do
 			if equippedItemLink == 0 then
-				result[slot] = self:ApplyTemplateToDelta(item)
+				result[slot] = GearHelper:ApplyTemplateToDelta(item)
 			elseif equippedItemLink == -1 then
-				equippedItem = self:GetItemByLink(GearHelperVars.charInventory["MainHand"])
+				equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
 				result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			else
-				equippedItem = self:GetItemByLink(equippedItemLink)
+				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
 				result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			end
 		end
 	elseif item.equipLoc == "INVTYPE_2HWEAPON" or item.equipLoc == "INVTYPE_RANGED" then
 		if tonumber(equippedItems["MainHand"]) and tonumber(equippedItems["SecondaryHand"]) then
-			result["MainHand"] = self:ApplyTemplateToDelta(item)
+			result["MainHand"] = GearHelper:ApplyTemplateToDelta(item)
 		elseif tonumber(equippedItems["MainHand"]) then
-			equippedItem = self:GetItemByLink(equippedItems["SecondaryHand"])
+			equippedItem = GearHelper:GetItemByLink(equippedItems["SecondaryHand"])
 			result["SecondaryHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 		elseif tonumber(equippedItems["SecondaryHand"]) then
-			equippedItem = self:GetItemByLink(equippedItems["MainHand"])
+			equippedItem = GearHelper:GetItemByLink(equippedItems["MainHand"])
 			result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 		else
-			local combinedItems = self:CombineTwoItems(self:GetItemByLink(equippedItems["MainHand"]), self:GetItemByLink(equippedItems["SecondaryHand"]))
+			local combinedItems = GearHelper:CombineTwoItems(GearHelper:GetItemByLink(equippedItems["MainHand"]), GearHelper:GetItemByLink(equippedItems["SecondaryHand"]))
 			result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, combinedItems)
 		end
 	else
 		-- TODO: Why is there a for loop ?
 		for slot, equippedItemLink in pairs(equippedItems) do
 			if equippedItemLink == 0 then -- 0 if no item is equipped
-				result[slot] = self:ApplyTemplateToDelta(item)
+				result[slot] = GearHelper:ApplyTemplateToDelta(item)
 			else
-				equippedItem = self:GetItemByLink(equippedItemLink)
+				equippedItem = GearHelper:GetItemByLink(equippedItemLink)
 				result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
 			end
 		end
