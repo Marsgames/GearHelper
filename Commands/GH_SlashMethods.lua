@@ -9,20 +9,29 @@ function GearHelper:SlashDisplayHelp()
     GearHelper:Print("im 'newMsg' - Change the auto invite token by newMsg")
     GearHelper:Print("createItemLink - Generate a fake itemLink")
     print(L["helpDebug"])
-    GearHelper:Print("askLoot - Enable the feature (auto ask for loot)")
+    -- GearHelper:Print("askLoot - Enable the feature (auto ask for loot)")
     GearHelper:Print("dot - Enable the dot on better items icons")
     GearHelper:Print("suppDot - Disable the dot on better items icons")
     GearHelper:Print("ain - Test the ask if needed function")
     GearHelper:Print("reset - Reset GearHelper")
     GearHelper:Print("resetCache - Clear the GearHelper cache")
     GearHelper:Print("printCache - Print the GearHelper cache")
+    GearHelper:Print("countCache - count number of items in cache")
     -- GearHelper:Print("test - run unit tests")
+end
+
+function GearHelper:SlashCountCache()
+    GearHelper:Print(GearHelper:GetArraySize(GearHelper.db.global.ItemCache))
 end
 
 function GearHelper:SlashPrintCache()
     for k, v in pairs(GearHelper.db.global.ItemCache) do
-        GearHelper:Print(k)
-        foreach(v, GearHelper:Print())
+        GearHelper:Print("--- " .. k)
+        if (GearHelper.db.profile.debug) then
+            for kk, vv in pairs(v) do
+                print("   " .. kk .. " - " .. tostring(vv))
+            end
+        end
     end
 end
 
@@ -57,23 +66,23 @@ end
 function GearHelper:SlashCreateItemLink()
     local tempItemLink = "|cff1eff00|Hitem:128942::::::::100:105::::::|h[/gh createItemLink]|h|r"
     GearHelper:Print(tempItemLink)
-    GearHelper:Print("GearHelper:IsEquipped = " .. tostring(GearHelper:IsEquipped(tempItemLink)))
-    table.foreach(GearHelper:weightCalculation(tempItemLink), GearHelper:Print())
+    GearHelper:Print("GearHelper:IsEquipped = " .. tostring(IsEquippedItem(tempItemLink)))
+    table.foreach(GearHelper:NewWeightCalculation(tempItemLink), GearHelper.Print)
 end
 
-function GearHelper:SlashAskLoot()
-    if GearHelper.db.profile.askLootRaid == true then
-        GearHelper:setGHAskLootRaid(false)
-    else
-        GearHelper:setGHAskLootRaid(true)
-    end
-end
+-- function GearHelper:SlashAskLoot()
+-- if GearHelper.db.profile.askLootRaid == true then
+--     GearHelper:setGHAskLootRaid(false)
+-- else
+--     GearHelper:setGHAskLootRaid(true)
+-- end
+-- end
 
 function GearHelper:SlashDot()
     GearHelper:BuildCWTable()
-    GearHelper:sendAskVersion()
+    -- GearHelper:SendAskVersion()
     GearHelper:ScanCharacter()
-    GearHelper:poseDot()
+    GearHelper:SetDotOnIcons()
 end
 
 function GearHelper:SlashSuppDot()
@@ -90,11 +99,13 @@ function GearHelper:SlashAin()
 end
 
 function GearHelper:SlashReset()
-    GearHelper:setDefault()
+    self.db = nil
+    ReloadUI()
 end
 
 function GearHelper:SlashResetCache()
     GearHelper:ResetCache()
+    print("cache reseted")
 end
 
 function GearHelper:SlashDebug()
@@ -150,6 +161,7 @@ function GearHelper:SlashBenchmarkCountResult()
         return
     end
 
+    print("-----")
     for k, v in pairs(GearHelper:GetBenchmarkResult("Count")) do
         print(k .. " -> " .. v)
     end
