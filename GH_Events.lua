@@ -1,9 +1,12 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local gagne = 0
+local totalEarnedMoney = 0
 local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
--- waitingIDTable = waitingIDTable
+local waitSpeFrame = CreateFrame("Frame")
+
+-- GearHelperVars.waitSpeFrame:Hide()
+waitSpeFrame:Hide()
 
 --------------------------------- Functions ---------------------------------
 -- This function handle the BossesKilled function. It's called in PlayerLogin event.
@@ -20,7 +23,7 @@ local function BossesKilledFunctions()
 		GearHelper:CreateLfrButtons(frame)
 		GearHelper:UpdateButtonsAndTooltips(frame)
 		GearHelper:UpdateGHLfrButton()
-		GearHelper:UpdateSelecCursor()
+		GearHelper:UpdateSelectCursor()
 		GearHelper:RegisterEvent("LFG_UPDATE")
 		GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 	end
@@ -34,8 +37,24 @@ local function BossesKilledFunctions()
 
 	RaidFinderQueueFrame:HookScript("OnShow", LfrFrameShow)
 	RaidFinderQueueFrame:HookScript("OnHide", LfrFrameHide)
-	hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelecCursor)
+	hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelectCursor)
 end
+
+local function delayBetweenEquip(frame)
+	GearHelper:BenchmarkCountFuncCall("delayBetweenEquip")
+	if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
+		return
+	end
+	for bag = 0, 4 do
+		numBag = bag
+		GearHelper:EquipItem()
+	end
+	frame:Hide()
+end
+
+-- GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+
 -----------------------------------------------------------------------------
 ----------------------------------- Events ----------------------------------
 
@@ -61,19 +80,20 @@ local function AddonLoaded(_, _, name)
 	end
 end
 
+-- TODO: Split that shit
 local function OnMerchantShow()
 	GearHelper:BenchmarkCountFuncCall("OnMerchantShow")
-	gagne = 0
+	totalEarnedMoney = 0
 	if GearHelper.db.profile.sellGreyItems then
 		for bag = 0, 4 do
 			for slot = 1, GetContainerNumSlots(bag) do
 				if GetContainerItemID(bag, slot) ~= nil then
 					local id = GetContainerItemID(bag, slot)
 					if id then
-						local result = GearHelper:SiObjetGris(id)
-						if result[1] then
+						local isValueAvailable, sellPrice = GearHelper:GetItemSellPrice(id)
+						if isValueAvailable then
 							UseContainerItem(bag, slot)
-							gagne = gagne + result[2]
+							totalEarnedMoney = totalEarnedMoney + sellPrice
 						end
 					end
 				end
@@ -123,18 +143,17 @@ local function OnMerchantShow()
 				if id then
 					local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
 					if vendorPrice ~= nil then
-						gagne = gagne + (vendorPrice * itemCount)
+						totalEarnedMoney = totalEarnedMoney + (vendorPrice * itemCount)
 					end
 				end
 			end
 		end
 	end
+
+	GearHelper:ScanCharacter()
+	GearHelper:SetDotOnIcons()
 end
 
--- local function Dot()
--- 	GearHelper:poseDot()
--- 	print("On a appelé posedot")
--- end
 local function PlayerEnteringWorld()
 	GearHelper:BenchmarkCountFuncCall("PlayerEnteringWorld")
 	local used = false
@@ -151,10 +170,10 @@ local function PlayerEnteringWorld()
 
 	GearHelper:BuildCWTable()
 	if GearHelper.db.profile.addonEnabled == true then
-		GearHelper:sendAskVersion()
+		GearHelper:SendAskVersion()
 		GearHelper:ScanCharacter()
-		GearHelper:poseDot()
-		-- ContainerFrame1:HookScript("OnShow", Dot)
+		GearHelper:SetDotOnIcons()
+
 		if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
 			GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
 		end
@@ -171,7 +190,6 @@ local function PlayerEnteringWorld()
 				return
 			end
 		end
-		-- si le joueur est dans un groupe LFR afficher sous la minimap une case cochable permettant d'accepter automatiquement les appels
 
 		lfrCheckButton = lfrCheckButton_GlobalName or CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
 		lfrCheckButton:SetPoint("TOPRIGHT", -325, -50)
@@ -223,10 +241,10 @@ local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
 	if prefVersion == "answerVersion" then
 		local vVersion = message:sub(message:find(";") + 1, #message)
 		versionCible = vVersion
-		GearHelper:receiveAnswer(vVersion, sender)
+		GearHelper:ReceiveAnswer(vVersion, sender)
 	end
 	if prefVersion == "askVersion" then
-		GearHelper:sendAnswerVersion()
+		GearHelper:SendAnswerVersion()
 	end
 end
 
@@ -248,7 +266,10 @@ local function ItemPush(_, _, bag)
 	elseif bag == 20 then
 		theBag = 1
 	end
-	GearHelper:equipItem(theBag)
+	GearHelper:EquipItem(theBag)
+
+	GearHelper:ScanCharacter()
+	GearHelper:SetDotOnIcons()
 end
 
 local function QuestComplete()
@@ -280,10 +301,9 @@ local function QuestFinished()
 			end
 		end
 	)
-
-	print("Bola, on a fermé la fenetre")
 end
 
+-- TODO: Split that shit
 local function QuestDetail()
 	GearHelper:BenchmarkCountFuncCall("QuestDetail")
 
@@ -323,7 +343,7 @@ local function QuestDetail()
 				end
 			end
 
-			if GearHelper:CountArray(tmpTable) == 0 then
+			if GearHelper:GetArraySize(tmpTable) == 0 then
 				table.insert(weightTable, -10)
 				table.insert(prixTable, item.sellPrice)
 				table.insert(altTable, item.sellPrice, item.itemLink)
@@ -383,7 +403,6 @@ local function QuestDetail()
 
 		isBetter = true
 	else
-		-- end
 		local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyPrix]
 
 		if button.overlay then
@@ -401,7 +420,6 @@ local function QuestDetail()
 
 		local objetI = GetQuestItemLink("choice", keyPrix)
 
-		-- do
 		do
 			return
 		end
@@ -416,7 +434,7 @@ local function MerchantClosed()
 		end
 	end
 
-	local argentFin = 0
+	local moneyBag = 0
 	for bag = 0, 4 do
 		for slot = 1, GetContainerNumSlots(bag) do
 			if GetContainerItemID(bag, slot) ~= nil then
@@ -424,14 +442,14 @@ local function MerchantClosed()
 				local id = GetContainerItemID(bag, slot)
 				if id then
 					local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
-					argentFin = argentFin + (vendorPrice * itemCount)
+					moneyBag = moneyBag + (vendorPrice * itemCount)
 				end
 			end
 		end
 	end
-	if (gagne - argentFin > 0) then
-		print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor((gagne - argentFin) / 10000) .. L["dot"] .. math.floor(((gagne - argentFin) % 10000) / 100) .. L["gold"])
-		gagne = 0
+	if (totalEarnedMoney - moneyBag > 0) then
+		print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor((totalEarnedMoney - moneyBag) / 10000) .. L["dot"] .. math.floor(((totalEarnedMoney - moneyBag) % 10000) / 100) .. L["gold"])
+		totalEarnedMoney = 0
 	end
 end
 
@@ -455,7 +473,7 @@ local function BagUpdate()
 	end
 	-- Random check to verify that charInventory is initialized because BagUpdate is fired before PlayerEnteringWorld
 	GearHelper:ScanCharacter()
-	GearHelper:poseDot()
+	GearHelper:SetDotOnIcons()
 end
 
 local function ActiveTalentGroupChanged()
@@ -468,12 +486,16 @@ local function ActiveTalentGroupChanged()
 	end
 
 	GearHelperVars.waitSpeTimer = time()
-	GearHelperVars.waitSpeFrame:Show()
-	GearHelper:equipItem(0)
-	GearHelper:equipItem(1)
-	GearHelper:equipItem(2)
-	GearHelper:equipItem(3)
-	GearHelper:equipItem(4)
+	-- GearHelperVars.waitSpeFrame:Show()
+	waitSpeFrame:Show()
+	GearHelper:EquipItem(0)
+	GearHelper:EquipItem(1)
+	GearHelper:EquipItem(2)
+	GearHelper:EquipItem(3)
+	GearHelper:EquipItem(4)
+
+	GearHelper:ScanCharacter()
+	GearHelper:SetDotOnIcons()
 end
 
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)
@@ -517,62 +539,52 @@ local function ChatMsgLoot(_, _, message, language, sender, channelString, targe
 	GearHelper:CreateLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 end
 
-local function ChatMsgBattleground(_, _, msg, sender, lang, channel)
-	GearHelper:BenchmarkCountFuncCall("ChatMsgBattleground")
-	GearHelper:showMessageSMN("BG", sender, msg)
-end
-
-local function ChatMsgBattlegroundLeader(_, _, msg, sender, lang, channel)
-	GearHelper:BenchmarkCountFuncCall("ChatMsgBattlegroundLeader")
-	GearHelper:showMessageSMN("BG", sender, msg)
-end
-
-local function ChatMsgEmote(_, _, msg, sender, lang, channel)
+local function ChatMsgEmote(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgEmote")
 	GearHelper:showMessageSMN("Emote", sender, msg)
 end
 
-local function ChatMsgGuild(_, _, msg, sender, lang, channel)
+local function ChatMsgGuild(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgGuild")
 	GearHelper:showMessageSMN("Guild", sender, msg)
 end
 
-local function ChatMsgOfficer(_, _, msg, sender, lang, channel)
+local function ChatMsgOfficer(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgOfficer")
 	GearHelper:showMessageSMN("Officer", sender, msg)
 end
 
-local function ChatMsgParty(_, _, msg, sender, lang, channel)
+local function ChatMsgParty(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgParty")
 	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
-local function ChatMsgPartyLeader(_, _, msg, sender, lang, channel)
+local function ChatMsgPartyLeader(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgPartyLeader")
 	GearHelper:showMessageSMN("Party", sender, msg)
 end
 
-local function ChatMsgRaid(_, _, msg, sender, lang, channel)
+local function ChatMsgRaid(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgRaid")
 	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
-local function ChatMsgRaidLeader(_, _, msg, sender, lang, channel)
+local function ChatMsgRaidLeader(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgRaidLeader")
 	GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
-local function ChatMsgRaidWarning(_, _, msg, sender, lang, channel)
+local function ChatMsgRaidWarning(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgRaidWarning")
 	GearHelper:showMessageSMN("Raid_warning", sender, msg)
 end
 
-local function ChatMsgSay(_, _, msg, sender, lang, channel)
+local function ChatMsgSay(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgSay")
 	GearHelper:showMessageSMN("Say", sender, msg)
 end
 
-local function ChatMsgYell(_, _, msg, sender, lang, channel)
+local function ChatMsgYell(_, _, msg, sender, _, _)
 	GearHelper:BenchmarkCountFuncCall("ChatMsgYell")
 	GearHelper:showMessageSMN("Yell", sender, msg)
 end
@@ -616,7 +628,8 @@ local function QuestTurnedIn()
 	end
 
 	GearHelperVars.waitSpeTimer = time()
-	GearHelperVars.waitSpeFrame:Show()
+	-- GearHelperVars.waitSpeFrame:Show()
+	waitSpeFrame:Show()
 end
 
 local function GetItemInfoReceived(_, _, item)
@@ -652,12 +665,11 @@ end
 
 local function PlayerLogin(_, _)
 	GearHelper:BenchmarkCountFuncCall("PlayerLogin")
-	-- Si la frame recherche donjon est ouverte et que la fonction de selection de donjon est dispo (sur la page lfr en gros)
+
 	if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
 		BossesKilledFunctions()
 	end
 
-	-- Si la page du personnage s'affiche, on affiche l'ilvl
 	if (PaperDollItemsFrame) then
 		GearHelper:AddIlvlOnCharFrame()
 	end
@@ -680,15 +692,6 @@ local function InspectReady(_, _, target)
 			local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped)
 			local itemEquippedIlvl = itemEquippedTable.iLvl
 			local itemLootIlvl = itemLootTable.iLvl
-
-			print("-------------")
-			print("item équippé par " .. GearHelper.db.profile.inspectAin.target .. " : " .. itemEquipped)
-			print("item reçu : " .. itemLoot)
-			if (itemEquippedIlvl >= itemLootIlvl) then
-				print("Vous pouvez essayer de demander cet objet")
-			else
-				print("L'item loot à un meilleur ilvl, + de chances de refus")
-			end
 		end
 
 		GearHelper.db.profile.inspectAin.waitingIlvl = false
@@ -697,9 +700,9 @@ local function InspectReady(_, _, target)
 		GearHelper.db.profile.inspectAin.target = nil
 
 		ClearInspectPlayer()
-	elseif (InspectPaperDollItemsFrame) then -------------------- AFFICHE L'ILVL DES ITEMS D'UN JOUEUR SUR LA FICHE D'INSPECTION
-		GearHelper:AddIlvlOnInspectFrame(target)
-	else ------------------- AFFICHE L'ILVL MOYEN D'UN MEC SUR SON TOOLTIP
+	elseif (InspectPaperDollItemsFrame) then
+		GearHelper:AddIlvlOnInspectFrame()
+	else
 		if not GameTooltip:IsVisible() then
 			do
 				return
@@ -759,14 +762,10 @@ local function ReadyCheck()
 	if lfrCheckIsChecked then
 		ConfirmReadyCheck(1)
 		ReadyCheckFrame:Hide()
-		print("Ready check accepted")
+		print("Ready check accepted") -- TODO: Add localization
 		UIErrorsFrame:AddMessage("Ready check accepted", 0.0, 1.0, 0.0, 80)
 	end
 end
-
--- local function UpdateInstanceInfo()
--- 	print("UpdateInstanceInfo called (un boss vient d'être tué ?")
--- end
 
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
@@ -774,7 +773,6 @@ GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
 GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
 GearHelper:RegisterEvent("ITEM_PUSH", ItemPush, ...)
 GearHelper:RegisterEvent("QUEST_COMPLETE", QuestComplete)
--- GearHelper:RegisterEvent("QUEST_FINISHED", QuestFinished)
 GearHelper:RegisterEvent("QUEST_DETAIL", QuestDetail)
 GearHelper:RegisterEvent("MERCHANT_CLOSED", MerchantClosed)
 GearHelper:RegisterEvent("BAG_UPDATE", BagUpdate)
@@ -800,4 +798,3 @@ GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
 GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
--- GearHelper:RegisterEvent("UPDATE_INSTANCE_INFO", UpdateInstanceInfo)
