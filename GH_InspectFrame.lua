@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 local function InspectFrameShow(_)
     GearHelper:BenchmarkCountFuncCall("InspectFrameShow")
 

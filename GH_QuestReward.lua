@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 -- TODO: Overlay buttons needs to be rework, because they don't seems to work
 -- TODO: Split that shit
 function GearHelper:GetQuestReward()

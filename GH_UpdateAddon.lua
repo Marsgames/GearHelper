@@ -1,3 +1,4 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 local waitAnswerFrame = CreateFrame("Frame")
 local askTime, maxWaitTime = nil, 15
 local updateAddonReminderCount = 3

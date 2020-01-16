@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 local function IsTargetValid(target)
 	if nil == target or "" == target or string.find(target, GetUnitName("player")) then
 		return false

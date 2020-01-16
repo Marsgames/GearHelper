@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 function GearHelper:CreateLfrButtons(frameParent)
 	self:BenchmarkCountFuncCall("GearHelper:CreateLfrButtons")
 	local nbInstance = GetNumRFDungeons()
