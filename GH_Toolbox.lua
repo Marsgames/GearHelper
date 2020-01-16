@@ -1,66 +1,28 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local GHBenchmarkedFuncCount = {}
-local BenchmarkMode = false
-
-function GearHelper:ResetBenchmark(type)
-	if type == "Count" then
-		GHBenchmarkedFuncCount = {}
-	end
-end
-
-function GearHelper:SwapBenchmarkMode()
-	BenchmarkMode = not BenchmarkMode
-end
-
-function GearHelper:GetBenchmarkMode()
-	return BenchmarkMode
-end
-
-function GearHelper:GetBenchmarkResult(type)
-	if type == "Count" then
-		return GHBenchmarkedFuncCount
-	end
-end
-
-function GearHelper:BenchmarkCountFuncCall(funcName)
-	if (false == GearHelper:GetBenchmarkMode()) then
-		return
-	end
-
-	if GHBenchmarkedFuncCount[funcName] == nil then
-		GHBenchmarkedFuncCount[funcName] = 0
-	end
-
-	GHBenchmarkedFuncCount[funcName] = GHBenchmarkedFuncCount[funcName] + 1
-end
-
-function GearHelper:Print(object)
+function GearHelper:Print(object, tableOffset)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:Print")
-	if object ~= nil then
-		if GearHelper.db.profile.debug and type(object) == "table" then
-			foreach(object, print)
-		elseif GearHelper.db.profile.debug then
-			print(object)
+	if (GearHelper.db.profile.debug) then
+		if (object ~= nil) then
+			if type(object) == "table" then
+				foreach(object, print)
+			else
+				print(object)
+			end
+		else
+			print(tostring(nil))
 		end
-	else
-		print(tostring(nil))
 	end
 end
 
-function GearHelper:SiObjetGris(itemID)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:SiObjetGris")
+function GearHelper:GetItemSellPrice(itemID)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:GetItemSellPrice")
 	local _, _, itemRarity, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(itemID)
-	local result = {}
 
 	if itemRarity == 0 then
-		table.insert(result, true)
-		table.insert(result, itemSellPrice)
-		return result
+		return true, itemSellPrice
 	else
-		table.insert(result, false)
-		table.insert(result, 0)
-		return result
+		return false, 0
 	end
 end
 
@@ -69,7 +31,7 @@ function GearHelper:IsEquippableByMe(item)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEquippableByMe")
 	local isEquippable = false
 
-	if not IsEquippableItem(item.id) or string.match(item.itemLink, "battlepet") then
+	if (not IsEquippableItem(item.id) or string.match(item.itemLink, L["mascotte"])) then
 		return false
 	end
 
@@ -120,23 +82,7 @@ function GearHelper:IsInventoryInCache()
 	return true
 end
 
--------------------------- C'EST LA MËME FONCTION QU'EN DESSOUS ?!
-function GearHelper:IsInTable(array, data)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:IsInTable")
-	-- local result = false
-	-- table.foreach(
-	-- 	array,
-	-- 	function(k, _)
-	-- 		local ret = strmatch(array[k], tostring(data))
-	-- 		if ret ~= nil then
-	-- 			result = true
-	-- 		end
-	-- 	end
-	-- )
-	-- return result
-
-	return GearHelper:IsValueInTable(tab, val)
-end
+-- TODO: Replace that by @Marsgames suggestion about = true test
 function GearHelper:IsValueInTable(tab, val)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:IsValueInTable")
 
@@ -146,12 +92,6 @@ function GearHelper:IsValueInTable(tab, val)
 		end
 	end
 	return false
-end
--------------------------
-
-function GearHelper:IsEmptyTable(maTable)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:IsEmptyTable")
-	return (next(maTable) == nil)
 end
 
 function GearHelper:MySplit(inputString, separator)
@@ -194,6 +134,7 @@ function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 end
 
 local function AddStatToTab(item, tab)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:AddStatToTab")
 	for k, v in pairs(item) do
 		if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
 			if tab[k] == nil then
@@ -209,11 +150,11 @@ end
 
 function GearHelper:CombineTwoItems(first, second)
 	GearHelper:BenchmarkCountFuncCall("GearHelper:CombineTwoItems")
-
 	return AddStatToTab(second, AddStatToTab(first, {}))
 end
 
 local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:CombineArraysOfEquippableTypes")
 	local mergedArrays = {}
 	for _, array in pairs(arraysOfEquippableByClasses) do
 		for k, v in pairs(array) do
@@ -224,6 +165,7 @@ local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
 end
 
 function GearHelper:GetEquippableTypes()
+	GearHelper:BenchmarkCountFuncCall("GearHelper:GetEquippableTypes")
 	return CombineArraysOfEquippableTypes(L.IsEquippable)
 end
 
@@ -262,8 +204,8 @@ function GearHelper:ReturnGoodLink(itemLink, target, tar)
 	return "|HGHWhispWhenClick:askIfHeNeed_" .. target .. "_" .. itemId .. "_|h" .. tar .. "|h"
 end
 
-function GearHelper:CouleurClasse(classFileName)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:CouleurClasse")
+function GearHelper:GetClassColor(classFileName)
+	GearHelper:BenchmarkCountFuncCall("GearHelper:GetClassColor")
 	local color = RAID_CLASS_COLORS[classFileName]
 
 	return "|c" .. color.colorStr
@@ -301,7 +243,7 @@ function GearHelper:FindHighestStatInTemplate()
 	local template = GetActiveTemplate()
 
 	if (nil == template) then
-		error("template is nil line")
+		error(GHExceptionTemplateIsNil)
 	end
 
 	local maxV = 0
@@ -354,89 +296,9 @@ function GearHelper:ColorizeString(text, color)
 	end
 end
 
-function GearHelper:NormalizeWeightResult(result)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:NormalizeWeightResult")
-	-- -10 not adapted (no stat in template)
-	-- -20 not equippable
-	-- -30 item worst than equipped one
-	-- -40 nil
-	-- -50 if better than nothing
-	-- 0 item equal
-	-- + the value for a better item
-	local resultList = {}
-	resultList["notAdapted"] = -10
-	resultList["notEquippable"] = -20
-	resultList["worstThanEquipped"] = -30
-	resultList["nil"] = -40
-	resultList["betterThanNothing"] = -50
-	resultList["alreadyEquipped"] = -60
-	if result == nil then
-		return {resultList["nil"]}
-	end
-
-	for k, v in pairs(result) do
-		if type(v) == "number" then
-			if v < 0 then
-				result[k] = resultList["worstThanEquipped"]
-			end
-		elseif type(v) == "string" then
-			if resultList[v] ~= nil then
-				result[k] = resultList[v]
-			end
-		end
-	end
-	return result
-end
-
-function GearHelper:DoDisplayOverlay(result)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:DoDisplayOverlay")
-	local doDisplay = {-50}
-	local displayOverlay = false
-	for _, v in pairs(result) do
-		for _, y in pairs(doDisplay) do
-			if v == y or v > 0 then
-				displayOverlay = true
-			end
-		end
-	end
-	return displayOverlay
-end
-
-function GearHelper:parseID(link)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:parseID")
-	local a = string.match(link, "item[%-?%d::]+")
-	local b = string.sub(a, 5, 12)
-	local c = string.gsub(b, ":", "")
-	return c
-end
-
-function GearHelper:CountingSort(f)
-	GearHelper:BenchmarkCountFuncCall("GearHelper:CountingSort")
-	-- local min, max = math.min(unpack(f)), math.max(unpack(f))
-	-- local count = {}
-	-- for i = min, max do
-	-- 	count[i] = 0
-	-- end
-
-	-- for i = 1, #f do
-	-- 	count[f[i]] = count[f[i]] + 1
-	-- end
-
-	-- local z = 1
-	-- for i = min, max do
-	-- 	while count[i] > 0 do
-	-- 		f[z] = i
-	-- 		z = z + 1
-	-- 		count[i] = count[i] - 1
-	-- 	end
-	-- end
-
-	table.sort(f)
-end
-
-function GearHelper:CountArray(tab)
+function GearHelper:GetArraySize(tab)
 	if (type(tab) ~= "table") then
-		return 0
+		error(GHExceptionParameterIsNotAnArray)
 	end
 
 	local count = 0
@@ -444,9 +306,28 @@ function GearHelper:CountArray(tab)
 		count = count + 1
 	end
 
-	-- GearHelper:Print("CountArray : " .. count .. "   - #() : " .. #(tab))
-
 	return count
+end
 
-	-- return table.getn(tab)
+function GearHelper:GetQualityFromColor(color)
+	GearHelper:BenchmarkCountFuncCall("GetQualityFromColor")
+	if (color == "9d9d9d") then
+		return 0
+	elseif (color == "ffffff") then
+		return 1
+	elseif (color == "1eff00") then
+		return 2
+	elseif (color == "0070dd") then
+		return 3
+	elseif (color == "a335ee") then
+		return 4
+	elseif (color == "ff8000") then
+		return 5
+	elseif (color == "e6cc80") then
+		return 6
+	elseif (color == "00ccff") then
+		return 7
+	else
+		error("Color " .. color .. " is not a possible choice")
+	end
 end

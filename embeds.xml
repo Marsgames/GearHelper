@@ -14,5 +14,4 @@
   <Include file="Libs\LibBabble-Inventory-3.0\lib.xml"/>
   <Include file="Libs\LibAboutPanel\lib.xml"/>
   <Script file="Libs\LibRealmInfo\LibRealmInfo.lua"/>
-
 </Ui>
