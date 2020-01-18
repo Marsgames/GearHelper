@@ -4,6 +4,7 @@ local totalEarnedMoney = 0
 local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
 local waitSpeFrame = CreateFrame("Frame")
+local delaySpeTimer = 0.5
 
 -- GearHelperVars.waitSpeFrame:Hide()
 waitSpeFrame:Hide()
