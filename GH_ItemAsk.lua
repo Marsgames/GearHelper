@@ -63,8 +63,10 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 					PlaySound(5274, "Master")
 				end
 			end
-		else
-			error(err)
+		-- else
+		-- 	if (err ~= GHExceptionNotEquippable) then
+		-- 		error(err)
+		-- 	end
 		end
 	end
 end
