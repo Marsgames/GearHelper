@@ -22,7 +22,7 @@ GearHelperVars = {
 --{{ Local Vars }}
 local allPrefix = {["askVersion" .. GearHelperVars.prefixAddon] = GearHelper.SendAnswerVersion, ["answerVersion" .. GearHelperVars.prefixAddon] = GearHelper.ReceiveAnswer}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-local delaySpeTimer = 0.5
+
 local delayNilTimer = 10
 local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
