@@ -83,11 +83,11 @@ local function ParseDefaultValues(rawValues, specID, templateID)
 				lastWord = "CriticalStrike"
 			end
 
-			if lastWord == "OffHandDamage" then
+			if lastWord == "OffHandDamage" or "Off-Hand-Weapon-Dps" == lastWord then
 				lastWord = "OffHandDps"
 			end
 
-			if lastWord == "MainHandDamage" then
+			if lastWord == "MainHandDamage" or "Weapon-Dps" == lastWord then
 				lastWord = "MainHandDps"
 			end
 
@@ -199,7 +199,7 @@ local rawValues = {
 	},
 	-- PRIEST HOLY --
 	["257"] = {
-		["NOX"] = ""
+		["NOX"] = "Intellect [7.52] > Mastery [6.1] = Crit [6.0] > Haste [4.42] > Versatility [4.00]"
 	},
 	-- PRIEST SHADOW --
 	["258"] = {
@@ -211,7 +211,7 @@ local rawValues = {
 	},
 	-- ROGUE OUTLAW --
 	["260"] = {
-		["NOX"] = ""
+		["NOX"] = "Weapon-Dps [11.35] > Crit [4.72] > Versatility [4.7] > Hast [4.0] > Agility [3.4] > Mastery [2.75] > Off-Hand-Weapon-Dps [2.0]"
 	},
 	-- ROGUE SUBTLETY --
 	["261"] = {
