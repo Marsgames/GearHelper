@@ -8,6 +8,41 @@ local function IsTargetValid(target)
 	return true
 end
 
+local function AskIfHeNeed(link, sendTo)
+	GearHelper:BenchmarkCountFuncCall("AskIfHeNeed")
+	local className, classFile, classID = UnitClass(sendTo)
+	local itemTable = GearHelper:GetItemByLink(link)
+	local itemLink = itemTable["itemLink"]
+	local lienPerso = tostring(GearHelper:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
+	StaticPopupDialogs["AskIfHeNeed"] = {
+		text = L["demande1"] .. lienPerso .. L["demande2"] .. itemLink .. " ?",
+		button1 = L["yes"],
+		button2 = L["no"],
+		OnAccept = function(GearHelper, data, data2)
+			local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
+			local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
+			if unitLocale == nil then
+				unitLocale = "enUS"
+			end
+			local theSource = "demande4" .. unitLocale
+			local theSource2 = theSource .. "2"
+			local msg = L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
+			local rep = "rep" .. unitLocale
+			local rep2 = "rep" .. unitLocale .. "2"
+			local msgRep = L[rep] .. L["maLangue" .. unitLocale] .. L[rep2] ~= nil and L[rep] .. L["maLangue" .. unitLocale] .. L[rep2] or L["repenUS"] .. L["maLangue" .. unitLocale]
+
+			SendChatMessage(msg, "WHISPER", "Common", sendTo)
+			SendChatMessage(msgRep, "WHISPER", "Common", sendTo)
+			StaticPopup_Hide("AskIfHeNeed")
+		end,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = true,
+		preferredIndex = 3 -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+	}
+	StaticPopup_Show("AskIfHeNeed")
+end
+
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 	self:BenchmarkCountFuncCall("GearHelper:CreateLinkAskIfHeNeeds")
 	-- local message = message or "|cffff8000|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
@@ -69,39 +104,4 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 		-- 	end
 		end
 	end
-end
-
-local function AskIfHeNeed(link, sendTo)
-	GearHelper:BenchmarkCountFuncCall("AskIfHeNeed")
-	local className, classFile, classID = UnitClass(sendTo)
-	local itemTable = GearHelper:GetItemByLink(link)
-	local itemLink = itemTable["itemLink"]
-	local lienPerso = tostring(GearHelper:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
-	StaticPopupDialogs["AskIfHeNeed"] = {
-		text = L["demande1"] .. lienPerso .. L["demande2"] .. itemLink .. " ?",
-		button1 = L["yes"],
-		button2 = L["no"],
-		OnAccept = function(GearHelper, data, data2)
-			local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
-			local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
-			if unitLocale == nil then
-				unitLocale = "enUS"
-			end
-			local theSource = "demande4" .. unitLocale
-			local theSource2 = theSource .. "2"
-			local msg = L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
-			local rep = "rep" .. unitLocale
-			local rep2 = "rep" .. unitLocale .. "2"
-			local msgRep = L[rep] .. L["maLangue" .. unitLocale] .. L[rep2] ~= nil and L[rep] .. L["maLangue" .. unitLocale] .. L[rep2] or L["repenUS"] .. L["maLangue" .. unitLocale]
-
-			SendChatMessage(msg, "WHISPER", "Common", sendTo)
-			SendChatMessage(msgRep, "WHISPER", "Common", sendTo)
-			StaticPopup_Hide("AskIfHeNeed")
-		end,
-		timeout = 0,
-		whileDead = true,
-		hideOnEscape = true,
-		preferredIndex = 3 -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
-	}
-	StaticPopup_Show("AskIfHeNeed")
 end
