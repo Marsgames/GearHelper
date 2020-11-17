@@ -760,7 +760,7 @@ GearHelper.cwTable = {
             end,
             set = function(_, val)
                 if val == 1 then
-                    if #GearHelper.db.profile.CW == 0 or not GearHelper.db.profile.lastWeightTemplate then --To avoid error if we select custome weight and we do not create a template
+                    if GearHelper:GetArraySize(GearHelper.db.profile.CW) == 0 or not GearHelper.db.profile.lastWeightTemplate then --To avoid error if we select custome weight and we do not create a template
                         GearHelper.db.profile.weightTemplate = "NOX_ByDefault"
                     else
                         GearHelper.db.profile.weightTemplate = GearHelper.db.profile.lastWeightTemplate
