@@ -1,20 +1,18 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("GearHelper", "deDE")
 if not L then
-	return
+    return
 end
 
 L["merci"] = "|cFF00FF00Thank you deathcore001 and CeloSG for German translation"
-
 L["local"] = "DE"
 
+-------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE EST DISPO SUR CURSE --------------------------
 L["ActivatedGreen"] = "|cFF00FF00Aktiviert|r"
 L["Addon"] = "|cFF00FF00GearHelper: |r"
 L["ask1"] = "|cFFFFFF00Du kannst ["
 L["ask2"] = "|cFFFFFF00] fragen, ob er es braucht"
 L["autoEquipLootedStuff"] = "Geplünderte Gegenstände automatisch ausrüsten"
 L["autoEquipSpecChangedStuff"] = "Automatisches ausrüsten beim Ändern der Spezialisierung"
-L["autoGreed"] = "Gier automatisch wählen"
-L["autoNeed"] = "Bedarf automatisch wählen"
 L["AutoRepair"] = "Reparieren mit eigenen Geld"
 L["auto-repair"] = "Repariere automatisch"
 L["auto-repairDesc"] = "Aktiviert / deaktiviert die automatische Reparatur"
@@ -42,7 +40,6 @@ L["helpCW"] = "cw - Öffnet das Benutzerdefinierte Gewichtungsfenster"
 L["helpDebug"] = "debug - Aktiviert den Debugmodus"
 L["helpVersion"] = "version - Zeigt die aktuelle Version von GH an"
 L["ilvlInspect"] = "Durchschnittliches ilvl:"
-L["iNeededOn"] = "Ich habe Bedarf auf"
 L["InviteMessage"] = "Die Nachricht die geflüstert werden müssen für die automatische Einladung lautet:"
 L["isAlive"] = "ist Lebendig!"
 L["isDead"] = "ist tot!"
@@ -109,9 +106,7 @@ L["UIGHCheckBoxAddon"] = "Schalte GearHelper ein/aus"
 L["UIGHCheckBoxAutoAcceptQuestReward"] = "Schalte automatisches Akzeptieren von Questbelohnungen ein/aus"
 L["UIGHCheckBoxAutoEquipLootedStuff"] = "Schalte automatisches Ausrüsten geplünderter Gegenstände ein/aus"
 L["UIGHCheckBoxAutoEquipWhenSwitchSpe"] = "Aktiviere / deaktiviere automatisches Ausrüsten beim wechseln der Spezialisierung"
-L["UIGHCheckBoxAutoGreed"] = "Schalte automatisches Würfeln von Gier in Instanzen ein/aus"
 L["UIGHCheckBoxAutoInvite"] = "Automatisches Einladen der Person, welche dir den text zuflüstert |cFF00FF00"
-L["UIGHCheckBoxAutoNeed"] = "Schalte automatisches Würfeln von Bedarf in Instanzen ein/aus"
 L["UIGHCheckBoxlootInRaidAlert"] = "Schalte die Option ein/aus, um darüber informiert zu werden, wenn jemand eine bessere Ausrüstung als deine aktuelle plündert."
 L["UIGHCheckBoxSellGrey"] = "Schalte automatisches Verkaufen von grauen Gegenständen ein/aus"
 L["UIGlobalComputeNotEquippable"] = "Zeige nicht ausrüstbare Gegenstände"
@@ -134,33 +129,32 @@ L["UItemplateName"] = "Neue Vorlage"
 L["UIWhisperAlert"] = "Flüster Alarm"
 L["UIWhisperAlertDesc"] = "Spiele einen Ton, wenn du angeflüstert wirst"
 L["yes"] = "Ja"
-
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
 -----
 
 L["Tooltip"] = {
-	Stat = {
-		["Intellect"] = ITEM_MOD_INTELLECT_SHORT,
-		["Haste"] = ITEM_MOD_HASTE_RATING_SHORT,
-		["CriticalStrike"] = ITEM_MOD_CRIT_RATING_SHORT,
-		["Versatility"] = ITEM_MOD_VERSATILITY,
-		["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT,
-		["Agility"] = ITEM_MOD_AGILITY_SHORT,
-		["Stamina"] = ITEM_MOD_STAMINA_SHORT,
-		["Strength"] = ITEM_MOD_STRENGTH_SHORT,
-		["Armor"] = RESISTANCE0_NAME,
-		["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
-		["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
-		["Leech"] = "Lebensraub",
-		["Avoidance"] = "Vermeidung",
-		["MovementSpeed"] = "Bewegungsgeschwindigkeit"
-	},
-	["ItemLevel"] = "^Gegenstandsstufe",
-	["LevelRequired"] = "^Benötigt Stufe",
-	["GemSocketEmpty"] = "Sockel",
-	["BonusGem"] = "^Sockelbonus"
-	--["MainDroite"] = "Dégâts main droite",
-	--["MainGauche"] = "Dégâts main gauche"
+    Stat = {
+        ["Intellect"] = ITEM_MOD_INTELLECT_SHORT,
+        ["Haste"] = ITEM_MOD_HASTE_RATING_SHORT,
+        ["CriticalStrike"] = ITEM_MOD_CRIT_RATING_SHORT,
+        ["Versatility"] = ITEM_MOD_VERSATILITY,
+        ["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT,
+        ["Agility"] = ITEM_MOD_AGILITY_SHORT,
+        ["Stamina"] = ITEM_MOD_STAMINA_SHORT,
+        ["Strength"] = ITEM_MOD_STRENGTH_SHORT,
+        ["Armor"] = RESISTANCE0_NAME,
+        ["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
+        ["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
+        ["Leech"] = "Lebensraub",
+        ["Avoidance"] = "Vermeidung",
+        ["MovementSpeed"] = "Bewegungsgeschwindigkeit"
+    },
+    ["ItemLevel"] = "^Gegenstandsstufe",
+    ["LevelRequired"] = "^Benötigt Stufe",
+    ["GemSocketEmpty"] = "Sockel",
+    ["BonusGem"] = "^Sockelbonus"
+    --["MainDroite"] = "Dégâts main droite",
+    --["MainGauche"] = "Dégâts main gauche"
 }
