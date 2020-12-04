@@ -99,7 +99,15 @@ function GearHelper:SlashAin()
 end
 
 function GearHelper:SlashReset()
-    self.db = nil
+    GearHelper:ResetCache()
+     GearHelper.db.profileKeys = {}
+     GearHelper.db.profileKeys = nil
+     GearHelper.db.global = {}
+     GearHelper.db.global = nil
+     GearHelper.db.profiles = {}
+     GearHelper.db.profiles = nil
+    GearHelper.db = {}
+    GearHelper.db = nil
     ReloadUI()
 end
 
