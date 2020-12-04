@@ -1442,7 +1442,7 @@ local phrasesTable = {
                     type = "description",
                     name = "english",
                     fontSize = "medium"
-                }
+                },
                 -- Rep2 = {
                 --     order = 15,
                 --     name = "",
@@ -1454,7 +1454,19 @@ local phrasesTable = {
                 --     set = function(info, val)
                 --         GearHelper.db.global.phrases.enUS.rep2 = val
                 --     end
-                -- }
+                -- },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.enUS = {}
+                        GearHelper.db.global.phrases.enUS.demande4 = L["demande4enUS"]
+                        GearHelper.db.global.phrases.enUS.demande42 = L["demande4enUS2"]
+                        GearHelper.db.global.phrases.enUS.rep = L["repenUS"]
+                        GearHelper.db.global.phrases.enUS.rep2 = L["repenUS2"]
+                    end
+                }
             }
         },
         french = {
@@ -1578,6 +1590,18 @@ local phrasesTable = {
                     end,
                     set = function(info, val)
                         GearHelper.db.global.phrases.frFR.rep2 = val
+                    end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.frFR = {}
+                        GearHelper.db.global.phrases.frFR.demande4 = L["demande4frFR"]
+                        GearHelper.db.global.phrases.frFR.demande42 = L["demande4frFR2"]
+                        GearHelper.db.global.phrases.frFR.rep = L["repfrFR"]
+                        GearHelper.db.global.phrases.frFR.rep2 = L["repfrFR2"]
                     end
                 }
             }
@@ -1704,6 +1728,18 @@ local phrasesTable = {
                     set = function(info, val)
                         GearHelper.db.global.phrases.deDE.rep2 = val
                     end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.deDE = {}
+                        GearHelper.db.global.phrases.deDE.demande4 = L["demande4deDE"]
+                        GearHelper.db.global.phrases.deDE.demande42 = L["demande4deDE2"]
+                        GearHelper.db.global.phrases.deDE.rep = L["repdeDE"]
+                        GearHelper.db.global.phrases.deDE.rep2 = L["repdeDE2"]
+                    end
                 }
             }
         },
@@ -1828,6 +1864,18 @@ local phrasesTable = {
                     end,
                     set = function(info, val)
                         GearHelper.db.global.phrases.esES.rep2 = val
+                    end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.esES = {}
+                        GearHelper.db.global.phrases.esES.demande4 = L["demande4esES"]
+                        GearHelper.db.global.phrases.esES.demande42 = L["demande4esES2"]
+                        GearHelper.db.global.phrases.esES.rep = L["repesES"]
+                        GearHelper.db.global.phrases.esES.rep2 = L["repesES2"]
                     end
                 }
             }
@@ -1954,6 +2002,18 @@ local phrasesTable = {
                     set = function(info, val)
                         GearHelper.db.global.phrases.esMX.rep2 = val
                     end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.esMX = {}
+                        GearHelper.db.global.phrases.esMX.demande4 = L["demande4esMX"]
+                        GearHelper.db.global.phrases.esMX.demande42 = L["demande4esMX2"]
+                        GearHelper.db.global.phrases.esMX.rep = L["repesMX"]
+                        GearHelper.db.global.phrases.esMX.rep2 = L["repesMX2"]
+                    end
                 }
             }
         },
@@ -2078,6 +2138,18 @@ local phrasesTable = {
                     end,
                     set = function(info, val)
                         GearHelper.db.global.phrases.itIT.rep2 = val
+                    end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.itIT = {}
+                        GearHelper.db.global.phrases.itIT.demande4 = L["demande4itIT"]
+                        GearHelper.db.global.phrases.itIT.demande42 = L["demande4itIT2"]
+                        GearHelper.db.global.phrases.itIT.rep = L["repitIT"]
+                        GearHelper.db.global.phrases.itIT.rep2 = L["repitIT2"]
                     end
                 }
             }
@@ -2204,6 +2276,18 @@ local phrasesTable = {
                     set = function(info, val)
                         GearHelper.db.global.phrases.koKR.rep2 = val
                     end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.koKR = {}
+                        GearHelper.db.global.phrases.koKR.demande4 = L["demande4koKR"]
+                        GearHelper.db.global.phrases.koKR.demande42 = L["demande4koKR2"]
+                        GearHelper.db.global.phrases.koKR.rep = L["repkoKR"]
+                        GearHelper.db.global.phrases.koKR.rep2 = L["repkoKR2"]
+                    end
                 }
             }
         },
@@ -2328,6 +2412,18 @@ local phrasesTable = {
                     end,
                     set = function(info, val)
                         GearHelper.db.global.phrases.ptBR.rep2 = val
+                    end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.ptBR = {}
+                        GearHelper.db.global.phrases.ptBR.demande4 = L["demande4ptBR"]
+                        GearHelper.db.global.phrases.ptBR.demande42 = L["demande4ptBR2"]
+                        GearHelper.db.global.phrases.ptBR.rep = L["repptBR"]
+                        GearHelper.db.global.phrases.ptBR.rep2 = L["repptBR2"]
                     end
                 }
             }
@@ -2454,6 +2550,18 @@ local phrasesTable = {
                     set = function(info, val)
                         GearHelper.db.global.phrases.ruRU.rep2 = val
                     end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.ruRU = {}
+                        GearHelper.db.global.phrases.ruRU.demande4 = L["demande4ruRU"]
+                        GearHelper.db.global.phrases.ruRU.demande42 = L["demande4ruRU2"]
+                        GearHelper.db.global.phrases.ruRU.rep = L["repruRU"]
+                        GearHelper.db.global.phrases.ruRU.rep2 = L["repruRU2"]
+                    end
                 }
             }
         },
@@ -2579,6 +2687,18 @@ local phrasesTable = {
                     set = function(info, val)
                         GearHelper.db.global.phrases.zhCN.rep2 = val
                     end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.zhCN = {}
+                        GearHelper.db.global.phrases.zhCN.demande4 = L["demande4zhCN"]
+                        GearHelper.db.global.phrases.zhCN.demande42 = L["demande4zhCN2"]
+                        GearHelper.db.global.phrases.zhCN.rep = L["repzhCN"]
+                        GearHelper.db.global.phrases.zhCN.rep2 = L["repzhCN2"]
+                    end
                 }
             }
         },
@@ -2703,6 +2823,18 @@ local phrasesTable = {
                     end,
                     set = function(info, val)
                         GearHelper.db.global.phrases.zhTW.rep2 = val
+                    end
+                },
+                ResetButton = {
+                    order = 16,
+                    type = "execute",
+                    name = "Reset",
+                    func = function()
+                        GearHelper.db.global.phrases.zhTW = {}
+                        GearHelper.db.global.phrases.zhTW.demande4 = L["demande4zhTW"]
+                        GearHelper.db.global.phrases.zhTW.demande42 = L["demande4zhTW2"]
+                        GearHelper.db.global.phrases.zhTW.rep = L["repzhTW"]
+                        GearHelper.db.global.phrases.zhTW.rep2 = L["repzhTW2"]
                     end
                 }
             }
@@ -2906,6 +3038,6 @@ LibStub("AceConfig-3.0"):RegisterOptionsTable(L["thanksPanel"], thanksTable)
 GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["secondaryOptions"], L["secondaryOptions"], "GearHelper")
 GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
-LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["phrases"], L["phrases"], "GearHelper")
+LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["thanksPanel"], L["thanksPanel"], "GearHelper")

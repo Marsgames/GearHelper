@@ -94,6 +94,13 @@ function GearHelper:IsValueInTable(tab, val)
     return false
 end
 
+-- Remove an item from table and return elem
+function GearHelper:RemoveItemByKey(table, key)
+local element = table[key]
+    table[key] = nil
+    return element
+end
+
 function GearHelper:MySplit(inputString, separator)
     GearHelper:BenchmarkCountFuncCall("GearHelper:MySplit")
     if separator == nil then
