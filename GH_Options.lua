@@ -1328,6 +1328,1388 @@ function GearHelper:BuildCWTable()
     LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
 end
 
+local phrasesTable = {
+    name = L["phrases"],
+    type = "group",
+    args = {
+        english = {
+            order = 0,
+            name = "English",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "english",
+                    fontSize = "medium"
+                }
+                -- Rep2 = {
+                --     order = 15,
+                --     name = "",
+                --     type = "input",
+                --     width = "double",
+                --     get = function(info)
+                --         return GearHelper.db.global.phrases.enUS.rep2
+                --     end,
+                --     set = function(info, val)
+                --         GearHelper.db.global.phrases.enUS.rep2 = val
+                --     end
+                -- }
+            }
+        },
+        french = {
+            order = 1,
+            name = "French",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.frFR.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.frFR.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.frFR.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.frFR.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.frFR.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.frFR.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "français",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.frFR.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.frFR.rep2 = val
+                    end
+                }
+            }
+        },
+        German = {
+            order = 2,
+            name = "German",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.deDE.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.deDE.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.deDE.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.deDE.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.deDE.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.deDE.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "deutsch",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.deDE.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.deDE.rep2 = val
+                    end
+                }
+            }
+        },
+        Spanish = {
+            order = 3,
+            name = "Spanish",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esES.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esES.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esES.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esES.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esES.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esES.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "español",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esES.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esES.rep2 = val
+                    end
+                }
+            }
+        },
+        Mexican = {
+            order = 4,
+            name = "Mexican",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esMX.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esMX.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esMX.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esMX.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esMX.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esMX.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "español",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.esMX.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.esMX.rep2 = val
+                    end
+                }
+            }
+        },
+        Italian = {
+            order = 5,
+            name = "Italian",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.itIT.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.itIT.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.itIT.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.itIT.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "italiano",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.itIT.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.itIT.rep2 = val
+                    end
+                }
+            }
+        },
+        Korean = {
+            order = 6,
+            name = "Korean",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.koKR.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.koKR.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.koKR.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.koKR.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "한국어",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.koKR.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.koKR.rep2 = val
+                    end
+                }
+            }
+        },
+        Portuguese = {
+            order = 7,
+            name = "Portuguese",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.ptBR.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.ptBR.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.ptBR.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.ptBR.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "Português",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.ptBR.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.ptBR.rep2 = val
+                    end
+                }
+            }
+        },
+        Russian = {
+            order = 8,
+            name = "Russian",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.ruRU.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.ruRU.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.ruRU.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.ruRU.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "русский",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.ruRU.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.ruRU.rep2 = val
+                    end
+                }
+            }
+        },
+        SimplifiedChinese = {
+            order = 9,
+            name = "Simplified Chinese",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.zhCN.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.zhCN.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.zhCN.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.zhCN.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "中文",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.zhCN.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.zhCN.rep2 = val
+                    end
+                }
+            }
+        },
+        TraditionalChinese = {
+            order = 10,
+            name = "Traditional Chinese",
+            type = "group",
+            args = {
+                Ask1 = {
+                    order = 0,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.enUS.demande4
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.enUS.demande4 = val
+                    end
+                },
+                Empty1 = {
+                    order = 1,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                ItemLink = {
+                    order = 2,
+                    type = "description",
+                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
+                    fontSize = "medium"
+                },
+                Empty2 = {
+                    order = 3,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Ask2 = {
+                    order = 4,
+                    name = "",
+                    type = "input",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.zhTW.demande42
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.zhTW.demande42 = val
+                    end
+                },
+                Empty7 = {
+                    order = 5,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                QuestionMark = {
+                    order = 6,
+                    type = "description",
+                    name = "?",
+                    fontSize = "medium"
+                },
+                Empty8 = {
+                    order = 7,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty3 = {
+                    order = 8,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty4 = {
+                    order = 9,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Header = {
+                    order = 10,
+                    type = "header",
+                    name = "Answer"
+                },
+                Empty5 = {
+                    order = 11,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Empty6 = {
+                    order = 12,
+                    type = "description",
+                    name = "",
+                    fontSize = "medium"
+                },
+                Rep = {
+                    order = 13,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.zhTW.rep
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.zhTW.rep = val
+                    end
+                },
+                myLang = {
+                    order = 14,
+                    type = "description",
+                    name = "中文",
+                    fontSize = "medium"
+                },
+                Rep2 = {
+                    order = 15,
+                    name = "",
+                    type = "input",
+                    width = "double",
+                    get = function(info)
+                        return GearHelper.db.global.phrases.zhTW.rep2
+                    end,
+                    set = function(info, val)
+                        GearHelper.db.global.phrases.zhTW.rep2 = val
+                    end
+                }
+            }
+        }
+    }
+}
+
 local aboutTable = {
     name = "About",
     type = "group",
@@ -1507,6 +2889,11 @@ local thanksTable = {
             fontSize = "medium",
             name = "        |cFFFFFF00 Newill-Kristin |r - Bug report",
             type = "description"
+        },
+        name27 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 zloy-online |r - Bug report",
+            type = "description"
         }
     }
 }
@@ -1514,9 +2901,11 @@ local thanksTable = {
 LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
 LibStub("AceConfig-3.0"):RegisterOptionsTable(L["secondaryOptions"], ghSecondaryOptionsTable)
 LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable(L["phrases"], phrasesTable)
 LibStub("AceConfig-3.0"):RegisterOptionsTable(L["thanksPanel"], thanksTable)
 GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["secondaryOptions"], L["secondaryOptions"], "GearHelper")
 GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
 LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["phrases"], L["phrases"], "GearHelper")
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["thanksPanel"], L["thanksPanel"], "GearHelper")
