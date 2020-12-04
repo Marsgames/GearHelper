@@ -221,6 +221,8 @@ function GearHelper:OnEnable()
         self.db.global.phrases.zhTW.rep = L["repzhTW"]
         self.db.global.phrases.zhTW.rep2 = L["repzhTW2"]
     end
+
+    GearHelper:CheckCacheDate()
 end
 
 function GearHelper:setInviteMessage(newMessage)
