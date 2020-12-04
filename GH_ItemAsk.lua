@@ -18,18 +18,19 @@ local function AskIfHeNeed(link, sendTo)
         text = L["demande1"] .. lienPerso .. L["demande2"] .. itemLink .. " ?",
         button1 = L["yes"],
         button2 = L["no"],
-        OnAccept = function(GearHelper, data, data2)
+        OnAccept = function(GearHelper2, data, data2)
             local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
             local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
             if unitLocale == nil then
                 unitLocale = "enUS"
             end
-            local theSource = "demande4" .. unitLocale
-            local theSource2 = theSource .. "2"
-            local msg = L[theSource] .. itemLink .. L[theSource2] .. "?" ~= nil and L[theSource] .. itemLink .. L[theSource2] .. "?" or L["demande4enUS"] .. itemLink .. L["demande4enUS2"] .. "?"
-            local rep = "rep" .. unitLocale
-            local rep2 = "rep" .. unitLocale .. "2"
-            local msgRep = L[rep] .. L["maLangue" .. unitLocale] .. L[rep2] ~= nil and L[rep] .. L["maLangue" .. unitLocale] .. L[rep2] or L["repenUS"] .. L["maLangue" .. unitLocale]
+
+            local theSource = GearHelper.db.global.phrases[unitLocale].demande4 or L["demande4enUS"]
+            local theSource2 = GearHelper.db.global.phrases[unitLocale].demande42 or L["demande4enUS2"]
+            local  msg = theSource .. itemLink .. theSource2 .. "?"
+            local rep = GearHelper.db.global.phrases[unitLocale].rep or  L["repenUS"]
+            local rep2 = GearHelper.db.global.phrases[unitLocale].rep2 or ""
+            local msgRep = rep .. L["maLangue" .. unitLocale] .. rep2
 
             SendChatMessage(msg, "WHISPER", "Common", sendTo)
             SendChatMessage(msgRep, "WHISPER", "Common", sendTo)
@@ -67,6 +68,9 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
     local nameLink
 
     local OldSetItemRef = SetItemRef
+    if (debug == 1) then
+        AskIfHeNeed(message, target)
+    end
     function SetItemRef(link, text, button, chatFrame)
         self:BenchmarkCountFuncCall("SetItemRef")
         local func = strmatch(link, "^GHWhispWhenClick:(%a+)")

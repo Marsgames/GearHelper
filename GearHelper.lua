@@ -64,7 +64,8 @@ local defaultsOptions = {
         itemWaitList = {},
         myNames = "",
         buildVersion = 7,
-        equipLocInspect = {}
+        equipLocInspect = {},
+        phrases = {}
     }
 }
 waitNilFrame:Hide()
@@ -150,8 +151,75 @@ function GearHelper:OnEnable()
 
     print(self:ColorizeString(L["Addon"], "LightGreen") .. self:ColorizeString(L["ActivatedGreen"], "LightGreen"))
     self.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
-    if (#self.db.global.equipLocInspect == 0) then
+    if (0 == self:GetArraySize(self.db.global.equipLocInspect)) then
         InitEquipLocInspect()
+    end
+    if (0 == self:GetArraySize(self.db.global.phrases)) then
+        self.db.global.phrases.enUS = {}
+        self.db.global.phrases.enUS["demande4"] = L["demande4enUS"]
+        self.db.global.phrases.enUS["demande42"] = L["demande4enUS2"]
+        self.db.global.phrases.enUS["rep"] = L["repenUS"]
+        self.db.global.phrases.enUS["rep2"] = L["repenUS2"]
+
+        self.db.global.phrases.frFR = {}
+        self.db.global.phrases.frFR.demande4 = L["demande4frFR"]
+        self.db.global.phrases.frFR.demande42 = L["demande4frFR2"]
+        self.db.global.phrases.frFR.rep = L["repfrFR"]
+        self.db.global.phrases.frFR.rep2 = L["repfrFR2"]
+
+        self.db.global.phrases.deDE = {}
+        self.db.global.phrases.deDE.demande4 = L["demande4deDE"]
+        self.db.global.phrases.deDE.demande42 = L["demande4deDE2"]
+        self.db.global.phrases.deDE.rep = L["repdeDE"]
+        self.db.global.phrases.deDE.rep2 = L["repdeDE2"]
+
+        self.db.global.phrases.esES = {}
+        self.db.global.phrases.esES.demande4 = L["demande4esES"]
+        self.db.global.phrases.esES.demande42 = L["demande4esES2"]
+        self.db.global.phrases.esES.rep = L["repesES"]
+        self.db.global.phrases.esES.rep2 = L["repesES2"]
+
+        self.db.global.phrases.esMX = {}
+        self.db.global.phrases.esMX.demande4 = L["demande4esMX"]
+        self.db.global.phrases.esMX.demande42 = L["demande4esMX2"]
+        self.db.global.phrases.esMX.rep = L["repesMX"]
+        self.db.global.phrases.esMX.rep2 = L["repesMX2"]
+
+        self.db.global.phrases.itIT = {}
+        self.db.global.phrases.itIT.demande4 = L["demande4itIT"]
+        self.db.global.phrases.itIT.demande42 = L["demande4itIT2"]
+        self.db.global.phrases.itIT.rep = L["repitIT"]
+        self.db.global.phrases.itIT.rep2 = L["repitIT2"]
+
+        self.db.global.phrases.koKR = {}
+        self.db.global.phrases.koKR.demande4 = L["demande4koKR"]
+        self.db.global.phrases.koKR.demande42 = L["demande4koKR2"]
+        self.db.global.phrases.koKR.rep = L["repkoKR"]
+        self.db.global.phrases.koKR.rep2 = L["repkoKR2"]
+
+        self.db.global.phrases.ptBR = {}
+        self.db.global.phrases.ptBR.demande4 = L["demande4ptBR"]
+        self.db.global.phrases.ptBR.demande42 = L["demande4ptBR2"]
+        self.db.global.phrases.ptBR.rep = L["repptBR"]
+        self.db.global.phrases.ptBR.rep2 = L["repptBR2"]
+
+        self.db.global.phrases.ruRU = {}
+        self.db.global.phrases.ruRU.demande4 = L["demande4ruRU"]
+        self.db.global.phrases.ruRU.demande42 = L["demande4ruRU2"]
+        self.db.global.phrases.ruRU.rep = L["repruRU"]
+        self.db.global.phrases.ruRU.rep2 = L["repruRU2"]
+
+        self.db.global.phrases.zhCN = {}
+        self.db.global.phrases.zhCN.demande4 = L["demande4zhCN"]
+        self.db.global.phrases.zhCN.demande42 = L["demande4zhCN2"]
+        self.db.global.phrases.zhCN.rep = L["repzhCN"]
+        self.db.global.phrases.zhCN.rep2 = L["repzhCN2"]
+
+        self.db.global.phrases.zhTW = {}
+        self.db.global.phrases.zhTW.demande4 = L["demande4zhTW"]
+        self.db.global.phrases.zhTW.demande42 = L["demande4zhTW2"]
+        self.db.global.phrases.zhTW.rep = L["repzhTW"]
+        self.db.global.phrases.zhTW.rep2 = L["repzhTW2"]
     end
 end
 

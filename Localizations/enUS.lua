@@ -77,7 +77,7 @@ L["repruRU"] = "Please, answer in "
 L["repruRU2"] = "or in english."
 L["repesES"] --[[don't translate this]] = "Por favor, contesta en "
 L["repesES2"] --[[don't translate this]] = "o en inglès."
-L["represMX"] = "Please, answer in "
+L["repesMX"] = "Please, answer in "
 L["repesMX2"] = "or in english."
 L["repkoKR"] = "Please, answer in "
 L["repkoKR2"] = "or in english."
@@ -172,6 +172,7 @@ L["helpConfig"] = "config - Open the config panel"
 L["helpVersion"] = "version - Print your actual version of GH"
 L["helpCW"] = "cw - Open the Custom Weights panel"
 L["helpDebug"] = "debug - Enable the debug print mode"
+L["phrases"] = "Phrases"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
