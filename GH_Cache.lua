@@ -35,7 +35,7 @@ function GearHelper:CheckCacheDate()
 
     local todayDate = GearHelper:MySplit(date("%y-%m-%d"), "-")
     local todayThreshold = ((todayDate[1] * 12 * 30) + (todayDate[2] * 30) + todayDate[3]) - 35
-    
+
     for k, v in pairs(GearHelper.db.global.ItemCache) do
         if (nil == v.date) then
             GearHelper:RemoveItemByKey(GearHelper.db.global.ItemCache, k)
