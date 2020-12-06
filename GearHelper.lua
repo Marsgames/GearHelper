@@ -85,11 +85,11 @@ function GearHelper:RefreshConfig()
     InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
-function Gearhelper:NilTableValues(tableToReset)
-    GearHelper:BenchmarkCountFuncCall("Gearhelper:NilTableValues")
+function GearHelper:NilTableValues(tableToReset)
+    GearHelper:BenchmarkCountFuncCall("GearHelper:NilTableValues")
     for key, v in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
-            Gearhelper:NilTableValues(tableToReset[key])
+            GearHelper:NilTableValues(tableToReset[key])
         else
             tableToReset[key] = nil
         end

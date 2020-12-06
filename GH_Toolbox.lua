@@ -96,7 +96,7 @@ end
 
 -- Remove an item from table and return elem
 function GearHelper:RemoveItemByKey(table, key)
-local element = table[key]
+    local element = table[key]
     table[key] = nil
     return element
 end
@@ -336,5 +336,15 @@ function GearHelper:GetQualityFromColor(color)
         return 7
     else
         error("Color " .. color .. " is not a possible choice")
+    end
+end
+
+function GearHelper:ForEachItemInBag(callback)
+    for bag = 0, 4 do
+        for slot = 1, GetContainerNumSlots(bag) do
+            if GetContainerItemID(bag, slot) ~= nil then
+                callback(bag, slot)
+            end
+        end
     end
 end
