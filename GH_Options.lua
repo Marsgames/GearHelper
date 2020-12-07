@@ -17,7 +17,7 @@ end
 local function GetStatCW(info, stat, bool)
     GearHelper:BenchmarkCountFuncCall("GetStatCW")
     if bool then
-        local currentSpec = tonumber(GetSpecializationInfo(GetSpecialization()))
+        local currentSpec = GetSpecializationInfo(GetSpecialization())
         return tostring(GearHelper.db.global.templates[(currentSpec)]["NOX"][stat])
     else
         if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
