@@ -100,12 +100,12 @@ end
 
 function GearHelper:SlashReset()
     GearHelper:ResetCache()
-     GearHelper.db.profileKeys = {}
-     GearHelper.db.profileKeys = nil
-     GearHelper.db.global = {}
-     GearHelper.db.global = nil
-     GearHelper.db.profiles = {}
-     GearHelper.db.profiles = nil
+    GearHelper.db.profileKeys = {}
+    GearHelper.db.profileKeys = nil
+    GearHelper.db.global = {}
+    GearHelper.db.global = nil
+    GearHelper.db.profiles = {}
+    GearHelper.db.profiles = nil
     GearHelper.db = {}
     GearHelper.db = nil
     ReloadUI()

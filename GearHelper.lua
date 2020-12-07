@@ -1,11 +1,9 @@
 -- https://mothereff.in/lua-minifier
 -- Memory footprint 12048.4 k
 -- TODO extract player inventory related function to an independant lib
--- TODO Move functions in split files
 -- TODO check war item SetHyperlink in tooltip fail
 -- TODO Expose more options to player
 -- TODO: Repair GH :
--- 			- Quand on n'active pas le calcul d'ilvl, rien ne semble fonctionner correctement
 --			- La prise en compte des châsses ne semble pas changer grand chose
 
 -- #errors : 01
@@ -87,11 +85,11 @@ function GearHelper:RefreshConfig()
     InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
-local function nilTableValues(tableToReset)
-    GearHelper:BenchmarkCountFuncCall("nilTableValues")
+function GearHelper:NilTableValues(tableToReset)
+    GearHelper:BenchmarkCountFuncCall("GearHelper:NilTableValues")
     for key, v in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
-            nilTableValues(tableToReset[key])
+            GearHelper:NilTableValues(tableToReset[key])
         else
             tableToReset[key] = nil
         end
@@ -134,8 +132,8 @@ end
 
 function GearHelper:ResetConfig()
     self:BenchmarkCountFuncCall("GearHelper:ResetConfig")
-    nilTableValues(self.db.profile)
-    nilTableValues(self.db.global)
+    Gearhelper:NilTableValues(self.db.profile)
+    Gearhelper:NilTableValues(self.db.global)
 
     InterfaceOptionsFrame:Hide()
     InterfaceOptionsFrame:Show()
@@ -378,7 +376,7 @@ local ModifyTooltip = function(self, ...)
     local _, itemLink = self:GetItem()
 
     -- Do not ask me why, but itemLink is the 2nd parameter IN __THIS__ CASE
-    -- Somthing to do with the difference between GearHelper:Sommething() and GearHelper.Something
+    -- Something to do with the difference between GearHelper:Sommething() and GearHelper.Something
     -- https://stackoverflow.com/questions/29047541/how-to-pass-arguments-to-a-function-within-a-table (find the solution after this (non related ?) "solution")
     local shouldBeCompared, err = pcall(GearHelper.ShouldBeCompared, nil, itemLink)
 
