@@ -40,7 +40,6 @@ function GearHelper:ShouldBeCompared(itemLink)
 
     if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink))) then
         error(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
-        return false
     end
 
     return true
@@ -56,12 +55,12 @@ local function AutoEquipShouldBeCompared(itemLink)
     local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
     if (IsEquippedItem(id)) then
-        print(GHExceptionAlreadyEquipped)
+        --print(GHExceptionAlreadyEquipped)
         return false
     end
 
     if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink))) then
-        print(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
+        --print(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
         return false
     end
 
