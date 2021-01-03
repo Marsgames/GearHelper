@@ -247,6 +247,7 @@ end
 
 local function ItemPush(_, _, bag)
     GearHelper:BenchmarkCountFuncCall("ItemPush")
+
     if not GearHelper.db.profile.autoEquipLooted.actual then
         do
             return
@@ -263,10 +264,8 @@ local function ItemPush(_, _, bag)
     elseif bag == 20 then
         theBag = 1
     end
-    GearHelper:EquipItem(theBag)
 
-    GearHelper:ScanCharacter()
-    GearHelper:SetDotOnIcons()
+    GearHelper:EquipItem(theBag)
 end
 
 local function QuestComplete()
