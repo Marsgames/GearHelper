@@ -253,7 +253,7 @@ local function ItemPush(_, _, bag)
             return
         end
     end
-    
+
     local theBag = bag
     if bag == 23 then
         theBag = 4
@@ -264,7 +264,7 @@ local function ItemPush(_, _, bag)
     elseif bag == 20 then
         theBag = 1
     end
-    
+
     GearHelper:EquipItem(theBag)
 end
 

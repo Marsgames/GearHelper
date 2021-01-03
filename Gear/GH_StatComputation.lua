@@ -27,11 +27,11 @@ end
 
 function GearHelper:ShouldBeCompared(itemLink)
     GearHelper:BenchmarkCountFuncCall("GearHelper:ShouldBeCompared")
-    
+
     if (not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r")) then
         error(GHExceptionInvalidItemLink)
     end
-    
+
     local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
     if (IsEquippedItem(id)) then
@@ -48,11 +48,11 @@ end
 
 local function AutoEquipShouldBeCompared(itemLink)
     GearHelper:BenchmarkCountFuncCall("AutoEquipShouldBeCompared")
-    
+
     if (not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r")) then
         return false
     end
-    
+
     local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
     if (IsEquippedItem(id)) then
@@ -93,17 +93,17 @@ function GearHelper:EquipItem(inThisBag)
                  self:Hide()
                 return
             end
-                
+
             for slot = 1, GetContainerNumSlots(bagToEquip) do
                 local itemLink = GetContainerItemLink(bagToEquip, slot)
                 if (tostring(itemLink) ~= "nil") then
                     -- local status, shouldBeCompared = pcall(self.ShouldBeCompared, itemLink)
                     local shouldBeCompared = AutoEquipShouldBeCompared(itemLink)
-                    
+
                     if (shouldBeCompared) then
                         local item = GearHelper:GetItemByLink(itemLink)
                         local status, result = pcall(GearHelper.NewWeightCalculation, self, item)
-                        
+
                         if status then
                             for _, v in pairs(result) do
                                 if v > 0 then
