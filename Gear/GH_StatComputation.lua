@@ -27,11 +27,11 @@ end
 
 function GearHelper:ShouldBeCompared(itemLink)
     GearHelper:BenchmarkCountFuncCall("GearHelper:ShouldBeCompared")
-
+    
     if (not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r")) then
         error(GHExceptionInvalidItemLink)
     end
-
+    
     local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
 
     if (IsEquippedItem(id)) then
@@ -39,7 +39,30 @@ function GearHelper:ShouldBeCompared(itemLink)
     end
 
     if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink))) then
-        error(GHExceptionNotEquippable)
+        error(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
+        return false
+    end
+
+    return true
+end
+
+local function AutoEquipShouldBeCompared(itemLink)
+    GearHelper:BenchmarkCountFuncCall("AutoEquipShouldBeCompared")
+    
+    if (not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r")) then
+        return false
+    end
+    
+    local id, _, _, equipLoc = GetItemInfoInstant(itemLink)
+
+    if (IsEquippedItem(id)) then
+        print(GHExceptionAlreadyEquipped)
+        return false
+    end
+
+    if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink))) then
+        print(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
+        return false
     end
 
     return true
@@ -52,7 +75,6 @@ local function ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
     return GearHelper:ApplyTemplateToDelta(delta)
 end
 
--- TODO: Rework this function
 function GearHelper:EquipItem(inThisBag)
     self:BenchmarkCountFuncCall("GearHelper:EquipItem")
     local bagToEquip = inThisBag or 0
@@ -64,31 +86,38 @@ function GearHelper:EquipItem(inThisBag)
         "OnUpdate",
         function(self, elapsed)
             if time() <= waitEquipTimer + 0.5 then
-                do
-                    return
-                end
+                do return end
             end
 
             if "pvp" == typeInstance or "24" == tostring(difficultyIndex) or InCombatLockdown() then
-                self:Hide()
+                 self:Hide()
                 return
             end
-
+                
             for slot = 1, GetContainerNumSlots(bagToEquip) do
                 local itemLink = GetContainerItemLink(bagToEquip, slot)
-                if pcall(self.ShouldBeCompared, itemLink) then
-                    local item = self:GetItemByLink(itemLink)
-                    local status, result = pcall(self.NewWeightCalculation, self, item)
-
-                    if status then
-                        for _, v in pairs(result) do
-                            if v > 0 then
-                                EquipItemByName(item.itemLink)
+                if (tostring(itemLink) ~= "nil") then
+                    -- local status, shouldBeCompared = pcall(self.ShouldBeCompared, itemLink)
+                    local shouldBeCompared = AutoEquipShouldBeCompared(itemLink)
+                    
+                    if (shouldBeCompared) then
+                        local item = GearHelper:GetItemByLink(itemLink)
+                        local status, result = pcall(GearHelper.NewWeightCalculation, self, item)
+                        
+                        if status then
+                            for _, v in pairs(result) do
+                                if v > 0 then
+                                    EquipItemByName(item.itemLink)
+                                end
                             end
                         end
                     end
                 end
             end
+
+            GearHelper:ScanCharacter()
+            GearHelper:SetDotOnIcons()
+
             self:Hide()
         end
     )
