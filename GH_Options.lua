@@ -485,6 +485,7 @@ local function CreateNewTemplate(templateName)
                 name = L["UICWasPercentage"],
                 desc = L["UICWasPercentageDescription"],
                 type = "toggle",
+                hidden = true, ---------------------------------------------------- REMOVE HERE TO RESTORE STATS AS PERCENTAGE ----------------------------------------------------
                 width = "double",
                 set = function(_, val)
                     for k, v in pairs(GearHelper.db.profile.CW[templateName]) do
@@ -1075,6 +1076,7 @@ function GearHelper:BuildCWTable()
                         name = L["UICWasPercentage"],
                         desc = L["UICWasPercentageDescription"],
                         type = "toggle",
+                        hidden = true, ---------------------------------------------------- REMOVE HERE TO RESTORE STATS AS PERCENTAGE ----------------------------------------------------
                         width = "double",
                         set = function(_, val)
                             for x, y in pairs(v) do
