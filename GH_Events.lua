@@ -631,8 +631,12 @@ local function GetItemInfoReceived(_, _, item)
     GearHelper:BenchmarkCountFuncCall("GetItemInfoReceived")
     if GearHelper.db.global.itemWaitList[item] then
         local slotName = GearHelper.db.global.itemWaitList[item]
+        if (not string.find(slotName, "Slot")) then
+            slotName = slotName + "Slot"
+        end
+        local slotID = GetInventorySlotInfo(slotName)
         GearHelper.db.global.itemWaitList[item] = nil
-        GearHelperVars.charInventory[string.sub(slotName, 1, -5)] = GearHelper:GetEquippedItemLink(GetInventorySlotInfo(slotName), slotName)
+        GearHelperVars.charInventory[string.sub(slotName, 1, -5)] = GearHelper:GetEquippedItemLink(slotID, slotName)
     end
     if item ~= nil then
         if GearHelper.idNilGetQuestReward ~= nil then
