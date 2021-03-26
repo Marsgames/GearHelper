@@ -155,7 +155,7 @@ local rawValues = {
     },
     -- HUNTER MASTERY --
     [253] = {
-        ["NOX"] = "Agility [7.56] > Crit [6.16] >= Haste [6.06] >= Versatility [6.02] >= Mastery [5.96]"
+        ["NOX"] = "Agility [7.56] > Crit [6.16] >= Haste [6.06] >= Mastery [6.04] >= Versatility [6.02]"
     },
     -- HUNTER MARKSMANSHIP --
     [254] = {
@@ -207,7 +207,7 @@ local rawValues = {
     },
     -- PRIEST HOLY --
     [257] = {
-        ["NOX"] = "Intellect [7.52] > Mastery [6.1] = Crit [6.0] > Haste [4.42] > Versatility [4.00]"
+        ["NOX"] = "Intellect [7.52] > Mastery [5.11] = Crit [5.72] > Haste [6.11] > Versatility [5.72]"
     },
     -- PRIEST SHADOW --
     [258] = {
@@ -219,7 +219,7 @@ local rawValues = {
     },
     -- ROGUE OUTLAW --
     [260] = {
-        ["NOX"] = "Weapon-Dps [11.35] > Crit [4.72] > Versatility [4.7] > Hast [4.0] > Agility [3.4] > Mastery [2.75] > Off-Hand-Weapon-Dps [2.0]"
+        ["NOX"] = "Agility [5.46] > Versatility [4.72] > Crit [4.31] > Mastery [3.69] > Haste [3.18]"
     },
     -- ROGUE SUBTLETY --
     [261] = {
