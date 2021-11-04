@@ -408,7 +408,10 @@ local ModifyTooltip = function(self, ...)
                 -- print("subtype : " .. tostring(item.subType))
                 if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
                     table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
-                    self.Backdrop:SetBackdropBorderColor(255, 0, 0)
+                    self.Backdrop:SetBackdropBorderColor(255, 0, 0, 255)
+                else
+                    self.Backdrop:SetBackdrop(nil)
+                    self.Backdrop = nil
                 end
             end
         else
@@ -426,14 +429,16 @@ local ModifyTooltip = function(self, ...)
                     local floorValue = math.floor(v)
 
                     if (floorValue < 0) then
-                        self.Backdrop:SetBackdropBorderColor(255, 0, 0)
+                        self.Backdrop:SetBackdropBorderColor(255, 0, 0, 255)
                     else
-                        self.Backdrop:SetBackdropBorderColor(0, 255, 150)
+                        self.Backdrop:SetBackdropBorderColor(0, 255, 150, 255)
                     end
                 end
             else
                 -- Got an error with warlock when showing tooltip of left hand Illidan's Warglaive of Azzinoth
                 -- print("result : " .. tostring(result))
+                -- self.Backdrop:SetBackdrop(nil)
+                -- self.Backdrop = nil
             end
             linesToAdd = GearHelper:LinesToAddToTooltip(result)
         end
@@ -460,6 +465,15 @@ for _, obj in next, {
     ItemRefTooltip
 } do
     obj:HookScript("OnTooltipSetItem", ModifyTooltip)
+    obj:HookScript(
+        "OnHide",
+        function()
+            if obj.Backdrop then
+                obj.Backdrop:SetBackdrop(nil)
+                obj.Backdrop = nil
+            end
+        end
+    )
 end
 
 GameTooltip:HookScript(

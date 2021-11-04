@@ -1,10 +1,10 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local totalEarnedMoney = 0
 local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
 local waitSpeFrame = CreateFrame("Frame")
 local delaySpeTimer = 0.5
+local moneyFlux = 0
 
 -- GearHelperVars.waitSpeFrame:Hide()
 waitSpeFrame:Hide()
@@ -83,24 +83,10 @@ end
 
 local function OnMerchantShow()
     GearHelper:BenchmarkCountFuncCall("OnMerchantShow")
+    moneyFlux = GetMoney()
 
-    totalEarnedMoney = GearHelper:SellGreyItems()
-
+    GearHelper:SellGreyItems()
     GearHelper:RepairEquipment()
-
-    -- func check money after selling / repairing
-    GearHelper:ForEachItemInBag(
-        function(bag, slot)
-            local _, itemCount = GetContainerItemInfo(bag, slot)
-            local id = GetContainerItemID(bag, slot)
-            if id then
-                local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
-                if vendorPrice ~= nil then
-                    totalEarnedMoney = totalEarnedMoney + (vendorPrice * itemCount)
-                end
-            end
-        end
-    )
 
     GearHelper:ScanCharacter()
     GearHelper:SetDotOnIcons()
@@ -386,21 +372,12 @@ local function MerchantClosed()
         end
     end
 
-    local moneyBag = 0
-    GearHelper:ForEachItemInBag(
-        function(bag, slot)
-            local _, itemCount = GetContainerItemInfo(bag, slot)
-            local id = GetContainerItemID(bag, slot)
-            if id then
-                local _, _, _, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(id)
-                moneyBag = moneyBag + (vendorPrice * itemCount)
-            end
-        end
-    )
+    local actualMoney = GetMoney()
+    local moneyEarned = actualMoney - moneyFlux
 
-    if (totalEarnedMoney - moneyBag > 0) then
-        print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor((totalEarnedMoney - moneyBag) / 10000) .. L["dot"] .. math.floor(((totalEarnedMoney - moneyBag) % 10000) / 100) .. L["gold"])
-        totalEarnedMoney = 0
+    if (moneyEarned > 0 and moneyEarned ~= actualMoney) then
+        print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor(moneyEarned / 10000) .. L["dot"] .. math.floor((moneyEarned % 10000) / 100) .. L["gold"])
+        moneyFlux = 0
     end
 end
 

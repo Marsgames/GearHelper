@@ -19,8 +19,6 @@ function GearHelper:SellGreyItems()
         end
     end
 
-    local totalEarnedMoney = 0
-
     GearHelper:ForEachItemInBag(
         function(bag, slot)
             local id = GetContainerItemID(bag, slot)
@@ -28,11 +26,8 @@ function GearHelper:SellGreyItems()
                 local isValueAvailable, sellPrice = GearHelper:GetItemSellPrice(id)
                 if isValueAvailable then
                     UseContainerItem(bag, slot)
-                    totalEarnedMoney = totalEarnedMoney + sellPrice
                 end
             end
         end
     )
-
-    return totalEarnedMoney
 end
