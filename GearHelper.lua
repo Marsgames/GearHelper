@@ -373,6 +373,22 @@ local ModifyTooltip = function(self, ...)
         return
     end
 
+    -- TODO: Improve backdrop to restore old one (without the frame border)
+    if not self.Backdrop then
+        self.Backdrop = CreateFrame("Frame", "GHGameTooltipBackdrop", self, "BackdropTemplate")
+        self.Backdrop:SetAllPoints()
+        self.Backdrop.backdropInfo = {
+            -- bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+            tile = true,
+            tileSize = 32,
+            edgeSize = 32
+            -- insets = {left = 11, right = 12, top = 12, bottom = 9}
+        }
+        self.Backdrop:SetBackdrop(self.Backdrop.backdropInfo)
+        self.Backdrop:ApplyBackdrop()
+    end
+
     local _, itemLink = self:GetItem()
 
     -- Do not ask me why, but itemLink is the 2nd parameter IN __THIS__ CASE
@@ -392,7 +408,7 @@ local ModifyTooltip = function(self, ...)
                 -- print("subtype : " .. tostring(item.subType))
                 if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
                     table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
-                    self:SetBackdropBorderColor(255, 0, 0)
+                    self.Backdrop:SetBackdropBorderColor(255, 0, 0)
                 end
             end
         else
@@ -410,9 +426,9 @@ local ModifyTooltip = function(self, ...)
                     local floorValue = math.floor(v)
 
                     if (floorValue < 0) then
-                        self:SetBackdropBorderColor(255, 0, 0)
+                        self.Backdrop:SetBackdropBorderColor(255, 0, 0)
                     else
-                        self:SetBackdropBorderColor(0, 255, 150)
+                        self.Backdrop:SetBackdropBorderColor(0, 255, 150)
                     end
                 end
             else
@@ -422,7 +438,7 @@ local ModifyTooltip = function(self, ...)
             linesToAdd = GearHelper:LinesToAddToTooltip(result)
         end
     else
-        self:SetBackdropBorderColor(255, 255, 0)
+        self.Backdrop:SetBackdropBorderColor(255, 255, 0)
         table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
     end
 

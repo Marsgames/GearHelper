@@ -38,9 +38,10 @@ function GearHelper:RepairEquipment()
     local ghRepair = GearHelper.db.profile.autoRepair
     local canUseAutoRepair = 1 == ghRepair or 2 == ghRepair
 
-
     if not CanMerchantRepair() or not canUseAutoRepair then
-        do return end
+        do
+            return
+        end
     end
 
     local ownedGolds = GetMoney()
@@ -50,7 +51,9 @@ function GearHelper:RepairEquipment()
     local guildIsAbleToRepair = true
 
     if price <= 0 then
-        do return end
+        do
+            return
+        end
     end
 
     if IsInGuild() and CanGuildBankRepair() then
@@ -61,15 +64,21 @@ function GearHelper:RepairEquipment()
     if 1 == ghRepair then
         if ownedGolds < price then
             print(L["CantRepair"])
-            do return end
+            do
+                return
+            end
         end
     else -- if 2 == ghRepair then
-        if (nil == canRepairWithGuild) or -- Player cannot use guild to repair
-            (canRepairWithGuild < price) or -- Player canot use enough guild money to repair
-                (guildGolds < price) then -- Guild has not enough money to repair
+        if
+            (nil == canRepairWithGuild) or -- Player cannot use guild to repair
+                (canRepairWithGuild < price) or -- Player canot use enough guild money to repair
+                (guildGolds < price)
+         then -- Guild has not enough money to repair
             if ownedGolds < price then -- Player cannot repair by himself
                 print(L["CantRepair"])
-                do return end
+                do
+                    return
+                end
             end
         else
             guildIsAbleToRepair = true
@@ -79,7 +88,7 @@ function GearHelper:RepairEquipment()
     if 1 == ghRepair then
         RepairAllItems(false)
         print(GearHelper:ColorizeString(L["repairCost"], "Pink") .. math.floor(price / 10000) .. L["dot"] .. math.floor((price % 10000) / 100) .. L["gold"])
-    else if guildIsAbleToRepair then
+    elseif guildIsAbleToRepair then
         RepairAllItems(true)
         print(GearHelper:ColorizeString(L["guildRepairCost"], "Pink") .. math.floor(price / 10000) .. L["dot"] .. math.floor((price % 10000) / 100) .. L["gold"])
     else

@@ -34,7 +34,7 @@ function GearHelper:BuildItemFromTooltip(itemLink)
         return false
     end
 
-    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate", "BackdropTemplate")
+    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate", BackdropTemplateMixin and "BackdropTemplate")
     tip:SetOwner(WorldFrame, "ANCHOR_NONE")
 
     tip:SetHyperlink(itemLink)

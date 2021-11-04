@@ -184,7 +184,7 @@ function GearHelper:GetGemValue()
     end
     local tip = ""
 
-    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
+    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate", BackdropTemplateMixin and "BackdropTemplate")
     tip:SetOwner(WorldFrame, "ANCHOR_NONE")
     tip:SetHyperlink(gemItemLink)
 
