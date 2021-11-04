@@ -12,7 +12,7 @@ waitSpeFrame:Hide()
 --------------------------------- Functions ---------------------------------
 -- This function handle the BossesKilled function. It's called in PlayerLogin event.
 local function BossesKilledFunctions()
-    -- When the LFR fram shows up
+    -- When the LFR frame shows up
     local function LfrFrameShow(frame)
         GearHelper:BenchmarkCountFuncCall("LfrFrameShow")
         if not GearHelper.db.profile.bossesKilled then
@@ -81,59 +81,14 @@ local function AddonLoaded(_, _, name)
     end
 end
 
--- TODO: Split that shit
 local function OnMerchantShow()
     GearHelper:BenchmarkCountFuncCall("OnMerchantShow")
-    totalEarnedMoney = 0
-    if GearHelper.db.profile.sellGreyItems then
-        GearHelper:ForEachItemInBag(
-            function(bag, slot)
-                local id = GetContainerItemID(bag, slot)
-                if id then
-                    local isValueAvailable, sellPrice = GearHelper:GetItemSellPrice(id)
-                    if isValueAvailable then
-                        UseContainerItem(bag, slot)
-                        totalEarnedMoney = totalEarnedMoney + sellPrice
-                    end
-                end
-            end
-        )
-    end
 
-    if CanMerchantRepair() and GearHelper.db.profile.autoRepair == 1 or GearHelper.db.profile.autoRepair == 2 then
-        local argentPossedee = GetMoney()
-        local prix = GetRepairAllCost()
-        local droitGuilde = ""
-        local argentGuilde = ""
+    totalEarnedMoney = GearHelper:SellGreyItems()
 
-        if IsInGuild() and CanGuildBankRepair() then
-            droitGuilde = GetGuildBankWithdrawMoney()
-            argentGuilde = GetGuildBankMoney()
-        end
-        if prix > 0 then
-            if GearHelper.db.profile.autoRepair == 1 then
-                if argentPossedee >= prix then
-                    RepairAllItems(false)
-                    print(GearHelper:ColorizeString(L["repairCost"], "Pink") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
-                else
-                    print(L["CantRepair"])
-                end
-            elseif GearHelper.db.profile.autoRepair == 2 then
-                if droitGuilde ~= nil and (droitGuilde == -1 or (droitGuilde > argentGuilde and argentGuilde > prix)) then
-                    RepairAllItems(true)
-                    print(GearHelper:ColorizeString(L["guildRepairCost"], "Pink") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
-                else
-                    if argentPossedee >= prix then
-                        RepairAllItems(false)
-                        print(GearHelper:ColorizeString(L["repairCost"], "Pink") .. math.floor(prix / 10000) .. L["dot"] .. math.floor((prix % 10000) / 100) .. L["gold"])
-                    else
-                        print(L["CantRepair"])
-                    end
-                end
-            end
-        end
-    end
+    GearHelper:RepairEquipment()
 
+    -- func check money after selling / repairing
     GearHelper:ForEachItemInBag(
         function(bag, slot)
             local _, itemCount = GetContainerItemInfo(bag, slot)
@@ -151,6 +106,7 @@ local function OnMerchantShow()
     GearHelper:SetDotOnIcons()
 end
 
+-- TODO: Split this shit too
 local function PlayerEnteringWorld()
     GearHelper:BenchmarkCountFuncCall("PlayerEnteringWorld")
     local used = false
@@ -742,12 +698,7 @@ end
 
 local function UpdateMouseOverUnit()
     GearHelper:BenchmarkCountFuncCall("UpdateMouseOverUnit")
-    if not CanInspect("mouseover") then
-        do
-            return
-        end
-    end
-    if not CheckInteractDistance("mouseover", 1) then
+    if not CanInspect("mouseover") or not CheckInteractDistance("mouseover", 1) then
         do
             return
         end
