@@ -1,3 +1,5 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+
 local function GetSlotsByEquipLoc(equipLoc)
     GearHelper:BenchmarkCountFuncCall("GetSlotsByEquipLoc")
     local equipSlot = {}
@@ -46,9 +48,9 @@ function GearHelper:RepairEquipment()
 
     local ownedGolds = GetMoney()
     local price = GetRepairAllCost()
-    local canRepairWithGuild = ""
+    local canRepairWithGuild = nil
     local guildGolds = ""
-    local guildIsAbleToRepair = true
+    local guildIsAbleToRepair = false
 
     if price <= 0 then
         do
@@ -71,7 +73,7 @@ function GearHelper:RepairEquipment()
     else -- if 2 == ghRepair then
         if
             (nil == canRepairWithGuild) or -- Player cannot use guild to repair
-                (canRepairWithGuild < price) or -- Player canot use enough guild money to repair
+                (tonumber(canRepairWithGuild) < price) or -- Player canot use enough guild money to repair
                 (guildGolds < price)
          then -- Guild has not enough money to repair
             if ownedGolds < price then -- Player cannot repair by himself
