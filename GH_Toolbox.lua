@@ -96,6 +96,7 @@ end
 
 -- Remove an item from table and return elem
 function GearHelper:RemoveItemByKey(table, key)
+    GearHelper:BenchmarkCountnFuncCall("GearHelper:RemoveItemByKey")
     local element = table[key]
     table[key] = nil
     return element
