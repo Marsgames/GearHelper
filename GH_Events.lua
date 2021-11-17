@@ -324,42 +324,44 @@ local function QuestDetail()
         local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
         -- GearHelper.ButtonQuestReward = {}
         -- table.insert(GearHelper.ButtonQuestReward, button)
+        if nil ~= button then
+            if button.overlay then
+                button.overlay:SetShown(false)
+                button.overlay = nil
+            end
 
-        if button.overlay then
-            button.overlay:SetShown(false)
-            button.overlay = nil
+            if not button.overlay then
+                button.overlay = button:CreateTexture(nil, "OVERLAY")
+                button.overlay:SetSize(18, 18)
+                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
+                button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+                button.overlay:SetShown(true)
+                xDif = xDif + 11
+            end
+
+            isBetter = true
         end
-
-        if not button.overlay then
-            button.overlay = button:CreateTexture(nil, "OVERLAY")
-            button.overlay:SetSize(18, 18)
-            button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-            button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
-            button.overlay:SetShown(true)
-            xDif = xDif + 11
-        end
-
-        isBetter = true
     else
         local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyPrix]
+        if nil ~= button then
+            if button.overlay then
+                button.overlay:SetShown(false)
+                button.overlay = nil
+            end
+            if not button.overlay then
+                button.overlay = button:CreateTexture(nil, "OVERLAY")
+                button.overlay:SetSize(18, 18)
+                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
+                button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
+                button.overlay:SetShown(true)
+                xDif = xDif + 11
+            end
 
-        if button.overlay then
-            button.overlay:SetShown(false)
-            button.overlay = nil
-        end
-        if not button.overlay then
-            button.overlay = button:CreateTexture(nil, "OVERLAY")
-            button.overlay:SetSize(18, 18)
-            button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-            button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
-            button.overlay:SetShown(true)
-            xDif = xDif + 11
-        end
+            local objetI = GetQuestItemLink("choice", keyPrix)
 
-        local objetI = GetQuestItemLink("choice", keyPrix)
-
-        do
-            return
+            do
+                return
+            end
         end
     end
 end
