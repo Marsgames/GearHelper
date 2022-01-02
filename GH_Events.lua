@@ -324,42 +324,44 @@ local function QuestDetail()
         local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
         -- GearHelper.ButtonQuestReward = {}
         -- table.insert(GearHelper.ButtonQuestReward, button)
+        if nil ~= button then
+            if button.overlay then
+                button.overlay:SetShown(false)
+                button.overlay = nil
+            end
 
-        if button.overlay then
-            button.overlay:SetShown(false)
-            button.overlay = nil
+            if not button.overlay then
+                button.overlay = button:CreateTexture(nil, "OVERLAY")
+                button.overlay:SetSize(18, 18)
+                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
+                button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+                button.overlay:SetShown(true)
+                xDif = xDif + 11
+            end
+
+            isBetter = true
         end
-
-        if not button.overlay then
-            button.overlay = button:CreateTexture(nil, "OVERLAY")
-            button.overlay:SetSize(18, 18)
-            button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-            button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
-            button.overlay:SetShown(true)
-            xDif = xDif + 11
-        end
-
-        isBetter = true
     else
         local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyPrix]
+        if nil ~= button then
+            if button.overlay then
+                button.overlay:SetShown(false)
+                button.overlay = nil
+            end
+            if not button.overlay then
+                button.overlay = button:CreateTexture(nil, "OVERLAY")
+                button.overlay:SetSize(18, 18)
+                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
+                button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
+                button.overlay:SetShown(true)
+                xDif = xDif + 11
+            end
 
-        if button.overlay then
-            button.overlay:SetShown(false)
-            button.overlay = nil
-        end
-        if not button.overlay then
-            button.overlay = button:CreateTexture(nil, "OVERLAY")
-            button.overlay:SetSize(18, 18)
-            button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-            button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
-            button.overlay:SetShown(true)
-            xDif = xDif + 11
-        end
+            local objetI = GetQuestItemLink("choice", keyPrix)
 
-        local objetI = GetQuestItemLink("choice", keyPrix)
-
-        do
-            return
+            do
+                return
+            end
         end
     end
 end
@@ -609,6 +611,7 @@ end
 
 local function InspectReady(_, _, target)
     GearHelper:BenchmarkCountFuncCall("InspectReady")
+
     if GearHelper.db.profile.inspectAin.waitingIlvl then ---------------- /GH AIN AVEC UN MESSAGE SPÉCIALE SI L'ILVL DE L'OBJET LOOT EST MOINS BON QUE CELUI ÉQUIPPÉ PAR CELUI QUI L'A LOOT
         local itemLoot = GearHelper.db.profile.inspectAin.linkItemReceived
         local itemLootTable = GearHelper:GetItemByLink(itemLoot)
@@ -641,35 +644,39 @@ local function InspectReady(_, _, target)
             end
         end
 
-        local arrayIlvl = {}
-        for i = 1, 19 do
-            local itemLink = GetInventoryItemLink("mouseover", i)
-            if (itemLink) then
-                local itemScan = GearHelper:GetItemByLink(itemLink)
-                local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
-                if equipLoc ~= nil then
-                    arrayIlvl[equipLoc] = itemLvl
-                    table.insert(arrayIlvl, itemLvl)
+        local function computeIlvl()
+            local arrayIlvl = {}
+            for i = 1, 19 do
+                local itemLink = GetInventoryItemLink("mouseover", i)
+                if (itemLink) then
+                    local itemScan = GearHelper:GetItemByLink(itemLink)
+                    local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
+                    if equipLoc ~= nil then
+                        arrayIlvl[equipLoc] = itemLvl
+                        table.insert(arrayIlvl, itemLvl)
+                    end
                 end
             end
-        end
-        local ilvlAverage = 0
-        local itemCount = 0
-        table.foreach(
-            arrayIlvl,
-            function(equipLoc, ilvl)
-                if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
-                    ilvlAverage = ilvlAverage + ilvl
-                    itemCount = itemCount + 1
+            local ilvlAverage = 0
+            local itemCount = 0
+            table.foreach(
+                arrayIlvl,
+                function(equipLoc, ilvl)
+                    if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+                        ilvlAverage = ilvlAverage + ilvl
+                        itemCount = itemCount + 1
+                    end
                 end
+            )
+            if (itemCount ~= 0) then
+                GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
             end
-        )
-        if (itemCount ~= 0) then
-            GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+
+            ClearInspectPlayer()
+            GameTooltip:Show()
         end
 
-        ClearInspectPlayer()
-        GameTooltip:Show()
+        coroutine.resume(coroutine.create(computeIlvl))
     end
 end
 
