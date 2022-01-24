@@ -2896,12 +2896,12 @@ local thanksTable = {
     args = {
         name1 = {
             fontSize = "medium",
-            name = "        |cFFFFFF00 Nirek |r - Bug report and bug fix",
+            name = "        |cFFFFFF00 Nirek |r - Bug report + bug fix",
             type = "description"
         },
         name2 = {
             fontSize = "medium",
-            name = "        |cFFFFFF00 titaniumcoder |r - Bug report and bug fix",
+            name = "        |cFFFFFF00 titaniumcoder |r - Bug report + bug fix",
             type = "description"
         },
         name3 = {
@@ -3032,6 +3032,46 @@ local thanksTable = {
         name28 = {
             fontSize = "medium",
             name = "        |cFFFFFF00 vaendryl |r - Bug report",
+            type = "description"
+        },
+        name29 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 TheRedBull |r - Bug report",
+            type = "description"
+        },
+        name30 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 MarshallBuhl |r - Bug report",
+            type = "description"
+        },
+        name31 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 Zallanon |r - Bug report",
+            type = "description"
+        },
+        name32 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 cz016m |r - Bug report",
+            type = "description"
+        },
+        name33 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 tomas352000 |r - Bug report",
+            type = "description"
+        },
+        name34 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 keithgeeker |r - Bug report + improvement",
+            type = "description"
+        },
+        name35 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 knightfire120 |r - Bug report",
+            type = "description"
+        },
+        name36 = {
+            fontSize = "medium",
+            name = "        |cFFFFFF00 netaras |r - KR translation",
             type = "description"
         }
     }
