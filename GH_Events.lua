@@ -61,7 +61,7 @@ waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 local function AddonLoaded(_, _, name)
     GearHelper:BenchmarkCountFuncCall("AddonLoaded")
-    if GearHelper.db.global.templates == nil then
+    if GearHelper and GearHelper.db and GearHelper.db.global.templates == nil then
         GearHelper.db.global.templates = {}
     end
 
