@@ -118,6 +118,7 @@ end
 
 function GearHelper:SlashDebug()
     GearHelper.db.profile.debug = not GearHelper.db.profile.debug
+    print("debug mode set to " .. tostring(GearHelper.db.profile.debug))
 end
 
 function GearHelper:SlashInspect()
