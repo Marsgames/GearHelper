@@ -12,6 +12,7 @@ waitSpeFrame:Hide()
 --------------------------------- Functions ---------------------------------
 -- This function handle the BossesKilled function. It's called in PlayerLogin event.
 local function BossesKilledFunctions()
+    local theFrame = nil
     -- When the LFR frame shows up
     local function LfrFrameShow(frame)
         GearHelper:BenchmarkCountFuncCall("LfrFrameShow")
@@ -20,9 +21,10 @@ local function BossesKilledFunctions()
                 return
             end
         end
+        theFrame = frame
 
-        GearHelper:CreateLfrButtons(frame)
-        GearHelper:UpdateButtonsAndTooltips(frame)
+        GearHelper:CreateLfrButtons(theFrame)
+        GearHelper:UpdateButtonsAndTooltips(theFrame)
         GearHelper:UpdateGHLfrButton()
         GearHelper:UpdateSelectCursor()
         GearHelper:RegisterEvent("LFG_UPDATE")
@@ -32,7 +34,7 @@ local function BossesKilledFunctions()
     -- When the LFR frame is closed
     local function LfrFrameHide()
         GearHelper:BenchmarkCountFuncCall("LfrFrameHide")
-        GearHelper:HideLfrButtons()
+        GearHelper:HideLfrButtons(theFrame)
         GearHelper:UnregisterEvent("LFG_UPDATE")
     end
 
