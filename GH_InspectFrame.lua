@@ -9,6 +9,8 @@ local function InspectFrameShow(_)
         end
     end
 
+    print("InspectFrameShow called")
+
     local arrayPos = {
         xINVTYPE_HEAD = -100,
         xINVTYPE_NECK = -100,
@@ -61,6 +63,32 @@ local function InspectFrameShow(_)
         yINVTYPE_SECONDARYHAND = -140,
         yINVTYPE_WEAPONOFFHAND = -140
     }
+
+    for slotID, slotInfos in pairs(_G["PaperDollItemsFrame"]["EquipmentSlots"]) do
+        for k, v in pairs(slotInfos) do
+            print(k, v)
+        end
+
+        print(_G["PaperDollItemsFrame"]["EquipmentSlots"][slotID].GetItem())
+        -- for k, v in pairs(slotInfos.IconOverlay2) do
+        --     print(k, v)
+        -- end
+        -- local position = slotInfos.IsLeftSide and -100 or 95
+
+        -- print("slotID: " .. slotID .. " - slotInfos : " .. tostring(slotInfos))
+
+        -- local location = slotInfos.GetItemLocation
+        -- print(location())
+
+        do
+            return
+        end
+    end
+
+    do
+        return
+    end
+    --------------- WIP ------------------
 
     local trinketAlreadyDone = false
     local fingerAlreadyDone = false
@@ -151,26 +179,26 @@ local function InspectFrameHide()
 end
 
 function GearHelper:AddIlvlOnInspectFrame()
-	self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnInspectFrame")
+    self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnInspectFrame")
 
-	InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
-	InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
+    InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
+    InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
 end
 
 function GearHelper:HideIlvlOnInspectFrame()
     self:BenchmarkCountFuncCall("GearHelper:HideIlvlOnInspectFrame")
 
-	table.foreach(
-		self.db.global.equipLocInspect,
-		function(equipLoc, _)
-			if (_G["charIlvlInspectButton" .. equipLoc]) then
-				_G["charIlvlInspectButton" .. equipLoc]:Hide()
-				_G["charIlvlInspectButton" .. equipLoc] = nil
-			end
-			if (_G["ilvlAverageInspect"]) then
-				_G["ilvlAverageInspect"]:Hide()
-				_G["ilvlAverageInspect"] = nil
-			end
-		end
-	)
+    table.foreach(
+        self.db.global.equipLocInspect,
+        function(equipLoc, _)
+            if (_G["charIlvlInspectButton" .. equipLoc]) then
+                _G["charIlvlInspectButton" .. equipLoc]:Hide()
+                _G["charIlvlInspectButton" .. equipLoc] = nil
+            end
+            if (_G["ilvlAverageInspect"]) then
+                _G["ilvlAverageInspect"]:Hide()
+                _G["ilvlAverageInspect"] = nil
+            end
+        end
+    )
 end
