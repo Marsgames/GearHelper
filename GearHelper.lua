@@ -21,6 +21,7 @@ GearHelperVars = {
 local allPrefix = {["askVersion" .. GearHelperVars.prefixAddon] = GearHelper.SendAnswerVersion, ["answerVersion" .. GearHelperVars.prefixAddon] = GearHelper.ReceiveAnswer}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
+local tooltipProcessed = {} -- this variable is used to save tooltip lines add by gearhelper, to avoid computation each frame
 local delayNilTimer = 10
 local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
@@ -371,7 +372,6 @@ local function ShouldDisplayNotEquippable(subType)
     return false
 end
 
-local tooltipProcessed = {}
 local ModifyTooltip = function(self, ...)
     -- local pCallWorked, err = pcall(anyFunction) 	-- if no error : pCallWorked == true and err == nil
     --												-- if error : pCallWorked == false and err == "some error"
@@ -478,8 +478,10 @@ local ModifyTooltip = function(self, ...)
         end
     end
 
-    tooltipProcessed[name] = self
-    tooltipProcessed["lines" .. name] = linesToAdd
+    if name then
+        tooltipProcessed[name] = self
+        tooltipProcessed["lines" .. name] = linesToAdd
+    end
 end
 
 for _, obj in next, {
