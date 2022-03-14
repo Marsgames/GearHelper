@@ -371,11 +371,30 @@ local function ShouldDisplayNotEquippable(subType)
     return false
 end
 
+local tooltipProcessed = {}
 local ModifyTooltip = function(self, ...)
     -- local pCallWorked, err = pcall(anyFunction) 	-- if no error : pCallWorked == true and err == nil
     --												-- if error : pCallWorked == false and err == "some error"
     if not GearHelper.db or not GearHelper.db.profile.addonEnabled then
         return
+    end
+
+    local name, itemLink = self:GetItem()
+
+    -- Do not redo all the tooltip processing if we already did it
+    if tooltipProcessed[name] then
+        self = tooltipProcessed[name]
+        local lines = tooltipProcessed["lines" .. name]
+
+        if lines then
+            for _, v in pairs(lines) do
+                self:AddLine(v)
+            end
+        end
+
+        do
+            return
+        end
     end
 
     -- TODO: Improve backdrop to restore old one (without the frame border)
@@ -393,8 +412,6 @@ local ModifyTooltip = function(self, ...)
         self.Backdrop:SetBackdrop(self.Backdrop.backdropInfo)
         self.Backdrop:ApplyBackdrop()
     end
-
-    local _, itemLink = self:GetItem()
 
     -- Do not ask me why, but itemLink is the 2nd parameter IN __THIS__ CASE
     -- Something to do with the difference between GearHelper:Sommething() and GearHelper.Something
@@ -460,6 +477,9 @@ local ModifyTooltip = function(self, ...)
             self:AddLine(v)
         end
     end
+
+    tooltipProcessed[name] = self
+    tooltipProcessed["lines" .. name] = linesToAdd
 end
 
 for _, obj in next, {
@@ -477,6 +497,7 @@ for _, obj in next, {
                 obj.Backdrop:SetBackdrop(nil)
                 obj.Backdrop = nil
             end
+            tooltipProcessed = {}
         end
     )
 end
