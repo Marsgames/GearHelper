@@ -171,7 +171,7 @@ function GearHelper:UpdateGHLfrButton()
     end
 end
 
-function GearHelper:HideLfrButtons()
+function GearHelper:HideLfrButtons(frameParent)
     self:BenchmarkCountFuncCall("GearHelper:HideLfrButtons")
     local nbInstance = GetNumRFDungeons()
 
@@ -180,5 +180,10 @@ function GearHelper:HideLfrButtons()
         if _G["RaidFinderQueueFrameGHLfrButtons" .. id] then
             _G["RaidFinderQueueFrameGHLfrButtons" .. id]:Hide()
         end
+    end
+
+    local buttons = frameParent.GHLfrButtons
+    for id, button in pairs(buttons) do
+        button = nil
     end
 end
