@@ -703,6 +703,32 @@ local function ReadyCheck()
     end
 end
 
+local function LFGSearch(...)
+    local groups = LFGListFrame.SearchPanel.results
+    local groupsToRemove = {}
+
+    for i = 1, #groups do
+        local id = groups[i]
+        -- TODO: Get filters from a new small frame shoewed everytime player open LFG frame
+        local filters = {"190k", "200k", "wts"}
+
+        -- Unexpected behavior when lowering strings, but they should be lowercase
+        --> when I lowercased a string, it is transformed into something like "r3415" instead of lowercased string
+        local name = C_LFGList.GetSearchResultInfo(id).name
+        local comment = C_LFGList.GetSearchResultInfo(id).comment
+
+        -- Check if group name or comment contains any of the filters
+        for j = 1, #filters do
+            local filter = filters[j]
+            if (string.find(name, filter) or (comment and string.find(comment, filter))) then
+                table.insert(groupsToRemove, id)
+            end
+        end
+    end
+
+    -- TODO: Find a proper way to remove groups from LFG list
+end
+
 GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
@@ -734,3 +760,4 @@ GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
 GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
+GearHelper:RegisterEvent("LFG_LIST_SEARCH_RESULTS_RECEIVED", LFGSearch, ...)
