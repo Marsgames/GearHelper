@@ -11,7 +11,7 @@ end
 local function AskIfHeNeed(link, sendTo)
     GearHelper:BenchmarkCountFuncCall("AskIfHeNeed")
     local className, classFile, classID = UnitClass(sendTo)
-    local itemTable = GearHelper:GetItemByLink(link)
+    local itemTable = GearHelper:GetItemByLink(link, "GH_ItemAsk.AskIfHeNeed()")
     local itemLink = itemTable["itemLink"]
     local lienPerso = tostring(GearHelper:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
     StaticPopupDialogs["AskIfHeNeed"] = {
@@ -27,8 +27,8 @@ local function AskIfHeNeed(link, sendTo)
 
             local theSource = GearHelper.db.global.phrases[unitLocale].demande4 or L["demande4enUS"]
             local theSource2 = GearHelper.db.global.phrases[unitLocale].demande42 or L["demande4enUS2"]
-            local  msg = theSource .. itemLink .. theSource2 .. "?"
-            local rep = GearHelper.db.global.phrases[unitLocale].rep or  L["repenUS"]
+            local msg = theSource .. itemLink .. theSource2 .. "?"
+            local rep = GearHelper.db.global.phrases[unitLocale].rep or L["repenUS"]
             local rep2 = GearHelper.db.global.phrases[unitLocale].rep2 or ""
             local msgRep = rep .. L["maLangue" .. unitLocale] .. rep2
 
@@ -77,7 +77,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         if func == "askIfHeNeed" then
             local _, nomPerso, itID, persoLink = strsplit("_", link)
             local _, theItemLink = GetItemInfo(itID)
-            local itemTable = self:GetItemByLink(theItemLink)
+            local itemTable = self:GetItemByLink(theItemLink, "GH_ItemAsk.SetItemRef")
             local itLink1 = itemTable.itemLink
 
             AskIfHeNeed(itLink1, nomPerso)
@@ -89,7 +89,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
     for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
         local shouldBeCompared, err = pcall(self.ShouldBeCompared, nil, itemLink)
         if (shouldBeCompared) then
-            local item = self:GetItemByLink(itemLink)
+            local item = self:GetItemByLink(itemLink, "GH_ItemAsk.CreatreLinkAskIfHeNeeds")
             local quality = GearHelper:GetQualityFromColor(item.rarity)
 
             if quality ~= nil and quality < 5 then

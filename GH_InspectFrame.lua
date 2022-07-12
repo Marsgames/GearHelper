@@ -71,7 +71,7 @@ local function InspectFrameShow(_)
     for i = 1, 18 do
         local itemID = GetInventoryItemLink("target", i)
         if (itemID ~= nil and itemID ~= -1) then
-            local itemScan = GearHelper:GetItemByLink(itemID)
+            local itemScan = GearHelper:GetItemByLink(itemID, "GH_InspectFrame.InspectFrameShow()")
             local iR, itemLevel, itemEquipLoc = itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
 
             iR = ((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or (iR == "a335ee" and 4) or (iR == "ff8000" and 5) or (iR == "e6cc80" and 6) or (iR == "00ccff" and 7))
@@ -151,26 +151,26 @@ local function InspectFrameHide()
 end
 
 function GearHelper:AddIlvlOnInspectFrame()
-	self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnInspectFrame")
+    self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnInspectFrame")
 
-	InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
-	InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
+    InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
+    InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
 end
 
 function GearHelper:HideIlvlOnInspectFrame()
     self:BenchmarkCountFuncCall("GearHelper:HideIlvlOnInspectFrame")
 
-	table.foreach(
-		self.db.global.equipLocInspect,
-		function(equipLoc, _)
-			if (_G["charIlvlInspectButton" .. equipLoc]) then
-				_G["charIlvlInspectButton" .. equipLoc]:Hide()
-				_G["charIlvlInspectButton" .. equipLoc] = nil
-			end
-			if (_G["ilvlAverageInspect"]) then
-				_G["ilvlAverageInspect"]:Hide()
-				_G["ilvlAverageInspect"] = nil
-			end
-		end
-	)
+    table.foreach(
+        self.db.global.equipLocInspect,
+        function(equipLoc, _)
+            if (_G["charIlvlInspectButton" .. equipLoc]) then
+                _G["charIlvlInspectButton" .. equipLoc]:Hide()
+                _G["charIlvlInspectButton" .. equipLoc] = nil
+            end
+            if (_G["ilvlAverageInspect"]) then
+                _G["ilvlAverageInspect"]:Hide()
+                _G["ilvlAverageInspect"] = nil
+            end
+        end
+    )
 end

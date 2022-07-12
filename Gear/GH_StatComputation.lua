@@ -9,7 +9,7 @@ function GearHelper:IsItemBetter(itemLink)
     if (not shouldBeCompared) then
         return false
     end
-    item = self:GetItemByLink(itemLink)
+    item = self:GetItemByLink(itemLink, "GH_StatComputation.IsItemBetter")
 
     local status, res = pcall(self.NewWeightCalculation, self, item)
     if not status then
@@ -38,8 +38,8 @@ function GearHelper:ShouldBeCompared(itemLink)
         error(GHExceptionAlreadyEquipped)
     end
 
-    if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink))) then
-        error(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
+    if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink, "GH_StatComputation.ShouldBeCompared"))) then
+        error(GearHelper:GetItemByLink(itemLink, "GH_StatComputation.ShouldBeCompared(error)").itemLink .. " - " .. GHExceptionNotEquippable)
     end
 
     return true
@@ -59,7 +59,7 @@ local function AutoEquipShouldBeCompared(itemLink)
         return false
     end
 
-    if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink))) then
+    if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink, "GH_StatComputation.AutoEquipShouldBeCompared()"))) then
         --print(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
         return false
     end
@@ -85,11 +85,13 @@ function GearHelper:EquipItem(inThisBag)
         "OnUpdate",
         function(self, elapsed)
             if time() <= waitEquipTimer + 0.5 then
-                do return end
+                do
+                    return
+                end
             end
 
             if "pvp" == typeInstance or "24" == tostring(difficultyIndex) or InCombatLockdown() then
-                 self:Hide()
+                self:Hide()
                 return
             end
 
@@ -100,7 +102,7 @@ function GearHelper:EquipItem(inThisBag)
                     local shouldBeCompared = AutoEquipShouldBeCompared(itemLink)
 
                     if (shouldBeCompared) then
-                        local item = GearHelper:GetItemByLink(itemLink)
+                        local item = GearHelper:GetItemByLink(itemLink, "GH_StatComputation.EquipItem()")
                         local status, result = pcall(GearHelper.NewWeightCalculation, self, item)
 
                         if status then
@@ -141,7 +143,7 @@ function GearHelper:NewWeightCalculation(item)
             if equippedItemLink == 0 then
                 result[slot] = GearHelper:ApplyTemplateToDelta(item)
             else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink)
+                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() Trinket / Finger")
                 result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
             end
         end
@@ -150,10 +152,10 @@ function GearHelper:NewWeightCalculation(item)
             if equippedItemLink == 0 then
                 result[slot] = GearHelper:ApplyTemplateToDelta(item)
             elseif equippedItemLink == -1 then
-                equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"])
+                equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"], "GH_StatComputation.NewWeightCalculation() Mainhand")
                 result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
             else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink)
+                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() Holdable")
                 result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
             end
         end
@@ -161,13 +163,13 @@ function GearHelper:NewWeightCalculation(item)
         if tonumber(equippedItems["MainHand"]) and tonumber(equippedItems["SecondaryHand"]) then
             result["MainHand"] = GearHelper:ApplyTemplateToDelta(item)
         elseif tonumber(equippedItems["MainHand"]) then
-            equippedItem = GearHelper:GetItemByLink(equippedItems["SecondaryHand"])
+            equippedItem = GearHelper:GetItemByLink(equippedItems["SecondaryHand"], "GH_StatComputation.NewWeightCalculation() SecondaryHand")
             result["SecondaryHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
         elseif tonumber(equippedItems["SecondaryHand"]) then
-            equippedItem = GearHelper:GetItemByLink(equippedItems["MainHand"])
+            equippedItem = GearHelper:GetItemByLink(equippedItems["MainHand"], "GH_StatComputation.NewWeightCalculation() MainHand 2Weapon")
             result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
         else
-            local combinedItems = GearHelper:CombineTwoItems(GearHelper:GetItemByLink(equippedItems["MainHand"]), GearHelper:GetItemByLink(equippedItems["SecondaryHand"]))
+            local combinedItems = GearHelper:CombineTwoItems(GearHelper:GetItemByLink(equippedItems["MainHand"], "GH_StatComputation.NewWeightCalculation() 1"), GearHelper:GetItemByLink(equippedItems["SecondaryHand"], "GH_StatComputation.NewWeightCalculation() 2"))
             result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, combinedItems)
         end
     else
@@ -176,7 +178,7 @@ function GearHelper:NewWeightCalculation(item)
             if equippedItemLink == 0 then -- 0 if no item is equipped
                 result[slot] = GearHelper:ApplyTemplateToDelta(item)
             else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink)
+                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() other ?")
                 result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
             end
         end

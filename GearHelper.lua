@@ -425,7 +425,7 @@ local ModifyTooltip = function(self, ...)
         if (not shouldBeCompared) then
             if (string.find(tostring(err), GHExceptionNotEquippable)) then
                 -- Show message only on equippable items
-                local item = GearHelper:GetItemByLink(itemLink)
+                local item = GearHelper:GetItemByLink(itemLink, "GearHelper.ModifyTooltip 1")
 
                 -- print("subtype : " .. tostring(item.subType))
                 if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
@@ -438,7 +438,7 @@ local ModifyTooltip = function(self, ...)
             end
         else
             -- end
-            local item = GearHelper:GetItemByLink(itemLink)
+            local item = GearHelper:GetItemByLink(itemLink, "GearHelper.ModifyTooltip 2")
             local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
 
             -- N'est pas censé arriver
