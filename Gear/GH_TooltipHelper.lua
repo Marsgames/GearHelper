@@ -19,18 +19,18 @@ local function GetNumberOfGemsFromTooltip()
     return tonumber(n)
 end
 
-function GearHelper:BuildItemFromTooltip(itemLink)
+function GearHelper:BuildItemFromTooltip(itemLink, caller)
     self:BenchmarkCountFuncCall("GearHelper:BuildItemFromTooltip")
     local tip = ""
     local item = {}
 
     if not itemLink or itemLink == -1 then
-        error(GHExceptionInvalidItemLink .. " : " .. tostring(itemLink))
+        error(GHExceptionInvalidItemLink .. " : " .. tostring(itemLink) .. " - caller : " .. tostring(caller))
         return false
     end
 
     if string.find(itemLink, L["mascotte"]) then
-        error(GHExceptionInvalidItem .. " : " .. tostring(itemLink))
+        error(GHExceptionInvalidItem .. " : " .. tostring(itemLink) .. " - caller : " .. tostring(caller))
         return false
     end
 

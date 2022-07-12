@@ -260,7 +260,17 @@ local function QuestDetail()
     end
 
     for i = 1, numQuestChoices do
-        local item = GearHelper:GetItemByLink(GetQuestItemLink("choice", i))
+        local questItemLink = GetQuestItemLink("choice", i)
+        if (questItemLink == nil) then
+            -- Check other possibilities if choice is nil ?
+            -- print("choice : " .. tostring(GetQuestItemLink("choice", i)))
+            -- print("reward : " .. tostring(GetQuestItemLink("reward", i)))
+            -- print("required : " .. tostring(GetQuestItemLink("required", i)))
+            do
+                return
+            end
+        end
+        local item = GearHelper:GetItemByLink(GetQuestItemLink("choice", i), "GH_Event.QuestDetail()")
 
         if item.type ~= L["armor"] and item.type ~= L["weapon"] then
             do
@@ -616,7 +626,7 @@ local function InspectReady(_, _, target)
 
     if GearHelper.db.profile.inspectAin.waitingIlvl then ---------------- /GH AIN AVEC UN MESSAGE SPÉCIALE SI L'ILVL DE L'OBJET LOOT EST MOINS BON QUE CELUI ÉQUIPPÉ PAR CELUI QUI L'A LOOT
         local itemLoot = GearHelper.db.profile.inspectAin.linkItemReceived
-        local itemLootTable = GearHelper:GetItemByLink(itemLoot)
+        local itemLootTable = GearHelper:GetItemByLink(itemLoot, "GH_events/InspectReady() 1")
         local itemLootEquipLoc = GearHelper.db.global.equipLocInspect[itemLootTable.equipLoc]
 
         if (itemLootEquipLoc ~= 11 and itemLootEquipLoc ~= 12 and itemLootEquipLoc ~= 13 and itemLootEquipLoc ~= 14) then
@@ -626,7 +636,7 @@ local function InspectReady(_, _, target)
                     return
                 end
             end
-            local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped)
+            local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped, "GH_events/InspectReady() 2")
             local itemEquippedIlvl = itemEquippedTable.iLvl
             local itemLootIlvl = itemLootTable.iLvl
         end
@@ -651,7 +661,7 @@ local function InspectReady(_, _, target)
             for i = 1, 19 do
                 local itemLink = GetInventoryItemLink("mouseover", i)
                 if (itemLink) then
-                    local itemScan = GearHelper:GetItemByLink(itemLink)
+                    local itemScan = GearHelper:GetItemByLink(itemLink, "GH_events.computeIlvl")
                     local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
                     if equipLoc ~= nil then
                         arrayIlvl[equipLoc] = itemLvl

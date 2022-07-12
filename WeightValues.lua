@@ -1,119 +1,119 @@
 GearHelper.itemSlot = {
-	INVTYPE_AMMO = {"Ammo"},
-	INVTYPE_HEAD = {"Head"},
-	INVTYPE_NECK = {"Neck"},
-	INVTYPE_SHOULDER = {"Shoulder"},
-	INVTYPE_BODY = {"Body"},
-	INVTYPE_CHEST = {"Chest"},
-	INVTYPE_ROBE = {"Chest"},
-	INVTYPE_WAIST = {"Waist"},
-	INVTYPE_LEGS = {"Legs"},
-	INVTYPE_FEET = {"Feet"},
-	INVTYPE_WRIST = {"Wrist"},
-	INVTYPE_HAND = {"Hands"},
-	INVTYPE_FINGER = {"Finger0", "Finger1"},
-	INVTYPE_TRINKET = {"Trinket0", "Trinket1"},
-	INVTYPE_CLOAK = {"Back"},
-	INVTYPE_SHIELD = {"SecondaryHand"},
-	INVTYPE_WEAPON = {
-		WARRIOR = {
-			["72"] = {"MainHand", "SecondaryHand"},
-			["71"] = {"MainHand"},
-			["73"] = {"MainHand"}
-		},
-		SHAMAN = {
-			["263"] = {"MainHand", "SecondaryHand"},
-			["262"] = {"MainHand"},
-			["264"] = {"MainHand"}
-		},
-		HUNTER = {"MainHand"},
-		DEATHKNIGHT = {
-			["250"] = {"MainHand", "SecondaryHand"},
-			["251"] = {"MainHand"},
-			["252"] = {"MainHand"}
-		},
-		ROGUE = {"MainHand", "SecondaryHand"},
-		DEMONHUNTER = {"MainHand", "SecondaryHand"},
-		DRUID = {"MainHand"},
-		MONK = {"MainHand"},
-		WARLOCK = {"MainHand"},
-		MAGE = {"MainHand"},
-		PRIEST = {"MainHand"},
-		PALADIN = {"MainHand"}
-	},
-	INVTYPE_2HWEAPON = {"MainHand", "SecondaryHand"},
-	INVTYPE_WEAPONMAINHAND = {"MainHand"},
-	INVTYPE_WEAPONOFFHAND = {"SecondaryHand"},
-	INVTYPE_HOLDABLE = {"SecondaryHand"},
-	INVTYPE_RANGED = {"MainHand", "SecondaryHand"},
-	INVTYPE_RANGEDRIGHT = {"MainHand"}
+    INVTYPE_AMMO = {"Ammo"},
+    INVTYPE_HEAD = {"Head"},
+    INVTYPE_NECK = {"Neck"},
+    INVTYPE_SHOULDER = {"Shoulder"},
+    INVTYPE_BODY = {"Body"},
+    INVTYPE_CHEST = {"Chest"},
+    INVTYPE_ROBE = {"Chest"},
+    INVTYPE_WAIST = {"Waist"},
+    INVTYPE_LEGS = {"Legs"},
+    INVTYPE_FEET = {"Feet"},
+    INVTYPE_WRIST = {"Wrist"},
+    INVTYPE_HAND = {"Hands"},
+    INVTYPE_FINGER = {"Finger0", "Finger1"},
+    INVTYPE_TRINKET = {"Trinket0", "Trinket1"},
+    INVTYPE_CLOAK = {"Back"},
+    INVTYPE_SHIELD = {"SecondaryHand"},
+    INVTYPE_WEAPON = {
+        WARRIOR = {
+            ["72"] = {"MainHand", "SecondaryHand"},
+            ["71"] = {"MainHand"},
+            ["73"] = {"MainHand"}
+        },
+        SHAMAN = {
+            ["263"] = {"MainHand", "SecondaryHand"},
+            ["262"] = {"MainHand"},
+            ["264"] = {"MainHand"}
+        },
+        HUNTER = {"MainHand"},
+        DEATHKNIGHT = {
+            ["250"] = {"MainHand", "SecondaryHand"},
+            ["251"] = {"MainHand"},
+            ["252"] = {"MainHand"}
+        },
+        ROGUE = {"MainHand", "SecondaryHand"},
+        DEMONHUNTER = {"MainHand", "SecondaryHand"},
+        DRUID = {"MainHand"},
+        MONK = {"MainHand"},
+        WARLOCK = {"MainHand"},
+        MAGE = {"MainHand"},
+        PRIEST = {"MainHand"},
+        PALADIN = {"MainHand"}
+    },
+    INVTYPE_2HWEAPON = {"MainHand", "SecondaryHand"},
+    INVTYPE_WEAPONMAINHAND = {"MainHand"},
+    INVTYPE_WEAPONOFFHAND = {"SecondaryHand"},
+    INVTYPE_HOLDABLE = {"SecondaryHand"},
+    INVTYPE_RANGED = {"MainHand", "SecondaryHand"},
+    INVTYPE_RANGEDRIGHT = {"MainHand"}
 }
 
 local function ParseDefaultValues(rawValues, specID, templateID)
-	GearHelper:BenchmarkCountFuncCall("ParseDefaultValues")
-	local rawCopy = rawValues
-	local tmpTemplate = {
-		["Intellect"] = 0,
-		["Haste"] = 0,
-		["CriticalStrike"] = 0,
-		["Versatility"] = 0,
-		["Mastery"] = 0,
-		["Agility"] = 0,
-		["Stamina"] = 0,
-		["Strength"] = 0,
-		["Armor"] = 0,
-		["Leech"] = 0,
-		["Avoidance"] = 0,
-		["MainHandDps"] = 0,
-		["MovementSpeed"] = 0,
-		["OffHandDps"] = 0,
-		["Max"] = 0
-	}
-	local lastWord = ""
-	local count = 1
+    GearHelper:BenchmarkCountFuncCall("ParseDefaultValues")
+    local rawCopy = rawValues
+    local tmpTemplate = {
+        ["Intellect"] = 0,
+        ["Haste"] = 0,
+        ["CriticalStrike"] = 0,
+        ["Versatility"] = 0,
+        ["Mastery"] = 0,
+        ["Agility"] = 0,
+        ["Stamina"] = 0,
+        ["Strength"] = 0,
+        ["Armor"] = 0,
+        ["Leech"] = 0,
+        ["Avoidance"] = 0,
+        ["MainHandDps"] = 0,
+        ["MovementSpeed"] = 0,
+        ["OffHandDps"] = 0,
+        ["Max"] = 0
+    }
+    local lastWord = ""
+    local count = 1
 
-	for token in string.gmatch(rawCopy, "[^%s]+") do
-		if count == 1 or count == 4 or count == 7 or count == 10 or count == 13 or count == 16 or count == 19 or count == 22 or count == 25 or count == 28 or count == 31 then
-			lastWord = token
-		end
+    for token in string.gmatch(rawCopy, "[^%s]+") do
+        if count == 1 or count == 4 or count == 7 or count == 10 or count == 13 or count == 16 or count == 19 or count == 22 or count == 25 or count == 28 or count == 31 then
+            lastWord = token
+        end
 
-		if count == 2 or count == 5 or count == 8 or count == 11 or count == 14 or count == 17 or count == 20 or count == 23 or count == 26 or count == 29 or count == 32 then
-			--Refactoring some spelling from Noxxic and AMR
-			if lastWord == "Crit" then
-				lastWord = "CriticalStrike"
-			end
+        if count == 2 or count == 5 or count == 8 or count == 11 or count == 14 or count == 17 or count == 20 or count == 23 or count == 26 or count == 29 or count == 32 then
+            --Refactoring some spelling from Noxxic and AMR
+            if lastWord == "Crit" then
+                lastWord = "CriticalStrike"
+            end
 
-			if lastWord == "OffHandDamage" or "Off-Hand-Weapon-Dps" == lastWord then
-				lastWord = "OffHandDps"
-			end
+            if lastWord == "OffHandDamage" or "Off-Hand-Weapon-Dps" == lastWord then
+                lastWord = "OffHandDps"
+            end
 
-			if lastWord == "MainHandDamage" or "Weapon-Dps" == lastWord then
-				lastWord = "MainHandDps"
-			end
+            if lastWord == "MainHandDamage" or "Weapon-Dps" == lastWord then
+                lastWord = "MainHandDps"
+            end
 
-			if string.gsub(token, "%[", "") then
-				token = string.gsub(token, "%[", "")
-			end
-			if string.gsub(token, "%]", "") then
-				token = string.gsub(token, "%]", "")
-			end
+            if string.gsub(token, "%[", "") then
+                token = string.gsub(token, "%[", "")
+            end
+            if string.gsub(token, "%]", "") then
+                token = string.gsub(token, "%]", "")
+            end
 
-			tmpTemplate[lastWord] = tonumber(token)
-		end
+            tmpTemplate[lastWord] = tonumber(token)
+        end
 
-		count = count + 1
-	end
+        count = count + 1
+    end
 
-	for _, value in pairs(tmpTemplate) do
-		if tmpTemplate.Max < value then
-			tmpTemplate.Max = value
-		end
-	end
+    for _, value in pairs(tmpTemplate) do
+        if tmpTemplate.Max < value then
+            tmpTemplate.Max = value
+        end
+    end
 
-	if GearHelper.db.global.templates[specID] == nil then
-		GearHelper.db.global.templates[specID] = {}
-	end
-	GearHelper.db.global.templates[specID][templateID] = tmpTemplate
+    if GearHelper.db.global.templates[specID] == nil then
+        GearHelper.db.global.templates[specID] = {}
+    end
+    GearHelper.db.global.templates[specID][templateID] = tmpTemplate
 end
 
 local rawValues = {
@@ -123,15 +123,15 @@ local rawValues = {
     },
     -- DEATH KNIGHT FROST --
     [251] = {
-        ["NOX"] = "Strength [7.03] > Crit [4.65] > Haste [3.99] >= Mastery [3.92] >= Versatility [3.61]"
+        ["NOX"] = "Strength [6.84] > Haste [4.81] = Mastery [4.81] >= Crit [4.79] > Versatility [3.86]"
     },
     -- DEATH KNIGHT UNHOLY --
     [252] = {
-        ["NOX"] = "Strength [5.86] > Haste [3.66] >= Crit [3.4] = Versatility [3.4] >= Mastery [3.21]"
+        ["NOX"] = "Strength [6.05] > Haste [4.17] >= Versatility [4.0] >= Crit [3.76] >= Mastery [3.64]"
     },
     -- DEMON HUNTER HAVOC --
     [577] = {
-        ["NOX"] = "Agility [5.9] > Versatility [3.51] >= Crit [3.35] >= Mastery [3.17] >= Haste [3.15]"
+        ["NOX"] = "Agility [5.88] > Crit [3.47] >= Versatility [3.37] >= Haste [3.36] >= Mastery [3.23]"
     },
     -- DEMON HUNTER VENGEANCE --
     [581] = {
@@ -139,11 +139,11 @@ local rawValues = {
     },
     -- DRUID BALANCE --
     [102] = {
-        ["NOX"] = "Intellect [7.01] > Mastery [4.71] > Versatility [3.93] >= Haste [3.91] >= Crit [3.64]"
+        ["NOX"] = "Intellect [7.03] > Mastery [4.69] > Haste [3.76] >= Crit [3.56] = Versatility [3.56]"
     },
     -- DRUID FERAL --
     [103] = {
-        ["NOX"] = "Agility [5.96] > Mastery [3.52] >= Crit [3.5] >= Haste [3.23] >= Versatility [3.19]"
+        ["NOX"] = "Agility [6.16] > Mastery [3.63] >= Crit [3.62] >= Haste [3.36] >= Versatility [3.31]"
     },
     -- DRUID GUARDIAN --
     [104] = {
@@ -155,27 +155,27 @@ local rawValues = {
     },
     -- HUNTER BEAST MASTERY --
     [253] = {
-        ["NOX"] = "Agility [5.99] > Crit [3.04] >= Haste [2.91] >= Versatility [2.85] >= Mastery [2.8]"
+        ["NOX"] = "Agility [6.39] > Crit [3.55] >= Versatility [3.35] >= Mastery [3.24] >= Haste [2.91]"
     },
     -- HUNTER MARKSMANSHIP --
     [254] = {
-        ["NOX"] = "Agility [5.9] > Mastery [3.48] >= Crit [3.34] = Haste [3.34] >= Versatility [3.28]"
+        ["NOX"] = "Agility [5.79] > Mastery [3.67] >= Crit [3.61] >= Haste [3.57] >= Versatility [3.5]"
     },
     -- HUNTER SURVIVAL --
     [255] = {
-        ["NOX"] = "Agility [6.07] > Crit [3.57] >= Versatility [3.39] > Haste [2.89] > Mastery [1.48]"
+        ["NOX"] = "Agility [6.18] > Crit [3.59] >= Versatility [3.3] > Haste [2.75] > Mastery [1.5]"
     },
     -- MAGE ARCANE --
     [62] = {
-        ["NOX"] = "Intellect [6.21] > Versatility [3.58] >= Crit [3.42] >= Mastery [3.35] >= Haste [3.23]"
+        ["NOX"] = "Intellect [6.35] > Mastery [4.38] > Versatility [3.63] >= Crit [3.5] > Haste [1.56]"
     },
     -- MAGE FIRE --
     [63] = {
-        ["NOX"] = "Intellect [6.25] > Haste [3.49] >= Mastery [3.36] >= Versatility [3.11] > Crit [2.56]"
+        ["NOX"] = "Intellect [7.11] > Haste [4.2] > Mastery [3.67] >= Versatility [3.6] > Crit [2.93]"
     },
     -- MAGE FROST --
     [64] = {
-        ["NOX"] = "Intellect [6.87] > Haste [3.77] >= Versatility [3.75] >= Mastery [3.6] > Crit [1.15]"
+        ["NOX"] = "Intellect [6.92] > Haste [4.22] > Versatility [3.74] >= Mastery [3.52] > Crit [1.19]"
     },
     -- MONK BREWMASTER --
     [268] = {
@@ -183,7 +183,7 @@ local rawValues = {
     },
     -- MONK WINDWALKER --
     [269] = {
-        ["NOX"] = "Agility [4.99] > Versatility [2.71] >= Mastery [2.41] >= Crit [2.34] > Haste [0.8] > Stamina [0.18]"
+        ["NOX"] = "Agility [5.66] > Crit [3.22] >= Mastery [3.02] >= Versatility [2.97] > Haste [2.18] > Stamina [0.18]"
     },
     -- MONK MISTWEAVER --
     [270] = {
@@ -199,7 +199,7 @@ local rawValues = {
     },
     -- PALADIN RETRIBUTION --
     [70] = {
-        ["NOX"] = "Strength [5.55] > Mastery [3.37] >= Haste [3.1] >= Crit [3.03] >= Versatility [2.96]"
+        ["NOX"] = "Strength [6.03] > Mastery [3.83] >= Crit [3.63] >= Versatility [3.55] >= Haste [3.49]"
     },
     -- PRIEST DISCIPLINE --
     [256] = {
@@ -211,27 +211,27 @@ local rawValues = {
     },
     -- PRIEST SHADOW --
     [258] = {
-        ["NOX"] = "Intellect [6.61] > Mastery [4.59] >= Crit [4.32] >= Haste [4.13] >= Versatility [4.0]"
+        ["NOX"] = "Intellect [6.78] > Crit [4.4] >= Haste [4.36] = Mastery [4.36] >= Versatility [4.17]"
     },
     -- ROGUE ASSASSINATION --
     [259] = {
-        ["NOX"] = "Agility [6.26] > Mastery [3.89] >= Haste [3.78] >= Crit [3.71] >= Versatility [3.36]"
+        ["NOX"] = "Agility [6.54] > Mastery [4.13] >= Crit [4.05] >= Haste [3.79] >= Versatility [3.42]"
     },
     -- ROGUE OUTLAW --
     [260] = {
-        ["NOX"] = "Agility [5.41] > Versatility [3.1] >= Crit [2.87] >= Haste [2.7] > Mastery [1.97]"
+        ["NOX"] = "Agility [5.95] > Versatility [3.3] >= Crit [3.07] >= Haste [2.75] > Mastery [2.18]"
     },
     -- ROGUE SUBTLETY --
     [261] = {
-        ["NOX"] = "Agility [6.38] > Versatility [3.44] > Mastery [3.02] >= Crit [2.98] > Haste [2.28]"
+        ["NOX"] = "Agility [6.18] > Versatility [3.46] >= Crit [3.24] >= Mastery [2.89] > Haste [2.17]"
     },
     -- SHAMAN ELEMENTAL --
     [262] = {
-        ["NOX"] = "Intellect [6.38] > Versatility [3.45] > Mastery [3.03] >= Haste [2.77] >= Crit [2.53]"
+        ["NOX"] = "Intellect [7.09] > Versatility [3.57] >= Haste [3.39] >= Mastery [3.37] > Crit [2.92]"
     },
     -- SHAMAN ENHANCEMENT --
     [263] = {
-        ["NOX"] = "Agility [7.61] > Haste [5.54] > Versatility [4.26] >= Crit [3.98] > Mastery [3.57]"
+        ["NOX"] = "Agility [7.61] > Haste [4.45] >= Mastery [4.34] >= Crit [3.96] >= Versatility [3.85]"
     },
     -- SHAMAN RESTORATION --
     [264] = {
@@ -239,37 +239,37 @@ local rawValues = {
     },
     -- WARLOCK AFFLICTION --
     [265] = {
-        ["NOX"] = "Intellect [5.87] > Mastery [3.57] >= Crit [3.47] >= Versatility [3.42] >= Haste [3.3]"
+        ["NOX"] = "Intellect [6.22] > Crit [3.64] >= Mastery [3.59] >= Versatility [3.58] >= Haste [3.38]"
     },
     -- WARLOCK DEMONOLOGY --
     [266] = {
-        ["NOX"] = "Intellect [5.36] > Mastery [3.79] >= Crit [3.73] >= Versatility [3.72] > Haste [3.23] > Stamina [1.15]"
+        ["NOX"] = "Intellect [5.07] > Haste [3.82] >= Mastery [3.79] >= Crit [3.74] >= Versatility [3.68] > Stamina [0.87]"
     },
     -- WARLOCK DESTRUCTION --
     [267] = {
-        ["NOX"] = "Intellect [6.79] > Haste [4.21] >= Crit [4.18] >= Versatility [3.96] >= Mastery [3.87]"
+        ["NOX"] = "Intellect [6.22] > Crit [3.77] >= Mastery [3.62] = Versatility [3.62] >= Haste [3.6]"
     },
     -- WARRIOR ARMS --
     [71] = {
-        ["NOX"] = "Strength [5.84] > Crit [3.94] > Versatility [3.4] >= Mastery [3.36] >= Haste [3.02]"
+        ["NOX"] = "Strength [6.5] > Crit [4.39] >= Versatility [4.03] >= Mastery [3.77] > Haste [3.26]"
     },
     -- WARRIOR FURY --
     [72] = {
-        ["NOX"] = "Strength [5.59] > Mastery [4.25] > Crit [3.47] >= Versatility [3.44] > Haste [2.83]"
+        ["NOX"] = "Strength [5.62] > Mastery [4.29] > Versatility [3.69] >= Crit [3.63] > Haste [2.74]"
     },
     -- WARRIOR PROTECTION --
     [73] = {
         ["NOX"] = "Haste [6.08] > Crit [5.67] = Versatility [5.67] > Mastery [5.24] > Strength [4.83]"
-    },
+    }
 }
 
 function GearHelper:InitTemplates()
-	GearHelper:BenchmarkCountFuncCall("GearHelper:InitTemplates")
-	for spec, templates in pairs(rawValues) do
-		for templateID, stats in pairs(templates) do
-			ParseDefaultValues(stats, spec, templateID)
-		end
-	end
+    GearHelper:BenchmarkCountFuncCall("GearHelper:InitTemplates")
+    for spec, templates in pairs(rawValues) do
+        for templateID, stats in pairs(templates) do
+            ParseDefaultValues(stats, spec, templateID)
+        end
+    end
 end
 
 --[[

@@ -14,13 +14,18 @@ local function PutItemInCache(itemLink, item)
     GearHelper.db.global.ItemCache[itemLink] = item
 end
 
-function GearHelper:GetItemByLink(itemLink)
+function GearHelper:GetItemByLink(itemLink, caller)
     self:BenchmarkCountFuncCall("GearHelper:GetItemByLink")
 
     local item = GetItemFromCache(itemLink)
 
+    -- print("ItemLink : " .. tostring(itemLink) .. " - caller : " .. tostring(caller))
+
     if not item then
-        item = self:BuildItemFromTooltip(itemLink)
+        if not itemLink then
+            error("ItemLink is " .. tostring(itemLink) .. " in GH_Cache.GetItemByLink - caller : " .. tostring(caller))
+        end
+        item = self:BuildItemFromTooltip(itemLink, "GH_Cache.GetItemByLink")
         if (false == item) then -- there was an error
             return
         end

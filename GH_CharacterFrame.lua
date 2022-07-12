@@ -50,7 +50,7 @@ local function CharFrameShow(_)
                 button:SetSize(1, 1)
 
                 if (item ~= 0) then
-                    local itemScan = GearHelper:GetItemByLink(item)
+                    local itemScan = GearHelper:GetItemByLink(item, "GH_CharacterFrame.CharFrameShow()")
                     local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
                     iR = ((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or (iR == "a335ee" and 4) or (iR == "ff8000" and 5) or (iR == "e6cc80" and 6) or (iR == "00ccff" and 7))
 
@@ -73,21 +73,21 @@ local function CharFrameHide()
 end
 
 function GearHelper:AddIlvlOnCharFrame()
-	self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnCharFrame")
+    self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnCharFrame")
 
-	PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
-	PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
+    PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
+    PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
 end
 
 function GearHelper:HideIlvlOnCharFrame()
-	GearHelper:BenchmarkCountFuncCall("GearHelper:HideIlvlOnCharFrame")
-	table.foreach(
-		GearHelperVars.charInventory,
-		function(slotName, _)
-			if (_G["charIlvlButton" .. slotName]) then
-				_G["charIlvlButton" .. slotName]:Hide()
-				_G["charIlvlButton" .. slotName] = nil
-			end
-		end
-	)
+    GearHelper:BenchmarkCountFuncCall("GearHelper:HideIlvlOnCharFrame")
+    table.foreach(
+        GearHelperVars.charInventory,
+        function(slotName, _)
+            if (_G["charIlvlButton" .. slotName]) then
+                _G["charIlvlButton" .. slotName]:Hide()
+                _G["charIlvlButton" .. slotName] = nil
+            end
+        end
+    )
 end
