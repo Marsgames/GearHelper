@@ -7,7 +7,8 @@ The main purpose of this addon is to help the player to chose the best item for 
 GearHelper can tell you if an item you just looted is better than the one equipped depending on custom weights or Noxxic templates.
 In raid, if a player loot an item that is better than what you have equipped, GearHelper will tel you so. But unlike Personal Loot Helper, GearHelper will offer you to send him a message, in his language, simply by clicking on his name in the message print by GearHelper.
 
-Functionnalities : 
+Functionnalities :
+
 - Tell if an item looted is better than what is equipped
 - In instance, send a message to someone that loot something better than what you have
 - Auto repaire gear
