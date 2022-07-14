@@ -94,6 +94,14 @@ function GearHelper:IsValueInTable(tab, val)
     return false
 end
 
+-- Remove an item from table and return elem
+function GearHelper:RemoveItemByKey(table, key)
+    GearHelper:BenchmarkCountFuncCall("GearHelper:RemoveItemByKey")
+    local element = table[key]
+    table[key] = nil
+    return element
+end
+
 function GearHelper:MySplit(inputString, separator)
     GearHelper:BenchmarkCountFuncCall("GearHelper:MySplit")
     if separator == nil then
@@ -177,7 +185,7 @@ function GearHelper:GetGemValue()
     end
     local tip = ""
 
-    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate")
+    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate", BackdropTemplateMixin and "BackdropTemplate")
     tip:SetOwner(WorldFrame, "ANCHOR_NONE")
     tip:SetHyperlink(gemItemLink)
 
@@ -220,7 +228,7 @@ local function GetActiveTemplate()
     end
 
     if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
-        local currentSpec = tostring(GetSpecializationInfo(GetSpecialization()))
+        local currentSpec = GetSpecializationInfo(GetSpecialization())
         if GearHelper.db.global.templates[currentSpec]["NOX"] == nil then
             error(GHExceptionMissingNoxTemplate)
         end

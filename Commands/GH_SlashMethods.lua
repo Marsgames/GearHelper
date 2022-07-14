@@ -99,7 +99,15 @@ function GearHelper:SlashAin()
 end
 
 function GearHelper:SlashReset()
-    self.db = nil
+    GearHelper:ResetCache()
+    GearHelper.db.profileKeys = {}
+    GearHelper.db.profileKeys = nil
+    GearHelper.db.global = {}
+    GearHelper.db.global = nil
+    GearHelper.db.profiles = {}
+    GearHelper.db.profiles = nil
+    GearHelper.db = {}
+    GearHelper.db = nil
     ReloadUI()
 end
 
@@ -110,6 +118,7 @@ end
 
 function GearHelper:SlashDebug()
     GearHelper.db.profile.debug = not GearHelper.db.profile.debug
+    print("debug mode set to " .. tostring(GearHelper.db.profile.debug))
 end
 
 function GearHelper:SlashInspect()
@@ -161,9 +170,24 @@ function GearHelper:SlashBenchmarkCountResult()
         return
     end
 
+    function createTuples(array)
+        local tuples = {}
+        for k, v in pairs(array) do
+            tuples[#tuples + 1] = {v, k}
+        end
+        return tuples
+    end
+    function compare(a, b)
+        return a[1] > b[1]
+    end
+
+    local query = GearHelper:GetBenchmarkResult("Count")
+    local tuples = createTuples(query)
+    table.sort(tuples, compare)
+
     print("-----")
-    for k, v in pairs(GearHelper:GetBenchmarkResult("Count")) do
-        print(k .. " -> " .. v)
+    for k, v in pairs(tuples) do
+        print(v[2] .. " -> " .. v[1])
     end
 end
 

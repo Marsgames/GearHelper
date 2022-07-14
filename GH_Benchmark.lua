@@ -1,34 +1,34 @@
 local GHBenchmarkedFuncCount = {}
-local BenchmarkMode = false
+local BenchmarkMode = false or "Niisha" == UnitName("player")
 
 function GearHelper:ResetBenchmark(type)
-	if type == "Count" then
-		GHBenchmarkedFuncCount = {}
-	end
+    if type == "Count" then
+        GHBenchmarkedFuncCount = {}
+    end
 end
 
 function GearHelper:SwapBenchmarkMode()
-	BenchmarkMode = not BenchmarkMode
+    BenchmarkMode = not BenchmarkMode
 end
 
 function GearHelper:GetBenchmarkMode()
-	return BenchmarkMode
+    return BenchmarkMode
 end
 
 function GearHelper:GetBenchmarkResult(type)
-	if type == "Count" then
-		return GHBenchmarkedFuncCount
-	end
+    if type == "Count" then
+        return GHBenchmarkedFuncCount
+    end
 end
 
 function GearHelper:BenchmarkCountFuncCall(funcName)
-	if (false == GearHelper:GetBenchmarkMode()) then
-		return
-	end
+    if (false == GearHelper:GetBenchmarkMode()) then
+        return
+    end
 
-	if GHBenchmarkedFuncCount[funcName] == nil then
-		GHBenchmarkedFuncCount[funcName] = 0
-	end
+    if GHBenchmarkedFuncCount[funcName] == nil then
+        GHBenchmarkedFuncCount[funcName] = 0
+    end
 
-	GHBenchmarkedFuncCount[funcName] = GHBenchmarkedFuncCount[funcName] + 1
+    GHBenchmarkedFuncCount[funcName] = GHBenchmarkedFuncCount[funcName] + 1
 end

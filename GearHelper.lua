@@ -1,11 +1,9 @@
 -- https://mothereff.in/lua-minifier
 -- Memory footprint 12048.4 k
 -- TODO extract player inventory related function to an independant lib
--- TODO Move functions in split files
 -- TODO check war item SetHyperlink in tooltip fail
 -- TODO Expose more options to player
 -- TODO: Repair GH :
--- 			- Quand on n'active pas le calcul d'ilvl, rien ne semble fonctionner correctement
 --			- La prise en compte des châsses ne semble pas changer grand chose
 
 -- #errors : 01
@@ -23,6 +21,7 @@ GearHelperVars = {
 local allPrefix = {["askVersion" .. GearHelperVars.prefixAddon] = GearHelper.SendAnswerVersion, ["answerVersion" .. GearHelperVars.prefixAddon] = GearHelper.ReceiveAnswer}
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
+local tooltipProcessed = {} -- this variable is used to save tooltip lines add by gearhelper, to avoid computation each frame
 local delayNilTimer = 10
 local waitNilFrame = CreateFrame("Frame")
 local waitNilTimer = nil
@@ -87,11 +86,11 @@ function GearHelper:RefreshConfig()
     InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
-local function nilTableValues(tableToReset)
-    GearHelper:BenchmarkCountFuncCall("nilTableValues")
+function GearHelper:NilTableValues(tableToReset)
+    GearHelper:BenchmarkCountFuncCall("GearHelper:NilTableValues")
     for key, v in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
-            nilTableValues(tableToReset[key])
+            GearHelper:NilTableValues(tableToReset[key])
         else
             tableToReset[key] = nil
         end
@@ -134,8 +133,8 @@ end
 
 function GearHelper:ResetConfig()
     self:BenchmarkCountFuncCall("GearHelper:ResetConfig")
-    nilTableValues(self.db.profile)
-    nilTableValues(self.db.global)
+    Gearhelper:NilTableValues(self.db.profile)
+    Gearhelper:NilTableValues(self.db.global)
 
     InterfaceOptionsFrame:Hide()
     InterfaceOptionsFrame:Show()
@@ -221,6 +220,8 @@ function GearHelper:OnEnable()
         self.db.global.phrases.zhTW.rep = L["repzhTW"]
         self.db.global.phrases.zhTW.rep2 = L["repzhTW2"]
     end
+
+    GearHelper:CheckCacheDate()
 end
 
 function GearHelper:setInviteMessage(newMessage)
@@ -296,31 +297,36 @@ end
 
 function GearHelper:ScanCharacter()
     self:BenchmarkCountFuncCall("GearHelper:ScanCharacter")
-    GearHelperVars.charInventory["Head"] = self:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
-    GearHelperVars.charInventory["Neck"] = self:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
-    GearHelperVars.charInventory["Shoulder"] = self:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
-    GearHelperVars.charInventory["Back"] = self:GetEquippedItemLink(GetInventorySlotInfo("BackSlot"), "BackSlot")
-    GearHelperVars.charInventory["Chest"] = self:GetEquippedItemLink(GetInventorySlotInfo("ChestSlot"), "ChestSlot")
-    GearHelperVars.charInventory["Wrist"] = self:GetEquippedItemLink(GetInventorySlotInfo("WristSlot"), "WristSlot")
-    GearHelperVars.charInventory["Hands"] = self:GetEquippedItemLink(GetInventorySlotInfo("HandsSlot"), "HandsSlot")
-    GearHelperVars.charInventory["Waist"] = self:GetEquippedItemLink(GetInventorySlotInfo("WaistSlot"), "WaistSlot")
-    GearHelperVars.charInventory["Legs"] = self:GetEquippedItemLink(GetInventorySlotInfo("LegsSlot"), "LegsSlot")
-    GearHelperVars.charInventory["Feet"] = self:GetEquippedItemLink(GetInventorySlotInfo("FeetSlot"), "FeetSlot")
-    GearHelperVars.charInventory["Finger0"] = self:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
-    GearHelperVars.charInventory["Finger1"] = self:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
-    GearHelperVars.charInventory["Trinket0"] = self:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
-    GearHelperVars.charInventory["Trinket1"] = self:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
-    GearHelperVars.charInventory["MainHand"] = self:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
-    GearHelperVars.charInventory["SecondaryHand"] = self:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
-    if GearHelperVars.charInventory["MainHand"] ~= -2 and GearHelperVars.charInventory["MainHand"] ~= 0 then
-        -- TODO: Why doesn't we use GH:GetItemInfo ?
-        local _, _, _, itemEquipLocWeapon = GetItemInfoInstant(GearHelperVars.charInventory["MainHand"])
+    local function scanCoroutine()
+        GearHelperVars.charInventory["Head"] = self:GetEquippedItemLink(GetInventorySlotInfo("HeadSlot"), "HeadSlot")
+        GearHelperVars.charInventory["Neck"] = self:GetEquippedItemLink(GetInventorySlotInfo("NeckSlot"), "NeckSlot")
+        GearHelperVars.charInventory["Shoulder"] = self:GetEquippedItemLink(GetInventorySlotInfo("ShoulderSlot"), "ShoulderSlot")
+        GearHelperVars.charInventory["Back"] = self:GetEquippedItemLink(GetInventorySlotInfo("BackSlot"), "BackSlot")
+        GearHelperVars.charInventory["Chest"] = self:GetEquippedItemLink(GetInventorySlotInfo("ChestSlot"), "ChestSlot")
+        GearHelperVars.charInventory["Wrist"] = self:GetEquippedItemLink(GetInventorySlotInfo("WristSlot"), "WristSlot")
+        GearHelperVars.charInventory["Hands"] = self:GetEquippedItemLink(GetInventorySlotInfo("HandsSlot"), "HandsSlot")
+        GearHelperVars.charInventory["Waist"] = self:GetEquippedItemLink(GetInventorySlotInfo("WaistSlot"), "WaistSlot")
+        GearHelperVars.charInventory["Legs"] = self:GetEquippedItemLink(GetInventorySlotInfo("LegsSlot"), "LegsSlot")
+        GearHelperVars.charInventory["Feet"] = self:GetEquippedItemLink(GetInventorySlotInfo("FeetSlot"), "FeetSlot")
+        GearHelperVars.charInventory["Finger0"] = self:GetEquippedItemLink(GetInventorySlotInfo("Finger0Slot"), "Finger0Slot")
+        GearHelperVars.charInventory["Finger1"] = self:GetEquippedItemLink(GetInventorySlotInfo("Finger1Slot"), "Finger1Slot")
+        GearHelperVars.charInventory["Trinket0"] = self:GetEquippedItemLink(GetInventorySlotInfo("Trinket0Slot"), "Trinket0Slot")
+        GearHelperVars.charInventory["Trinket1"] = self:GetEquippedItemLink(GetInventorySlotInfo("Trinket1Slot"), "Trinket1Slot")
+        GearHelperVars.charInventory["MainHand"] = self:GetEquippedItemLink(GetInventorySlotInfo("MainHandSlot"), "MainHandSlot")
+        GearHelperVars.charInventory["SecondaryHand"] = self:GetEquippedItemLink(GetInventorySlotInfo("SecondaryHandSlot"), "SecondaryHandSlot")
 
-        if string.match(itemEquipLocWeapon, "INVTYPE_2HWEAPON") or string.match(itemEquipLocWeapon, "INVTYPE_RANGED") then
-            GearHelperVars.charInventory["SecondaryHand"] = -1
+        if GearHelperVars.charInventory["MainHand"] ~= -2 and GearHelperVars.charInventory["MainHand"] ~= 0 then
+            -- TODO: Why doesn't we use GH:GetItemInfo ?
+            local _, _, _, itemEquipLocWeapon = GetItemInfoInstant(GearHelperVars.charInventory["MainHand"])
+
+            if string.match(itemEquipLocWeapon, "INVTYPE_2HWEAPON") or string.match(itemEquipLocWeapon, "INVTYPE_RANGED") then
+                GearHelperVars.charInventory["SecondaryHand"] = -1
+            end
         end
     end
+
+    coroutine.resume(coroutine.create(scanCoroutine))
 end
 
 function GearHelper:SetDotOnIcons()
@@ -373,10 +379,42 @@ local ModifyTooltip = function(self, ...)
         return
     end
 
-    local _, itemLink = self:GetItem()
+    local name, itemLink = self:GetItem()
+
+    -- Do not redo all the tooltip processing if we already did it
+    if tooltipProcessed[name] then
+        self = tooltipProcessed[name]
+        local lines = tooltipProcessed["lines" .. name]
+
+        if lines then
+            for _, v in pairs(lines) do
+                self:AddLine(v)
+            end
+        end
+
+        do
+            return
+        end
+    end
+
+    -- TODO: Improve backdrop to restore old one (without the frame border)
+    if not self.Backdrop then
+        self.Backdrop = CreateFrame("Frame", "GHGameTooltipBackdrop", self, "BackdropTemplate")
+        self.Backdrop:SetAllPoints()
+        self.Backdrop.backdropInfo = {
+            -- bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+            tile = true,
+            tileSize = 32,
+            edgeSize = 32
+            -- insets = {left = 11, right = 12, top = 12, bottom = 9}
+        }
+        self.Backdrop:SetBackdrop(self.Backdrop.backdropInfo)
+        self.Backdrop:ApplyBackdrop()
+    end
 
     -- Do not ask me why, but itemLink is the 2nd parameter IN __THIS__ CASE
-    -- Somthing to do with the difference between GearHelper:Sommething() and GearHelper.Something
+    -- Something to do with the difference between GearHelper:Sommething() and GearHelper.Something
     -- https://stackoverflow.com/questions/29047541/how-to-pass-arguments-to-a-function-within-a-table (find the solution after this (non related ?) "solution")
     local shouldBeCompared, err = pcall(GearHelper.ShouldBeCompared, nil, itemLink)
 
@@ -387,17 +425,20 @@ local ModifyTooltip = function(self, ...)
         if (not shouldBeCompared) then
             if (string.find(tostring(err), GHExceptionNotEquippable)) then
                 -- Show message only on equippable items
-                local item = GearHelper:GetItemByLink(itemLink)
+                local item = GearHelper:GetItemByLink(itemLink, "GearHelper.ModifyTooltip 1")
 
                 -- print("subtype : " .. tostring(item.subType))
                 if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
                     table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
-                    self:SetBackdropBorderColor(255, 0, 0)
+                    self.Backdrop:SetBackdropBorderColor(255, 0, 0, 255)
+                else
+                    self.Backdrop:SetBackdrop(nil)
+                    self.Backdrop = nil
                 end
             end
         else
             -- end
-            local item = GearHelper:GetItemByLink(itemLink)
+            local item = GearHelper:GetItemByLink(itemLink, "GearHelper.ModifyTooltip 2")
             local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
 
             -- N'est pas censé arriver
@@ -410,19 +451,21 @@ local ModifyTooltip = function(self, ...)
                     local floorValue = math.floor(v)
 
                     if (floorValue < 0) then
-                        self:SetBackdropBorderColor(255, 0, 0)
+                        self.Backdrop:SetBackdropBorderColor(255, 0, 0, 255)
                     else
-                        self:SetBackdropBorderColor(0, 255, 150)
+                        self.Backdrop:SetBackdropBorderColor(0, 255, 150, 255)
                     end
                 end
             else
                 -- Got an error with warlock when showing tooltip of left hand Illidan's Warglaive of Azzinoth
                 -- print("result : " .. tostring(result))
+                -- self.Backdrop:SetBackdrop(nil)
+                -- self.Backdrop = nil
             end
             linesToAdd = GearHelper:LinesToAddToTooltip(result)
         end
     else
-        self:SetBackdropBorderColor(255, 255, 0)
+        self.Backdrop:SetBackdropBorderColor(255, 255, 0)
         table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
     end
 
@@ -434,6 +477,11 @@ local ModifyTooltip = function(self, ...)
             self:AddLine(v)
         end
     end
+
+    if name then
+        tooltipProcessed[name] = self
+        tooltipProcessed["lines" .. name] = linesToAdd
+    end
 end
 
 for _, obj in next, {
@@ -444,6 +492,16 @@ for _, obj in next, {
     ItemRefTooltip
 } do
     obj:HookScript("OnTooltipSetItem", ModifyTooltip)
+    obj:HookScript(
+        "OnHide",
+        function()
+            if obj.Backdrop then
+                obj.Backdrop:SetBackdrop(nil)
+                obj.Backdrop = nil
+            end
+            tooltipProcessed = {}
+        end
+    )
 end
 
 GameTooltip:HookScript(
