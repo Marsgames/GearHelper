@@ -2,12 +2,6 @@ package-as: GearHelper
 
 ignore:
  - README.md
- - Libs/
- - .github
- - .vscode
- - .gitattributes
- - .gitignore
- - .luacheckrc
 
 externals:
  Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
