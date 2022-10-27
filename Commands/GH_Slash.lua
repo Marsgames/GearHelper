@@ -81,9 +81,10 @@ function GearHelper:MySlashCommand(input)
     end
 
     if input == "" then
-        InterfaceOptionsFrame:Show()
-        InterfaceOptionsFrame_OpenToCategory(GearHelper.cwFrame)
-        InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
+        -- InterfaceOptionsFrame_OpenToCategory(GearHelper.cwFrame)
+        -- InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
+        -- TODO: Find a way to show subpanel (ex OpenToCategory)
+        Settings.OpenToCategory("GearHelper")
     else
         slashCmd["help"]()
     end
