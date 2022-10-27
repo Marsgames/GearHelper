@@ -464,7 +464,7 @@ local ModifyTooltip = function(self, ...)
             linesToAdd = GearHelper:LinesToAddToTooltip(result)
         end
     else
-        self.Backdrop:SetBackdropBorderColor(255, 255, 0)
+        self.NineSlice:SetBorderColor(1, 1, 0)
         table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
     end
 
