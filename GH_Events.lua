@@ -708,7 +708,7 @@ local function ReadyCheck()
         ConfirmReadyCheck(1)
         ReadyCheckFrame:Hide()
         print("Ready check accepted") -- TODO: Add localization
-        UIErrorsFrame:AddMessage("Ready check accepted", 0.0, 1.0, 0.0, 80)
+        UIErrorsFrame:AddMessage("Ready check accepted", 0.0, 1.0, 0.0)
     end
 end
 

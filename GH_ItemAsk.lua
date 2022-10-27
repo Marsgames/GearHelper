@@ -97,7 +97,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 
                 local isItemBetter = self:IsItemBetter(itemLink)
                 if (isItemBetter) then
-                    UIErrorsFrame:AddMessage(self:ColorizeString(L["ask1"], "Yellow") .. nameLink .. self:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0, 80)
+                    UIErrorsFrame:AddMessage(self:ColorizeString(L["ask1"], "Yellow") .. nameLink .. self:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
                     print(self:ColorizeString(L["ask1"], "Yellow") .. nameLink .. self:ColorizeString(L["ask2"], "Yellow") .. itemLink)
                     PlaySound(5274, "Master")
                 end
