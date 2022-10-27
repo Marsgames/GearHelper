@@ -249,7 +249,7 @@ function GearHelper:showMessageSMN(channel, sender, msg)
     local i = 1
     while (not stop and arrayNames[i]) do
         if (string.match(msg:lower(), arrayNames[i]:lower())) then
-            UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0, 5.0, 4)
+            UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0)
             PlaySound(5275, "Master")
             stop = true
             return
