@@ -1,119 +1,115 @@
 GearHelper.itemSlot = {
-	INVTYPE_AMMO = {"Ammo"},
-	INVTYPE_HEAD = {"Head"},
-	INVTYPE_NECK = {"Neck"},
-	INVTYPE_SHOULDER = {"Shoulder"},
-	INVTYPE_BODY = {"Body"},
-	INVTYPE_CHEST = {"Chest"},
-	INVTYPE_ROBE = {"Chest"},
-	INVTYPE_WAIST = {"Waist"},
-	INVTYPE_LEGS = {"Legs"},
-	INVTYPE_FEET = {"Feet"},
-	INVTYPE_WRIST = {"Wrist"},
-	INVTYPE_HAND = {"Hands"},
-	INVTYPE_FINGER = {"Finger0", "Finger1"},
-	INVTYPE_TRINKET = {"Trinket0", "Trinket1"},
-	INVTYPE_CLOAK = {"Back"},
-	INVTYPE_SHIELD = {"SecondaryHand"},
-	INVTYPE_WEAPON = {
-		WARRIOR = {
-			["72"] = {"MainHand", "SecondaryHand"},
-			["71"] = {"MainHand"},
-			["73"] = {"MainHand"}
-		},
-		SHAMAN = {
-			["263"] = {"MainHand", "SecondaryHand"},
-			["262"] = {"MainHand"},
-			["264"] = {"MainHand"}
-		},
-		HUNTER = {"MainHand"},
-		DEATHKNIGHT = {
-			["250"] = {"MainHand", "SecondaryHand"},
-			["251"] = {"MainHand"},
-			["252"] = {"MainHand"}
-		},
-		ROGUE = {"MainHand", "SecondaryHand"},
-		DEMONHUNTER = {"MainHand", "SecondaryHand"},
-		DRUID = {"MainHand"},
-		MONK = {"MainHand"},
-		WARLOCK = {"MainHand"},
-		MAGE = {"MainHand"},
-		PRIEST = {"MainHand"},
-		PALADIN = {"MainHand"}
-	},
-	INVTYPE_2HWEAPON = {"MainHand", "SecondaryHand"},
-	INVTYPE_WEAPONMAINHAND = {"MainHand"},
-	INVTYPE_WEAPONOFFHAND = {"SecondaryHand"},
-	INVTYPE_HOLDABLE = {"SecondaryHand"},
-	INVTYPE_RANGED = {"MainHand", "SecondaryHand"},
-	INVTYPE_RANGEDRIGHT = {"MainHand"}
+    INVTYPE_AMMO = {"Ammo"},
+    INVTYPE_HEAD = {"Head"},
+    INVTYPE_NECK = {"Neck"},
+    INVTYPE_SHOULDER = {"Shoulder"},
+    INVTYPE_BODY = {"Body"},
+    INVTYPE_CHEST = {"Chest"},
+    INVTYPE_ROBE = {"Chest"},
+    INVTYPE_WAIST = {"Waist"},
+    INVTYPE_LEGS = {"Legs"},
+    INVTYPE_FEET = {"Feet"},
+    INVTYPE_WRIST = {"Wrist"},
+    INVTYPE_HAND = {"Hands"},
+    INVTYPE_FINGER = {"Finger0", "Finger1"},
+    INVTYPE_TRINKET = {"Trinket0", "Trinket1"},
+    INVTYPE_CLOAK = {"Back"},
+    INVTYPE_SHIELD = {"SecondaryHand"},
+    INVTYPE_WEAPON = {
+        WARRIOR = {
+            ["72"] = {"MainHand", "SecondaryHand"},
+            ["71"] = {"MainHand"},
+            ["73"] = {"MainHand"}
+        },
+        SHAMAN = {
+            ["263"] = {"MainHand", "SecondaryHand"},
+            ["262"] = {"MainHand"},
+            ["264"] = {"MainHand"}
+        },
+        HUNTER = {"MainHand"},
+        DEATHKNIGHT = {
+            ["250"] = {"MainHand", "SecondaryHand"},
+            ["251"] = {"MainHand"},
+            ["252"] = {"MainHand"}
+        },
+        ROGUE = {"MainHand", "SecondaryHand"},
+        DEMONHUNTER = {"MainHand", "SecondaryHand"},
+        DRUID = {"MainHand"},
+        MONK = {"MainHand"},
+        WARLOCK = {"MainHand"},
+        MAGE = {"MainHand"},
+        PRIEST = {"MainHand"},
+        PALADIN = {"MainHand"}
+    },
+    INVTYPE_2HWEAPON = {"MainHand", "SecondaryHand"},
+    INVTYPE_WEAPONMAINHAND = {"MainHand"},
+    INVTYPE_WEAPONOFFHAND = {"SecondaryHand"},
+    INVTYPE_HOLDABLE = {"SecondaryHand"},
+    INVTYPE_RANGED = {"MainHand", "SecondaryHand"},
+    INVTYPE_RANGEDRIGHT = {"MainHand"}
 }
 
 local function ParseDefaultValues(rawValues, specID, templateID)
-	GearHelper:BenchmarkCountFuncCall("ParseDefaultValues")
-	local rawCopy = rawValues
-	local tmpTemplate = {
-		["Intellect"] = 0,
-		["Haste"] = 0,
-		["CriticalStrike"] = 0,
-		["Versatility"] = 0,
-		["Mastery"] = 0,
-		["Agility"] = 0,
-		["Stamina"] = 0,
-		["Strength"] = 0,
-		["Armor"] = 0,
-		["Leech"] = 0,
-		["Avoidance"] = 0,
-		["MainHandDps"] = 0,
-		["MovementSpeed"] = 0,
-		["OffHandDps"] = 0,
-		["Max"] = 0
-	}
-	local lastWord = ""
-	local count = 1
+    GearHelper:BenchmarkCountFuncCall("ParseDefaultValues")
+    local rawCopy = rawValues
+    local tmpTemplate = {
+        ["Intellect"] = 0,
+        ["Haste"] = 0,
+        ["CriticalStrike"] = 0,
+        ["Versatility"] = 0,
+        ["Mastery"] = 0,
+        ["Agility"] = 0,
+        ["Stamina"] = 0,
+        ["Strength"] = 0,
+        ["Armor"] = 0,
+        ["Leech"] = 0,
+        ["Avoidance"] = 0,
+        ["MainHandDps"] = 0,
+        ["MovementSpeed"] = 0,
+        ["OffHandDps"] = 0,
+        ["Max"] = 0
+    }
+    local lastWord = ""
+    local count = 1
 
-	for token in string.gmatch(rawCopy, "[^%s]+") do
-		if count == 1 or count == 4 or count == 7 or count == 10 or count == 13 or count == 16 or count == 19 or count == 22 or count == 25 or count == 28 or count == 31 then
-			lastWord = token
-		end
+    -- Pattern is : "Word > [value] Word > [value]"
+    for word in string.gmatch(rawCopy, "%S+") do
+        if count == 1 then
+            lastWord = word
+            if lastWord == "Crit" then
+                lastWord = "CriticalStrike"
+            end
 
-		if count == 2 or count == 5 or count == 8 or count == 11 or count == 14 or count == 17 or count == 20 or count == 23 or count == 26 or count == 29 or count == 32 then
-			--Refactoring some spelling from Noxxic and AMR
-			if lastWord == "Crit" then
-				lastWord = "CriticalStrike"
-			end
+            if lastWord == "OffHandDamage" or "Off-Hand-Weapon-Dps" == lastWord then
+                lastWord = "OffHandDps"
+            end
 
-			if lastWord == "OffHandDamage" or "Off-Hand-Weapon-Dps" == lastWord then
-				lastWord = "OffHandDps"
-			end
+            if lastWord == "MainHandDamage" or "Weapon-Dps" == lastWord then
+                lastWord = "MainHandDps"
+            end
+        elseif count == 2 then
+            -- continue
+        elseif count == 3 then
+            -- remove first and last char from word
+            word = string.sub(word, 2, -2) -- remove first and last char from word
+            if tmpTemplate[lastWord] then
+                tmpTemplate[lastWord] = tonumber(word)
+            end
+            if tmpTemplate.Max < tonumber(word) then
+                tmpTemplate.Max = tonumber(word)
+                print(lastWord, word) -- debug
+            end
+        end
+        count = count + 1
+        if count > 3 then
+            count = 1
+        end
+    end
 
-			if lastWord == "MainHandDamage" or "Weapon-Dps" == lastWord then
-				lastWord = "MainHandDps"
-			end
-
-			if string.gsub(token, "%[", "") then
-				token = string.gsub(token, "%[", "")
-			end
-			if string.gsub(token, "%]", "") then
-				token = string.gsub(token, "%]", "")
-			end
-
-			tmpTemplate[lastWord] = tonumber(token)
-		end
-
-		count = count + 1
-	end
-
-	for _, value in pairs(tmpTemplate) do
-		if tmpTemplate.Max < value then
-			tmpTemplate.Max = value
-		end
-	end
-
-	if GearHelper.db.global.templates[specID] == nil then
-		GearHelper.db.global.templates[specID] = {}
-	end
-	GearHelper.db.global.templates[specID][templateID] = tmpTemplate
+    if GearHelper.db.global.templates[specID] == nil then
+        GearHelper.db.global.templates[specID] = {}
+    end
+    GearHelper.db.global.templates[specID][templateID] = tmpTemplate
 end
 
 local rawValues = {
@@ -260,16 +256,16 @@ local rawValues = {
     -- WARRIOR PROTECTION --
     [73] = {
         ["NOX"] = "Mastery > [2.88] Crit > [3.11] Stamina > [0.02] Str > [5.23] Versatility > [3.29] Leech > [-0.04] Bonus-Armor > [0.02] Weapon-Dps > [24.6] Armor > [0] Attack-Power > [4.12] Haste > [3.07]"
-    },
+    }
 }
 
 function GearHelper:InitTemplates()
-	GearHelper:BenchmarkCountFuncCall("GearHelper:InitTemplates")
-	for spec, templates in pairs(rawValues) do
-		for templateID, stats in pairs(templates) do
-			ParseDefaultValues(stats, spec, templateID)
-		end
-	end
+    GearHelper:BenchmarkCountFuncCall("GearHelper:InitTemplates")
+    for spec, templates in pairs(rawValues) do
+        for templateID, stats in pairs(templates) do
+            ParseDefaultValues(stats, spec, templateID)
+        end
+    end
 end
 
 --[[
