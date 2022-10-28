@@ -576,10 +576,16 @@ end
 
 local function GetItemInfoReceived(_, _, item)
     GearHelper:BenchmarkCountFuncCall("GetItemInfoReceived")
-    if GearHelper.db.global.itemWaitList[item] then
-        local slotName = GearHelper.db.global.itemWaitList[item]
+
+    local slotName = GearHelper.db.global.itemWaitList[item]
+    if slotName then
         if (not string.find(slotName, "Slot")) then
-            slotName = slotName + "Slot"
+            -- print("---------- On test des prints ----------")
+            -- print("slotName == nil : " .. tostring(slotName == nil))
+            -- print("slotName == 'nil' : " .. tostring(tostring(slotName) == "nil"))
+            -- print("slotName : " .. slotName)
+            -- print("typeof slotname : " .. tostring(type(slotName)))
+            slotName = slotName .. "Slot"
         end
         local slotID = GetInventorySlotInfo(slotName)
         GearHelper.db.global.itemWaitList[item] = nil
@@ -594,9 +600,10 @@ local function GetItemInfoReceived(_, _, item)
         end
     end
 
-    if (InspectPaperDollItemsFrame) then
-        NotifyInspect("target")
-    end
+    -- It seems that this code is causing issue (delay when inspecting player)
+    -- if (InspectPaperDollItemsFrame) then
+    --     NotifyInspect("target")
+    -- end
 end
 
 local function ReadyCheck(_, _)
@@ -622,85 +629,77 @@ local function PlayerLogin(_, _)
 end
 
 local function InspectReady(_, _, target)
-    GearHelper:BenchmarkCountFuncCall("InspectReady")
-
-    if GearHelper.db.profile.inspectAin.waitingIlvl then ---------------- /GH AIN AVEC UN MESSAGE SPÉCIALE SI L'ILVL DE L'OBJET LOOT EST MOINS BON QUE CELUI ÉQUIPPÉ PAR CELUI QUI L'A LOOT
-        local itemLoot = GearHelper.db.profile.inspectAin.linkItemReceived
-        local itemLootTable = GearHelper:GetItemByLink(itemLoot, "GH_events/InspectReady() 1")
-        local itemLootEquipLoc = GearHelper.db.global.equipLocInspect[itemLootTable.equipLoc]
-
-        if (itemLootEquipLoc ~= 11 and itemLootEquipLoc ~= 12 and itemLootEquipLoc ~= 13 and itemLootEquipLoc ~= 14) then
-            local itemEquipped = GetInventoryItemLink(target, itemLootEquipLoc)
-            if (not itemEquipped) then
-                do
-                    return
-                end
-            end
-            local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped, "GH_events/InspectReady() 2")
-            local itemEquippedIlvl = itemEquippedTable.iLvl
-            local itemLootIlvl = itemLootTable.iLvl
-        end
-
-        GearHelper.db.profile.inspectAin.waitingIlvl = false
-        GearHelper.db.profile.inspectAin.linkItemReceived = nil
-        GearHelper.db.profile.inspectAin.message = nil
-        GearHelper.db.profile.inspectAin.target = nil
-
-        ClearInspectPlayer()
-    elseif (InspectPaperDollItemsFrame) then
-        GearHelper:AddIlvlOnInspectFrame()
-    else
-        if not GameTooltip:IsVisible() then
-            do
-                return
-            end
-        end
-
-        local function computeIlvl()
-            local arrayIlvl = {}
-            for i = 1, 19 do
-                local itemLink = GetInventoryItemLink("mouseover", i)
-                if (itemLink) then
-                    local itemScan = GearHelper:GetItemByLink(itemLink, "GH_events.computeIlvl")
-                    local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
-                    if equipLoc ~= nil then
-                        arrayIlvl[equipLoc] = itemLvl
-                        table.insert(arrayIlvl, itemLvl)
-                    end
-                end
-            end
-            local ilvlAverage = 0
-            local itemCount = 0
-            table.foreach(
-                arrayIlvl,
-                function(equipLoc, ilvl)
-                    if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
-                        ilvlAverage = ilvlAverage + ilvl
-                        itemCount = itemCount + 1
-                    end
-                end
-            )
-            if (itemCount ~= 0) then
-                GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-            end
-
-            ClearInspectPlayer()
-            GameTooltip:Show()
-        end
-
-        coroutine.resume(coroutine.create(computeIlvl))
-    end
+    -- GearHelper:BenchmarkCountFuncCall("InspectReady")
+    -- if GearHelper.db.profile.inspectAin.waitingIlvl then ---------------- /GH AIN AVEC UN MESSAGE SPÉCIALE SI L'ILVL DE L'OBJET LOOT EST MOINS BON QUE CELUI ÉQUIPPÉ PAR CELUI QUI L'A LOOT
+    --     local itemLoot = GearHelper.db.profile.inspectAin.linkItemReceived
+    --     local itemLootTable = GearHelper:GetItemByLink(itemLoot, "GH_events/InspectReady() 1")
+    --     local itemLootEquipLoc = GearHelper.db.global.equipLocInspect[itemLootTable.equipLoc]
+    --     if (itemLootEquipLoc ~= 11 and itemLootEquipLoc ~= 12 and itemLootEquipLoc ~= 13 and itemLootEquipLoc ~= 14) then
+    --         local itemEquipped = GetInventoryItemLink(target, itemLootEquipLoc)
+    --         if (not itemEquipped) then
+    --             do
+    --                 return
+    --             end
+    --         end
+    --         local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped, "GH_events/InspectReady() 2")
+    --         local itemEquippedIlvl = itemEquippedTable.iLvl
+    --         local itemLootIlvl = itemLootTable.iLvl
+    --     end
+    --     GearHelper.db.profile.inspectAin.waitingIlvl = false
+    --     GearHelper.db.profile.inspectAin.linkItemReceived = nil
+    --     GearHelper.db.profile.inspectAin.message = nil
+    --     GearHelper.db.profile.inspectAin.target = nil
+    --     ClearInspectPlayer()
+    -- elseif (InspectPaperDollItemsFrame) then
+    --     GearHelper:AddIlvlOnInspectFrame()
+    -- else
+    --     if not GameTooltip:IsVisible() then
+    --         do
+    --             return
+    --         end
+    --     end
+    --     local function computeIlvl()
+    --         local arrayIlvl = {}
+    --         for i = 1, 19 do
+    --             local itemLink = GetInventoryItemLink("mouseover", i)
+    --             if (itemLink) then
+    --                 local itemScan = GearHelper:GetItemByLink(itemLink, "GH_events.computeIlvl")
+    --                 local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
+    --                 if equipLoc ~= nil then
+    --                     arrayIlvl[equipLoc] = itemLvl
+    --                     table.insert(arrayIlvl, itemLvl)
+    --                 end
+    --             end
+    --         end
+    --         local ilvlAverage = 0
+    --         local itemCount = 0
+    --         table.foreach(
+    --             arrayIlvl,
+    --             function(equipLoc, ilvl)
+    --                 if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
+    --                     ilvlAverage = ilvlAverage + ilvl
+    --                     itemCount = itemCount + 1
+    --                 end
+    --             end
+    --         )
+    --         if (itemCount ~= 0) then
+    --             GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
+    --         end
+    --         ClearInspectPlayer()
+    --         GameTooltip:Show()
+    --     end
+    --     coroutine.resume(coroutine.create(computeIlvl))
+    -- end
 end
 
 local function UpdateMouseOverUnit()
     GearHelper:BenchmarkCountFuncCall("UpdateMouseOverUnit")
-    if not CanInspect("mouseover") or not CheckInteractDistance("mouseover", 1) then
-        do
-            return
-        end
-    end
-
-    NotifyInspect("mouseover")
+    -- if not CanInspect("mouseover") or not CheckInteractDistance("mouseover", 1) then
+    --     do
+    --         return
+    --     end
+    -- end
+    -- NotifyInspect("mouseover")
 end
 
 local function ReadyCheck()
@@ -709,7 +708,7 @@ local function ReadyCheck()
         ConfirmReadyCheck(1)
         ReadyCheckFrame:Hide()
         print("Ready check accepted") -- TODO: Add localization
-        UIErrorsFrame:AddMessage("Ready check accepted", 0.0, 1.0, 0.0, 80)
+        UIErrorsFrame:AddMessage("Ready check accepted", 0.0, 1.0, 0.0)
     end
 end
 
@@ -741,6 +740,6 @@ GearHelper:RegisterEvent("QUEST_TURNED_IN", QuestTurnedIn)
 GearHelper:RegisterEvent("GET_ITEM_INFO_RECEIVED", GetItemInfoReceived, ...)
 GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
-GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
+-- GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
 GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)

@@ -249,7 +249,7 @@ function GearHelper:showMessageSMN(channel, sender, msg)
     local i = 1
     while (not stop and arrayNames[i]) do
         if (string.match(msg:lower(), arrayNames[i]:lower())) then
-            UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0, 5.0, 4)
+            UIErrorsFrame:AddMessage(channel .. " [" .. sender .. "]: " .. msg, 0.0, 1.0, 0.0)
             PlaySound(5275, "Master")
             stop = true
             return
@@ -397,22 +397,6 @@ local ModifyTooltip = function(self, ...)
         end
     end
 
-    -- TODO: Improve backdrop to restore old one (without the frame border)
-    if not self.Backdrop then
-        self.Backdrop = CreateFrame("Frame", "GHGameTooltipBackdrop", self, "BackdropTemplate")
-        self.Backdrop:SetAllPoints()
-        self.Backdrop.backdropInfo = {
-            -- bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
-            edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-            tile = true,
-            tileSize = 32,
-            edgeSize = 32
-            -- insets = {left = 11, right = 12, top = 12, bottom = 9}
-        }
-        self.Backdrop:SetBackdrop(self.Backdrop.backdropInfo)
-        self.Backdrop:ApplyBackdrop()
-    end
-
     -- Do not ask me why, but itemLink is the 2nd parameter IN __THIS__ CASE
     -- Something to do with the difference between GearHelper:Sommething() and GearHelper.Something
     -- https://stackoverflow.com/questions/29047541/how-to-pass-arguments-to-a-function-within-a-table (find the solution after this (non related ?) "solution")
@@ -430,14 +414,10 @@ local ModifyTooltip = function(self, ...)
                 -- print("subtype : " .. tostring(item.subType))
                 if (IsEquippableItem(itemLink) and ShouldDisplayNotEquippable(tostring(item.subType))) then
                     table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
-                    self.Backdrop:SetBackdropBorderColor(255, 0, 0, 255)
-                else
-                    self.Backdrop:SetBackdrop(nil)
-                    self.Backdrop = nil
+                    self.NineSlice:SetBorderColor(255, 0, 0)
                 end
             end
         else
-            -- end
             local item = GearHelper:GetItemByLink(itemLink, "GearHelper.ModifyTooltip 2")
             local weightCalcGotResult, result = pcall(GearHelper.NewWeightCalculation, GearHelper, item)
 
@@ -451,9 +431,9 @@ local ModifyTooltip = function(self, ...)
                     local floorValue = math.floor(v)
 
                     if (floorValue < 0) then
-                        self.Backdrop:SetBackdropBorderColor(255, 0, 0, 255)
+                        self.NineSlice:SetBorderColor(1, 0, 0)
                     else
-                        self.Backdrop:SetBackdropBorderColor(0, 255, 150, 255)
+                        self.NineSlice:SetBorderColor(0, 255, 150)
                     end
                 end
             else
@@ -465,7 +445,7 @@ local ModifyTooltip = function(self, ...)
             linesToAdd = GearHelper:LinesToAddToTooltip(result)
         end
     else
-        self.Backdrop:SetBackdropBorderColor(255, 255, 0)
+        self.NineSlice:SetBorderColor(1, 1, 0)
         table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
     end
 
@@ -495,10 +475,8 @@ for _, obj in next, {
     obj:HookScript(
         "OnHide",
         function()
-            if obj.Backdrop then
-                obj.Backdrop:SetBackdrop(nil)
-                obj.Backdrop = nil
-            end
+            -- Reset tooltip border color when hiding toltip (to avoid something like player tooltip to be red)
+            obj.NineSlice:SetBorderColor(1, 1, 1)
             tooltipProcessed = {}
         end
     )
