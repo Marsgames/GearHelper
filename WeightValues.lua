@@ -90,14 +90,12 @@ local function ParseDefaultValues(rawValues, specID, templateID)
         elseif count == 2 then
             -- continue
         elseif count == 3 then
-            -- remove first and last char from word
             word = string.sub(word, 2, -2) -- remove first and last char from word
             if tmpTemplate[lastWord] then
                 tmpTemplate[lastWord] = tonumber(word)
             end
             if tmpTemplate.Max < tonumber(word) then
                 tmpTemplate.Max = tonumber(word)
-                print(lastWord, word) -- debug
             end
         end
         count = count + 1
