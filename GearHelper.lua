@@ -12,7 +12,7 @@
 GearHelperVars = {
     version = GetAddOnMetadata("GearHelper", "Version"),
     prefixAddon = "GeARHeLPeRPReFIX",
-    addonTruncatedVersion = 2,
+    addonTruncatedVersion = 3,
     waitSpeTimer = nil,
     charInventory = {}
 }
@@ -335,11 +335,11 @@ function GearHelper:SetDotOnIcons()
     -- local bag = 0
     -- local slot = 2
     for bag = 0, 4 do
-        for slot = 1, GetContainerNumSlots(bag) do
+        for slot = 1, C_Container.GetContainerNumSlots(bag) do
             local myBag = bag + 1
-            local mySlot = GetContainerNumSlots(bag) - (slot - 1)
+            local mySlot = C_Container.GetContainerNumSlots(bag) - (slot - 1)
             local button = _G["ContainerFrame" .. myBag .. "Item" .. mySlot]
-            local itemLink = GetContainerItemLink(bag, slot)
+            local itemLink = C_Container.GetContainerItemLink(bag, slot)
 
             if button.overlay then
                 button.overlay:SetShown(false)
@@ -376,6 +376,9 @@ local ModifyTooltip = function(self, ...)
     -- local pCallWorked, err = pcall(anyFunction) 	-- if no error : pCallWorked == true and err == nil
     --												-- if error : pCallWorked == false and err == "some error"
     if not GearHelper.db or not GearHelper.db.profile.addonEnabled then
+        return
+    end
+    if (not self.GetItem) then
         return
     end
 
@@ -464,6 +467,7 @@ local ModifyTooltip = function(self, ...)
     end
 end
 
+TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, ModifyTooltip)
 for _, obj in next, {
     GameTooltip,
     ShoppingTooltip1,
@@ -471,7 +475,7 @@ for _, obj in next, {
     ShoppingTooltip3,
     ItemRefTooltip
 } do
-    obj:HookScript("OnTooltipSetItem", ModifyTooltip)
+    -- obj:HookScript("OnTooltipSetItem", ModifyTooltip)
     obj:HookScript(
         "OnHide",
         function()
@@ -482,8 +486,8 @@ for _, obj in next, {
     )
 end
 
-GameTooltip:HookScript(
-    "OnTooltipAddMoney",
+TooltipDataProcessor.AddTooltipPostCall(
+    Enum.TooltipDataType.Money,
     function(self, amount)
         local _, itemLink = self:GetItem()
         if GearHelper.db.global.ItemCache[itemLink] and not GearHelper.db.global.ItemCache[itemLink].sellPrice then
@@ -491,3 +495,12 @@ GameTooltip:HookScript(
         end
     end
 )
+-- GameTooltip:HookScript(
+--     "OnTooltipAddMoney",
+--     function(self, amount)
+--         local _, itemLink = self:GetItem()
+--         if GearHelper.db.global.ItemCache[itemLink] and not GearHelper.db.global.ItemCache[itemLink].sellPrice then
+--             GearHelper.db.global.ItemCache[itemLink].sellPrice = amount
+--         end
+--     end
+-- )
