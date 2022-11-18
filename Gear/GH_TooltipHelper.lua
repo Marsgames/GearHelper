@@ -88,26 +88,36 @@ function GearHelper:LinesToAddToTooltip(result)
     if self:GetArraySize(result) == 1 then
         for _, v in pairs(result) do
             local flooredValue = math.floor(v)
+            local str = ""
             if (flooredValue < 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
+                str = self:ColorizeString(L["itemLessThanGeneral"], "LightRed")
             elseif (flooredValue > 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemBetterThanGeneral"], "Better") .. flooredValue)
+                str = self:ColorizeString(L["itemBetterThanGeneral"], "Better") .. flooredValue
             else
-                table.insert(linesToAdd, L["itemEgal"])
+                str = L["itemEgal"]
+            end
+
+            if (str ~= "" and not GearHelper:IsValueInTable(linesToAdd, str)) then
+                table.insert(linesToAdd, str)
             end
         end
     elseif self:GetArraySize(result) == 2 then
         for slot, weight in pairs(result) do
             local slotId = GetInventorySlotInfo(slot .. "Slot")
             local itemLink = self:GetEquippedItemLink(slotId, slot)
+            local str = ""
 
             local flooredValue = math.floor(weight)
             if (flooredValue < 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. itemLink)
+                str = self:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. itemLink
             elseif (flooredValue > 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemBetterThan"], "Better") .. " " .. itemLink .. " " .. self:ColorizeString(L["itemBetterThan2"], "Better") .. flooredValue)
+                str = self:ColorizeString(L["itemBetterThan"], "Better") .. " " .. itemLink .. " " .. self:ColorizeString(L["itemBetterThan2"], "Better") .. flooredValue
             else
-                table.insert(linesToAdd, L["itemEgala"] .. " " .. itemLink)
+                str = L["itemEgala"] .. " " .. itemLink
+            end
+
+            if (str ~= "" and not GearHelper:IsValueInTable(linesToAdd, str)) then
+                table.insert(linesToAdd, str)
             end
         end
     end
