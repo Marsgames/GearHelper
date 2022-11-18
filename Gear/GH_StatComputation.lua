@@ -95,8 +95,8 @@ function GearHelper:EquipItem(inThisBag)
                 return
             end
 
-            for slot = 1, GetContainerNumSlots(bagToEquip) do
-                local itemLink = GetContainerItemLink(bagToEquip, slot)
+            for slot = 1, C_Container.GetContainerNumSlots(bagToEquip) do
+                local itemLink = C_Container.GetContainerItemLink(bagToEquip, slot)
                 if (tostring(itemLink) ~= "nil") then
                     -- local status, shouldBeCompared = pcall(self.ShouldBeCompared, itemLink)
                     local shouldBeCompared = AutoEquipShouldBeCompared(itemLink)
