@@ -62,27 +62,27 @@ local function OnMinimapTooltipClick(button, tooltip)
 end
 
 function GearHelper:CreateMinimapIcon()
-    GearHelper:BenchmarkCountFuncCall("CreateMinimapIcon")
-    local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, BackdropTemplateMixin and "BackdropTemplate")
-    local icon = LibStub("LibDBIcon-1.0")
-    local GHIcon =
-        LibStub("LibDataBroker-1.1"):NewDataObject(
-        "GHIcon",
-        {
-            type = "data source",
-            text = "GearHelper",
-            icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
-            label = "GearHelper",
-            OnClick = function(_, button)
-                OnMinimapTooltipClick(button, tooltip)
-            end,
-            OnTooltipShow = function()
-                OnMinimapTooltipShow(tooltip)
-            end,
-            OnLeave = function()
-                tooltip:Hide()
-            end
-        }
-    )
-    icon:Register("GHIcon", GHIcon, GearHelper.db.profile.minimap)
+    -- GearHelper:BenchmarkCountFuncCall("CreateMinimapIcon")
+    -- local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, BackdropTemplateMixin and "BackdropTemplate")
+    -- local icon = LibStub("LibDBIcon-1.0")
+    -- local GHIcon =
+    --     LibStub("LibDataBroker-1.1"):NewDataObject(
+    --     "GHIcon",
+    --     {
+    --         type = "data source",
+    --         text = "GearHelper",
+    --         icon = "Interface\\AddOns\\GearHelper\\Textures\\flecheUp",
+    --         label = "GearHelper",
+    --         OnClick = function(_, button)
+    --             OnMinimapTooltipClick(button, tooltip)
+    --         end,
+    --         OnTooltipShow = function()
+    --             OnMinimapTooltipShow(tooltip)
+    --         end,
+    --         OnLeave = function()
+    --             tooltip:Hide()
+    --         end
+    --     }
+    -- )
+    -- icon:Register("GHIcon", GHIcon, GearHelper.db.profile.minimap)
 end

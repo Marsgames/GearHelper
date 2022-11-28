@@ -77,7 +77,7 @@ function GearHelper:OnInitialize()
     self.db.RegisterCallback(self, "OnProfileReset", "ResetConfig")
     self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 
-    GearHelper:CreateMinimapIcon()
+    -- GearHelper:CreateMinimapIcon()
 end
 
 function GearHelper:RefreshConfig()

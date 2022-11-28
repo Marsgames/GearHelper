@@ -128,25 +128,25 @@ local ghOptionsTable = {
                         return GearHelper.db.profile.debug
                     end
                 },
-                minimapButton = {
-                    order = 2,
-                    name = L["UIMinimapIcon"],
-                    --hidden = function() if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then return true end end,
-                    desc = L["UIMinimapIconDesc"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.minimap = {hide = not val}
-                        local icon = LibStub("LibDBIcon-1.0")
-                        if (val) then
-                            icon:Show("GHIcon")
-                        else
-                            icon:Hide("GHIcon")
-                        end
-                    end,
-                    get = function()
-                        return not GearHelper.db.profile.minimap.hide
-                    end
-                }
+                -- minimapButton = {
+                --     order = 2,
+                --     name = L["UIMinimapIcon"],
+                --     --hidden = function() if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then return true end end,
+                --     desc = L["UIMinimapIconDesc"],
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.minimap = {hide = not val}
+                --         local icon = LibStub("LibDBIcon-1.0")
+                --         if (val) then
+                --             icon:Show("GHIcon")
+                --         else
+                --             icon:Hide("GHIcon")
+                --         end
+                --     end,
+                --     get = function()
+                --         return not GearHelper.db.profile.minimap.hide
+                --     end
+                -- }
             }
         },
         spacer1 = {
