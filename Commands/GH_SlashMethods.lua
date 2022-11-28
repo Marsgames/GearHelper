@@ -37,8 +37,8 @@ end
 
 function GearHelper:SlashList()
     for bag = 0, 4 do
-        for slot = 1, GetContainerNumSlots(bag) do
-            local _, _, _, _, _, _, link = GetContainerItemInfo(bag, slot)
+        for slot = 1, C_Container.GetContainerNumSlots(bag) do
+            local _, _, _, _, _, _, link = C_Container.GetContainerItemInfo(bag, slot)
             if link ~= nil then
                 if (strfind(link, "|H(.+)|h") ~= nil) then
                     link = "|cff9d9d9d" .. link .. "|h|h|r"

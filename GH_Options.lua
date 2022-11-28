@@ -101,8 +101,10 @@ local ghOptionsTable = {
                         ---------- A ETUDIER --------
                         local icon = LibStub("LibDBIcon-1.0")
                         local ghIcon = icon:GetMinimapButton("GHIcon")
-                        ghIcon.icon = GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
-                        icon:Refresh("GHIcon")
+                        if (ghIcon) then
+                            ghIcon.icon = GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
+                            icon:Refresh("GHIcon")
+                        end
                         -----------------------------
                     end,
                     get = function()
