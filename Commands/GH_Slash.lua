@@ -2,12 +2,6 @@ local slashCmd = {
     help = function()
         GearHelper:SlashDisplayHelp()
     end,
-    printCache = function()
-        GearHelper:SlashPrintCache()
-    end,
-    list = function()
-        GearHelper:SlashList()
-    end,
     config = function()
         GearHelper:SlashConfig()
     end,

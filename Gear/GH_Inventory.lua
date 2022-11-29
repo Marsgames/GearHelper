@@ -1,34 +1,38 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-local function GetSlotsByEquipLoc(equipLoc)
+function GearHelper:GetSlotsByEquipLoc(equipLoc)
     GearHelper:BenchmarkCountFuncCall("GetSlotsByEquipLoc")
-    local equipSlot = {}
+    local equipSlots = {}
+    local canDualWield = IsPlayerSpell(674) --Dual Wield spellId
+    GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield ? "..tostring(canDualWield))
 
-    if equipLoc == "INVTYPE_WEAPON" then
-        local _, myClass = UnitClass("player")
-        local playerSpec = GetSpecializationInfo(GetSpecialization())
-        local equipLocByClass = GearHelper.itemSlot[equipLoc][myClass]
-
-        if equipLocByClass[tostring(playerSpec)] == nil then
-            equipSlot = equipLocByClass
-        else
-            equipSlot = equipLocByClass[tostring(playerSpec)]
-        end
+    if canDualWield and (
+        (equipLoc == "INVTYPE_2HWEAPON" and IsPlayerSpell(46917))  --Titan's Grip War Fury spellId
+        or equipLoc == "INVTYPE_WEAPON") 
+    then
+        GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield and it's a "..equipLoc)
+        equipSlots = {
+            slots = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
+            operator = GearHelper.operators.OR
+        }
     else
-        equipSlot = GearHelper.itemSlot[equipLoc]
+        equipSlots = GearHelper.itemSlot[equipLoc]
     end
 
-    return equipSlot
+    return equipSlots
 end
 
-function GearHelper:GetItemsByEquipLoc(equipLoc)
-    self:BenchmarkCountFuncCall("GearHelper:GetItemsByEquipLoc")
-    local result = {}
-    local equipSlot = GetSlotsByEquipLoc(equipLoc)
+function GearHelper:GetEquippedItems(equipLoc)
+    self:BenchmarkCountFuncCall("GearHelper:GetEquippedItems")
+    self:Print("GetEquippedItems - Gettin' slots ID for "..equipLoc)
 
-    -- TODO: si on remplace ça par Result[v] = true, on peut faire une recherche dans la table avec un if (Result[v]) then, ce qui evite de faire un foreach avec la fonction IsValueInTablr
-    for k, v in ipairs(equipSlot) do
-        result[v] = GearHelperVars.charInventory[v]
+    local result = GearHelper:GetSlotsByEquipLoc(equipLoc)
+
+    result.items = {}
+
+
+    for i,slotId in ipairs(result.slots) do
+        result.items[i] = GearHelperVars.charInventory[slotId]
     end
 
     return result

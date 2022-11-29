@@ -60,29 +60,6 @@ waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 -----------------------------------------------------------------------------
 ----------------------------------- Events ----------------------------------
-
-local function AddonLoaded(_, _, name)
-    GearHelper:BenchmarkCountFuncCall("AddonLoaded")
-    if GearHelper and GearHelper.db and GearHelper.db.global.templates == nil then
-        GearHelper.db.global.templates = {}
-    end
-
-    GearHelper:InitTemplates()
-
-    if name ~= addonName then
-        do
-            return
-        end
-    end
-
-    print(GearHelper:ColorizeString(L["merci"], "LightGreen"))
-    local runningBuild = select(4, GetBuildInfo())
-    if GearHelper.db.global.buildVersion ~= runningBuild then
-        GearHelper.db.global.buildVersion = runningBuild
-        GearHelper:ResetCache()
-    end
-end
-
 local function OnMerchantShow()
     GearHelper:BenchmarkCountFuncCall("OnMerchantShow")
     moneyFlux = GetMoney()
@@ -606,11 +583,6 @@ local function GetItemInfoReceived(_, _, item)
     -- end
 end
 
-local function ReadyCheck(_, _)
-    GearHelper:BenchmarkCountFuncCall("ReadyCheck")
-    local players = GetHomePartyInfo()
-end
-
 local function LfgUpdate(_, _)
     GearHelper:BenchmarkCountFuncCall("LfgUpdate")
     GearHelper:UpdateGHLfrButton()
@@ -628,80 +600,6 @@ local function PlayerLogin(_, _)
     end
 end
 
-local function InspectReady(_, _, target)
-    -- GearHelper:BenchmarkCountFuncCall("InspectReady")
-    -- if GearHelper.db.profile.inspectAin.waitingIlvl then ---------------- /GH AIN AVEC UN MESSAGE SPÉCIALE SI L'ILVL DE L'OBJET LOOT EST MOINS BON QUE CELUI ÉQUIPPÉ PAR CELUI QUI L'A LOOT
-    --     local itemLoot = GearHelper.db.profile.inspectAin.linkItemReceived
-    --     local itemLootTable = GearHelper:GetItemByLink(itemLoot, "GH_events/InspectReady() 1")
-    --     local itemLootEquipLoc = GearHelper.db.global.equipLocInspect[itemLootTable.equipLoc]
-    --     if (itemLootEquipLoc ~= 11 and itemLootEquipLoc ~= 12 and itemLootEquipLoc ~= 13 and itemLootEquipLoc ~= 14) then
-    --         local itemEquipped = GetInventoryItemLink(target, itemLootEquipLoc)
-    --         if (not itemEquipped) then
-    --             do
-    --                 return
-    --             end
-    --         end
-    --         local itemEquippedTable = GearHelper:GetItemByLink(itemEquipped, "GH_events/InspectReady() 2")
-    --         local itemEquippedIlvl = itemEquippedTable.iLvl
-    --         local itemLootIlvl = itemLootTable.iLvl
-    --     end
-    --     GearHelper.db.profile.inspectAin.waitingIlvl = false
-    --     GearHelper.db.profile.inspectAin.linkItemReceived = nil
-    --     GearHelper.db.profile.inspectAin.message = nil
-    --     GearHelper.db.profile.inspectAin.target = nil
-    --     ClearInspectPlayer()
-    -- elseif (InspectPaperDollItemsFrame) then
-    --     GearHelper:AddIlvlOnInspectFrame()
-    -- else
-    --     if not GameTooltip:IsVisible() then
-    --         do
-    --             return
-    --         end
-    --     end
-    --     local function computeIlvl()
-    --         local arrayIlvl = {}
-    --         for i = 1, 19 do
-    --             local itemLink = GetInventoryItemLink("mouseover", i)
-    --             if (itemLink) then
-    --                 local itemScan = GearHelper:GetItemByLink(itemLink, "GH_events.computeIlvl")
-    --                 local itemLvl, equipLoc = itemScan.iLvl, itemScan.equipLoc
-    --                 if equipLoc ~= nil then
-    --                     arrayIlvl[equipLoc] = itemLvl
-    --                     table.insert(arrayIlvl, itemLvl)
-    --                 end
-    --             end
-    --         end
-    --         local ilvlAverage = 0
-    --         local itemCount = 0
-    --         table.foreach(
-    --             arrayIlvl,
-    --             function(equipLoc, ilvl)
-    --                 if (equipLoc ~= "INVTYPE_TABARD" and equipLoc ~= "INVTYPE_BODY") then
-    --                     ilvlAverage = ilvlAverage + ilvl
-    --                     itemCount = itemCount + 1
-    --                 end
-    --             end
-    --         )
-    --         if (itemCount ~= 0) then
-    --             GameTooltip:AddLine(L["ilvlInspect"] .. tostring(math.floor((ilvlAverage / itemCount) + .5)))
-    --         end
-    --         ClearInspectPlayer()
-    --         GameTooltip:Show()
-    --     end
-    --     coroutine.resume(coroutine.create(computeIlvl))
-    -- end
-end
-
-local function UpdateMouseOverUnit()
-    GearHelper:BenchmarkCountFuncCall("UpdateMouseOverUnit")
-    -- if not CanInspect("mouseover") or not CheckInteractDistance("mouseover", 1) then
-    --     do
-    --         return
-    --     end
-    -- end
-    -- NotifyInspect("mouseover")
-end
-
 local function ReadyCheck()
     GearHelper:BenchmarkCountFuncCall("ReadyCheck")
     if lfrCheckIsChecked then
@@ -712,7 +610,6 @@ local function ReadyCheck()
     end
 end
 
-GearHelper:RegisterEvent("ADDON_LOADED", AddonLoaded, ...)
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
 GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
@@ -740,6 +637,4 @@ GearHelper:RegisterEvent("QUEST_TURNED_IN", QuestTurnedIn)
 GearHelper:RegisterEvent("GET_ITEM_INFO_RECEIVED", GetItemInfoReceived, ...)
 GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
--- GearHelper:RegisterEvent("INSPECT_READY", InspectReady, ...)
-GearHelper:RegisterEvent("UPDATE_MOUSEOVER_UNIT", UpdateMouseOverUnit, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)

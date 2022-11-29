@@ -1,15 +1,3 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-
-function GearHelper:ForEachItemInBag(callback)
-    for bag = 0, 4 do
-        for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            if C_Container.GetContainerItemID(bag, slot) ~= nil then
-                callback(bag, slot)
-            end
-        end
-    end
-end
-
 function GearHelper:SellGreyItems()
     GearHelper:BenchmarkCountFuncCall("SellGreyItems")
 
@@ -19,15 +7,16 @@ function GearHelper:SellGreyItems()
         end
     end
 
-    GearHelper:ForEachItemInBag(
-        function(bag, slot)
-            local id = C_Container.GetContainerItemID(bag, slot)
-            if id then
-                local isValueAvailable, sellPrice = GearHelper:GetItemSellPrice(id)
-                if isValueAvailable then
+    for bag = 0, NUM_BAG_SLOTS do
+        for slot = 1, C_Container.GetContainerNumSlots(bag) do
+            if C_Container.GetContainerItemID(bag, slot) == nil then
+                local id = C_Container.GetContainerItemID(bag, slot)
+
+                --Test if itemRarity (3) is grey
+                if id and select(3, GetItemInfo(id)) == 0 then
                     C_Container.UseContainerItem(bag, slot)
                 end
             end
         end
-    )
+    end
 end

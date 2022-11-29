@@ -1,5 +1,3 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-
 local function GetStatFromTemplate(stat)
     GearHelper:BenchmarkCountFuncCall("GetStatFromTemplate")
     if (nil == GearHelper.db.profile.weightTemplate) then
@@ -19,26 +17,23 @@ local function GetStatFromTemplate(stat)
     end
 end
 
-function GearHelper:ApplyTemplateToDelta(delta)
+-- TODO: Re-Add Gems handling when DF is out
+function GearHelper:GetItemStatsScore(item)
     self:BenchmarkCountFuncCall("GearHelper:ApplyTemplateToDelta")
     local valueItem = 0
-    local mainStat = self:FindHighestStatInTemplate()
-
-    -- TODO: Check the GetGemValue() function
-    if self.db.profile.includeSocketInCompute == true then
-        valueItem = delta.nbGem * self:GetGemValue() * GetStatFromTemplate(mainStat)
-    end
 
     if self.db.profile.iLvlOption == true then
         if (self.db.profile.iLvlWeight == nil or self.db.profile.iLvlWeight == "") then
             self.db.profile.iLvlWeight = 10
         end
 
-        valueItem = valueItem + delta.iLvl * self.db.profile.iLvlWeight
+        valueItem = valueItem + item.iLvl * self.db.profile.iLvlWeight
     end
 
-    for k, v in pairs(delta) do
-        if (k ~= nil and v ~= nil and L.Tooltip.Stat[k] ~= nil) then -- or v < 0) then
+    for k, v in pairs(item.stats) do
+        GearHelper:Print(k)
+        GearHelper:Print(GetStatFromTemplate(k))
+        --[[if (k ~= nil and v ~= nil and L.Tooltip.Stat[k] ~= nil) then -- or v < 0) then
             if (GetStatFromTemplate(k) ~= nil and GetStatFromTemplate(k) ~= 0) then
                 valueItem = valueItem + GetStatFromTemplate(k) * v
             else
@@ -49,7 +44,7 @@ function GearHelper:ApplyTemplateToDelta(delta)
                     valueItem = valueItem + self.db.profile.defaultWeightForStat * v
                 end
             end
-        end
+        end]]
     end
 
     return valueItem

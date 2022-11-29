@@ -1,37 +1,13 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-function GearHelper:Print(object, tableOffset)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:Print")
-    if (GearHelper.db.profile.debug) then
-        if (object ~= nil) then
-            if type(object) == "table" then
-                foreach(object, print)
-            else
-                print(object)
-            end
-        else
-            print(tostring(nil))
-        end
-    end
-end
-
-function GearHelper:GetItemSellPrice(itemID)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:GetItemSellPrice")
-    local _, _, itemRarity, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(itemID)
-
-    if itemRarity == 0 then
-        return true, itemSellPrice
-    else
-        return false, 0
-    end
-end
-
--- TODO: Rework this function
 function GearHelper:IsEquippableByMe(item)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:IsEquippableByMe")
+    self:BenchmarkCountFuncCall("GearHelper:IsEquippableByMe")
+    self:Print("IsEquippableByMe - Testing item " .. item.itemLink)
+
     local isEquippable = false
 
     if (not IsEquippableItem(item.id) or string.match(item.itemLink, L["mascotte"])) then
+        self:Print("IsEquippableByMe - Not equippable / mascotte")
         return false
     end
 
@@ -39,14 +15,17 @@ function GearHelper:IsEquippableByMe(item)
     local _, myClass = UnitClass("player")
     local playerSpec = GetSpecializationInfo(GetSpecialization())
 
-    if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" or item.equipLoc == "INVTYPE_TABARD" or item.equipLoc == "INVTYPE_BODY" then
+    if item.levelRequired > myLevel or item.equipLoc == "INVTYPE_BAG" or item.equipLoc == "INVTYPE_TABARD" or
+        item.equipLoc == "INVTYPE_BODY" then
+        self:Print("IsEquippableByMe - No required level / wrong slot")
         return false
-    elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or item.subType == L.IsEquippable.PRIEST.Tissu then
-        isEquippable = true
-    elseif item.rarity == "e6cc80" then
+    elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or
+        item.equipLoc == "INVTYPE_CLOAK" and item.subType == L["divers"] or item.subType == L.IsEquippable.PRIEST.Tissu then
+        return true
+    elseif item.rarity == 6 then -- Artifacts
         if type(L.Artifact[tostring(playerSpec)]) == "string" then
             if tostring(item.id) == L.Artifact[tostring(playerSpec)] then
-                isEquippable = true
+                return true
             end
         else
             table.foreach(
@@ -68,18 +47,8 @@ function GearHelper:IsEquippableByMe(item)
             end
         )
     end
-    return isEquippable
-end
 
-function GearHelper:IsInventoryInCache()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:IsInventoryInCache")
-    local result = {}
-    for _, v in pairs(GearHelperVars.charInventory) do
-        if tonumber(v) == -2 then
-            return false
-        end
-    end
-    return true
+    return isEquippable
 end
 
 -- TODO: Replace that by @Marsgames suggestion about = true test
@@ -185,7 +154,9 @@ function GearHelper:GetGemValue()
     end
     local tip = ""
 
-    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate", BackdropTemplateMixin and "BackdropTemplate")
+    tip = myTooltipFromTemplate or
+        CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate",
+            BackdropTemplateMixin and "BackdropTemplate")
     tip:SetOwner(WorldFrame, "ANCHOR_NONE")
     tip:SetHyperlink(gemItemLink)
 
@@ -304,19 +275,6 @@ function GearHelper:ColorizeString(text, color)
     end
 end
 
-function GearHelper:GetArraySize(tab)
-    if (type(tab) ~= "table") then
-        error(GHExceptionParameterIsNotAnArray)
-    end
-
-    local count = 0
-    for _, _ in pairs(tab) do
-        count = count + 1
-    end
-
-    return count
-end
-
 function GearHelper:GetQualityFromColor(color)
     GearHelper:BenchmarkCountFuncCall("GetQualityFromColor")
     if (color == "9d9d9d") then
@@ -337,5 +295,16 @@ function GearHelper:GetQualityFromColor(color)
         return 7
     else
         error("Color " .. color .. " is not a possible choice")
+    end
+end
+
+function GearHelper:NilTableValues(tableToReset)
+    GearHelper:BenchmarkCountFuncCall("GearHelper:NilTableValues")
+    for key, v in pairs(tableToReset) do
+        if type(tableToReset[key]) == "table" then
+            GearHelper:NilTableValues(tableToReset[key])
+        else
+            tableToReset[key] = nil
+        end
     end
 end

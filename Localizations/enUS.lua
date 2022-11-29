@@ -1,4 +1,3 @@
-GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):NewLocale("GearHelper", "enUS", true)
 -- local BT = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 

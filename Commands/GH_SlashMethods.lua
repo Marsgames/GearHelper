@@ -20,36 +20,6 @@ function GearHelper:SlashDisplayHelp()
     -- GearHelper:Print("test - run unit tests")
 end
 
-function GearHelper:SlashCountCache()
-    GearHelper:Print(GearHelper:GetArraySize(GearHelper.db.global.ItemCache))
-end
-
-function GearHelper:SlashPrintCache()
-    for k, v in pairs(GearHelper.db.global.ItemCache) do
-        GearHelper:Print("--- " .. k)
-        if (GearHelper.db.profile.debug) then
-            for kk, vv in pairs(v) do
-                print("   " .. kk .. " - " .. tostring(vv))
-            end
-        end
-    end
-end
-
-function GearHelper:SlashList()
-    for bag = 0, 4 do
-        for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            local _, _, _, _, _, _, link = C_Container.GetContainerItemInfo(bag, slot)
-            if link ~= nil then
-                if (strfind(link, "|H(.+)|h") ~= nil) then
-                    link = "|cff9d9d9d" .. link .. "|h|h|r"
-                end
-                GearHelper:Print(bag .. " " .. slot)
-                GearHelper:Print(link)
-            end
-        end
-    end
-end
-
 function GearHelper:SlashConfig()
     InterfaceOptionsFrame:Show()
     InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
