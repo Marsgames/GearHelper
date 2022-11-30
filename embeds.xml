@@ -14,4 +14,11 @@
   <Include file="Libs\LibBabble-Inventory-3.0\lib.xml"/>
   <Include file="Libs\LibAboutPanel\lib.xml"/>
   <Script file="Libs\LibRealmInfo\LibRealmInfo.lua"/>
+   <GameTooltip name="ScanningTooltip" inherits="GameTooltipTemplate">
+   <Scripts>
+     <Onload>
+       self:SetOwner(WorldFrame, "ANCHOR_NONE");
+     </Onload>
+   </Scripts>
+ </GameTooltip>
 </Ui>

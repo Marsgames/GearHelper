@@ -2,7 +2,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 -- TODO: Replace that by @Marsgames suggestion about = true test
 function GearHelper:IsValueInTable(tab, val)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:IsValueInTable")
+
 
     for _, v in pairs(tab) do
         if val == v then
@@ -14,14 +14,14 @@ end
 
 -- Remove an item from table and return elem
 function GearHelper:RemoveItemByKey(table, key)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:RemoveItemByKey")
+
     local element = table[key]
     table[key] = nil
     return element
 end
 
 function GearHelper:MySplit(inputString, separator)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:MySplit")
+
     if separator == nil then
         separator = "%s"
     end
@@ -35,7 +35,7 @@ function GearHelper:MySplit(inputString, separator)
 end
 
 function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:GetStatDeltaBetweenItems")
+
     local delta = {}
 
     for k, v in pairs(looted) do
@@ -60,7 +60,7 @@ function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 end
 
 local function AddStatToTab(item, tab)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:AddStatToTab")
+
     for k, v in pairs(item) do
         if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
             if tab[k] == nil then
@@ -75,12 +75,12 @@ local function AddStatToTab(item, tab)
 end
 
 function GearHelper:CombineTwoItems(first, second)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:CombineTwoItems")
+
     return AddStatToTab(second, AddStatToTab(first, {}))
 end
 
 local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:CombineArraysOfEquippableTypes")
+
     local mergedArrays = {}
     for _, array in pairs(arraysOfEquippableByClasses) do
         for k, v in pairs(array) do
@@ -91,12 +91,11 @@ local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
 end
 
 function GearHelper:GetEquippableTypes()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:GetEquippableTypes")
-    return CombineArraysOfEquippableTypes(L.IsEquippable)
+    return CombineArraysOfEquippableTypes(ITEM_TYPES_EQUIPPABLE_BY_CLASS)
 end
 
 function GearHelper:GetGemValue()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:GetGemValue")
+
     local _, gemItemLink = GetItemInfo("151585")
     if gemItemLink == nil then
         return 0
@@ -121,7 +120,7 @@ function GearHelper:GetGemValue()
 end
 
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:ReturnGoodLink")
+
     local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
     local _, itemId = strsplit(":", itemString)
 
@@ -133,7 +132,7 @@ function GearHelper:ReturnGoodLink(itemLink, target, tar)
 end
 
 function GearHelper:GetClassColor(classFileName)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:GetClassColor")
+
     local color = RAID_CLASS_COLORS[classFileName]
 
     return "|c" .. color.colorStr
@@ -166,7 +165,7 @@ local function GetActiveTemplate()
 end
 
 function GearHelper:FindHighestStatInTemplate()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:FindHighestStatInTemplate")
+
 
     local template = GetActiveTemplate()
 
@@ -188,7 +187,7 @@ function GearHelper:FindHighestStatInTemplate()
 end
 
 local function GetColor(name)
-    GearHelper:BenchmarkCountFuncCall("GetColor")
+
 
     local colorList = {}
     colorList.yellow = "|cFFFFFF00"
@@ -205,7 +204,7 @@ local function GetColor(name)
 end
 
 function GearHelper:ColorizeString(text, color)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:ColorizeString")
+
     local colorList = {}
     colorList.yellow = "|cFFFFFF00"
     colorList.lightgreen = "|cFF00FF00"
@@ -225,7 +224,7 @@ function GearHelper:ColorizeString(text, color)
 end
 
 function GearHelper:GetQualityFromColor(color)
-    GearHelper:BenchmarkCountFuncCall("GetQualityFromColor")
+
     if (color == "9d9d9d") then
         return 0
     elseif (color == "ffffff") then
@@ -248,7 +247,7 @@ function GearHelper:GetQualityFromColor(color)
 end
 
 function GearHelper:NilTableValues(tableToReset)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:NilTableValues")
+
     for key, v in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
             GearHelper:NilTableValues(tableToReset[key])

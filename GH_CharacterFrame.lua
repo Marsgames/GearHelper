@@ -1,5 +1,5 @@
 local function CharFrameShow(_)
-    GearHelper:BenchmarkCountFuncCall("CharFrameShow")
+
     if not GearHelper.db.profile.ilvlCharFrame then
         do
             return
@@ -68,19 +68,19 @@ local function CharFrameShow(_)
 end
 
 local function CharFrameHide()
-    GearHelper:BenchmarkCountFuncCall("CharFrameHide")
+
     GearHelper:HideIlvlOnCharFrame()
 end
 
 function GearHelper:AddIlvlOnCharFrame()
-    self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnCharFrame")
+
 
     PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
     PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
 end
 
 function GearHelper:HideIlvlOnCharFrame()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:HideIlvlOnCharFrame")
+
     table.foreach(
         GearHelperVars.charInventory,
         function(slotName, _)

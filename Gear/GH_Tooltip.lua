@@ -1,7 +1,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:LinesToAddToTooltip(result)
-    self:BenchmarkCountFuncCall("GearHelper:LinesToAddToTooltip")
+
     local linesToAdd = {}
 
     if self:GetArraySize(result) == 1 then
@@ -41,12 +41,12 @@ function GearHelper:GetTooltipDataForItem(itemLink)
     local tooltipData = C_TooltipInfo.GetHyperlink(itemLink, classID, specID)
 
     --This is required to populate .lefttext like fields
-    TooltipUtil.SurfaceArgs(tooltipData)
+    --TooltipUtil.SurfaceArgs(tooltipData)
+    --Magic happens in there, before processInfo data are wrong (same than GetItemStats)
+    ScanningTooltip:ProcessInfo(tooltipData)
     for _, line in ipairs(tooltipData.lines) do
         TooltipUtil.SurfaceArgs(line)
     end
-    --Magic happens in there, before processInfo data are wrong (same than GetItemStats)
-    GameTooltip:ProcessInfo(tooltipData)
 
-    return GameTooltip:GetTooltipData()
+    return tooltipData
 end

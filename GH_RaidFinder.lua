@@ -1,7 +1,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:CreateLfrButtons(frameParent)
-    self:BenchmarkCountFuncCall("GearHelper:CreateLfrButtons")
+
     local nbInstance = GetNumRFDungeons()
     local scale = min(480 / ((nbInstance - 6) * 24), 1) --> Adjust size of buttons depending on number of buttons
 
@@ -85,7 +85,7 @@ function GearHelper:CreateLfrButtons(frameParent)
 end
 
 function GearHelper:UpdateButtonsAndTooltips(frameParent)
-    self:BenchmarkCountFuncCall("GearHelper:UpdateButtonsAndTooltips")
+
 
     local buttons = frameParent.GHLfrButtons
 
@@ -128,7 +128,7 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 end
 
 function GearHelper:UpdateSelectCursor()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:UpdateSelectCursor")
+
 
     if not GearHelper.cursor then
         local cursor = GroupFinderFrame:CreateTexture("GHLfrCursor", "ARTWORK")
@@ -154,7 +154,7 @@ function GearHelper:UpdateSelectCursor()
 end
 
 function GearHelper:UpdateGHLfrButton()
-    self:BenchmarkCountFuncCall("GearHelper:UpdateGHLfrButton")
+
     if not RaidFinderQueueFrame.GHLfrButtons then
         return
     end
@@ -172,7 +172,7 @@ function GearHelper:UpdateGHLfrButton()
 end
 
 function GearHelper:HideLfrButtons(frameParent)
-    self:BenchmarkCountFuncCall("GearHelper:HideLfrButtons")
+
     local nbInstance = GetNumRFDungeons()
 
     for i = 1, nbInstance do

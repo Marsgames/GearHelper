@@ -1,7 +1,8 @@
 GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "AceEvent-3.0")
+GearHelper.locals = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:Print(object)
-    GearHelper:BenchmarkCountFuncCall("GearHelper:Print")
+
     local file, ln = strmatch(debugstack(2, 1, 0), "([%w_]*%.lua).*%:(%d+)")
 
     if (GearHelper.db.profile.debug) then
@@ -18,9 +19,6 @@ function GearHelper:Print(object)
 end
 
 function GearHelper:OnInitialize()
-    self:BenchmarkCountFuncCall("GearHelper:OnInitialize")
-
-    self.locals = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
     self.db = LibStub("AceDB-3.0"):New("GearHelperDB", GearHelper.defaultSettings)
     self.db.RegisterCallback(self, "OnProfileChanged", "OnRefreshConfig")
     self.db.RegisterCallback(self, "OnProfileCopied", "OnRefreshConfig")
@@ -39,14 +37,11 @@ function GearHelper:OnInitialize()
 end
 
 function GearHelper:OnRefreshConfig()
-    self:BenchmarkCountFuncCall("GearHelper:RefreshConfig")
     InterfaceOptionsFrame:Show()
     InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
-function GearHelper:OnResetConfig()
-    self:BenchmarkCountFuncCall("GearHelper:ResetConfig")
-    
+function GearHelper:OnResetConfig()    
     self:NilTableValues(self.db.profile)
     self:NilTableValues(self.db.global)
 
@@ -56,18 +51,18 @@ function GearHelper:OnResetConfig()
 end
 
 function GearHelper:OnEnable()
-    self:BenchmarkCountFuncCall("GearHelper:OnEnable")
+
     if not self.db.profile.addonEnabled then
         print(self:ColorizeString(self.locals["Addon"], "LightGreen") .. self:ColorizeString(self.locals["DeactivatedRed"], "LightRed"))
         return
     end
 
     print(self:ColorizeString(self.locals["Addon"], "LightGreen") .. self:ColorizeString(self.locals["ActivatedGreen"], "LightGreen"))
-    self.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
+    --self.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 end
 
 function GearHelper:NilTableValues(tableToReset)
-    self:BenchmarkCountFuncCall("GearHelper:NilTableValues")
+
     for key, _ in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
             self:NilTableValues(tableToReset[key])

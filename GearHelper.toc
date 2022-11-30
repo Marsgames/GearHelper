@@ -19,10 +19,6 @@
 
 ## SavedVariables: GearHelperDB
 
-embeds.xml
-GH_Exceptions.lua
-GH_Core.lua
-WeightValues.lua
 
 ########## Localizations ##########
 Localizations\enUS.lua
@@ -38,25 +34,31 @@ Localizations\esES.lua
 Localizations\zhTW.lua
 
 ########## Addon ##########
-GH_Constants.lua
-GH_Benchmark.lua
-GH_Minimap.lua
-GH_CharacterFrame.lua
+embeds.xml
+GH_Exceptions.lua
+GH_Core.lua
+Gear\GH_Template.lua
 Gear\GH_Items.lua
+
+GH_Constants.lua
+Inventory\GH_Inventory.lua
+Inventory\GH_AutoSell.lua
+Gear\GH_ItemCompare.lua
+Gear\GH_Tooltip.lua
+Gear\GH_Repair.lua
 DropRates\GH_DropRates.lua
 DropRates\items.lua
 GH_ItemAsk.lua
 GH_QuestReward.lua
 GH_RaidFinder.lua
 GH_UpdateAddon.lua
-Gear\GH_Tooltip.lua
-Gear\GH_Template.lua
-Gear\GH_Inventory.lua
-Gear\GH_StatComputation.lua
-GearHelper.lua
 Commands\GH_SlashMethods.lua
 Commands\GH_Slash.lua
-GH_Bags.lua
-GH_Events.lua
 GH_Options.lua
+Options\GH_Messages.lua
+Options\GH_Thanks.lua
+GH_Events.lua
 GH_Toolbox.lua
+GH_Minimap.lua
+GH_CharacterFrame.lua
+GearHelper.lua

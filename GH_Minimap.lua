@@ -1,7 +1,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local function OnMinimapTooltipShow(tooltip)
-    GearHelper:BenchmarkCountFuncCall("OnMinimapTooltipShow")
+
     tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
     tooltip:SetText(GearHelper:ColorizeString("GearHelper", GearHelper.db.profile.addonEnabled and "LightGreen" or "LightRed"))
 
@@ -29,7 +29,7 @@ local function OnMinimapTooltipShow(tooltip)
 end
 
 local function OnMinimapTooltipClick(button, tooltip)
-    GearHelper:BenchmarkCountFuncCall("OnMinimapTooltipClick")
+
     if InterfaceOptionsFrame:IsShown() then
         InterfaceOptionsFrame:Hide()
     else
@@ -62,7 +62,7 @@ local function OnMinimapTooltipClick(button, tooltip)
 end
 
 function GearHelper:CreateMinimapIcon()
-    GearHelper:BenchmarkCountFuncCall("CreateMinimapIcon")
+
     local tooltip = tooltip or CreateFrame("GameTooltip", "tooltip", nil, BackdropTemplateMixin and "BackdropTemplate")
     local icon = LibStub("LibDBIcon-1.0")
     local GHIcon =

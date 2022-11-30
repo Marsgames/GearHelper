@@ -17,8 +17,6 @@ function GearHelper:IsItemBetter(itemLink)
 end
 
 local function AutoEquipShouldBeCompared(itemLink)
-    GearHelper:BenchmarkCountFuncCall("AutoEquipShouldBeCompared")
-
     if (not itemLink or string.match(itemLink, "|cffffffff|Hitem:::::::::(%d*):(%d*)::::::|h%[%]|h|r")) then
         return false
     end
@@ -36,15 +34,7 @@ local function AutoEquipShouldBeCompared(itemLink)
     return true
 end
 
-local function ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-    GearHelper:BenchmarkCountFuncCall("ComputeWithTemplateDeltaBetweenItems")
-    local delta = GearHelper:GetStatDeltaBetweenItems(item, equippedItem)
-
-    return GearHelper:GetItemStatsScore(delta)
-end
-
 function GearHelper:EquipItem(inThisBag)
-    self:BenchmarkCountFuncCall("GearHelper:EquipItem")
     local bagToEquip = inThisBag or 0
     local _, typeInstance, difficultyIndex = GetInstanceInfo()
     waitEquipFrame = CreateFrame("Frame")
@@ -93,127 +83,38 @@ function GearHelper:EquipItem(inThisBag)
     waitEquipFrame:Show()
 end
 
-function GearHelper:CompareWithEquipped(item)
-    local result = {}
-    
-    local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
+function GearHelper:GetEquippedItemsScore(equippedItems)
     local equippedItemsScores = {}
 
     for slotId, equippedItem in pairs(equippedItems.items) do
         self:Print("CompareWithEquipped - Localized slot name is ".._G[GearHelper.slotToNameMapping[slotId]]:lower())
-        local equippedItemScore = item:GetScore()
+        GearHelper:Print(slotId)
+        local equippedItemScore = equippedItem:GetScore()
         if equippedItems.operator == GearHelper.operators.UNDEFINED or equippedItems.operator == GearHelper.operators.OR then
             equippedItemsScores[slotId] = equippedItemScore
         elseif equippedItems.operator == GearHelper.operators.AND then
-            equippedItemsScores[]
+            equippedItemsScores[slotId] = (equippedItemsScores[slotId] or 0) + equippedItemScore
         end
 
-        self:Print(equippedItem)
+        self:Print("Equipped item scores are : ")
+        self:Print(equippedItemsScores)
     end
 
-
-    --[[
-    if item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_FINGER" then
-        for slot, equippedItemLink in pairs(equippedItems) do
-            if equippedItemLink == 0 then
-                result[slot] = GearHelper:ApplyTemplateToDelta(item)
-            else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink)
-                result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            end
-        end
-    elseif item.equipLoc == "INVTYPE_WEAPON" or item.equipLoc == "INVTYPE_HOLDABLE" then
-        for slot, equippedItemLink in pairs(equippedItems) do
-            if equippedItemLink == 0 then
-                result[slot] = GearHelper:ApplyTemplateToDelta(item)
-            elseif equippedItemLink == -1 then
-                equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"], "GH_StatComputation.NewWeightCalculation() Mainhand")
-                result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() Holdable")
-                result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            end
-        end
-    elseif item.equipLoc == "INVTYPE_2HWEAPON" or item.equipLoc == "INVTYPE_RANGED" then
-        if tonumber(equippedItems["MainHand"]) and tonumber(equippedItems["SecondaryHand"]) then
-            result["MainHand"] = GearHelper:ApplyTemplateToDelta(item)
-        elseif tonumber(equippedItems["MainHand"]) then
-            equippedItem = GearHelper:GetItemByLink(equippedItems["SecondaryHand"], "GH_StatComputation.NewWeightCalculation() SecondaryHand")
-            result["SecondaryHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-        elseif tonumber(equippedItems["SecondaryHand"]) then
-            equippedItem = GearHelper:GetItemByLink(equippedItems["MainHand"], "GH_StatComputation.NewWeightCalculation() MainHand 2Weapon")
-            result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-        else
-            local combinedItems = GearHelper:CombineTwoItems(GearHelper:GetItemByLink(equippedItems["MainHand"], "GH_StatComputation.NewWeightCalculation() 1"), GearHelper:GetItemByLink(equippedItems["SecondaryHand"], "GH_StatComputation.NewWeightCalculation() 2"))
-            result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, combinedItems)
-        end
-    else
-        -- ?: Why is there a for loop ?
-        for slot, equippedItemLink in pairs(equippedItems) do
-            if equippedItemLink == 0 then -- 0 if no item is equipped
-                result[slot] = GearHelper:ApplyTemplateToDelta(item)
-            else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() other ?")
-                result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            end
-        end
-    end]]
-
-    return result
+    return equippedItemsScores
 end
 
-function GearHelper:TestCalc(item)
-    self:BenchmarkCountFuncCall("GearHelper:NewWeightCalculation")
-
+function GearHelper:CompareWithEquipped(item)
     local result = {}
-
+    
     local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
+    local equippedItemsScore = GearHelper:GetEquippedItemsScore(equippedItems)
 
-    if item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_FINGER" then
-        for slot, equippedItemLink in pairs(equippedItems) do
-            if equippedItemLink == 0 then
-                result[slot] = GearHelper:GetItemStatsScore(item)
-            else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() Trinket / Finger")
-                result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            end
-        end
-    elseif item.equipLoc == "INVTYPE_WEAPON" or item.equipLoc == "INVTYPE_HOLDABLE" then
-        for slot, equippedItemLink in pairs(equippedItems) do
-            if equippedItemLink == 0 then
-                result[slot] = GearHelper:GetItemStatsScore(item)
-            elseif equippedItemLink == -1 then
-                equippedItem = GearHelper:GetItemByLink(GearHelperVars.charInventory["MainHand"], "GH_StatComputation.NewWeightCalculation() Mainhand")
-                result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() Holdable")
-                result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            end
-        end
-    elseif item.equipLoc == "INVTYPE_2HWEAPON" or item.equipLoc == "INVTYPE_RANGED" then
-        if tonumber(equippedItems["MainHand"]) and tonumber(equippedItems["SecondaryHand"]) then
-            result["MainHand"] = GearHelper:GetItemStatsScore(item)
-        elseif tonumber(equippedItems["MainHand"]) then
-            equippedItem = GearHelper:GetItemByLink(equippedItems["SecondaryHand"], "GH_StatComputation.NewWeightCalculation() SecondaryHand")
-            result["SecondaryHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-        elseif tonumber(equippedItems["SecondaryHand"]) then
-            equippedItem = GearHelper:GetItemByLink(equippedItems["MainHand"], "GH_StatComputation.NewWeightCalculation() MainHand 2Weapon")
-            result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-        else
-            local combinedItems = GearHelper:CombineTwoItems(GearHelper:GetItemByLink(equippedItems["MainHand"], "GH_StatComputation.NewWeightCalculation() 1"), GearHelper:GetItemByLink(equippedItems["SecondaryHand"], "GH_StatComputation.NewWeightCalculation() 2"))
-            result["MainHand"] = ComputeWithTemplateDeltaBetweenItems(item, combinedItems)
-        end
-    else
-        -- ?: Why is there a for loop ?
-        for slot, equippedItemLink in pairs(equippedItems) do
-            if equippedItemLink == 0 then -- 0 if no item is equipped
-                result[slot] = GearHelper:GetItemStatsScore(item)
-            else
-                equippedItem = GearHelper:GetItemByLink(equippedItemLink, "GH_StatComputation.NewWeightCalculation() other ?")
-                result[slot] = ComputeWithTemplateDeltaBetweenItems(item, equippedItem)
-            end
-        end
+    for slotId, score in pairs(equippedItemsScore) do
+        result[slotId] = item:GetScore() - score
     end
+
+    self:Print("Result score is : ")
+    self:Print(result)
 
     return result
 end

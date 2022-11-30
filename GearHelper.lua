@@ -3,7 +3,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:setInviteMessage(newMessage)
-    self:BenchmarkCountFuncCall("GearHelper:setInviteMessage")
+
     if newMessage == nil then
         return
     end
@@ -13,7 +13,7 @@ function GearHelper:setInviteMessage(newMessage)
 end
 
 function GearHelper:showMessageSMN(channel, sender, msg)
-    self:BenchmarkCountFuncCall("GearHelper:showMessageSMN")
+
     if not self.db.profile.sayMyName or not msg then
         return
     end
@@ -37,25 +37,21 @@ function GearHelper:showMessageSMN(channel, sender, msg)
 end
 
 function GearHelper:ScanCharacter()
-    self:BenchmarkCountFuncCall("GearHelper:ScanCharacter")
-
     for slotID, _ in pairs(GearHelperVars.charInventory) do
         local item = Item:CreateFromEquipmentSlot(slotID)
-        if item:IsItemEmpty() == false then
-            if(item:IsItemDataCached() == false) then
-                self:Print("Item in slot "..slotID.." not in cache")
-            end
-    
-            item:ContinueOnItemLoad(function()
-                self:Print("Scanning character slot "..slotID.." = "..item:GetItemLink())
-                GearHelperVars.charInventory[slotID] = item:GetItemLink()
-            end) 
+        if (item:IsItemDataCached() == false) then
+            self:Print("Item in slot " .. slotID .. " not in cache")
         end
+
+        item:ContinueOnItemLoad(function()
+            self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
+            GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())
+        end)
     end
 end
 
 function GearHelper:SetDotOnIcons()
-    self:BenchmarkCountFuncCall("GearHelper:SetDotOnIcons")
+
 
     for bag = 0, 4 do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
@@ -81,40 +77,36 @@ function GearHelper:SetDotOnIcons()
     ContainerFrame_UpdateAll()
 end
 
-local function ShouldDisplayNotEquippable(subType)
-    GearHelper:BenchmarkCountFuncCall("ShouldDisplayNotEquippable")
+local function ShouldDisplayNotEquippable(item)
+    GearHelper:Print(item)
+    local inventoryType = C_Item.GetItemInventoryTypeByID(item.itemLink)
 
-    if (GearHelper:IsValueInTable(self.locals["TypeToNotNeed"], subType)) then
+    if INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
         return false
     end
 
-    if GearHelper.db.profile.computeNotEquippable == true then
-        return GearHelper:IsValueInTable(GearHelper:GetEquippableTypes(), tostring(subType))
-    end
-
-    return false
+    return true
 end
 
 local function OnToolTipSetItem(tooltip, data)
-    if not GearHelper.db or not GearHelper.db.profile.addonEnabled then
+    if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip then
         return
     end
 
-    local item = GearHelper:GetItem(select(2, TooltipUtil.GetDisplayedItem(tooltip)))
-
+    local item = GHItem:Create(select(2, TooltipUtil.GetDisplayedItem(tooltip)))
     if not item then return end
 
-    GearHelper:Print("OnToolTipSetItem - New tooltip open "..item.itemLink)
+    GearHelper:Print("OnToolTipSetItem - New tooltip open " .. item.itemLink)
 
     local linesToAdd = {}
 
     if IsEquippedItem(item.itemLink) then -- Item equipped, yellow overlay on tooltip
         GearHelper:Print("ModifyTooltip - Item already equipped, applying yellow overlay")
         tooltip.NineSlice:SetBorderColor(FACTION_YELLOW_COLOR.r, FACTION_YELLOW_COLOR.g, FACTION_YELLOW_COLOR.b)
-        table.insert(linesToAdd, GearHelper:ColorizeString(self.locals["itemEquipped"], "Yellow"))
+        table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
     elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
         GearHelper:Print("ModifyTooltip - Item not equipped, computing value...")
-        local result = GearHelper:NewWeightCalculation(item)
+        local result = GearHelper:CompareWithEquipped(item)
         GearHelper:Print(result)
 
         if (type(result) == "table") then
@@ -122,16 +114,16 @@ local function OnToolTipSetItem(tooltip, data)
                 local floorValue = math.floor(v)
 
                 if (floorValue < 0) then
-                    self.NineSlice:SetBorderColor(1, 0, 0)
+                    tooltip.NineSlice:SetBorderColor(1, 0, 0)
                 else
-                    self.NineSlice:SetBorderColor(0, 255, 150)
+                    tooltip.NineSlice:SetBorderColor(0, 255, 150)
                 end
             end
         end
-        linesToAdd = GearHelper:LinesToAddToTooltip(result)
-    elseif ShouldDisplayNotEquippable(tostring(item.subType)) then -- Item not equippable, red overlay on tooltip
+        --linesToAdd = GearHelper:LinesToAddToTooltip(result)
+    elseif ShouldDisplayNotEquippable(item) then -- Item not equippable, red overlay on tooltip
         GearHelper:Print("ModifyTooltip - Item not equippable, applying red overlay")
-        table.insert(linesToAdd, GearHelper:ColorizeString(self.locals["itemNotEquippable"], "LightRed"))
+        table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
         tooltip.NineSlice:SetBorderColor(FACTION_RED_COLOR.r, FACTION_RED_COLOR.g, FACTION_RED_COLOR.b)
     end
 

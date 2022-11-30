@@ -39,72 +39,72 @@ GearHelper.defaultSettings = {
         myNames = "",
         buildVersion = 7,
         equipLocInspect = {},
-        phrases = {
+        messages = {
             enUS = {
-                demande4 = self.locals["demande4enUS"],
-                demande42 = self.locals["demande4enUS2"],
-                rep = self.locals["repenUS"],
-                rep2 = self.locals["repenUS2"]
+                demande4 = L["demande4enUS"],
+                demande42 = L["demande4enUS2"],
+                rep = L["repenUS"],
+                rep2 = L["repenUS2"]
             },
             frFR = {
-                demande4 = self.locals["demande4frFR"],
-                demande42 = self.locals["demande4frFR2"],
-                rep = self.locals["repfrFR"],
-                rep2 = self.locals["repfrFR2"]
+                demande4 = L["demande4frFR"],
+                demande42 = L["demande4frFR2"],
+                rep = L["repfrFR"],
+                rep2 = L["repfrFR2"]
             },
             deDE = {
-                demande4 = self.locals["demande4deDE"],
-                demande42 = self.locals["demande4deDE2"],
-                rep = self.locals["repdeDE"],
-                rep2 = self.locals["repdeDE2"]
+                demande4 = L["demande4deDE"],
+                demande42 = L["demande4deDE2"],
+                rep = L["repdeDE"],
+                rep2 = L["repdeDE2"]
             },
             esES = {
-                demande4 = self.locals["demande4esES"],
-                demande42 = self.locals["demande4esES2"],
-                rep = self.locals["repesES"],
-                rep2 = self.locals["repesES2"]
+                demande4 = L["demande4esES"],
+                demande42 = L["demande4esES2"],
+                rep = L["repesES"],
+                rep2 = L["repesES2"]
             },
             esMX = {
-                demande4 = self.locals["demande4esMX"],
-                demande42 = self.locals["demande4esMX2"],
-                rep = self.locals["repesMX"],
-                rep2 = self.locals["repesMX2"]
+                demande4 = L["demande4esMX"],
+                demande42 = L["demande4esMX2"],
+                rep = L["repesMX"],
+                rep2 = L["repesMX2"]
             },
             itIT = {
-                demande4 = self.locals["demande4itIT"],
-                demande42 = self.locals["demande4itIT2"],
-                rep = self.locals["repitIT"],
-                rep2 = self.locals["repitIT2"]
+                demande4 = L["demande4itIT"],
+                demande42 = L["demande4itIT2"],
+                rep = L["repitIT"],
+                rep2 = L["repitIT2"]
             },
             koKR = {
-                demande4 = self.locals["demande4koKR"],
-                demande42 = self.locals["demande4koKR2"],
-                rep = self.locals["repkoKR"],
-                rep2 = self.locals["repkoKR2"]
+                demande4 = L["demande4koKR"],
+                demande42 = L["demande4koKR2"],
+                rep = L["repkoKR"],
+                rep2 = L["repkoKR2"]
             },
             ptBR = {
-                demande4 = self.locals["demande4ptBR"],
-                demande42 = self.locals["demande4ptBR2"],
-                rep = self.locals["repptBR"],
-                rep2 = self.locals["repptBR2"]
+                demande4 = L["demande4ptBR"],
+                demande42 = L["demande4ptBR2"],
+                rep = L["repptBR"],
+                rep2 = L["repptBR2"]
             },
             ruRU = {
-                demande4 = self.locals["demande4ruRU"],
-                demande42 = self.locals["demande4ruRU2"],
-                rep = self.locals["repruRU"],
-                rep2 = self.locals["repruRU2"]
+                demande4 = L["demande4ruRU"],
+                demande42 = L["demande4ruRU2"],
+                rep = L["repruRU"],
+                rep2 = L["repruRU2"]
             },
             zhCN = {
-                demande4 = self.locals["demande4zhCN"],
-                demande42 = self.locals["demande4zhCN2"],
-                rep = self.locals["repzhCN"],
-                rep2 = self.locals["repzhCN2"]
+                demande4 = L["demande4zhCN"],
+                demande42 = L["demande4zhCN2"],
+                rep = L["repzhCN"],
+                rep2 = L["repzhCN2"]
             },
             zhTW = {
-                demande4 = self.locals["demande4zhTW"],
-                demande42 = self.locals["demande4zhTW2"],
-                rep = self.locals["repzhTW"],
-                rep2 = self.locals["repzhTW2"]
+                demande4 = L["demande4zhTW"],
+                demande42 = L["demande4zhTW2"],
+                rep = L["repzhTW"],
+                rep2 = L["repzhTW2"]
             }
         }    
     }
@@ -116,23 +116,22 @@ GearHelperVars = {
     addonTruncatedVersion = 3,
     waitSpeTimer = nil,
     charInventory = {
-        [INVSLOT_HEAD] = 0,
-        [INVSLOT_NECK] = 0,
-        [INVSLOT_SHOULDER] = 0,
-        [INVSLOT_CHEST] = 0,
-        [INVSLOT_WAIST] = 0,
-        [INVSLOT_LEGS] = 0,
-        [INVSLOT_FEET] = 0,
-        [INVSLOT_WRIST] = 0,
-        [INVSLOT_HAND] = 0,
-        [INVSLOT_FINGER1] = 0,
-        [INVSLOT_FINGER2] = 0,
-        [INVSLOT_TRINKET1] = 0,
-        [INVSLOT_TRINKET2] = 0,
-        [INVSLOT_MAINHAND] = 0,
-        [INVSLOT_OFFHAND] = 0
-    },
-    coroutineQueue = {},
+        [INVSLOT_HEAD] = GHItem:CreateEmpty(),
+        [INVSLOT_NECK] = GHItem:CreateEmpty(),
+        [INVSLOT_SHOULDER] = GHItem:CreateEmpty(),
+        [INVSLOT_CHEST] = GHItem:CreateEmpty(),
+        [INVSLOT_WAIST] = GHItem:CreateEmpty(),
+        [INVSLOT_LEGS] = GHItem:CreateEmpty(),
+        [INVSLOT_FEET] = GHItem:CreateEmpty(),
+        [INVSLOT_WRIST] = GHItem:CreateEmpty(),
+        [INVSLOT_HAND] = GHItem:CreateEmpty(),
+        [INVSLOT_FINGER1] = GHItem:CreateEmpty(),
+        [INVSLOT_FINGER2] = GHItem:CreateEmpty(),
+        [INVSLOT_TRINKET1] = GHItem:CreateEmpty(),
+        [INVSLOT_TRINKET2] = GHItem:CreateEmpty(),
+        [INVSLOT_MAINHAND] = GHItem:CreateEmpty(),
+        [INVSLOT_OFFHAND] = GHItem:CreateEmpty()
+    }
 }
 
 GearHelper.slotToNameMapping = {
@@ -258,5 +257,277 @@ GearHelper.itemSlot = {
     INVTYPE_RANGEDRIGHT = {
         slots = { INVSLOT_MAINHAND },
         operator = GearHelper.operators.UNDEFINED
+    }
+}
+
+INVTYPE_TO_IGNORE = {
+    [Enum.InventoryType.IndexBodyType] = true,
+    [Enum.InventoryType.IndexBagType] = true,
+    [Enum.InventoryType.IndexTabardType] = true
+}
+
+ARTIFACTS = {
+    ["251"] = {
+        "128293",
+        "128292"
+    },
+    ["259"] = {
+        "128869",
+        "128870"
+    },
+    ["260"] = {
+        "128872",
+        "134552"
+    },
+    ["103"] = {
+        "128859",
+        "128860"
+    },
+    ["104"] = {
+        "128821",
+        "128822"
+    },
+    ["269"] = {
+        "128940",
+        "133948"
+    },
+    ["66"] = {
+        "128866",
+        "128867"
+    },
+    ["258"] = {
+        "128827",
+        "133958"
+    },
+    ["262"] = {
+        "128935",
+        "128936"
+    },
+    ["263"] = {
+        "128819",
+        "128873"
+    },
+    ["264"] = {
+        "128911",
+        "128934"
+    },
+    ["266"] = {
+        "128943",
+        "137246"
+    },
+    ["72"] = {
+        "128908",
+        "134553"
+    },
+    ["73"] = {
+        "128289",
+        "128288"
+    },
+    ["577"] = {
+        "127829",
+        "127830"
+    },
+    ["581"] = {
+        "128832",
+        "128831"
+    },
+    ["250"] = "128402",
+    ["252"] = "128403",
+    ["102"] = "128858",
+    ["105"] = "128306",
+    ["253"] = "128861",
+    ["254"] = "128826",
+    ["255"] = "128808",
+    ["62"] = "127857",
+    ["63"] = "128820",
+    ["64"] = "128862",
+    ["268"] = "128938",
+    ["270"] = "128937",
+    ["65"] = "128823",
+    ["70"] = "120978",
+    ["256"] = "128868",
+    ["257"] = "128825",
+    ["261"] = "128476",
+    ["265"] = "128942",
+    ["267"] = "128941",
+    ["71"] = "128910"
+}
+
+local BabbleI = LibStub("LibBabble-Inventory-3.0")
+local BT = BabbleI:GetLookupTable()
+
+--L["armor"] = BT["Armor"]
+--L["weapon"] = BT["Weapon"]
+--L["divers"] = BT["Miscellaneous"]
+--L["cannapeche"] = BT["Fishing Poles"] -- supprimer le doublon ?
+--L["monture"] = BT["Mount"]
+--L["mascotte"] = BT["Companion Pets"]
+
+ITEM_TYPES_EQUIPPABLE_BY_CLASS = {
+    ["WARRIOR"] = {
+        ["Plaque"] = BT["Plate"],
+        ["Maille"] = BT["Mail"],
+        ["Cuir"] = BT["Leather"],
+        ["Bouclier"] = BT["Shield"],
+        ["Boucliers"] = BT["Shields"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Pugilat"] = BT["Fist Weapon"],
+        ["Pugilats"] = BT["Fist Weapons"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Epee1H"] = BT["One-Handed Swords"],
+        ["Hast"] = BT["Polearm"],
+        ["Hasts"] = BT["Polearms"],
+        ["Baton"] = BT["Staff"],
+        ["Batons"] = BT["Staves"],
+        ["Hache2H"] = BT["Two-Handed Axes"],
+        ["Epee2H"] = BT["Two-Handed Swords"],
+        ["Mace2H"] = BT["Two-Handed Maces"],
+        ["Jet"] = BT["Thrown"],
+        ["Arbalete"] = BT["Crossbow"],
+        ["Arbaletes"] = BT["Crossbows"],
+        ["Arc"] = BT["Bow"],
+        ["Arcs"] = BT["Bows"],
+        ["TenuMainGauche"] = BT["Held in Off-Hand"],
+        ["MainGauche"] = BT["Off Hand"],
+        ["UneMain"] = BT["One-Hand"],
+        ["Holdable"] = BT["Miscellaneous"],
+        ["Gun"] = BT["Gun"],
+        ["ArmeAFeus"] = BT["Guns"]
+    },
+    ["PALADIN"] = {
+        ["Plaque"] = BT["Plate"],
+        ["Maille"] = BT["Mail"],
+        ["Cuir"] = BT["Leather"],
+        ["Bouclier"] = BT["Shield"],
+        ["Boucliers"] = BT["Shields"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Masse2H"] = BT["Two-Handed Maces"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Hache2H"] = BT["Two-Handed Axes"],
+        ["Epee1H"] = BT["One-Handed Swords"],
+        ["Epee2H"] = BT["Two-Handed Swords"],
+        ["Hast"] = BT["Polearm"],
+        ["Hasts"] = BT["Polearms"],
+        ["Holdable"] = BT["Miscellaneous"],
+        ["UneMain"] = BT["One-Hand"]
+    },
+    ["HUNTER"] = {
+        ["Maille"] = BT["Mail"],
+        ["Arc"] = BT["Bow"],
+        ["Arcs"] = BT["Bows"],
+        ["Arbalete"] = BT["Crossbow"],
+        ["Arbaletes"] = BT["Crossbows"],
+        ["ArmeAFeus"] = BT["Guns"],
+        ["Hast"] = BT["Polearm"],
+        ["Hasts"] = BT["Polearms"]
+    },
+    ["ROGUE"] = {
+        ["Cuir"] = BT["Leather"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Pugilat"] = BT["Fist Weapon"],
+        ["Pugilats"] = BT["Fist Weapons"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Epee1H"] = BT["One-Handed Swords"]
+    },
+    ["PRIEST"] = {
+        ["Tissu"] = BT["Cloth"],
+        ["Baguette"] = BT["Wand"],
+        ["Baguettes"] = BT["Wands"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Baton"] = BT["Staff"],
+        ["Batons"] = BT["Staves"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Holdable"] = BT["Miscellaneous"]
+    },
+    ["DEATHKNIGHT"] = {
+        ["Plaque"] = BT["Plate"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Epee1H"] = BT["One-Handed Swords"],
+        ["Hast"] = BT["Polearm"],
+        ["Hasts"] = BT["Polearms"],
+        ["Hache2H"] = BT["Two-Handed Axes"],
+        ["Masse2H"] = BT["Two-Handed Maces"],
+        ["Epee2H"] = BT["Two-Handed Swords"]
+    },
+    ["SHAMAN"] = {
+        ["Maille"] = BT["Mail"],
+        ["Bouclier"] = BT["Shield"],
+        ["Boucliers"] = BT["Shields"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Pugilat"] = BT["Fist Weapon"],
+        ["Pugilats"] = BT["Fist Weapons"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Baton"] = BT["Staff"],
+        ["Batons"] = BT["Staves"],
+        ["Hache2H"] = BT["Two-Handed Axes"],
+        ["Masse2H"] = BT["Two-Handed Maces"],
+        ["Holdable"] = BT["Miscellaneous"]
+    },
+    ["MAGE"] = {
+        ["Tissu"] = BT["Cloth"],
+        ["Baguette"] = BT["Wand"],
+        ["Baguettes"] = BT["Wands"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Epee1H"] = BT["One-Handed Swords"],
+        ["Baton"] = BT["Staff"],
+        ["Batons"] = BT["Staves"],
+        ["Holdable"] = BT["Miscellaneous"]
+    },
+    ["WARLOCK"] = {
+        ["Tissu"] = BT["Cloth"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Epee1H"] = BT["One-Handed Swords"],
+        ["Baton"] = BT["Staff"],
+        ["Batons"] = BT["Staves"],
+        ["Baguette"] = BT["Wand"],
+        ["Baguettes"] = BT["Wands"],
+        ["Holdable"] = BT["Miscellaneous"]
+    },
+    ["MONK"] = {
+        ["Cuir"] = BT["Leather"],
+        ["Pugilat"] = BT["Fist Weapon"],
+        ["Pugilats"] = BT["Fist Weapons"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Epee1H"] = BT["One-Handed Swords"],
+        ["Hast"] = BT["Polearm"],
+        ["Hasts"] = BT["Polearms"],
+        ["Baton"] = BT["Staff"],
+        ["Batons"] = BT["Staves"],
+        ["Holdable"] = BT["Miscellaneous"]
+    },
+    ["DRUID"] = {
+        ["Cuir"] = BT["Leather"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Pugilat"] = BT["Fist Weapon"],
+        ["Pugilats"] = BT["Fist Weapons"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Hast"] = BT["Polearm"],
+        ["Hasts"] = BT["Polearms"],
+        ["Baton"] = BT["Staff"],
+        ["Batons"] = BT["Staves"],
+        ["Masse2H"] = BT["Two-Handed Maces"],
+        ["Holdable"] = BT["Miscellaneous"]
+    },
+    ["DEMONHUNTER"] = {
+        ["Cuir"] = BT["Leather"],
+        ["Glaives"] = BT["Warglaives"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Pugilat"] = BT["Fist Weapon"],
+        ["Pugilats"] = BT["Fist Weapons"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Epee1H"] = BT["One-Handed Swords"]
     }
 }

@@ -9,7 +9,7 @@ local function IsTargetValid(target)
 end
 
 local function AskIfHeNeed(link, sendTo)
-    GearHelper:BenchmarkCountFuncCall("AskIfHeNeed")
+
     local className, classFile, classID = UnitClass(sendTo)
     local itemTable = GearHelper:GetItemByLink(link, "GH_ItemAsk.AskIfHeNeed()")
     local itemLink = itemTable["itemLink"]
@@ -25,11 +25,11 @@ local function AskIfHeNeed(link, sendTo)
                 unitLocale = "enUS"
             end
 
-            local theSource = GearHelper.db.global.phrases[unitLocale].demande4 or self.locals["demande4enUS"]
-            local theSource2 = GearHelper.db.global.phrases[unitLocale].demande42 or self.locals["demande4enUS2"]
+            local theSource = GearHelper.db.global.messages[unitLocale].demande4 or self.locals["demande4enUS"]
+            local theSource2 = GearHelper.db.global.messages[unitLocale].demande42 or self.locals["demande4enUS2"]
             local msg = theSource .. itemLink .. theSource2 .. "?"
-            local rep = GearHelper.db.global.phrases[unitLocale].rep or self.locals["repenUS"]
-            local rep2 = GearHelper.db.global.phrases[unitLocale].rep2 or ""
+            local rep = GearHelper.db.global.messages[unitLocale].rep or self.locals["repenUS"]
+            local rep2 = GearHelper.db.global.messages[unitLocale].rep2 or ""
             local msgRep = rep .. self.locals["maLangue" .. unitLocale] .. rep2
 
             SendChatMessage(msg, "WHISPER", "Common", sendTo)
@@ -45,7 +45,7 @@ local function AskIfHeNeed(link, sendTo)
 end
 
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
-    self:BenchmarkCountFuncCall("GearHelper:CreateLinkAskIfHeNeeds")
+
     -- local message = message or "|cffff8000|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
     local message = message or "|cffff8000|Hitem:19019::::::::120:::::::|h[Thunderfury ma Gueule]|h|r"
     -- local message = message or "|cffff8000|Hitem:30212::::::::120:::::::|h[Zeub zeub]|h|r"
@@ -72,7 +72,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         AskIfHeNeed(message, target)
     end
     function SetItemRef(link, text, button, chatFrame)
-        self:BenchmarkCountFuncCall("SetItemRef")
+
         local func = strmatch(link, "^GHWhispWhenClick:(%a+)")
         if func == "askIfHeNeed" then
             local _, nomPerso, itID, persoLink = strsplit("_", link)
