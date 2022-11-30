@@ -41,70 +41,70 @@ GearHelper.defaultSettings = {
         equipLocInspect = {},
         phrases = {
             enUS = {
-                demande4 = L["demande4enUS"],
-                demande42 = L["demande4enUS2"],
-                rep = L["repenUS"],
-                rep2 = L["repenUS2"]
+                demande4 = self.locals["demande4enUS"],
+                demande42 = self.locals["demande4enUS2"],
+                rep = self.locals["repenUS"],
+                rep2 = self.locals["repenUS2"]
             },
             frFR = {
-                demande4 = L["demande4frFR"],
-                demande42 = L["demande4frFR2"],
-                rep = L["repfrFR"],
-                rep2 = L["repfrFR2"]
+                demande4 = self.locals["demande4frFR"],
+                demande42 = self.locals["demande4frFR2"],
+                rep = self.locals["repfrFR"],
+                rep2 = self.locals["repfrFR2"]
             },
             deDE = {
-                demande4 = L["demande4deDE"],
-                demande42 = L["demande4deDE2"],
-                rep = L["repdeDE"],
-                rep2 = L["repdeDE2"]
+                demande4 = self.locals["demande4deDE"],
+                demande42 = self.locals["demande4deDE2"],
+                rep = self.locals["repdeDE"],
+                rep2 = self.locals["repdeDE2"]
             },
             esES = {
-                demande4 = L["demande4esES"],
-                demande42 = L["demande4esES2"],
-                rep = L["repesES"],
-                rep2 = L["repesES2"]
+                demande4 = self.locals["demande4esES"],
+                demande42 = self.locals["demande4esES2"],
+                rep = self.locals["repesES"],
+                rep2 = self.locals["repesES2"]
             },
             esMX = {
-                demande4 = L["demande4esMX"],
-                demande42 = L["demande4esMX2"],
-                rep = L["repesMX"],
-                rep2 = L["repesMX2"]
+                demande4 = self.locals["demande4esMX"],
+                demande42 = self.locals["demande4esMX2"],
+                rep = self.locals["repesMX"],
+                rep2 = self.locals["repesMX2"]
             },
             itIT = {
-                demande4 = L["demande4itIT"],
-                demande42 = L["demande4itIT2"],
-                rep = L["repitIT"],
-                rep2 = L["repitIT2"]
+                demande4 = self.locals["demande4itIT"],
+                demande42 = self.locals["demande4itIT2"],
+                rep = self.locals["repitIT"],
+                rep2 = self.locals["repitIT2"]
             },
             koKR = {
-                demande4 = L["demande4koKR"],
-                demande42 = L["demande4koKR2"],
-                rep = L["repkoKR"],
-                rep2 = L["repkoKR2"]
+                demande4 = self.locals["demande4koKR"],
+                demande42 = self.locals["demande4koKR2"],
+                rep = self.locals["repkoKR"],
+                rep2 = self.locals["repkoKR2"]
             },
             ptBR = {
-                demande4 = L["demande4ptBR"],
-                demande42 = L["demande4ptBR2"],
-                rep = L["repptBR"],
-                rep2 = L["repptBR2"]
+                demande4 = self.locals["demande4ptBR"],
+                demande42 = self.locals["demande4ptBR2"],
+                rep = self.locals["repptBR"],
+                rep2 = self.locals["repptBR2"]
             },
             ruRU = {
-                demande4 = L["demande4ruRU"],
-                demande42 = L["demande4ruRU2"],
-                rep = L["repruRU"],
-                rep2 = L["repruRU2"]
+                demande4 = self.locals["demande4ruRU"],
+                demande42 = self.locals["demande4ruRU2"],
+                rep = self.locals["repruRU"],
+                rep2 = self.locals["repruRU2"]
             },
             zhCN = {
-                demande4 = L["demande4zhCN"],
-                demande42 = L["demande4zhCN2"],
-                rep = L["repzhCN"],
-                rep2 = L["repzhCN2"]
+                demande4 = self.locals["demande4zhCN"],
+                demande42 = self.locals["demande4zhCN2"],
+                rep = self.locals["repzhCN"],
+                rep2 = self.locals["repzhCN2"]
             },
             zhTW = {
-                demande4 = L["demande4zhTW"],
-                demande42 = L["demande4zhTW2"],
-                rep = L["repzhTW"],
-                rep2 = L["repzhTW2"]
+                demande4 = self.locals["demande4zhTW"],
+                demande42 = self.locals["demande4zhTW2"],
+                rep = self.locals["repzhTW"],
+                rep2 = self.locals["repzhTW2"]
             }
         }    
     }

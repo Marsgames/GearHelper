@@ -9,7 +9,7 @@ function GearHelper:setInviteMessage(newMessage)
     end
 
     self.db.profile.inviteMessage = tostring(newMessage)
-    print(L["InviteMessage"] .. tostring(self.db.profile.inviteMessage))
+    print(self.locals["InviteMessage"] .. tostring(self.db.profile.inviteMessage))
 end
 
 function GearHelper:showMessageSMN(channel, sender, msg)
@@ -84,7 +84,7 @@ end
 local function ShouldDisplayNotEquippable(subType)
     GearHelper:BenchmarkCountFuncCall("ShouldDisplayNotEquippable")
 
-    if (GearHelper:IsValueInTable(L["TypeToNotNeed"], subType)) then
+    if (GearHelper:IsValueInTable(self.locals["TypeToNotNeed"], subType)) then
         return false
     end
 
@@ -111,8 +111,8 @@ local function OnToolTipSetItem(tooltip, data)
     if IsEquippedItem(item.itemLink) then -- Item equipped, yellow overlay on tooltip
         GearHelper:Print("ModifyTooltip - Item already equipped, applying yellow overlay")
         tooltip.NineSlice:SetBorderColor(FACTION_YELLOW_COLOR.r, FACTION_YELLOW_COLOR.g, FACTION_YELLOW_COLOR.b)
-        table.insert(linesToAdd, GearHelper:ColorizeString(L["itemEquipped"], "Yellow"))
-    elseif item.isEquippable then
+        table.insert(linesToAdd, GearHelper:ColorizeString(self.locals["itemEquipped"], "Yellow"))
+    elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
         GearHelper:Print("ModifyTooltip - Item not equipped, computing value...")
         local result = GearHelper:NewWeightCalculation(item)
         GearHelper:Print(result)
@@ -131,7 +131,7 @@ local function OnToolTipSetItem(tooltip, data)
         linesToAdd = GearHelper:LinesToAddToTooltip(result)
     elseif ShouldDisplayNotEquippable(tostring(item.subType)) then -- Item not equippable, red overlay on tooltip
         GearHelper:Print("ModifyTooltip - Item not equippable, applying red overlay")
-        table.insert(linesToAdd, GearHelper:ColorizeString(L["itemNotEquippable"], "LightRed"))
+        table.insert(linesToAdd, GearHelper:ColorizeString(self.locals["itemNotEquippable"], "LightRed"))
         tooltip.NineSlice:SetBorderColor(FACTION_RED_COLOR.r, FACTION_RED_COLOR.g, FACTION_RED_COLOR.b)
     end
 

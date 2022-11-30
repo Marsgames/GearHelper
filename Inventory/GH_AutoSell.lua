@@ -1,6 +1,4 @@
 function GearHelper:SellGreyItems()
-    GearHelper:BenchmarkCountFuncCall("SellGreyItems")
-
     if not GearHelper.db.profile.sellGreyItems then
         do
             return

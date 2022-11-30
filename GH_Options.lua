@@ -90,8 +90,8 @@ local ghOptionsTable = {
             args = {
                 enable = {
                     order = 0,
-                    name = L["enable"] .. " GearHelper",
-                    desc = L["UIGHCheckBoxAddon"],
+                    name = self.locals["enable"] .. " GearHelper",
+                    desc = self.locals["UIGHCheckBoxAddon"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.addonEnabled = val
@@ -119,7 +119,7 @@ local ghOptionsTable = {
                             return true
                         end
                     end,
-                    desc = L["UIGHCheckBoxAddon"],
+                    desc = self.locals["UIGHCheckBoxAddon"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.debug = val
@@ -130,9 +130,9 @@ local ghOptionsTable = {
                 },
                 minimapButton = {
                     order = 2,
-                    name = L["UIMinimapIcon"],
+                    name = self.locals["UIMinimapIcon"],
                     --hidden = function() if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then return true end end,
-                    desc = L["UIMinimapIconDesc"],
+                    desc = self.locals["UIMinimapIconDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.minimap = {hide = not val}
@@ -151,7 +151,7 @@ local ghOptionsTable = {
         },
         spacer1 = {
             order = 1,
-            name = L["gearOptions"],
+            name = self.locals["gearOptions"],
             type = "header"
         },
         group2 = {
@@ -162,8 +162,8 @@ local ghOptionsTable = {
             args = {
                 autoEquipLootedStuff = {
                     order = 4,
-                    name = L["autoEquipLootedStuff"],
-                    desc = L["UIGHCheckBoxAutoEquipLootedStuff"],
+                    name = self.locals["autoEquipLootedStuff"],
+                    desc = self.locals["UIGHCheckBoxAutoEquipLootedStuff"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.autoEquipLooted.actual = val
@@ -175,7 +175,7 @@ local ghOptionsTable = {
                 },
                 printWhenEquip = {
                     order = 5,
-                    name = L["UIprintWhenEquip"],
+                    name = self.locals["UIprintWhenEquip"],
                     disabled = function()
                         if GearHelper.db.profile.autoEquipWhenSwitchSpe == false and GearHelper.db.profile.autoEquipLooted.actual == false then
                             return true
@@ -192,8 +192,8 @@ local ghOptionsTable = {
                 },
                 askLootRaid = {
                     order = 6,
-                    name = L["lootInRaidAlert"],
-                    desc = L["UIGHCheckBoxlootInRaidAlert"],
+                    name = self.locals["lootInRaidAlert"],
+                    desc = self.locals["UIGHCheckBoxlootInRaidAlert"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.askLootRaid = val
@@ -205,8 +205,8 @@ local ghOptionsTable = {
                 },
                 autoEquipWhenSwitchSpe = {
                     order = 7,
-                    name = L["autoEquipSpecChangedStuff"],
-                    desc = L["UIGHCheckBoxAutoEquipWhenSwitchSpe"],
+                    name = self.locals["autoEquipSpecChangedStuff"],
+                    desc = self.locals["UIGHCheckBoxAutoEquipWhenSwitchSpe"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.autoEquipWhenSwitchSpe = val
@@ -218,8 +218,8 @@ local ghOptionsTable = {
                 },
                 computeNotEquippable = {
                     order = 8,
-                    name = L["UIGlobalComputeNotEquippable"],
-                    desc = L["UIGlobalComputeNotEquippableDescription"],
+                    name = self.locals["UIGlobalComputeNotEquippable"],
+                    desc = self.locals["UIGlobalComputeNotEquippableDescription"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.computeNotEquippable = val
@@ -235,7 +235,7 @@ local ghOptionsTable = {
 }
 
 local ghSecondaryOptionsTable = {
-    name = L["secondaryOptions"],
+    name = self.locals["secondaryOptions"],
     type = "group",
     childGroups = "select",
     args = {
@@ -247,8 +247,8 @@ local ghSecondaryOptionsTable = {
             args = {
                 autoSell = {
                     order = 0,
-                    name = L["sellGrey"],
-                    desc = L["UIGHCheckBoxSellGrey"],
+                    name = self.locals["sellGrey"],
+                    desc = self.locals["UIGHCheckBoxSellGrey"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.sellGreyItems = val
@@ -259,8 +259,8 @@ local ghSecondaryOptionsTable = {
                 },
                 autoAcceptQuestReward = {
                     order = 1,
-                    name = L["questRewars"],
-                    desc = L["UIGHCheckBoxAutoAcceptQuestReward"],
+                    name = self.locals["questRewars"],
+                    desc = self.locals["UIGHCheckBoxAutoAcceptQuestReward"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.autoAcceptQuestReward = val
@@ -272,13 +272,13 @@ local ghSecondaryOptionsTable = {
                 },
                 autoRepair = {
                     order = 2,
-                    name = L["auto-repair"],
-                    desc = L["auto-repairDesc"],
+                    name = self.locals["auto-repair"],
+                    desc = self.locals["auto-repairDesc"],
                     type = "select",
                     values = {
-                        [0] = L["DNR"],
-                        [1] = L["AutoRepair"],
-                        [2] = L["GuildAutoRepair"]
+                        [0] = self.locals["DNR"],
+                        [1] = self.locals["AutoRepair"],
+                        [2] = self.locals["GuildAutoRepair"]
                     },
                     set = function(info, val)
                         GearHelper.db.profile.autoRepair = val
@@ -292,7 +292,7 @@ local ghSecondaryOptionsTable = {
                 autoTell = {
                     order = 3,
                     name = "Loot Announcement",
-                    desc = L["checkGHAutoTell"],
+                    desc = self.locals["checkGHAutoTell"],
                     hidden = true,
                     type = "toggle",
                     width = "full",
@@ -305,9 +305,9 @@ local ghSecondaryOptionsTable = {
                 },
                 autoInvite = {
                     order = 4,
-                    name = L["UIautoInvite"],
+                    name = self.locals["UIautoInvite"],
                     desc = function()
-                        return L["UIGHCheckBoxAutoInvite"] .. GearHelper:ColorizeString(GetInvMsg(), "LightGreen")
+                        return self.locals["UIGHCheckBoxAutoInvite"] .. GearHelper:ColorizeString(GetInvMsg(), "LightGreen")
                     end,
                     type = "toggle",
                     set = function(_, val)
@@ -319,8 +319,8 @@ local ghSecondaryOptionsTable = {
                 },
                 inviteMessage = {
                     order = 5,
-                    name = L["UIinviteMessage"],
-                    desc = L["UIinviteMessageDesc"],
+                    name = self.locals["UIinviteMessage"],
+                    desc = self.locals["UIinviteMessageDesc"],
                     type = "input",
                     set = function(_, val)
                         GearHelper:setInviteMessage(val)
@@ -331,8 +331,8 @@ local ghSecondaryOptionsTable = {
                 },
                 whisperAlert = {
                     order = 6,
-                    name = L["UIWhisperAlert"],
-                    desc = L["UIWhisperAlertDesc"],
+                    name = self.locals["UIWhisperAlert"],
+                    desc = self.locals["UIWhisperAlertDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.whisperAlert = val
@@ -343,8 +343,8 @@ local ghSecondaryOptionsTable = {
                 },
                 sayMyName = {
                     order = 7,
-                    name = L["UISayMyName"],
-                    desc = L["UISayMyNameDesc"],
+                    name = self.locals["UISayMyName"],
+                    desc = self.locals["UISayMyNameDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.sayMyName = val
@@ -355,8 +355,8 @@ local ghSecondaryOptionsTable = {
                 },
                 myNames = {
                     order = 8,
-                    name = L["UIMyNames"],
-                    desc = L["UIMyNamesDesc"],
+                    name = self.locals["UIMyNames"],
+                    desc = self.locals["UIMyNamesDesc"],
                     type = "input",
                     width = "full",
                     set = function(_, val)
@@ -372,8 +372,8 @@ local ghSecondaryOptionsTable = {
                 },
                 bossesKilled = {
                     order = 9,
-                    name = L["UIBossesKilled"],
-                    desc = L["UIBossesKilledDesc"],
+                    name = self.locals["UIBossesKilled"],
+                    desc = self.locals["UIBossesKilledDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.bossesKilled = val
@@ -394,8 +394,8 @@ local ghSecondaryOptionsTable = {
                 },
                 ilvlCharFrame = {
                     order = 10,
-                    name = L["UIIlvlCharFrame"],
-                    desc = L["UIIlvlCharFrameDesc"],
+                    name = self.locals["UIIlvlCharFrame"],
+                    desc = self.locals["UIIlvlCharFrameDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.ilvlCharFrame = val
@@ -411,8 +411,8 @@ local ghSecondaryOptionsTable = {
                 },
                 ilvlInspectFrame = {
                     order = 11,
-                    name = L["UIIlvlInspectFrame"],
-                    desc = L["UIIlvlInspectFrameDesc"],
+                    name = self.locals["UIIlvlInspectFrame"],
+                    desc = self.locals["UIIlvlInspectFrameDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.ilvlInspectFrame = val
@@ -435,15 +435,15 @@ local ghSecondaryOptionsTable = {
 
 local function DeleteTemplate(info)
     GearHelper:BenchmarkCountFuncCall("DeleteTemplate")
-    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(L["customWeights"], "dialog", "GearHelper-1.0")
+    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(self.locals["customWeights"], "dialog", "GearHelper-1.0")
 
     configTable.args.TemplateSelection.values[info[1]] = nil
     configTable.args.TemplateSelection.values = configTable.args.TemplateSelection.values
     configTable.args[info[1]] = nil
     GearHelper.db.profile.CW[info[1]] = nil
 
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], configTable)
-    LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(self.locals["customWeights"], configTable)
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(self.locals["customWeights"])
 end
 
 local function CreateNewTemplate(templateName)
@@ -484,8 +484,8 @@ local function CreateNewTemplate(templateName)
         args = {
             asPercentage = {
                 order = 0,
-                name = L["UICWasPercentage"],
-                desc = L["UICWasPercentageDescription"],
+                name = self.locals["UICWasPercentage"],
+                desc = self.locals["UICWasPercentageDescription"],
                 type = "toggle",
                 hidden = true, ---------------------------------------------------- REMOVE HERE TO RESTORE STATS AS PERCENTAGE ----------------------------------------------------
                 width = "double",
@@ -508,7 +508,7 @@ local function CreateNewTemplate(templateName)
             },
             Intell = {
                 order = 1,
-                name = L["Tooltip"]["Stat"]["Intellect"],
+                name = self.locals["Tooltip"]["Stat"]["Intellect"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -526,7 +526,7 @@ local function CreateNewTemplate(templateName)
             },
             Strength = {
                 order = 2,
-                name = L["Tooltip"]["Stat"]["Strength"],
+                name = self.locals["Tooltip"]["Stat"]["Strength"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -544,7 +544,7 @@ local function CreateNewTemplate(templateName)
             },
             Agility = {
                 order = 3,
-                name = L["Tooltip"]["Stat"]["Agility"],
+                name = self.locals["Tooltip"]["Stat"]["Agility"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -562,7 +562,7 @@ local function CreateNewTemplate(templateName)
             },
             Stamina = {
                 order = 4,
-                name = L["Tooltip"]["Stat"]["Stamina"],
+                name = self.locals["Tooltip"]["Stat"]["Stamina"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -580,7 +580,7 @@ local function CreateNewTemplate(templateName)
             },
             Haste = {
                 order = 5,
-                name = L["Tooltip"]["Stat"]["Haste"],
+                name = self.locals["Tooltip"]["Stat"]["Haste"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -599,7 +599,7 @@ local function CreateNewTemplate(templateName)
             },
             Mastery = {
                 order = 6,
-                name = L["Tooltip"]["Stat"]["Mastery"],
+                name = self.locals["Tooltip"]["Stat"]["Mastery"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -617,7 +617,7 @@ local function CreateNewTemplate(templateName)
             },
             Critic = {
                 order = 7,
-                name = L["Tooltip"]["Stat"]["CriticalStrike"],
+                name = self.locals["Tooltip"]["Stat"]["CriticalStrike"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -635,7 +635,7 @@ local function CreateNewTemplate(templateName)
             },
             Armor = {
                 order = 8,
-                name = L["Tooltip"]["Stat"]["Armor"],
+                name = self.locals["Tooltip"]["Stat"]["Armor"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -653,7 +653,7 @@ local function CreateNewTemplate(templateName)
             },
             Versatility = {
                 order = 9,
-                name = L["Tooltip"]["Stat"]["Versatility"],
+                name = self.locals["Tooltip"]["Stat"]["Versatility"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -671,7 +671,7 @@ local function CreateNewTemplate(templateName)
             },
             Leech = {
                 order = 10,
-                name = L["Tooltip"]["Stat"]["Leech"],
+                name = self.locals["Tooltip"]["Stat"]["Leech"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -689,7 +689,7 @@ local function CreateNewTemplate(templateName)
             },
             Avoidance = {
                 order = 11,
-                name = L["Tooltip"]["Stat"]["Avoidance"],
+                name = self.locals["Tooltip"]["Stat"]["Avoidance"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -707,7 +707,7 @@ local function CreateNewTemplate(templateName)
             },
             MovementSpeed = {
                 order = 14,
-                name = L["Tooltip"]["Stat"]["MovementSpeed"],
+                name = self.locals["Tooltip"]["Stat"]["MovementSpeed"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -725,7 +725,7 @@ local function CreateNewTemplate(templateName)
             },
             ButtonDelete = {
                 order = 15,
-                name = L["remove"],
+                name = self.locals["remove"],
                 func = function(info)
                     DeleteTemplate(info)
                 end,
@@ -733,26 +733,26 @@ local function CreateNewTemplate(templateName)
             }
         }
     }
-    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(L["customWeights"], "dialog", "GearHelper-1.0")
+    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(self.locals["customWeights"], "dialog", "GearHelper-1.0")
     configTable.args[templateName] = newGroup
     configTable.args.TemplateSelection.values[templateName] = templateName
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], configTable)
-    LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(self.locals["customWeights"], configTable)
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(self.locals["customWeights"])
 end
 
 GearHelper.cwTable = {
-    name = L["customWeights"],
+    name = self.locals["customWeights"],
     type = "group",
     childGroups = "tree",
     args = {
         Select = {
             order = 0,
-            name = L["UIstatsTemplateToUse"],
+            name = self.locals["UIstatsTemplateToUse"],
             type = "select",
             style = "radio",
             values = {
-                [0] = L["noxxicWeights"],
-                [1] = L["customWeights"]
+                [0] = self.locals["noxxicWeights"],
+                [1] = self.locals["customWeights"]
             },
             get = function()
                 if GearHelper.db.profile.weightTemplate == "NOX" then
@@ -767,7 +767,7 @@ GearHelper.cwTable = {
                         GearHelper.db.profile.weightTemplate = "NOX_ByDefault"
                     else
                         GearHelper.db.profile.weightTemplate = GearHelper.db.profile.lastWeightTemplate
-                        LibStub("AceConfigDialog-3.0"):SelectGroup(L["customWeights"], GearHelper.db.profile.weightTemplate)
+                        LibStub("AceConfigDialog-3.0"):SelectGroup(self.locals["customWeights"], GearHelper.db.profile.weightTemplate)
                     end
                 elseif val == 0 then
                     GearHelper.db.profile.lastWeightTemplate = GearHelper.db.profile.weightTemplate
@@ -783,7 +783,7 @@ GearHelper.cwTable = {
             args = {
                 GemSocketCompute = {
                     order = 1,
-                    name = L["UIcwGemSocketCompute"],
+                    name = self.locals["UIcwGemSocketCompute"],
                     type = "toggle",
                     width = "double",
                     --width = "double",
@@ -796,7 +796,7 @@ GearHelper.cwTable = {
                 },
                 IlvlOption = {
                     order = 2,
-                    name = L["UIcwIlvlOption"],
+                    name = self.locals["UIcwIlvlOption"],
                     type = "toggle",
                     get = function()
                         return GearHelper.db.profile.iLvlOption
@@ -807,7 +807,7 @@ GearHelper.cwTable = {
                 },
                 IlvlWeight = {
                     order = 3,
-                    name = L["UIcwIlvlWeight"],
+                    name = self.locals["UIcwIlvlWeight"],
                     width = "half",
                     type = "input",
                     disabled = function()
@@ -827,7 +827,7 @@ GearHelper.cwTable = {
         },
         templateName = {
             order = 4,
-            name = L["UItemplateName"],
+            name = self.locals["UItemplateName"],
             type = "input",
             width = "double",
             validate = function(_, val)
@@ -837,12 +837,12 @@ GearHelper.cwTable = {
             end,
             set = function(_, val)
                 CreateNewTemplate(val)
-                LibStub("AceConfigDialog-3.0"):SelectGroup(L["customWeights"], val)
+                LibStub("AceConfigDialog-3.0"):SelectGroup(self.locals["customWeights"], val)
             end
         },
         TemplateSelection = {
             order = 3,
-            name = L["UIcwTemplateToUse"],
+            name = self.locals["UIcwTemplateToUse"],
             type = "select",
             style = "dropdown",
             disabled = function()
@@ -855,7 +855,7 @@ GearHelper.cwTable = {
             end,
             set = function(_, val)
                 GearHelper.db.profile.weightTemplate = val
-                LibStub("AceConfigDialog-3.0"):SelectGroup(L["customWeights"], val)
+                LibStub("AceConfigDialog-3.0"):SelectGroup(self.locals["customWeights"], val)
             end,
             values = {}
         },
@@ -865,7 +865,7 @@ GearHelper.cwTable = {
             args = {
                 Intell = {
                     order = 1,
-                    name = L["Tooltip"]["Stat"]["Intellect"],
+                    name = self.locals["Tooltip"]["Stat"]["Intellect"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Intellect", 1)
@@ -881,7 +881,7 @@ GearHelper.cwTable = {
                 },
                 Strength = {
                     order = 2,
-                    name = L["Tooltip"]["Stat"]["Strength"],
+                    name = self.locals["Tooltip"]["Stat"]["Strength"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Strength", 1)
@@ -897,7 +897,7 @@ GearHelper.cwTable = {
                 },
                 Agility = {
                     order = 3,
-                    name = L["Tooltip"]["Stat"]["Agility"],
+                    name = self.locals["Tooltip"]["Stat"]["Agility"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Agility", 1)
@@ -913,7 +913,7 @@ GearHelper.cwTable = {
                 },
                 Stamina = {
                     order = 4,
-                    name = L["Tooltip"]["Stat"]["Stamina"],
+                    name = self.locals["Tooltip"]["Stat"]["Stamina"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Stamina", 1)
@@ -929,7 +929,7 @@ GearHelper.cwTable = {
                 },
                 Haste = {
                     order = 5,
-                    name = L["Tooltip"]["Stat"]["Haste"],
+                    name = self.locals["Tooltip"]["Stat"]["Haste"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Haste", 1)
@@ -945,7 +945,7 @@ GearHelper.cwTable = {
                 },
                 Mastery = {
                     order = 6,
-                    name = L["Tooltip"]["Stat"]["Mastery"],
+                    name = self.locals["Tooltip"]["Stat"]["Mastery"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Mastery", 1)
@@ -961,7 +961,7 @@ GearHelper.cwTable = {
                 },
                 Critic = {
                     order = 7,
-                    name = L["Tooltip"]["Stat"]["CriticalStrike"],
+                    name = self.locals["Tooltip"]["Stat"]["CriticalStrike"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "CriticalStrike", 1)
@@ -977,7 +977,7 @@ GearHelper.cwTable = {
                 },
                 Armor = {
                     order = 8,
-                    name = L["Tooltip"]["Stat"]["Armor"],
+                    name = self.locals["Tooltip"]["Stat"]["Armor"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Armor", 1)
@@ -993,7 +993,7 @@ GearHelper.cwTable = {
                 },
                 Versatility = {
                     order = 9,
-                    name = L["Tooltip"]["Stat"]["Versatility"],
+                    name = self.locals["Tooltip"]["Stat"]["Versatility"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Versatility", 1)
@@ -1009,7 +1009,7 @@ GearHelper.cwTable = {
                 },
                 Leech = {
                     order = 10,
-                    name = L["Tooltip"]["Stat"]["Leech"],
+                    name = self.locals["Tooltip"]["Stat"]["Leech"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Leech", 1)
@@ -1025,7 +1025,7 @@ GearHelper.cwTable = {
                 },
                 Avoidance = {
                     order = 11,
-                    name = L["Tooltip"]["Stat"]["Avoidance"],
+                    name = self.locals["Tooltip"]["Stat"]["Avoidance"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Avoidance", 1)
@@ -1041,7 +1041,7 @@ GearHelper.cwTable = {
                 },
                 MovementSpeed = {
                     order = 14,
-                    name = L["Tooltip"]["Stat"]["MovementSpeed"],
+                    name = self.locals["Tooltip"]["Stat"]["MovementSpeed"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "MovementSpeed", 1)
@@ -1075,8 +1075,8 @@ function GearHelper:BuildCWTable()
                 args = {
                     asPercentage = {
                         order = 0,
-                        name = L["UICWasPercentage"],
-                        desc = L["UICWasPercentageDescription"],
+                        name = self.locals["UICWasPercentage"],
+                        desc = self.locals["UICWasPercentageDescription"],
                         type = "toggle",
                         hidden = true, ---------------------------------------------------- REMOVE HERE TO RESTORE STATS AS PERCENTAGE ----------------------------------------------------
                         width = "double",
@@ -1099,7 +1099,7 @@ function GearHelper:BuildCWTable()
                     },
                     Intell = {
                         order = 1,
-                        name = L["Tooltip"]["Stat"]["Intellect"],
+                        name = self.locals["Tooltip"]["Stat"]["Intellect"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1117,7 +1117,7 @@ function GearHelper:BuildCWTable()
                     },
                     Strength = {
                         order = 2,
-                        name = L["Tooltip"]["Stat"]["Strength"],
+                        name = self.locals["Tooltip"]["Stat"]["Strength"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1135,7 +1135,7 @@ function GearHelper:BuildCWTable()
                     },
                     Agility = {
                         order = 3,
-                        name = L["Tooltip"]["Stat"]["Agility"],
+                        name = self.locals["Tooltip"]["Stat"]["Agility"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1153,7 +1153,7 @@ function GearHelper:BuildCWTable()
                     },
                     Stamina = {
                         order = 4,
-                        name = L["Tooltip"]["Stat"]["Stamina"],
+                        name = self.locals["Tooltip"]["Stat"]["Stamina"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1171,7 +1171,7 @@ function GearHelper:BuildCWTable()
                     },
                     Haste = {
                         order = 5,
-                        name = L["Tooltip"]["Stat"]["Haste"],
+                        name = self.locals["Tooltip"]["Stat"]["Haste"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1189,7 +1189,7 @@ function GearHelper:BuildCWTable()
                     },
                     Mastery = {
                         order = 6,
-                        name = L["Tooltip"]["Stat"]["Mastery"],
+                        name = self.locals["Tooltip"]["Stat"]["Mastery"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1207,7 +1207,7 @@ function GearHelper:BuildCWTable()
                     },
                     Critic = {
                         order = 7,
-                        name = L["Tooltip"]["Stat"]["CriticalStrike"],
+                        name = self.locals["Tooltip"]["Stat"]["CriticalStrike"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1225,7 +1225,7 @@ function GearHelper:BuildCWTable()
                     },
                     Armor = {
                         order = 8,
-                        name = L["Tooltip"]["Stat"]["Armor"],
+                        name = self.locals["Tooltip"]["Stat"]["Armor"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1243,7 +1243,7 @@ function GearHelper:BuildCWTable()
                     },
                     Versatility = {
                         order = 9,
-                        name = L["Tooltip"]["Stat"]["Versatility"],
+                        name = self.locals["Tooltip"]["Stat"]["Versatility"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1261,7 +1261,7 @@ function GearHelper:BuildCWTable()
                     },
                     Leech = {
                         order = 10,
-                        name = L["Tooltip"]["Stat"]["Leech"],
+                        name = self.locals["Tooltip"]["Stat"]["Leech"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1279,7 +1279,7 @@ function GearHelper:BuildCWTable()
                     },
                     Avoidance = {
                         order = 11,
-                        name = L["Tooltip"]["Stat"]["Avoidance"],
+                        name = self.locals["Tooltip"]["Stat"]["Avoidance"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1297,7 +1297,7 @@ function GearHelper:BuildCWTable()
                     },
                     MovementSpeed = {
                         order = 14,
-                        name = L["Tooltip"]["Stat"]["MovementSpeed"],
+                        name = self.locals["Tooltip"]["Stat"]["MovementSpeed"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1315,7 +1315,7 @@ function GearHelper:BuildCWTable()
                     },
                     ButtonDelete = {
                         order = 15,
-                        name = L["remove"],
+                        name = self.locals["remove"],
                         func = function(info)
                             DeleteTemplate(info)
                         end,
@@ -1328,12 +1328,12 @@ function GearHelper:BuildCWTable()
             GearHelper.cwTable.args.TemplateSelection.values[v.Name] = v.Name
         end
     end
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwTable)
-    LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(self.locals["customWeights"], GearHelper.cwTable)
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(self.locals["customWeights"])
 end
 
 local phrasesTable = {
-    name = L["phrases"],
+    name = self.locals["phrases"],
     type = "group",
     args = {
         english = {
@@ -1465,10 +1465,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.enUS = {}
-                        GearHelper.db.global.phrases.enUS.demande4 = L["demande4enUS"]
-                        GearHelper.db.global.phrases.enUS.demande42 = L["demande4enUS2"]
-                        GearHelper.db.global.phrases.enUS.rep = L["repenUS"]
-                        GearHelper.db.global.phrases.enUS.rep2 = L["repenUS2"]
+                        GearHelper.db.global.phrases.enUS.demande4 = self.locals["demande4enUS"]
+                        GearHelper.db.global.phrases.enUS.demande42 = self.locals["demande4enUS2"]
+                        GearHelper.db.global.phrases.enUS.rep = self.locals["repenUS"]
+                        GearHelper.db.global.phrases.enUS.rep2 = self.locals["repenUS2"]
                     end
                 }
             }
@@ -1602,10 +1602,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.frFR = {}
-                        GearHelper.db.global.phrases.frFR.demande4 = L["demande4frFR"]
-                        GearHelper.db.global.phrases.frFR.demande42 = L["demande4frFR2"]
-                        GearHelper.db.global.phrases.frFR.rep = L["repfrFR"]
-                        GearHelper.db.global.phrases.frFR.rep2 = L["repfrFR2"]
+                        GearHelper.db.global.phrases.frFR.demande4 = self.locals["demande4frFR"]
+                        GearHelper.db.global.phrases.frFR.demande42 = self.locals["demande4frFR2"]
+                        GearHelper.db.global.phrases.frFR.rep = self.locals["repfrFR"]
+                        GearHelper.db.global.phrases.frFR.rep2 = self.locals["repfrFR2"]
                     end
                 }
             }
@@ -1739,10 +1739,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.deDE = {}
-                        GearHelper.db.global.phrases.deDE.demande4 = L["demande4deDE"]
-                        GearHelper.db.global.phrases.deDE.demande42 = L["demande4deDE2"]
-                        GearHelper.db.global.phrases.deDE.rep = L["repdeDE"]
-                        GearHelper.db.global.phrases.deDE.rep2 = L["repdeDE2"]
+                        GearHelper.db.global.phrases.deDE.demande4 = self.locals["demande4deDE"]
+                        GearHelper.db.global.phrases.deDE.demande42 = self.locals["demande4deDE2"]
+                        GearHelper.db.global.phrases.deDE.rep = self.locals["repdeDE"]
+                        GearHelper.db.global.phrases.deDE.rep2 = self.locals["repdeDE2"]
                     end
                 }
             }
@@ -1876,10 +1876,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.esES = {}
-                        GearHelper.db.global.phrases.esES.demande4 = L["demande4esES"]
-                        GearHelper.db.global.phrases.esES.demande42 = L["demande4esES2"]
-                        GearHelper.db.global.phrases.esES.rep = L["repesES"]
-                        GearHelper.db.global.phrases.esES.rep2 = L["repesES2"]
+                        GearHelper.db.global.phrases.esES.demande4 = self.locals["demande4esES"]
+                        GearHelper.db.global.phrases.esES.demande42 = self.locals["demande4esES2"]
+                        GearHelper.db.global.phrases.esES.rep = self.locals["repesES"]
+                        GearHelper.db.global.phrases.esES.rep2 = self.locals["repesES2"]
                     end
                 }
             }
@@ -2013,10 +2013,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.esMX = {}
-                        GearHelper.db.global.phrases.esMX.demande4 = L["demande4esMX"]
-                        GearHelper.db.global.phrases.esMX.demande42 = L["demande4esMX2"]
-                        GearHelper.db.global.phrases.esMX.rep = L["repesMX"]
-                        GearHelper.db.global.phrases.esMX.rep2 = L["repesMX2"]
+                        GearHelper.db.global.phrases.esMX.demande4 = self.locals["demande4esMX"]
+                        GearHelper.db.global.phrases.esMX.demande42 = self.locals["demande4esMX2"]
+                        GearHelper.db.global.phrases.esMX.rep = self.locals["repesMX"]
+                        GearHelper.db.global.phrases.esMX.rep2 = self.locals["repesMX2"]
                     end
                 }
             }
@@ -2150,10 +2150,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.itIT = {}
-                        GearHelper.db.global.phrases.itIT.demande4 = L["demande4itIT"]
-                        GearHelper.db.global.phrases.itIT.demande42 = L["demande4itIT2"]
-                        GearHelper.db.global.phrases.itIT.rep = L["repitIT"]
-                        GearHelper.db.global.phrases.itIT.rep2 = L["repitIT2"]
+                        GearHelper.db.global.phrases.itIT.demande4 = self.locals["demande4itIT"]
+                        GearHelper.db.global.phrases.itIT.demande42 = self.locals["demande4itIT2"]
+                        GearHelper.db.global.phrases.itIT.rep = self.locals["repitIT"]
+                        GearHelper.db.global.phrases.itIT.rep2 = self.locals["repitIT2"]
                     end
                 }
             }
@@ -2287,10 +2287,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.koKR = {}
-                        GearHelper.db.global.phrases.koKR.demande4 = L["demande4koKR"]
-                        GearHelper.db.global.phrases.koKR.demande42 = L["demande4koKR2"]
-                        GearHelper.db.global.phrases.koKR.rep = L["repkoKR"]
-                        GearHelper.db.global.phrases.koKR.rep2 = L["repkoKR2"]
+                        GearHelper.db.global.phrases.koKR.demande4 = self.locals["demande4koKR"]
+                        GearHelper.db.global.phrases.koKR.demande42 = self.locals["demande4koKR2"]
+                        GearHelper.db.global.phrases.koKR.rep = self.locals["repkoKR"]
+                        GearHelper.db.global.phrases.koKR.rep2 = self.locals["repkoKR2"]
                     end
                 }
             }
@@ -2424,10 +2424,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.ptBR = {}
-                        GearHelper.db.global.phrases.ptBR.demande4 = L["demande4ptBR"]
-                        GearHelper.db.global.phrases.ptBR.demande42 = L["demande4ptBR2"]
-                        GearHelper.db.global.phrases.ptBR.rep = L["repptBR"]
-                        GearHelper.db.global.phrases.ptBR.rep2 = L["repptBR2"]
+                        GearHelper.db.global.phrases.ptBR.demande4 = self.locals["demande4ptBR"]
+                        GearHelper.db.global.phrases.ptBR.demande42 = self.locals["demande4ptBR2"]
+                        GearHelper.db.global.phrases.ptBR.rep = self.locals["repptBR"]
+                        GearHelper.db.global.phrases.ptBR.rep2 = self.locals["repptBR2"]
                     end
                 }
             }
@@ -2561,10 +2561,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.ruRU = {}
-                        GearHelper.db.global.phrases.ruRU.demande4 = L["demande4ruRU"]
-                        GearHelper.db.global.phrases.ruRU.demande42 = L["demande4ruRU2"]
-                        GearHelper.db.global.phrases.ruRU.rep = L["repruRU"]
-                        GearHelper.db.global.phrases.ruRU.rep2 = L["repruRU2"]
+                        GearHelper.db.global.phrases.ruRU.demande4 = self.locals["demande4ruRU"]
+                        GearHelper.db.global.phrases.ruRU.demande42 = self.locals["demande4ruRU2"]
+                        GearHelper.db.global.phrases.ruRU.rep = self.locals["repruRU"]
+                        GearHelper.db.global.phrases.ruRU.rep2 = self.locals["repruRU2"]
                     end
                 }
             }
@@ -2698,10 +2698,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.zhCN = {}
-                        GearHelper.db.global.phrases.zhCN.demande4 = L["demande4zhCN"]
-                        GearHelper.db.global.phrases.zhCN.demande42 = L["demande4zhCN2"]
-                        GearHelper.db.global.phrases.zhCN.rep = L["repzhCN"]
-                        GearHelper.db.global.phrases.zhCN.rep2 = L["repzhCN2"]
+                        GearHelper.db.global.phrases.zhCN.demande4 = self.locals["demande4zhCN"]
+                        GearHelper.db.global.phrases.zhCN.demande42 = self.locals["demande4zhCN2"]
+                        GearHelper.db.global.phrases.zhCN.rep = self.locals["repzhCN"]
+                        GearHelper.db.global.phrases.zhCN.rep2 = self.locals["repzhCN2"]
                     end
                 }
             }
@@ -2835,10 +2835,10 @@ local phrasesTable = {
                     name = "Reset",
                     func = function()
                         GearHelper.db.global.phrases.zhTW = {}
-                        GearHelper.db.global.phrases.zhTW.demande4 = L["demande4zhTW"]
-                        GearHelper.db.global.phrases.zhTW.demande42 = L["demande4zhTW2"]
-                        GearHelper.db.global.phrases.zhTW.rep = L["repzhTW"]
-                        GearHelper.db.global.phrases.zhTW.rep2 = L["repzhTW2"]
+                        GearHelper.db.global.phrases.zhTW.demande4 = self.locals["demande4zhTW"]
+                        GearHelper.db.global.phrases.zhTW.demande42 = self.locals["demande4zhTW2"]
+                        GearHelper.db.global.phrases.zhTW.rep = self.locals["repzhTW"]
+                        GearHelper.db.global.phrases.zhTW.rep2 = self.locals["repzhTW2"]
                     end
                 }
             }
@@ -2893,7 +2893,7 @@ local aboutTable = {
 }
 
 local thanksTable = {
-    name = L["thanksPanel"],
+    name = self.locals["thanksPanel"],
     type = "group",
     args = {
         name1 = {
@@ -3080,13 +3080,13 @@ local thanksTable = {
 }
 
 LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["secondaryOptions"], ghSecondaryOptionsTable)
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwTable)
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["phrases"], phrasesTable)
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["thanksPanel"], thanksTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable(self.locals["secondaryOptions"], ghSecondaryOptionsTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable(self.locals["customWeights"], GearHelper.cwTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable(self.locals["phrases"], phrasesTable)
+LibStub("AceConfig-3.0"):RegisterOptionsTable(self.locals["thanksPanel"], thanksTable)
 GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["secondaryOptions"], L["secondaryOptions"], "GearHelper")
-GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["phrases"], L["phrases"], "GearHelper")
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions(self.locals["secondaryOptions"], self.locals["secondaryOptions"], "GearHelper")
+GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(self.locals["customWeights"], self.locals["customWeights"], "GearHelper")
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions(self.locals["phrases"], self.locals["phrases"], "GearHelper")
 LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["thanksPanel"], L["thanksPanel"], "GearHelper")
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions(self.locals["thanksPanel"], self.locals["thanksPanel"], "GearHelper")

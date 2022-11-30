@@ -100,10 +100,10 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
             local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
 
             if (isDead and bossName) then
-                textBoss = self:ColorizeString(bossName, "Red") .. self:ColorizeString(" " .. L["isDead"], "LightRed")
+                textBoss = self:ColorizeString(bossName, "Red") .. self:ColorizeString(" " .. self.locals["isDead"], "LightRed")
                 bossKilled = bossKilled + 1
             elseif (not isDead and bossName) then
-                textBoss = self:ColorizeString(bossName, "Green") .. self:ColorizeString(" " .. L["isAlive"], "LightGreen")
+                textBoss = self:ColorizeString(bossName, "Green") .. self:ColorizeString(" " .. self.locals["isAlive"], "LightGreen")
             end
             table.insert(tooltip, textBoss)
         end

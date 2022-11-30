@@ -8,11 +8,11 @@ function GearHelper:LinesToAddToTooltip(result)
         for _, v in pairs(result) do
             local flooredValue = math.floor(v)
             if (flooredValue < 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemLessThanGeneral"], "LightRed"))
+                table.insert(linesToAdd, self:ColorizeString(self.locals["itemLessThanGeneral"], "LightRed"))
             elseif (flooredValue > 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemBetterThanGeneral"], "Better") .. flooredValue)
+                table.insert(linesToAdd, self:ColorizeString(self.locals["itemBetterThanGeneral"], "Better") .. flooredValue)
             else
-                table.insert(linesToAdd, L["itemEgal"])
+                table.insert(linesToAdd, self.locals["itemEgal"])
             end
         end
     elseif self:GetArraySize(result) == 2 then
@@ -22,11 +22,11 @@ function GearHelper:LinesToAddToTooltip(result)
 
             local flooredValue = math.floor(weight)
             if (flooredValue < 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemLessThan"], "LightRed") .. " " .. itemLink)
+                table.insert(linesToAdd, self:ColorizeString(self.locals["itemLessThan"], "LightRed") .. " " .. itemLink)
             elseif (flooredValue > 0) then
-                table.insert(linesToAdd, self:ColorizeString(L["itemBetterThan"], "Better") .. " " .. itemLink .. " " .. self:ColorizeString(L["itemBetterThan2"], "Better") .. flooredValue)
+                table.insert(linesToAdd, self:ColorizeString(self.locals["itemBetterThan"], "Better") .. " " .. itemLink .. " " .. self:ColorizeString(self.locals["itemBetterThan2"], "Better") .. flooredValue)
             else
-                table.insert(linesToAdd, L["itemEgala"] .. " " .. itemLink)
+                table.insert(linesToAdd, self.locals["itemEgala"] .. " " .. itemLink)
             end
         end
     end

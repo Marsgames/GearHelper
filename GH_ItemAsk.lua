@@ -15,9 +15,9 @@ local function AskIfHeNeed(link, sendTo)
     local itemLink = itemTable["itemLink"]
     local lienPerso = tostring(GearHelper:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
     StaticPopupDialogs["AskIfHeNeed"] = {
-        text = L["demande1"] .. lienPerso .. L["demande2"] .. itemLink .. " ?",
-        button1 = L["yes"],
-        button2 = L["no"],
+        text = self.locals["demande1"] .. lienPerso .. self.locals["demande2"] .. itemLink .. " ?",
+        button1 = self.locals["yes"],
+        button2 = self.locals["no"],
         OnAccept = function(GearHelper2, data, data2)
             local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
             local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
@@ -25,12 +25,12 @@ local function AskIfHeNeed(link, sendTo)
                 unitLocale = "enUS"
             end
 
-            local theSource = GearHelper.db.global.phrases[unitLocale].demande4 or L["demande4enUS"]
-            local theSource2 = GearHelper.db.global.phrases[unitLocale].demande42 or L["demande4enUS2"]
+            local theSource = GearHelper.db.global.phrases[unitLocale].demande4 or self.locals["demande4enUS"]
+            local theSource2 = GearHelper.db.global.phrases[unitLocale].demande42 or self.locals["demande4enUS2"]
             local msg = theSource .. itemLink .. theSource2 .. "?"
-            local rep = GearHelper.db.global.phrases[unitLocale].rep or L["repenUS"]
+            local rep = GearHelper.db.global.phrases[unitLocale].rep or self.locals["repenUS"]
             local rep2 = GearHelper.db.global.phrases[unitLocale].rep2 or ""
-            local msgRep = rep .. L["maLangue" .. unitLocale] .. rep2
+            local msgRep = rep .. self.locals["maLangue" .. unitLocale] .. rep2
 
             SendChatMessage(msg, "WHISPER", "Common", sendTo)
             SendChatMessage(msgRep, "WHISPER", "Common", sendTo)
@@ -97,8 +97,8 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 
                 local isItemBetter = self:IsItemBetter(itemLink)
                 if (isItemBetter) then
-                    UIErrorsFrame:AddMessage(self:ColorizeString(L["ask1"], "Yellow") .. nameLink .. self:ColorizeString(L["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
-                    print(self:ColorizeString(L["ask1"], "Yellow") .. nameLink .. self:ColorizeString(L["ask2"], "Yellow") .. itemLink)
+                    UIErrorsFrame:AddMessage(self:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. self:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
+                    print(self:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. self:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink)
                     PlaySound(5274, "Master")
                 end
             end

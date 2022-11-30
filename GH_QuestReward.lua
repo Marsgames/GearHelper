@@ -20,7 +20,7 @@ function GearHelper:GetQuestReward()
         for i = 1, numQuestChoices do
             local item = self:GetItemByLink(GetQuestItemLink("choice", i), "GH_QuestReward.GetQuestReward()")
 
-            if item.type ~= L["armor"] and item.type ~= L["weapon"] then
+            if item.type ~= self.locals["armor"] and item.type ~= self.locals["weapon"] then
                 return
             end
 

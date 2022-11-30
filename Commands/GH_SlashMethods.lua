@@ -3,12 +3,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 function GearHelper:SlashDisplayHelp()
     GearHelper:Print("state - Display the addon status")
     GearHelper:Print("list - Run a scanBag + scanCharacter")
-    print(L["helpConfig"])
-    print(L["helpCW"])
-    print(L["helpVersion"])
+    print(self.locals["helpConfig"])
+    print(self.locals["helpCW"])
+    print(self.locals["helpVersion"])
     GearHelper:Print("im 'newMsg' - Change the auto invite token by newMsg")
     GearHelper:Print("createItemLink - Generate a fake itemLink")
-    print(L["helpDebug"])
+    print(self.locals["helpDebug"])
     -- GearHelper:Print("askLoot - Enable the feature (auto ask for loot)")
     GearHelper:Print("dot - Enable the dot on better items icons")
     GearHelper:Print("suppDot - Disable the dot on better items icons")
@@ -109,8 +109,8 @@ function GearHelper:SlashCheck()
     if (not lfrCheckButton_GlobalName) then
         lfrCheckButton = CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
         lfrCheckButton:SetPoint("TOPRIGHT", -325, -45)
-        lfrCheckButton_GlobalNameText:SetText(L["lfrCheckButtonText"])
-        lfrCheckButton.tooltip = L["lfrCheckButtonTooltip"]
+        lfrCheckButton_GlobalNameText:SetText(self.locals["lfrCheckButtonText"])
+        lfrCheckButton.tooltip = self.locals["lfrCheckButtonTooltip"]
         lfrCheckButton:SetScript(
             "OnClick",
             function()

@@ -1,12 +1,12 @@
 function GearHelper:IsItemBetter(itemLink)
-    self:BenchmarkCountFuncCall("GearHelper:IsItemBetter")
     GearHelper:Print("IsItemBetter - "..itemLink)
 
-    local item = self:GetItem(itemLink)
+    local item = GHItem:Create(itemLink)
 
-    if not item or not item.isEquippable then return false end
+    if not item or (not item:IsEquippableByMe() and not IsEquippedItem(item.id))then return false end
 
-    local res = self:NewWeightCalculation(item)
+    local res = self:CompareWithEquipped(item)
+
     for _, result in pairs(res) do
         if result > 0 then
             return true
@@ -30,7 +30,6 @@ local function AutoEquipShouldBeCompared(itemLink)
     end
 
     if (not GearHelper:IsEquippableByMe(GearHelper:GetItemByLink(itemLink, "GH_StatComputation.AutoEquipShouldBeCompared()"))) then
-        --print(GearHelper:GetItemByLink(itemLink).itemLink .. " - " .. GHExceptionNotEquippable)
         return false
     end
 
@@ -94,18 +93,19 @@ function GearHelper:EquipItem(inThisBag)
     waitEquipFrame:Show()
 end
 
-function GearHelper:NewWeightCalculation(item)
-    self:BenchmarkCountFuncCall("GearHelper:NewWeightCalculation")
-
+function GearHelper:CompareWithEquipped(item)
     local result = {}
     
     local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
-    
+    local equippedItemsScores = {}
+
     for slotId, equippedItem in pairs(equippedItems.items) do
-        self:Print("NewWeightCalculation - Localized slot name is ".._G[GearHelper.slotToNameMapping[slotId]]:lower())
-        local bbb = GearHelper:GetItemStatsScore(item)
+        self:Print("CompareWithEquipped - Localized slot name is ".._G[GearHelper.slotToNameMapping[slotId]]:lower())
+        local equippedItemScore = item:GetScore()
         if equippedItems.operator == GearHelper.operators.UNDEFINED or equippedItems.operator == GearHelper.operators.OR then
+            equippedItemsScores[slotId] = equippedItemScore
         elseif equippedItems.operator == GearHelper.operators.AND then
+            equippedItemsScores[]
         end
 
         self:Print(equippedItem)

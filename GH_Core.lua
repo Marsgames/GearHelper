@@ -20,8 +20,7 @@ end
 function GearHelper:OnInitialize()
     self:BenchmarkCountFuncCall("GearHelper:OnInitialize")
 
-    local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-
+    self.locals = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
     self.db = LibStub("AceDB-3.0"):New("GearHelperDB", GearHelper.defaultSettings)
     self.db.RegisterCallback(self, "OnProfileChanged", "OnRefreshConfig")
     self.db.RegisterCallback(self, "OnProfileCopied", "OnRefreshConfig")
@@ -30,7 +29,7 @@ function GearHelper:OnInitialize()
 
     GearHelper:LoadBaseStatTemplates()
 
-    print(GearHelper:ColorizeString(L["merci"], "LightGreen"))
+    print(GearHelper:ColorizeString(self.locals["merci"], "LightGreen"))
     local runningBuild = select(4, GetBuildInfo())
     if GearHelper.db.global.buildVersion ~= runningBuild then
         GearHelper.db.global.buildVersion = runningBuild
@@ -57,15 +56,13 @@ function GearHelper:OnResetConfig()
 end
 
 function GearHelper:OnEnable()
-    local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-
     self:BenchmarkCountFuncCall("GearHelper:OnEnable")
     if not self.db.profile.addonEnabled then
-        print(self:ColorizeString(L["Addon"], "LightGreen") .. self:ColorizeString(L["DeactivatedRed"], "LightRed"))
+        print(self:ColorizeString(self.locals["Addon"], "LightGreen") .. self:ColorizeString(self.locals["DeactivatedRed"], "LightRed"))
         return
     end
 
-    print(self:ColorizeString(L["Addon"], "LightGreen") .. self:ColorizeString(L["ActivatedGreen"], "LightGreen"))
+    print(self:ColorizeString(self.locals["Addon"], "LightGreen") .. self:ColorizeString(self.locals["ActivatedGreen"], "LightGreen"))
     self.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 end
 

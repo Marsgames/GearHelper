@@ -111,8 +111,8 @@ local function PlayerEnteringWorld()
 
         lfrCheckButton = lfrCheckButton_GlobalName or CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
         lfrCheckButton:SetPoint("TOPRIGHT", -325, -50)
-        lfrCheckButton_GlobalNameText:SetText(L["lfrCheckButtonText"])
-        lfrCheckButton.tooltip = L["lfrCheckButtonTooltip"]
+        lfrCheckButton_GlobalNameText:SetText(self.locals["lfrCheckButtonText"])
+        lfrCheckButton.tooltip = self.locals["lfrCheckButtonTooltip"]
         lfrCheckButton:SetScript(
             "OnClick",
             function()
@@ -249,7 +249,7 @@ local function QuestDetail()
         end
         local item = GearHelper:GetItemByLink(GetQuestItemLink("choice", i), "GH_Event.QuestDetail()")
 
-        if item.type ~= L["armor"] and item.type ~= L["weapon"] then
+        if item.type ~= self.locals["armor"] and item.type ~= self.locals["weapon"] then
             do
                 return
             end
@@ -367,7 +367,7 @@ local function MerchantClosed()
     local moneyEarned = actualMoney - moneyFlux
 
     if (moneyEarned > 0 and moneyEarned ~= actualMoney) then
-        print(GearHelper:ColorizeString(L["moneyEarned"], "LightGreen") .. math.floor(moneyEarned / 10000) .. L["dot"] .. math.floor((moneyEarned % 10000) / 100) .. L["gold"])
+        print(GearHelper:ColorizeString(self.locals["moneyEarned"], "LightGreen") .. math.floor(moneyEarned / 10000) .. self.locals["dot"] .. math.floor((moneyEarned % 10000) / 100) .. self.locals["gold"])
         moneyFlux = 0
     end
 end
@@ -530,7 +530,7 @@ local function UnitInventoryChanged(_, _, joueur)
     end
 
     local _, _, _, _, _, _, subclass = GetItemInfo(GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")))
-    if subclass == L["cannapeche"] then
+    if subclass == self.locals["cannapeche"] then
         GearHelper.db.profile.autoEquipLooted.previous = GearHelper.db.profile.autoEquipLooted.actual
         GearHelper.db.profile.autoEquipLooted.actual = false
     else
