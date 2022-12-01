@@ -63,7 +63,10 @@ local function OnMerchantShow()
     GearHelper:SellGreyItems()
     GearHelper:RepairEquipment()
 
-    GearHelper:ScanCharacter()
+    if GearHelperVars.isCharInvInitialized == false then
+        GearHelper:ScanCharacter()
+    end
+    
     GearHelper:SetDotOnIcons()
 end
 
@@ -366,7 +369,10 @@ local function BagUpdate()
     end
     lastBagUpdateEvent = time()
 
-    GearHelper:ScanCharacter()
+    if GearHelperVars.isCharInvInitialized == false then
+        GearHelper:ScanCharacter()
+    end
+
     GearHelper:SetDotOnIcons()
 end
 
@@ -387,7 +393,6 @@ local function ActiveTalentGroupChanged()
     GearHelper:EquipItem(3)
     GearHelper:EquipItem(4)
 
-    GearHelper:ScanCharacter()
     GearHelper:SetDotOnIcons()
 end
 

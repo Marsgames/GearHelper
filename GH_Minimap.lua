@@ -5,23 +5,23 @@ local function OnMinimapTooltipShow(tooltip)
     tooltip:SetText(GearHelper:ColorizeString("GearHelper", GearHelper.db.profile.addonEnabled and "LightGreen" or "LightRed"))
 
     if not GearHelper.db.profile.addonEnabled then
-        tooltip:AddLine(GearHelper:ColorizeString(self.locals["Addon"], "Yellow") .. GearHelper:ColorizeString(self.locals["DeactivatedRed"], "LightRed"), 1, 1, 1)
+        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["Addon"], "Yellow") .. GearHelper:ColorizeString(GearHelper.locals["DeactivatedRed"], "LightRed"), 1, 1, 1)
     end
 
-    tooltip:AddLine(GearHelper:ColorizeString(self.locals["MmTtLClick"], "Yellow"), 1, 1, 1)
+    tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtLClick"], "Yellow"), 1, 1, 1)
 
     if GearHelper.db.profile.addonEnabled then
-        tooltip:AddLine(GearHelper:ColorizeString(self.locals["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
+        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
 
         if GearHelper.db.profile.minimap.isLock then
-            tooltip:AddLine(GearHelper:ColorizeString(self.locals["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
+            tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
         else
-            tooltip:AddLine(GearHelper:ColorizeString(self.locals["MmTtClickLock"], "Yellow"), 1, 1, 1)
+            tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtClickLock"], "Yellow"), 1, 1, 1)
         end
 
-        tooltip:AddLine(GearHelper:ColorizeString(self.locals["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
+        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
     else
-        tooltip:AddLine(GearHelper:ColorizeString(self.locals["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
+        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
     end
 
     tooltip:Show()

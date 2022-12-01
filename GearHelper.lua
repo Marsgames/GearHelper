@@ -52,6 +52,8 @@ function GearHelper:ScanCharacter()
             )
         end
     end
+
+    GearHelperVars.isCharInvInitialized = true
 end
 
 function GearHelper:SetDotOnIcons()

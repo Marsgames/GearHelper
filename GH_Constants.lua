@@ -132,7 +132,8 @@ GearHelperVars = {
         [INVSLOT_MAINHAND] = GHItem:CreateEmpty(),
         [INVSLOT_OFFHAND] = GHItem:CreateEmpty(),
         [INVSLOT_BACK] = GHItem:CreateEmpty()
-    }
+    },
+    isCharInvInitialized = false
 }
 
 GearHelper.slotToNameMapping = {

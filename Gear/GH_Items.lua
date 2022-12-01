@@ -26,7 +26,6 @@ function GHItem:Create(itemLink)
     local item = Item:CreateFromItemLink(itemLink)
 
     if item:IsItemEmpty() or GearHelper.itemSlot[select(4, GetItemInfoInstant(itemLink))] == nil then
-        GearHelper:Print("GHItem:Create - Not building item because invalid / not a stuff " .. itemLink)
         return this
     end
 
