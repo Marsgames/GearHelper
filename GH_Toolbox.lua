@@ -227,6 +227,11 @@ function GearHelper:GetQualityFromColor(color)
     end
 end
 
+function GearHelper:HexColorToRGB(hexColor)
+    local rhex, ghex, bhex = string.sub(hexColor, 1, 2), string.sub(hexColor, 3, 4), string.sub(hexColor, 5, 6)
+    return tonumber(rhex, 16), tonumber(ghex, 16), tonumber(bhex, 16)
+end
+
 function GearHelper:NilTableValues(tableToReset)
     for key, v in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
