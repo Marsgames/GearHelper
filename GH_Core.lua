@@ -2,18 +2,15 @@ GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "A
 GearHelper.locals = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:Print(object)
-
     local file, ln = strmatch(debugstack(2, 1, 0), "([%w_]*%.lua).*%:(%d+)")
 
     if (GearHelper.db.profile.debug) then
         if type(object) == "table" then
-            print(WrapTextInColorCode("[GearHelper]", "FF00FF96"), WrapTextInColorCode(file .. ":" .. ln, "FF9482C9"),
-                "\n-------------- TABLE --------------\n")
+            print(WrapTextInColorCode("[GearHelper]", "FF00FF96"), WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9"), "\n-------------- TABLE --------------\n")
             DevTools_Dump(object)
             print("-------------- ENDTABLE -----------")
         else
-            print(WrapTextInColorCode("[GearHelper]", "FF00FF96"), WrapTextInColorCode(file .. ":" .. ln, "FF9482C9"),
-                "-", object or tostring(nil))
+            print(WrapTextInColorCode("[GearHelper]", "FF00FF96"), WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9"), "-", object or tostring(nil))
         end
     end
 end
@@ -41,7 +38,7 @@ function GearHelper:OnRefreshConfig()
     InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
 end
 
-function GearHelper:OnResetConfig()    
+function GearHelper:OnResetConfig()
     self:NilTableValues(self.db.profile)
     self:NilTableValues(self.db.global)
 
@@ -51,7 +48,6 @@ function GearHelper:OnResetConfig()
 end
 
 function GearHelper:OnEnable()
-
     if not self.db.profile.addonEnabled then
         print(self:ColorizeString(self.locals["Addon"], "LightGreen") .. self:ColorizeString(self.locals["DeactivatedRed"], "LightRed"))
         return
@@ -62,7 +58,6 @@ function GearHelper:OnEnable()
 end
 
 function GearHelper:NilTableValues(tableToReset)
-
     for key, _ in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
             self:NilTableValues(tableToReset[key])
