@@ -110,8 +110,6 @@ function GHItem:GetStats()
 end
 
 function GHItem:IsEquippableByMe()
-    GearHelper:Print("Testing item " .. self.itemLink)
-
     local inventoryType = C_Item.GetItemInventoryTypeByID(self.id)
 
     if INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
@@ -145,14 +143,17 @@ function GHItem:IsEquippableByMe()
             )
         end
     else
+        
+        local isEquippable = false
         table.foreach(
             ITEM_TYPES_EQUIPPABLE_BY_CLASS[tostring(myClass)],
             function(_, v)
                 if self.subType == v then
-                    return true
+                    isEquippable = true
                 end
             end
         )
+        return isEquippable
     end
 end
 
@@ -169,12 +170,10 @@ function GHItem:GetScore()
     end
 
     for statName, statValue in pairs(self:GetStats()) do
-        GearHelper:Print("StatName : "..statName.. " ValueInTemplate : "..GearHelper:GetStatFromActiveTemplate(statName))
-
         valueItem = valueItem + GearHelper:GetStatFromActiveTemplate(statName) * statValue
     end
 
-    GearHelper:Print("Score : "..valueItem)
+    GearHelper:Print(self.itemLink.." Score : "..valueItem)
 
     return valueItem
 end

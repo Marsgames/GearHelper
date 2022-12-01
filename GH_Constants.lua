@@ -130,7 +130,8 @@ GearHelperVars = {
         [INVSLOT_TRINKET1] = GHItem:CreateEmpty(),
         [INVSLOT_TRINKET2] = GHItem:CreateEmpty(),
         [INVSLOT_MAINHAND] = GHItem:CreateEmpty(),
-        [INVSLOT_OFFHAND] = GHItem:CreateEmpty()
+        [INVSLOT_OFFHAND] = GHItem:CreateEmpty(),
+        [INVSLOT_BACK] = GHItem:CreateEmpty()
     }
 }
 
@@ -355,13 +356,6 @@ ARTIFACTS = {
 
 local BabbleI = LibStub("LibBabble-Inventory-3.0")
 local BT = BabbleI:GetLookupTable()
-
---L["armor"] = BT["Armor"]
---L["weapon"] = BT["Weapon"]
---L["divers"] = BT["Miscellaneous"]
---L["cannapeche"] = BT["Fishing Poles"] -- supprimer le doublon ?
---L["monture"] = BT["Mount"]
---L["mascotte"] = BT["Companion Pets"]
 
 ITEM_TYPES_EQUIPPABLE_BY_CLASS = {
     ["WARRIOR"] = {

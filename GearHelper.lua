@@ -78,10 +78,9 @@ function GearHelper:SetDotOnIcons()
 end
 
 local function ShouldDisplayNotEquippable(item)
-    GearHelper:Print(item)
     local inventoryType = C_Item.GetItemInventoryTypeByID(item.itemLink)
 
-    if INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
+    if item.isEmpty or not inventoryType or INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
         return false
     end
 
@@ -96,16 +95,14 @@ local function OnToolTipSetItem(tooltip, data)
     local item = GHItem:Create(select(2, TooltipUtil.GetDisplayedItem(tooltip)))
     if not item then return end
 
-    GearHelper:Print("OnToolTipSetItem - New tooltip open " .. item.itemLink)
-
     local linesToAdd = {}
 
     if IsEquippedItem(item.itemLink) then -- Item equipped, yellow overlay on tooltip
-        GearHelper:Print("ModifyTooltip - Item already equipped, applying yellow overlay")
+        GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay")
         tooltip.NineSlice:SetBorderColor(FACTION_YELLOW_COLOR.r, FACTION_YELLOW_COLOR.g, FACTION_YELLOW_COLOR.b)
         table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
     elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
-        GearHelper:Print("ModifyTooltip - Item not equipped, computing value...")
+        GearHelper:Print("OnToolTipSetItem - Item not equipped, computing value...")
         local result = GearHelper:CompareWithEquipped(item)
         GearHelper:Print(result)
 
@@ -122,7 +119,7 @@ local function OnToolTipSetItem(tooltip, data)
         end
         --linesToAdd = GearHelper:LinesToAddToTooltip(result)
     elseif ShouldDisplayNotEquippable(item) then -- Item not equippable, red overlay on tooltip
-        GearHelper:Print("ModifyTooltip - Item not equippable, applying red overlay")
+        GearHelper:Print("OnToolTipSetItem - Item not equippable, applying red overlay")
         table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
         tooltip.NineSlice:SetBorderColor(FACTION_RED_COLOR.r, FACTION_RED_COLOR.g, FACTION_RED_COLOR.b)
     end

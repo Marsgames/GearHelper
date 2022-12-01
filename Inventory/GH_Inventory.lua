@@ -27,9 +27,8 @@ function GearHelper:GetEquippedItems(equipLoc)
 
     result.items = {}
 
-    GearHelper:Print(GearHelperVars.charInventory)
     for i,slotId in ipairs(result.slots) do
-        result.items[i] = GearHelperVars.charInventory[slotId]
+        result.items[slotId] = GearHelperVars.charInventory[slotId]
     end
 
     return result
