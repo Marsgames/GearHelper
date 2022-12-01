@@ -42,16 +42,17 @@ function GearHelper:ScanCharacter()
 
         if not item then
             GHItem:CreateEmpty()
-        end
-        
-        if (item:IsItemDataCached() == false) then
-            self:Print("Item in slot " .. slotID .. " not in cache")
-        end
+        else
 
-        item:ContinueOnItemLoad(function()
-            self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
-            GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())
-        end)
+            if (item:IsItemDataCached() == false) then
+                self:Print("Item in slot " .. slotID .. " not in cache")
+            end
+
+            item:ContinueOnItemLoad(function()
+                self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
+                GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())
+            end)
+        end
     end
 end
 
