@@ -2,8 +2,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 -- TODO: Replace that by @Marsgames suggestion about = true test
 function GearHelper:IsValueInTable(tab, val)
-
-
     for _, v in pairs(tab) do
         if val == v then
             return true
@@ -14,14 +12,12 @@ end
 
 -- Remove an item from table and return elem
 function GearHelper:RemoveItemByKey(table, key)
-
     local element = table[key]
     table[key] = nil
     return element
 end
 
 function GearHelper:MySplit(inputString, separator)
-
     if separator == nil then
         separator = "%s"
     end
@@ -35,7 +31,6 @@ function GearHelper:MySplit(inputString, separator)
 end
 
 function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
-
     local delta = {}
 
     for k, v in pairs(looted) do
@@ -60,7 +55,6 @@ function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
 end
 
 local function AddStatToTab(item, tab)
-
     for k, v in pairs(item) do
         if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
             if tab[k] == nil then
@@ -75,12 +69,10 @@ local function AddStatToTab(item, tab)
 end
 
 function GearHelper:CombineTwoItems(first, second)
-
     return AddStatToTab(second, AddStatToTab(first, {}))
 end
 
 local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
-
     local mergedArrays = {}
     for _, array in pairs(arraysOfEquippableByClasses) do
         for k, v in pairs(array) do
@@ -95,16 +87,13 @@ function GearHelper:GetEquippableTypes()
 end
 
 function GearHelper:GetGemValue()
-
     local _, gemItemLink = GetItemInfo("151585")
     if gemItemLink == nil then
         return 0
     end
     local tip = ""
 
-    tip = myTooltipFromTemplate or
-        CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate",
-            BackdropTemplateMixin and "BackdropTemplate")
+    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate", BackdropTemplateMixin and "BackdropTemplate")
     tip:SetOwner(WorldFrame, "ANCHOR_NONE")
     tip:SetHyperlink(gemItemLink)
 
@@ -120,7 +109,6 @@ function GearHelper:GetGemValue()
 end
 
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
-
     local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
     local _, itemId = strsplit(":", itemString)
 
@@ -132,7 +120,6 @@ function GearHelper:ReturnGoodLink(itemLink, target, tar)
 end
 
 function GearHelper:GetClassColor(classFileName)
-
     local color = RAID_CLASS_COLORS[classFileName]
 
     return "|c" .. color.colorStr
@@ -165,8 +152,6 @@ local function GetActiveTemplate()
 end
 
 function GearHelper:FindHighestStatInTemplate()
-
-
     local template = GetActiveTemplate()
 
     if (nil == template) then
@@ -187,8 +172,6 @@ function GearHelper:FindHighestStatInTemplate()
 end
 
 local function GetColor(name)
-
-
     local colorList = {}
     colorList.yellow = "|cFFFFFF00"
     colorList.lightgreen = "|cFF00FF00"
@@ -204,7 +187,6 @@ local function GetColor(name)
 end
 
 function GearHelper:ColorizeString(text, color)
-
     local colorList = {}
     colorList.yellow = "|cFFFFFF00"
     colorList.lightgreen = "|cFF00FF00"
@@ -224,7 +206,6 @@ function GearHelper:ColorizeString(text, color)
 end
 
 function GearHelper:GetQualityFromColor(color)
-
     if (color == "9d9d9d") then
         return 0
     elseif (color == "ffffff") then
@@ -247,7 +228,6 @@ function GearHelper:GetQualityFromColor(color)
 end
 
 function GearHelper:NilTableValues(tableToReset)
-
     for key, v in pairs(tableToReset) do
         if type(tableToReset[key]) == "table" then
             GearHelper:NilTableValues(tableToReset[key])

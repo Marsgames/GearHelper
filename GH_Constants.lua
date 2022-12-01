@@ -106,7 +106,7 @@ GearHelper.defaultSettings = {
                 rep = L["repzhTW"],
                 rep2 = L["repzhTW2"]
             }
-        }    
+        }
     }
 }
 
@@ -136,26 +136,26 @@ GearHelperVars = {
 }
 
 GearHelper.slotToNameMapping = {
-    [INVSLOT_AMMO] = "AMMOSLOT", 
-    [INVSLOT_HEAD] = "HEADSLOT", 
-    [INVSLOT_NECK] = "NECKSLOT", 
-    [INVSLOT_SHOULDER] = "SHOULDERSLOT", 
-    [INVSLOT_BODY] = "SHIRTSLOT", 
-    [INVSLOT_CHEST] = "CHESTSLOT", 
-    [INVSLOT_WAIST] = "WAISTSLOT", 
-    [INVSLOT_LEGS] = "LEGSSLOT", 
-    [INVSLOT_FEET] = "FEETSLOT", 
-    [INVSLOT_WRIST] = "WRISTSLOT", 
-    [INVSLOT_HAND] = "HANDSSLOT", 
-    [INVSLOT_FINGER1] = "FINGER0SLOT", 
-    [INVSLOT_FINGER2] = "FINGER1SLOT", 
-    [INVSLOT_TRINKET1] = "TRINKET0SLOT", 
-    [INVSLOT_TRINKET2] = "TRINKET1SLOT", 
-    [INVSLOT_BACK] = "BACKSLOT", 
-    [INVSLOT_MAINHAND] = "MAINHANDSLOT", 
-    [INVSLOT_OFFHAND] = "SECONDARYHANDSLOT", 
-    [INVSLOT_RANGED] = "RANGEDSLOT", 
-    [INVSLOT_TABARD] = "TABARDSLOT", 
+    [INVSLOT_AMMO] = "AMMOSLOT",
+    [INVSLOT_HEAD] = "HEADSLOT",
+    [INVSLOT_NECK] = "NECKSLOT",
+    [INVSLOT_SHOULDER] = "SHOULDERSLOT",
+    [INVSLOT_BODY] = "SHIRTSLOT",
+    [INVSLOT_CHEST] = "CHESTSLOT",
+    [INVSLOT_WAIST] = "WAISTSLOT",
+    [INVSLOT_LEGS] = "LEGSSLOT",
+    [INVSLOT_FEET] = "FEETSLOT",
+    [INVSLOT_WRIST] = "WRISTSLOT",
+    [INVSLOT_HAND] = "HANDSSLOT",
+    [INVSLOT_FINGER1] = "FINGER0SLOT",
+    [INVSLOT_FINGER2] = "FINGER1SLOT",
+    [INVSLOT_TRINKET1] = "TRINKET0SLOT",
+    [INVSLOT_TRINKET2] = "TRINKET1SLOT",
+    [INVSLOT_BACK] = "BACKSLOT",
+    [INVSLOT_MAINHAND] = "MAINHANDSLOT",
+    [INVSLOT_OFFHAND] = "SECONDARYHANDSLOT",
+    [INVSLOT_RANGED] = "RANGEDSLOT",
+    [INVSLOT_TABARD] = "TABARDSLOT"
 }
 
 -- WEAPON both hand for Dual Wield class / spe
@@ -168,55 +168,55 @@ GearHelper.operators = {
 
 GearHelper.itemSlot = {
     INVTYPE_AMMO = {
-        slots = { INVSLOT_AMMO },
+        slots = {INVSLOT_AMMO},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_HEAD = {
-        slots = { INVSLOT_HEAD },
+        slots = {INVSLOT_HEAD},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_NECK = {
-        slots = { INVSLOT_NECK },
+        slots = {INVSLOT_NECK},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_SHOULDER = {
-        slots = { INVSLOT_SHOULDER },
+        slots = {INVSLOT_SHOULDER},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_BODY = {
-        slots = { INVSLOT_BODY },
+        slots = {INVSLOT_BODY},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_CHEST = {
-        slots = { INVSLOT_CHEST },
+        slots = {INVSLOT_CHEST},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_ROBE = {
-        slots = { INVSLOT_CHEST },
+        slots = {INVSLOT_CHEST},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_WAIST = {
-        slots = { INVSLOT_WAIST },
+        slots = {INVSLOT_WAIST},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_LEGS = {
-        slots = { INVSLOT_LEGS },
+        slots = {INVSLOT_LEGS},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_FEET = {
-        slots = { INVSLOT_FEET },
+        slots = {INVSLOT_FEET},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_WRIST = {
-        slots = { INVSLOT_WRIST },
+        slots = {INVSLOT_WRIST},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_HAND = {
-        slots = { INVSLOT_HAND },
+        slots = {INVSLOT_HAND},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_FINGER = {
-        slots = { INVSLOT_FINGER1, INVSLOT_FINGER2 },
+        slots = {INVSLOT_FINGER1, INVSLOT_FINGER2},
         operator = GearHelper.operators.OR
     },
     INVTYPE_TRINKET = {
@@ -224,15 +224,15 @@ GearHelper.itemSlot = {
         operator = GearHelper.operators.OR
     },
     INVTYPE_CLOAK = {
-        slots = { INVSLOT_BACK },
+        slots = {INVSLOT_BACK},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_SHIELD = {
-        slots = { INVSLOT_OFFHAND },
+        slots = {INVSLOT_OFFHAND},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_WEAPON = {
-        slots = { INVSLOT_MAINHAND },
+        slots = {INVSLOT_MAINHAND},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_2HWEAPON = {
@@ -244,11 +244,11 @@ GearHelper.itemSlot = {
         operator = GearHelper.operators.AND
     },
     INVTYPE_WEAPONOFFHAND = {
-        slots = { INVSLOT_OFFHAND },
+        slots = {INVSLOT_OFFHAND},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_HOLDABLE = {
-        slots = { INVSLOT_OFFHAND },
+        slots = {INVSLOT_OFFHAND},
         operator = GearHelper.operators.UNDEFINED
     },
     INVTYPE_RANGED = {
@@ -256,7 +256,7 @@ GearHelper.itemSlot = {
         operator = GearHelper.operators.AND
     },
     INVTYPE_RANGEDRIGHT = {
-        slots = { INVSLOT_MAINHAND },
+        slots = {INVSLOT_MAINHAND},
         operator = GearHelper.operators.UNDEFINED
     }
 }

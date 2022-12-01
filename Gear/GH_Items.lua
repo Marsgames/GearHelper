@@ -1,7 +1,6 @@
 GHItem = {}
 GHItem.__index = GHItem
 
-
 function GHItem:Create(itemLink)
     local this = {
         itemLink = "",
@@ -27,12 +26,12 @@ function GHItem:Create(itemLink)
     local item = Item:CreateFromItemLink(itemLink)
 
     if item:IsItemEmpty() or GearHelper.itemSlot[select(4, GetItemInfoInstant(itemLink))] == nil then
-        GearHelper:Print("GHItem:Create - Not building item because invalid / not a stuff "..itemLink)
+        GearHelper:Print("GHItem:Create - Not building item because invalid / not a stuff " .. itemLink)
         return this
     end
 
-    if(item:IsItemDataCached() == false) then
-        GearHelper:Print("GHItem:Create - Item "..itemLink.." not in cache aborting waiting for loading")
+    if (item:IsItemDataCached() == false) then
+        GearHelper:Print("GHItem:Create - Item " .. itemLink .. " not in cache aborting waiting for loading")
         return this
     end
 
@@ -88,7 +87,7 @@ end
 function GHItem:GetStats()
     if next(self.stats) == nil then
         local tooltipData = GearHelper:GetTooltipDataForItem(self.itemLink)
-        
+
         for _, line in ipairs(tooltipData.lines) do
             if GetBasicStatFromLine(line) then
                 local statName, statValue = GetBasicStatFromLine(line)
@@ -101,11 +100,11 @@ function GHItem:GetStats()
                 self.stats[statName] = tonumber(statValue)
             end
         end
-    
-        GearHelper:Print("Statistics extracted from tooltip for "..self.itemLink)
+
+        GearHelper:Print("Statistics extracted from tooltip for " .. self.itemLink)
         GearHelper:Print(self.stats)
     end
- 
+
     return self.stats
 end
 
@@ -124,17 +123,14 @@ function GHItem:IsEquippableByMe()
     if self.levelRequired > myLevel then
         GearHelper:Print("IsEquippableByMe - Required level not met")
         return false
-    elseif self.equipLoc == "INVTYPE_FINGER" or 
-           self.equipLoc == "INVTYPE_NECK" or 
-           self.equipLoc == "INVTYPE_TRINKET" or
-           self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or 
-           self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
+    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
         return true
     elseif self.rarity == 6 then -- Artifacts
         if type(ARTIFACTS[tostring(playerSpec)]) == "string" and tostring(self.id) == ARTIFACTS[tostring(playerSpec)] then
-                return true
+            return true
         else
-            table.foreach(ARTIFACTS[tostring(playerSpec)],
+            table.foreach(
+                ARTIFACTS[tostring(playerSpec)],
                 function(_, v)
                     if tostring(self.id) == v then
                         return true
@@ -143,7 +139,6 @@ function GHItem:IsEquippableByMe()
             )
         end
     else
-        
         local isEquippable = false
         table.foreach(
             ITEM_TYPES_EQUIPPABLE_BY_CLASS[tostring(myClass)],
@@ -176,7 +171,7 @@ function GHItem:GetScore()
         valueItem = valueItem + GearHelper:GetStatFromActiveTemplate(statName) * statValue
     end
 
-    GearHelper:Print(self.itemLink.." Score : "..valueItem)
+    GearHelper:Print(self.itemLink .. " Score : " .. valueItem)
 
     return valueItem
 end

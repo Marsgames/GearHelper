@@ -1,5 +1,4 @@
 local function CharFrameShow(_)
-
     if not GearHelper.db.profile.ilvlCharFrame then
         do
             return
@@ -68,19 +67,15 @@ local function CharFrameShow(_)
 end
 
 local function CharFrameHide()
-
     GearHelper:HideIlvlOnCharFrame()
 end
 
 function GearHelper:AddIlvlOnCharFrame()
-
-
     PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
     PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
 end
 
 function GearHelper:HideIlvlOnCharFrame()
-
     table.foreach(
         GearHelperVars.charInventory,
         function(slotName, _)

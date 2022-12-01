@@ -9,7 +9,6 @@ local function IsTargetValid(target)
 end
 
 local function AskIfHeNeed(link, sendTo)
-
     local className, classFile, classID = UnitClass(sendTo)
     local itemTable = GearHelper:GetItemByLink(link, "GH_ItemAsk.AskIfHeNeed()")
     local itemLink = itemTable["itemLink"]
@@ -45,7 +44,6 @@ local function AskIfHeNeed(link, sendTo)
 end
 
 function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
-
     -- local message = message or "|cffff8000|Hitem:13262::::::::100:105::::::|h[Porte-cendres ma Gueule]|h|r"
     local message = message or "|cffff8000|Hitem:19019::::::::120:::::::|h[Thunderfury ma Gueule]|h|r"
     -- local message = message or "|cffff8000|Hitem:30212::::::::120:::::::|h[Zeub zeub]|h|r"
@@ -72,7 +70,6 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         AskIfHeNeed(message, target)
     end
     function SetItemRef(link, text, button, chatFrame)
-
         local func = strmatch(link, "^GHWhispWhenClick:(%a+)")
         if func == "askIfHeNeed" then
             local _, nomPerso, itID, persoLink = strsplit("_", link)

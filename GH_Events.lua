@@ -15,7 +15,6 @@ local function BossesKilledFunctions()
     local theFrame = nil
     -- When the LFR frame shows up
     local function LfrFrameShow(frame)
-
         if not GearHelper.db.profile.bossesKilled then
             do
                 return
@@ -33,7 +32,6 @@ local function BossesKilledFunctions()
 
     -- When the LFR frame is closed
     local function LfrFrameHide()
-
         GearHelper:HideLfrButtons(theFrame)
         GearHelper:UnregisterEvent("LFG_UPDATE")
     end
@@ -44,7 +42,6 @@ local function BossesKilledFunctions()
 end
 
 local function delayBetweenEquip(frame)
-
     if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
         return
     end
@@ -61,7 +58,6 @@ waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 -----------------------------------------------------------------------------
 ----------------------------------- Events ----------------------------------
 local function OnMerchantShow()
-
     moneyFlux = GetMoney()
 
     GearHelper:SellGreyItems()
@@ -73,7 +69,6 @@ end
 
 -- TODO: Split this shit too
 local function PlayerEnteringWorld()
-
     local used = false
     for i = 1, NUM_CHAT_WINDOWS do
         local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
@@ -131,7 +126,6 @@ local function PlayerEnteringWorld()
 end
 
 local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
-
     if prefixMessage ~= GearHelperVars.prefixAddon then
         do
             return
@@ -167,8 +161,6 @@ local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
 end
 
 local function ItemPush(_, _, bag)
-
-
     if not GearHelper.db.profile.autoEquipLooted.actual then
         do
             return
@@ -190,7 +182,6 @@ local function ItemPush(_, _, bag)
 end
 
 local function QuestComplete()
-
     GearHelper.GetQuestRewardCoroutine =
         coroutine.create(
         function()
@@ -201,8 +192,6 @@ local function QuestComplete()
 end
 
 local function QuestFinished()
-
-
     if (nil == GearHelper.ButtonQuestReward) then
         do
             return
@@ -222,8 +211,6 @@ end
 
 -- TODO: Split that shit
 local function QuestDetail()
-
-
     local weightTable = {}
     local prixTable = {}
     local altTable = {}
@@ -356,7 +343,6 @@ local function QuestDetail()
 end
 
 local function MerchantClosed()
-
     if not GearHelper.db.profile.sellGreyItems then
         do
             return
@@ -373,7 +359,6 @@ local function MerchantClosed()
 end
 
 local function BagUpdate()
-
     if time() - lastBagUpdateEvent < 2 then
         do
             return
@@ -386,7 +371,6 @@ local function BagUpdate()
 end
 
 local function ActiveTalentGroupChanged()
-
     if not GearHelper.db.profile.autoEquipWhenSwitchSpe then
         GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
         do
@@ -408,7 +392,6 @@ local function ActiveTalentGroupChanged()
 end
 
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)
-
     if not GearHelper.db.profile.autoInvite or not msg then
         GearHelper:showMessageSMN(channel, sender, msg)
         do
@@ -428,7 +411,6 @@ local function ChatMsgChannel(_, _, msg, sender, lang, channel)
 end
 
 local function ChatMsgWhisper(_, _, msg, sender)
-
     if GearHelper.db.profile.autoInvite and msg ~= nil then
         local playerIsNotMe = not string.find(sender, GetUnitName("player"))
         if msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe and GetNumGroupMembers() == 5 then
@@ -444,62 +426,50 @@ local function ChatMsgWhisper(_, _, msg, sender)
 end
 
 local function ChatMsgLoot(_, _, message, language, sender, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
-
     GearHelper:CreateLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 end
 
 local function ChatMsgEmote(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Emote", sender, msg)
 end
 
 local function ChatMsgGuild(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Guild", sender, msg)
 end
 
 local function ChatMsgOfficer(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Officer", sender, msg)
 end
 
 local function ChatMsgParty(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Party", sender, msg)
 end
 
 local function ChatMsgPartyLeader(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Party", sender, msg)
 end
 
 local function ChatMsgRaid(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
 local function ChatMsgRaidLeader(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
 local function ChatMsgRaidWarning(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Raid_warning", sender, msg)
 end
 
 local function ChatMsgSay(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Say", sender, msg)
 end
 
 local function ChatMsgYell(_, _, msg, sender, _, _)
-
     GearHelper:showMessageSMN("Yell", sender, msg)
 end
 
 local function UnitInventoryChanged(_, _, joueur)
-
     if not GearHelper.db.profile.addonEnabled then
         do
             return
@@ -529,7 +499,6 @@ local function UnitInventoryChanged(_, _, joueur)
 end
 
 local function QuestTurnedIn()
-
     if not GearHelper.db.profile.autoEquipLooted.actual then
         do
             return
@@ -542,8 +511,6 @@ local function QuestTurnedIn()
 end
 
 local function GetItemInfoReceived(_, _, item)
-
-
     local slotName = GearHelper.db.global.itemWaitList[item]
     if slotName then
         if (not string.find(slotName, "Slot")) then
@@ -574,13 +541,10 @@ local function GetItemInfoReceived(_, _, item)
 end
 
 local function LfgUpdate(_, _)
-
     GearHelper:UpdateGHLfrButton()
 end
 
 local function PlayerLogin(_, _)
-
-
     if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
         BossesKilledFunctions()
     end
@@ -591,7 +555,6 @@ local function PlayerLogin(_, _)
 end
 
 local function ReadyCheck()
-
     if lfrCheckIsChecked then
         ConfirmReadyCheck(1)
         ReadyCheckFrame:Hide()

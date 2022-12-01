@@ -3,7 +3,6 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:setInviteMessage(newMessage)
-
     if newMessage == nil then
         return
     end
@@ -13,7 +12,6 @@ function GearHelper:setInviteMessage(newMessage)
 end
 
 function GearHelper:showMessageSMN(channel, sender, msg)
-
     if not self.db.profile.sayMyName or not msg then
         return
     end
@@ -46,17 +44,17 @@ function GearHelper:ScanCharacter()
                 self:Print("Item in slot " .. slotID .. " not in cache")
             end
 
-            item:ContinueOnItemLoad(function()
-                self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
-                GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())
-            end)
+            item:ContinueOnItemLoad(
+                function()
+                    self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
+                    GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())
+                end
+            )
         end
     end
 end
 
 function GearHelper:SetDotOnIcons()
-
-
     for bag = 0, 4 do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
             local myBag = bag + 1
@@ -97,7 +95,9 @@ local function OnToolTipSetItem(tooltip, data)
     end
 
     local item = GHItem:Create(select(2, TooltipUtil.GetDisplayedItem(tooltip)))
-    if not item then return end
+    if not item then
+        return
+    end
 
     local linesToAdd = {}
 
@@ -106,21 +106,19 @@ local function OnToolTipSetItem(tooltip, data)
         tooltip.NineSlice:SetBorderColor(FACTION_YELLOW_COLOR.r, FACTION_YELLOW_COLOR.g, FACTION_YELLOW_COLOR.b)
         table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
     elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
+        --linesToAdd = GearHelper:LinesToAddToTooltip(result)
         GearHelper:Print("OnToolTipSetItem - Item not equipped, computing value...")
         local result = GearHelper:CompareWithEquipped(item)
         for slotId, scoreDelta in pairs(result) do
             local floorValue = math.floor(scoreDelta)
             if (floorValue < 0) then
-                GearHelper:Print(item.itemLink ..
-                    " worser than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
+                GearHelper:Print(item.itemLink .. " worser than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
                 tooltip.NineSlice:SetBorderColor(1, 0, 0)
             else
-                GearHelper:Print(item.itemLink ..
-                    " better than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
+                GearHelper:Print(item.itemLink .. " better than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
                 tooltip.NineSlice:SetBorderColor(0, 255, 150)
             end
         end
-        --linesToAdd = GearHelper:LinesToAddToTooltip(result)
     elseif ShouldDisplayNotEquippable(item) then -- Item not equippable, red overlay on tooltip
         GearHelper:Print("OnToolTipSetItem - Item not equippable, applying red overlay")
         table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
@@ -139,10 +137,13 @@ local function OnToolTipSetItem(tooltip, data)
 end
 
 TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnToolTipSetItem)
-GameTooltip:HookScript("OnHide", function(tooltip)
-    -- Reset tooltip border color when hiding toltip (to avoid something like player tooltip to be red)
-    tooltip.NineSlice:SetBorderColor(1, 1, 1)
-end)
+GameTooltip:HookScript(
+    "OnHide",
+    function(tooltip)
+        -- Reset tooltip border color when hiding toltip (to avoid something like player tooltip to be red)
+        tooltip.NineSlice:SetBorderColor(1, 1, 1)
+    end
+)
 
 TooltipDataProcessor.AddTooltipPostCall(
     Enum.TooltipDataType.Money,
