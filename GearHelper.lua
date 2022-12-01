@@ -1,5 +1,9 @@
 -- Cleanup Trad data
 -- CLeanup settings
+-- Check auto sell grey
+-- Modify gold icon position on quest item + outline 
+-- Check auto repair
+--Check why kill a mob trigger a bunch of "OnToolTipSetItem"
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:setInviteMessage(newMessage)
@@ -96,7 +100,7 @@ local function OnToolTipSetItem(tooltip, data)
     if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip or tooltipItemLink == LAST_OPENED_TOOLTIP_ITEMLINK then
         return
     end
-    
+
     LAST_OPENED_TOOLTIP_ITEMLINK = tooltipItemLink
     local item = GHItem:Create(tooltipItemLink)
     if not item then
