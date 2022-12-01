@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+-- local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local lfrCheckIsChecked = false
 local lastBagUpdateEvent = time()
@@ -353,7 +353,7 @@ local function MerchantClosed()
     local moneyEarned = actualMoney - moneyFlux
 
     if (moneyEarned > 0 and moneyEarned ~= actualMoney) then
-        print(GearHelper:ColorizeString(self.locals["moneyEarned"], "LightGreen") .. math.floor(moneyEarned / 10000) .. self.locals["dot"] .. math.floor((moneyEarned % 10000) / 100) .. self.locals["gold"])
+        print(GearHelper:ColorizeString(GearHelper.locals["moneyEarned"], "LightGreen") .. math.floor(moneyEarned / 10000) .. GearHelper.locals["dot"] .. math.floor((moneyEarned % 10000) / 100) .. GearHelper.locals["gold"])
         moneyFlux = 0
     end
 end
