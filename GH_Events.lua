@@ -234,8 +234,8 @@ local function QuestDetail()
                 return
             end
         end
-        local item = GearHelper:GetItemByLink(GetQuestItemLink("choice", i), "GH_Event.QuestDetail()")
 
+        local item = GHItem:Create(questItemLink)
         if item.type ~= ARMOR and item.type ~= WEAPON then --TODO : Why ? We don't compare trinket etc... ?
             do
                 return
