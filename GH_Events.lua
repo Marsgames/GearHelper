@@ -249,7 +249,7 @@ local function QuestDetail()
         end
         local item = GearHelper:GetItemByLink(GetQuestItemLink("choice", i), "GH_Event.QuestDetail()")
 
-        if item.type ~= self.locals["armor"] and item.type ~= self.locals["weapon"] then
+        if item.type ~= ARMOR and item.type ~= WEAPON then --TODO : Why ? We don't compare trinket etc... ?
             do
                 return
             end
