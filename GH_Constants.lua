@@ -526,3 +526,5 @@ ITEM_TYPES_EQUIPPABLE_BY_CLASS = {
         ["Epee1H"] = BT["One-Handed Swords"]
     }
 }
+
+LAST_OPENED_TOOLTIP_ITEMLINK = ""

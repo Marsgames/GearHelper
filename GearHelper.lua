@@ -92,11 +92,13 @@ local function ShouldDisplayNotEquippable(item)
 end
 
 local function OnToolTipSetItem(tooltip, data)
-    if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip then
+    local tooltipItemLink = select(2, TooltipUtil.GetDisplayedItem(tooltip))
+    if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip or tooltipItemLink == LAST_OPENED_TOOLTIP_ITEMLINK then
         return
     end
-
-    local item = GHItem:Create(select(2, TooltipUtil.GetDisplayedItem(tooltip)))
+    
+    LAST_OPENED_TOOLTIP_ITEMLINK = tooltipItemLink
+    local item = GHItem:Create(tooltipItemLink)
     if not item then
         return
     end
@@ -124,7 +126,7 @@ local function OnToolTipSetItem(tooltip, data)
     elseif ShouldDisplayNotEquippable(item) then -- Item not equippable, red overlay on tooltip
         GearHelper:Print("OnToolTipSetItem - Item not equippable, applying red overlay")
         table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
-        tooltip.NineSlice:SetBorderColor(FACTION_RED_COLOR.r, FACTION_RED_COLOR.g, FACTION_RED_COLOR.b)
+        tooltip.NineSlice:SetBorderColor(255, 0, 0)
     end
 
     -- Add droprate to tooltip
