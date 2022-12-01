@@ -39,11 +39,9 @@ end
 function GearHelper:ScanCharacter()
     for slotID, _ in pairs(GearHelperVars.charInventory) do
         local item = Item:CreateFromEquipmentSlot(slotID)
-
-        if not item then
-            GHItem:CreateEmpty()
+        if item:IsItemEmpty() then
+            GearHelperVars.charInventory[slotID] = GHItem:CreateEmpty()
         else
-
             if (item:IsItemDataCached() == false) then
                 self:Print("Item in slot " .. slotID .. " not in cache")
             end
