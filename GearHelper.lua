@@ -108,17 +108,16 @@ local function OnToolTipSetItem(tooltip, data)
     elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
         GearHelper:Print("OnToolTipSetItem - Item not equipped, computing value...")
         local result = GearHelper:CompareWithEquipped(item)
-        GearHelper:Print(result)
-
-        if (type(result) == "table") then
-            for _, v in pairs(result) do
-                local floorValue = math.floor(v)
-
-                if (floorValue < 0) then
-                    tooltip.NineSlice:SetBorderColor(1, 0, 0)
-                else
-                    tooltip.NineSlice:SetBorderColor(0, 255, 150)
-                end
+        for slotId, scoreDelta in pairs(result) do
+            local floorValue = math.floor(scoreDelta)
+            if (floorValue < 0) then
+                GearHelper:Print(item.itemLink ..
+                    " worser than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
+                tooltip.NineSlice:SetBorderColor(1, 0, 0)
+            else
+                GearHelper:Print(item.itemLink ..
+                    " better than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
+                tooltip.NineSlice:SetBorderColor(0, 255, 150)
             end
         end
         --linesToAdd = GearHelper:LinesToAddToTooltip(result)

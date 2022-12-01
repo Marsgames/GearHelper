@@ -87,12 +87,11 @@ function GearHelper:GetEquippedItemsScore(equippedItems)
     local equippedItemsScores = {}
 
     for slotId, equippedItem in pairs(equippedItems.items) do
-        self:Print("CompareWithEquipped - Localized slot name is ".._G[GearHelper.slotToNameMapping[slotId]]:lower())
         local equippedItemScore = equippedItem:GetScore()
         if equippedItems.operator == GearHelper.operators.UNDEFINED or equippedItems.operator == GearHelper.operators.OR then
             equippedItemsScores[slotId] = equippedItemScore
         elseif equippedItems.operator == GearHelper.operators.AND then
-            equippedItemsScores[slotId] = (equippedItemsScores[slotId] or 0) + equippedItemScore
+            equippedItemsScores[0] = (equippedItemsScores[0] or 0) + equippedItemScore
         end
     end
 
@@ -101,7 +100,6 @@ end
 
 function GearHelper:CompareWithEquipped(item)
     local result = {}
-    
     local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
     local equippedItemsScore = GearHelper:GetEquippedItemsScore(equippedItems)
 

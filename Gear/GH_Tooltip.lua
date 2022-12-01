@@ -1,6 +1,4 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-
-function GearHelper:LinesToAddToTooltip(result)
+function GearHelper:GenerateScoreLines(result)
 
     local linesToAdd = {}
 
