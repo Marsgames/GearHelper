@@ -4,30 +4,6 @@ local function GetInvMsg()
     return GearHelper.db.profile.inviteMessage
 end
 
-local function GetStatCW(info, stat, bool)
-    if bool then
-        local currentSpec = GetSpecializationInfo(GetSpecialization())
-        return tostring(GearHelper.db.global.templates[(currentSpec)]["NOX"][stat])
-    else
-        if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
-            local valAsPercentage = (GearHelper.db.profile.CW[info[1]][stat] / 50) * 100
-            return tostring(valAsPercentage)
-        else
-            return tostring(GearHelper.db.profile.CW[info[1]][stat])
-        end
-    end
-end
-
-local function SetStatCW(info, val, stat)
-    if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
-        GearHelper.db.profile.CW[info[1]][stat] = (tonumber(val) / 100) * 50
-        return tostring(GearHelper.db.profile.CW[info[1]][stat])
-    else
-        GearHelper.db.profile.CW[info[1]][stat] = tonumber(val)
-        return tostring(GearHelper.db.profile.CW[info[1]][stat])
-    end
-end
-
 local function ValidateInputPattern(val, type, info)
     if type == "number" then
         if (string.len(val) > 0 and tonumber(val)) then
@@ -86,12 +62,12 @@ local ghOptionsTable = {
                             PlaySoundFile(67898, "MASTER")
                         end
                         ---------- A ETUDIER --------
-                        local icon = LibStub("LibDBIcon-1.0")
-                        local ghIcon = icon:GetMinimapButton("GHIcon")
-                        if (ghIcon) then
-                            ghIcon.icon = GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
-                            icon:Refresh("GHIcon")
-                        end
+                        -- local icon = LibStub("LibDBIcon-1.0")
+                        -- local ghIcon = icon:GetMinimapButton("GHIcon")
+                        -- if (ghIcon) then
+                        --     ghIcon.icon = GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
+                        --     icon:Refresh("GHIcon")
+                        -- end
                         -----------------------------
                     end,
                     get = function()
@@ -102,7 +78,7 @@ local ghOptionsTable = {
                     order = 1,
                     name = "Debug",
                     hidden = function()
-                        if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Faerlia" then
+                        if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Niisha" then
                             return true
                         end
                     end,
@@ -114,26 +90,26 @@ local ghOptionsTable = {
                     get = function()
                         return GearHelper.db.profile.debug
                     end
-                },
-                minimapButton = {
-                    order = 2,
-                    name = GearHelper.locals["UIMinimapIcon"],
-                    --hidden = function() if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then return true end end,
-                    desc = GearHelper.locals["UIMinimapIconDesc"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.minimap = {hide = not val}
-                        local icon = LibStub("LibDBIcon-1.0")
-                        if (val) then
-                            icon:Show("GHIcon")
-                        else
-                            icon:Hide("GHIcon")
-                        end
-                    end,
-                    get = function()
-                        return not GearHelper.db.profile.minimap.hide
-                    end
                 }
+                -- minimapButton = {
+                --     order = 2,
+                --     name = GearHelper.locals["UIMinimapIcon"],
+                --     --hidden = function() if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then return true end end,
+                --     desc = GearHelper.locals["UIMinimapIconDesc"],
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.minimap = {hide = not val}
+                --         local icon = LibStub("LibDBIcon-1.0")
+                --         if (val) then
+                --             icon:Show("GHIcon")
+                --         else
+                --             icon:Hide("GHIcon")
+                --         end
+                --     end,
+                --     get = function()
+                --         return not GearHelper.db.profile.minimap.hide
+                --     end
+                -- }
             }
         },
         spacer1 = {
@@ -503,10 +479,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Intellect")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Intellect")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_INTELLECT_SHORT, val)
                 end
             },
             Strength = {
@@ -521,10 +497,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Strength")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Strength")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STRENGTH_SHORT, val)
                 end
             },
             Agility = {
@@ -539,10 +515,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Agility")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Agility")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_AGILITY_SHORT, val)
                 end
             },
             Stamina = {
@@ -557,10 +533,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Stamina")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Stamina")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STAMINA_SHORT, val)
                 end
             },
             Haste = {
@@ -576,10 +552,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Haste")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Haste")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT, val)
                 end
             },
             Mastery = {
@@ -594,10 +570,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Mastery")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Mastery")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT, val)
                 end
             },
             Critic = {
@@ -612,15 +588,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "CriticalStrike")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "CriticalStrike")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT, val)
                 end
             },
             Armor = {
                 order = 8,
-                name = RESISTANCE0_NAME,
+                name = ITEM_MOD_EXTRA_ARMOR_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -630,10 +606,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Armor")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Armor")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT, val)
                 end
             },
             Versatility = {
@@ -648,10 +624,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Versatility")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Versatility")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_VERSATILITY, val)
                 end
             },
             Leech = {
@@ -666,10 +642,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Leech")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Leech")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT, val)
                 end
             },
             Avoidance = {
@@ -684,10 +660,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Avoidance")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Avoidance")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT, val)
                 end
             },
             MovementSpeed = {
@@ -702,10 +678,10 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "MovementSpeed")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "MovementSpeed")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_SPEED_SHORT, val)
                 end
             },
             ButtonDelete = {
@@ -853,10 +829,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_INTELLECT_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Intellect", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Intellect", 1) == 0 then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -869,13 +845,13 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_STRENGTH_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Strength", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT))
                     end,
                     disabled = function()
                         return true
                     end,
                     hidden = function(info)
-                        if GetStatCW(info, "Agility", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT) == 0 then
                             return true
                         end
                     end
@@ -885,13 +861,13 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_AGILITY_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Agility", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT))
                     end,
                     disabled = function()
                         return true
                     end,
                     hidden = function()
-                        if GetStatCW("", "Agility", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT) == 0 then
                             return true
                         end
                     end
@@ -901,10 +877,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_STAMINA_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Stamina", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Stamina", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -917,10 +893,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_HASTE_RATING_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Haste", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Haste", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -933,10 +909,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_MASTERY_RATING_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Mastery", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Mastery", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -949,10 +925,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_CRIT_RATING_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "CriticalStrike", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "CriticalStrike", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -962,13 +938,13 @@ GearHelper.cwTable = {
                 },
                 Armor = {
                     order = 8,
-                    name = RESISTANCE0_NAME,
+                    name = ITEM_MOD_EXTRA_ARMOR_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Armor", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Armor", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -981,10 +957,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_VERSATILITY,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Versatility", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Versatility", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY) == 0 then
                             return true
                         end
                     end,
@@ -997,10 +973,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_CR_LIFESTEAL_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Leech", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Leech", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -1013,10 +989,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_CR_AVOIDANCE_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Avoidance", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Avoidance", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -1029,10 +1005,10 @@ GearHelper.cwTable = {
                     name = ITEM_MOD_CR_SPEED_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "MovementSpeed", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "MovementSpeed", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -1093,10 +1069,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Intellect")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Intellect")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_INTELLECT_SHORT, val)
                         end
                     },
                     Strength = {
@@ -1111,10 +1087,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Strength")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Strength")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STRENGTH_SHORT, val)
                         end
                     },
                     Agility = {
@@ -1129,10 +1105,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Agility")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Agility")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_AGILITY_SHORT, val)
                         end
                     },
                     Stamina = {
@@ -1147,10 +1123,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Stamina")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Stamina")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STAMINA_SHORT, val)
                         end
                     },
                     Haste = {
@@ -1165,10 +1141,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Haste")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Haste")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT, val)
                         end
                     },
                     Mastery = {
@@ -1183,10 +1159,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Mastery")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Mastery")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT, val)
                         end
                     },
                     Critic = {
@@ -1201,15 +1177,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "CriticalStrike")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "CriticalStrike")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT, val)
                         end
                     },
                     Armor = {
                         order = 8,
-                        name = RESISTANCE0_NAME,
+                        name = ITEM_MOD_EXTRA_ARMOR_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1219,10 +1195,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Armor")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Armor")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT, val)
                         end
                     },
                     Versatility = {
@@ -1237,10 +1213,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Versatility")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Versatility")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_VERSATILITY, val)
                         end
                     },
                     Leech = {
@@ -1255,10 +1231,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Leech")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Leech")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT, val)
                         end
                     },
                     Avoidance = {
@@ -1273,10 +1249,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Avoidance")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Avoidance")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT, val)
                         end
                     },
                     MovementSpeed = {
@@ -1291,10 +1267,10 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "MovementSpeed")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "MovementSpeed")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_SPEED_SHORT, val)
                         end
                     },
                     ButtonDelete = {
