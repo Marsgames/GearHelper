@@ -78,7 +78,7 @@ function GearHelper:SetDotOnIcons()
                 button.overlay = button:CreateTexture(nil, "OVERLAY")
                 button.overlay:SetSize(18, 18)
                 button.overlay:SetPoint("TOPLEFT")
-                button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+                button.overlay:SetAtlas("bags-greenarrow", true)
                 button.overlay:SetShown(true)
             end
         end
