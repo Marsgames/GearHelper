@@ -5,8 +5,8 @@
 -- On bag change do not trigger all items compare, only the new one
 -- Move harcoded lines on tooltip to localization
 -- Manage find a pairable item to compare with
--- Reset player templates on addon update major
 -- Fix version messages ask/answer
+
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then
         return
