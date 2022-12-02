@@ -5,6 +5,7 @@
 --SetDotOnIcons is pete
 --On bag change do not trigger all items compare, only the new one
 -- Add line on tooltip compare
+--Move event register in addonEnabled func and unregister events in addonDisabled func
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:setInviteMessage(newMessage)
@@ -148,7 +149,6 @@ TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnToolTipSetI
 GameTooltip:HookScript(
     "OnHide",
     function(tooltip)
-        GearHelper:Print("ON HIDE GAMETOOLTIP")
         -- Reset tooltip border color when hiding toltip (to avoid something like player tooltip to be red)
         tooltip.NineSlice:SetBorderColor(1, 1, 1)
     end
