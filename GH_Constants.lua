@@ -26,7 +26,7 @@ GearHelper.defaultSettings = {
         computeNotEquippable = true,
         whisperAlert = true,
         sayMyName = true,
-        minimap = {hide = false, isLock = false},
+        minimap = {hide = true, isLock = false},
         bossesKilled = true,
         ilvlCharFrame = true,
         ilvlInspectFrame = true,
