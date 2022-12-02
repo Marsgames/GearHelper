@@ -488,36 +488,6 @@ local function QuestTurnedIn()
     waitSpeFrame:Show()
 end
 
-local function GetItemInfoReceived(_, _, item)
-    local slotName = GearHelper.db.global.itemWaitList[item]
-    if slotName then
-        if (not string.find(slotName, "Slot")) then
-            -- print("---------- On test des prints ----------")
-            -- print("slotName == nil : " .. tostring(slotName == nil))
-            -- print("slotName == 'nil' : " .. tostring(tostring(slotName) == "nil"))
-            -- print("slotName : " .. slotName)
-            -- print("typeof slotname : " .. tostring(type(slotName)))
-            slotName = slotName .. "Slot"
-        end
-        local slotID = GetInventorySlotInfo(slotName)
-        GearHelper.db.global.itemWaitList[item] = nil
-        GearHelperVars.charInventory[string.sub(slotName, 1, -5)] = GearHelper:GetEquippedItemLink(slotID, slotName)
-    end
-    if item ~= nil then
-        if GearHelper.idNilGetQuestReward ~= nil then
-            if item == GearHelper.idNilGetQuestReward then
-                GearHelper:Print(tostring(item) .. " était nil")
-                coroutine.resume(GearHelper.GetQuestRewardCoroutine)
-            end
-        end
-    end
-
-    -- It seems that this code is causing issue (delay when inspecting player)
-    -- if (InspectPaperDollItemsFrame) then
-    --     NotifyInspect("target")
-    -- end
-end
-
 local function LfgUpdate(_, _)
     GearHelper:UpdateGHLfrButton()
 end

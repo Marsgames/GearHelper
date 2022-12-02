@@ -1,3 +1,13 @@
+local function IsPlayerEquippedWith2HandsWeapon()
+    if not GearHelperVars.charInventory[INVSLOT_MAINHAND].isEmpty and (GearHelper.itemSlot[GearHelperVars.charInventory[INVSLOT_MAINHAND].equipLoc].operator == GearHelper.operators.AND) then
+        GearHelper:Print("Player have a 2 hands weapon equipped")
+        return true
+    end
+
+    GearHelper:Print("Player don't have a 2 hands weapon equipped")
+    return false
+end
+
 function GearHelper:GetSlotsByEquipLoc(equipLoc)
     local equipSlots = {}
     local canDualWield = IsPlayerSpell(674) --Dual Wield spellId
@@ -14,7 +24,13 @@ function GearHelper:GetSlotsByEquipLoc(equipLoc)
             operator = GearHelper.operators.OR
         }
     else
-        equipSlots = GearHelper.itemSlot[equipLoc]
+        if INVTYPE_1H_WEAPONS[equipLoc] and IsPlayerEquippedWith2HandsWeapon() then
+            GearHelper:Print("Testing 1H against 2H")
+
+            equipSlots = GearHelper.itemSlot["INVTYPE_2HWEAPON"]
+        else
+            equipSlots = GearHelper.itemSlot[equipLoc]
+        end
     end
 
     return equipSlots
