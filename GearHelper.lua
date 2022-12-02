@@ -1,6 +1,5 @@
 -- Cleanup Trad data
 -- CLeanup settings
--- Check auto sell grey
 --Check why kill a mob trigger a bunch of "OnToolTipSetItem"
 --SetDotOnIcons is pete
 --On bag change do not trigger all items compare, only the new one
