@@ -1,6 +1,5 @@
 -- Cleanup Trad data
 -- CLeanup settings
--- Check auto sell grey
 --Check why kill a mob trigger a bunch of "OnToolTipSetItem"
 --SetDotOnIcons is pete
 --On bag change do not trigger all items compare, only the new one
@@ -78,7 +77,7 @@ function GearHelper:SetDotOnIcons()
                 button.overlay = button:CreateTexture(nil, "OVERLAY")
                 button.overlay:SetSize(18, 18)
                 button.overlay:SetPoint("TOPLEFT")
-                button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+                button.overlay:SetAtlas("bags-greenarrow", true)
                 button.overlay:SetShown(true)
             end
         end
