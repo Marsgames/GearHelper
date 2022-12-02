@@ -1,7 +1,6 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local function GetInvMsg()
-
     return GearHelper.db.profile.inviteMessage
 end
 
@@ -422,7 +421,6 @@ local ghSecondaryOptionsTable = {
 }
 
 local function DeleteTemplate(info)
-
     local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(GearHelper.locals["customWeights"], "dialog", "GearHelper-1.0")
 
     configTable.args.TemplateSelection.values[info[1]] = nil
@@ -435,7 +433,6 @@ local function DeleteTemplate(info)
 end
 
 local function CreateNewTemplate(templateName)
-
     for _, v in pairs(GearHelper.db.profile.CW) do
         if (v.Name == templateName) then
             return
@@ -496,7 +493,7 @@ local function CreateNewTemplate(templateName)
             },
             Intell = {
                 order = 1,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Intellect"],
+                name = TOOLTIP_TEXT["Stat"]["Intellect"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -514,7 +511,7 @@ local function CreateNewTemplate(templateName)
             },
             Strength = {
                 order = 2,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Strength"],
+                name = TOOLTIP_TEXT["Stat"]["Strength"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -532,7 +529,7 @@ local function CreateNewTemplate(templateName)
             },
             Agility = {
                 order = 3,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Agility"],
+                name = TOOLTIP_TEXT["Stat"]["Agility"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -550,7 +547,7 @@ local function CreateNewTemplate(templateName)
             },
             Stamina = {
                 order = 4,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Stamina"],
+                name = TOOLTIP_TEXT["Stat"]["Stamina"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -568,7 +565,7 @@ local function CreateNewTemplate(templateName)
             },
             Haste = {
                 order = 5,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Haste"],
+                name = TOOLTIP_TEXT["Stat"]["Haste"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -587,7 +584,7 @@ local function CreateNewTemplate(templateName)
             },
             Mastery = {
                 order = 6,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Mastery"],
+                name = TOOLTIP_TEXT["Stat"]["Mastery"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -605,7 +602,7 @@ local function CreateNewTemplate(templateName)
             },
             Critic = {
                 order = 7,
-                name = GearHelper.locals["Tooltip"]["Stat"]["CriticalStrike"],
+                name = TOOLTIP_TEXT["Stat"]["CriticalStrike"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -623,7 +620,7 @@ local function CreateNewTemplate(templateName)
             },
             Armor = {
                 order = 8,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Armor"],
+                name = TOOLTIP_TEXT["Stat"]["Armor"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -641,7 +638,7 @@ local function CreateNewTemplate(templateName)
             },
             Versatility = {
                 order = 9,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Versatility"],
+                name = TOOLTIP_TEXT["Stat"]["Versatility"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -659,7 +656,7 @@ local function CreateNewTemplate(templateName)
             },
             Leech = {
                 order = 10,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Leech"],
+                name = TOOLTIP_TEXT["Stat"]["Leech"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -677,7 +674,7 @@ local function CreateNewTemplate(templateName)
             },
             Avoidance = {
                 order = 11,
-                name = GearHelper.locals["Tooltip"]["Stat"]["Avoidance"],
+                name = TOOLTIP_TEXT["Stat"]["Avoidance"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -695,7 +692,7 @@ local function CreateNewTemplate(templateName)
             },
             MovementSpeed = {
                 order = 14,
-                name = GearHelper.locals["Tooltip"]["Stat"]["MovementSpeed"],
+                name = TOOLTIP_TEXT["Stat"]["MovementSpeed"],
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -853,7 +850,7 @@ GearHelper.cwTable = {
             args = {
                 Intell = {
                     order = 1,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Intellect"],
+                    name = TOOLTIP_TEXT["Stat"]["Intellect"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Intellect", 1)
@@ -869,7 +866,7 @@ GearHelper.cwTable = {
                 },
                 Strength = {
                     order = 2,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Strength"],
+                    name = TOOLTIP_TEXT["Stat"]["Strength"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Strength", 1)
@@ -885,7 +882,7 @@ GearHelper.cwTable = {
                 },
                 Agility = {
                     order = 3,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Agility"],
+                    name = TOOLTIP_TEXT["Stat"]["Agility"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Agility", 1)
@@ -901,7 +898,7 @@ GearHelper.cwTable = {
                 },
                 Stamina = {
                     order = 4,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Stamina"],
+                    name = TOOLTIP_TEXT["Stat"]["Stamina"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Stamina", 1)
@@ -917,7 +914,7 @@ GearHelper.cwTable = {
                 },
                 Haste = {
                     order = 5,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Haste"],
+                    name = TOOLTIP_TEXT["Stat"]["Haste"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Haste", 1)
@@ -933,7 +930,7 @@ GearHelper.cwTable = {
                 },
                 Mastery = {
                     order = 6,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Mastery"],
+                    name = TOOLTIP_TEXT["Stat"]["Mastery"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Mastery", 1)
@@ -949,7 +946,7 @@ GearHelper.cwTable = {
                 },
                 Critic = {
                     order = 7,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["CriticalStrike"],
+                    name = TOOLTIP_TEXT["Stat"]["CriticalStrike"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "CriticalStrike", 1)
@@ -965,7 +962,7 @@ GearHelper.cwTable = {
                 },
                 Armor = {
                     order = 8,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Armor"],
+                    name = TOOLTIP_TEXT["Stat"]["Armor"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Armor", 1)
@@ -981,7 +978,7 @@ GearHelper.cwTable = {
                 },
                 Versatility = {
                     order = 9,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Versatility"],
+                    name = TOOLTIP_TEXT["Stat"]["Versatility"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Versatility", 1)
@@ -997,7 +994,7 @@ GearHelper.cwTable = {
                 },
                 Leech = {
                     order = 10,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Leech"],
+                    name = TOOLTIP_TEXT["Stat"]["Leech"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Leech", 1)
@@ -1013,7 +1010,7 @@ GearHelper.cwTable = {
                 },
                 Avoidance = {
                     order = 11,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["Avoidance"],
+                    name = TOOLTIP_TEXT["Stat"]["Avoidance"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "Avoidance", 1)
@@ -1029,7 +1026,7 @@ GearHelper.cwTable = {
                 },
                 MovementSpeed = {
                     order = 14,
-                    name = GearHelper.locals["Tooltip"]["Stat"]["MovementSpeed"],
+                    name = TOOLTIP_TEXT["Stat"]["MovementSpeed"],
                     type = "input",
                     get = function(info)
                         return GetStatCW(info, "MovementSpeed", 1)
@@ -1049,7 +1046,6 @@ GearHelper.cwTable = {
 }
 
 function GearHelper:BuildCWTable()
-
     for _, v in pairs(self.db.profile.CW) do
         if (v.Name ~= nil) then
             local newGroup = {
@@ -1087,7 +1083,7 @@ function GearHelper:BuildCWTable()
                     },
                     Intell = {
                         order = 1,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Intellect"],
+                        name = TOOLTIP_TEXT["Stat"]["Intellect"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1105,7 +1101,7 @@ function GearHelper:BuildCWTable()
                     },
                     Strength = {
                         order = 2,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Strength"],
+                        name = TOOLTIP_TEXT["Stat"]["Strength"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1123,7 +1119,7 @@ function GearHelper:BuildCWTable()
                     },
                     Agility = {
                         order = 3,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Agility"],
+                        name = TOOLTIP_TEXT["Stat"]["Agility"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1141,7 +1137,7 @@ function GearHelper:BuildCWTable()
                     },
                     Stamina = {
                         order = 4,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Stamina"],
+                        name = TOOLTIP_TEXT["Stat"]["Stamina"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1159,7 +1155,7 @@ function GearHelper:BuildCWTable()
                     },
                     Haste = {
                         order = 5,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Haste"],
+                        name = TOOLTIP_TEXT["Stat"]["Haste"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1177,7 +1173,7 @@ function GearHelper:BuildCWTable()
                     },
                     Mastery = {
                         order = 6,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Mastery"],
+                        name = TOOLTIP_TEXT["Stat"]["Mastery"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1195,7 +1191,7 @@ function GearHelper:BuildCWTable()
                     },
                     Critic = {
                         order = 7,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["CriticalStrike"],
+                        name = TOOLTIP_TEXT["Stat"]["CriticalStrike"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1213,7 +1209,7 @@ function GearHelper:BuildCWTable()
                     },
                     Armor = {
                         order = 8,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Armor"],
+                        name = TOOLTIP_TEXT["Stat"]["Armor"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1231,7 +1227,7 @@ function GearHelper:BuildCWTable()
                     },
                     Versatility = {
                         order = 9,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Versatility"],
+                        name = TOOLTIP_TEXT["Stat"]["Versatility"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1249,7 +1245,7 @@ function GearHelper:BuildCWTable()
                     },
                     Leech = {
                         order = 10,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Leech"],
+                        name = TOOLTIP_TEXT["Stat"]["Leech"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1267,7 +1263,7 @@ function GearHelper:BuildCWTable()
                     },
                     Avoidance = {
                         order = 11,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["Avoidance"],
+                        name = TOOLTIP_TEXT["Stat"]["Avoidance"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1285,7 +1281,7 @@ function GearHelper:BuildCWTable()
                     },
                     MovementSpeed = {
                         order = 14,
-                        name = GearHelper.locals["Tooltip"]["Stat"]["MovementSpeed"],
+                        name = TOOLTIP_TEXT["Stat"]["MovementSpeed"],
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1319,8 +1315,6 @@ function GearHelper:BuildCWTable()
     LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
     LibStub("AceConfigRegistry-3.0"):NotifyChange(GearHelper.locals["customWeights"])
 end
-
-
 
 local aboutTable = {
     name = "About",
@@ -1367,8 +1361,6 @@ local aboutTable = {
         }
     }
 }
-
-
 
 LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
 LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["secondaryOptions"], ghSecondaryOptionsTable)
