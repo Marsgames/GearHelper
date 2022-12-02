@@ -1,22 +1,3 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-
--- TODO: Replace that by @Marsgames suggestion about = true test
-function GearHelper:IsValueInTable(tab, val)
-    for _, v in pairs(tab) do
-        if val == v then
-            return true
-        end
-    end
-    return false
-end
-
--- Remove an item from table and return elem
-function GearHelper:RemoveItemByKey(table, key)
-    local element = table[key]
-    table[key] = nil
-    return element
-end
-
 function GearHelper:MySplit(inputString, separator)
     if separator == nil then
         separator = "%s"
@@ -28,62 +9,6 @@ function GearHelper:MySplit(inputString, separator)
         i = i + 1
     end
     return t
-end
-
-function GearHelper:GetStatDeltaBetweenItems(looted, equipped)
-    local delta = {}
-
-    for k, v in pairs(looted) do
-        if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
-            if equipped[k] == nil then --If looted item contain stat that are not on equipped item
-                delta[k] = tonumber(v)
-            else
-                delta[k] = tonumber(v) - tonumber(equipped[k])
-            end
-        end
-    end
-
-    --We find stat that looted item doesn't have compared to equipped item
-    for k, v in pairs(equipped) do
-        if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
-            if looted[k] == nil then
-                delta[k] = tonumber(v) * (-1)
-            end
-        end
-    end
-    return delta
-end
-
-local function AddStatToTab(item, tab)
-    for k, v in pairs(item) do
-        if tonumber(v) and k ~= "id" and k ~= "levelRequired" then
-            if tab[k] == nil then
-                tab[k] = tonumber(v)
-            else
-                tab[k] = tonumber(v) + tonumber(tab[k])
-            end
-        end
-    end
-
-    return tab
-end
-
-function GearHelper:CombineTwoItems(first, second)
-    return AddStatToTab(second, AddStatToTab(first, {}))
-end
-
-local function CombineArraysOfEquippableTypes(arraysOfEquippableByClasses)
-    local mergedArrays = {}
-    for _, array in pairs(arraysOfEquippableByClasses) do
-        for k, v in pairs(array) do
-            mergedArrays[k] = v
-        end
-    end
-    return mergedArrays
-end
-
-function GearHelper:GetEquippableTypes()
-    return CombineArraysOfEquippableTypes(ITEM_TYPES_EQUIPPABLE_BY_CLASS)
 end
 
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
@@ -165,17 +90,6 @@ local function GetColor(name)
 end
 
 function GearHelper:ColorizeString(text, color)
-    local colorList = {}
-    colorList.yellow = "|cFFFFFF00"
-    colorList.lightgreen = "|cFF00FF00"
-    colorList.green = "|cFF1bad1b"
-    colorList.lightred = "|cFFFF0000"
-    colorList.red = "|cFFb51b1b"
-    colorList.pink = "|cFFFF1493"
-    colorList.better = "|cFF00FF96"
-    colorList.white = "|cFFFFFFFF"
-    colorList.black = "|cFF000000"
-
     if GetColor(color) ~= nil then
         return GetColor(color) .. text
     else
@@ -205,11 +119,6 @@ function GearHelper:GetQualityFromColor(color)
     end
 end
 
-function GearHelper:HexColorToRGB(hexColor)
-    local rhex, ghex, bhex = string.sub(hexColor, 1, 2), string.sub(hexColor, 3, 4), string.sub(hexColor, 5, 6)
-    return tonumber(rhex, 16), tonumber(ghex, 16), tonumber(bhex, 16)
-end
-
 function GearHelper:GetArraySize(tab)
     if (type(tab) ~= "table") then
         error(GHExceptionParameterIsNotAnArray)
@@ -222,3 +131,10 @@ function GearHelper:GetArraySize(tab)
 
     return count
 end
+
+function GearHelper:TableConcat(t1,t2)
+    for i=1,#t2 do
+       t1[#t1+1] = t2[i]
+    end
+    return t1
+ end

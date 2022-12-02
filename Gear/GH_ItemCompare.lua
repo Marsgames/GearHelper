@@ -98,10 +98,40 @@ function GearHelper:GetEquippedItemsScore(equippedItems)
     return equippedItemsScores
 end
 
+local function GetItemWithBestScore(itemList)
+    local bestItem = GHItem:CreateEmpty()
+    for _, item in pairs(itemList) do
+        if item:GetScore() > bestItem:GetScore() then
+            bestItem = item
+        end
+    end
+
+    return bestItem
+end
+
 function GearHelper:CompareWithEquipped(item)
     local result = {}
     local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
     local equippedItemsScore = GearHelper:GetEquippedItemsScore(equippedItems)
+
+    if GearHelper:IsComparedItem1HTestedAgainst2HWeapon(item.equipLoc) then
+        GearHelper:Print("Comparing a 1 Hand weapon against a 2 Hands, trying to find a pairable in bags...")
+        local pairableItems = {}
+
+        if INVTYPE_1H_OFFHAND[item.equipLoc] then --Compared item is a offhand trying to find a mainhand
+            GearHelper:Print("Item is a offhand trying to find a mainhand...")
+            pairableItems = GearHelper:FindItemInBags(INVTYPE_1H_MAINHAND)
+        else --Compared item is a main hand trying to find an offhand
+            GearHelper:Print("Item is a mainhand trying to find a offhand...")
+            pairableItems = GearHelper:FindItemInBags(INVTYPE_1H_OFFHAND)
+        end
+
+        result.combinable = {
+            item = GetItemWithBestScore(pairableItems)
+        }
+        GearHelper:Print("Best item to pair is "..result.combinable.item.itemLink)
+        result.combinable.combinedScoreDelta = (item:GetScore() + result.combinable.item:GetScore()) - equippedItemsScore[0]
+    end
 
     result.comparedItemScore = item:GetScore()
     result.delta = {}

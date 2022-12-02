@@ -1,7 +1,6 @@
 -- local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local lfrCheckIsChecked = false
-local lastBagUpdateEvent = time()
 local waitSpeFrame = CreateFrame("Frame")
 local delaySpeTimer = 0.5
 local moneyFlux = 0
@@ -354,15 +353,15 @@ local function MerchantClosed()
     end
 end
 
-local function BagUpdate()
-    if time() - lastBagUpdateEvent < 2 then
+local function BagUpdate(_, _, bagId)
+    if time() - (GearHelperVars.lastBagUpdateEvent[bagId] or 0) < 1 then
         do
             return
         end
     end
-    lastBagUpdateEvent = time()
-    GearHelper:Print("EVENT BAG_UPDATE")
-
+    
+    GearHelperVars.lastBagUpdateEvent[bagId] = time()
+    GearHelper:UpdateItemsInBags(bagId)
     GearHelper:ScanCharacter()
     GearHelper:SetDotOnIcons()
 end
@@ -518,7 +517,7 @@ GearHelper:RegisterEvent("ITEM_PUSH", ItemPush, ...) --Fired when item is pushed
 GearHelper:RegisterEvent("QUEST_COMPLETE", QuestComplete)
 GearHelper:RegisterEvent("QUEST_DETAIL", QuestDetail)
 GearHelper:RegisterEvent("MERCHANT_CLOSED", MerchantClosed)
-GearHelper:RegisterEvent("BAG_UPDATE", BagUpdate)
+GearHelper:RegisterEvent("BAG_UPDATE", BagUpdate, ...)
 GearHelper:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", ActiveTalentGroupChanged)
 GearHelper:RegisterEvent("CHAT_MSG_CHANNEL", ChatMsgChannel, ...)
 GearHelper:RegisterEvent("CHAT_MSG_WHISPER", ChatMsgWhisper, ...)

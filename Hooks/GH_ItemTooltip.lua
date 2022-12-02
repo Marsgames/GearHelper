@@ -21,44 +21,37 @@ function GearHelper:HookItemTooltip()
         LAST_OPENED_TOOLTIP_ITEMLINK = tooltipItemLink
 
         local item = GHItem:Create(tooltipItemLink)
-        if not item then
+        if item.isEmpty then
             return
         end
 
-        local linesToAdd = {}
+        local tooltipSettings = {
+            lines = {},
+            borderColor = nil
+        }
 
         if IsEquippedItem(item.itemLink) then -- Item equipped, yellow overlay on tooltip
             GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay")
-            tooltip.NineSlice:SetBorderColor(FACTION_YELLOW_COLOR.r, FACTION_YELLOW_COLOR.g, FACTION_YELLOW_COLOR.b)
-            table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
+            tooltipSettings.borderColor = ITEM_EQUAL_TOOLTIP_BORDER
+            table.insert(tooltipSettings.lines, GearHelper:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
         elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
-            --
-            GearHelper:Print("OnToolTipSetItem - Item not equipped, computing value...")
+            GearHelper:Print("OnToolTipSetItem - Item not equipped, comparing score...")
             local result = GearHelper:CompareWithEquipped(item)
-            linesToAdd = GearHelper:GenerateScoreLines(result)
-            for slotId, scoreDelta in pairs(result.delta) do
-                local floorValue = math.floor(scoreDelta)
-                if (floorValue < 0) then
-                    GearHelper:Print(item.itemLink ..
-                        " worser than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
-                    tooltip.NineSlice:SetBorderColor(1, 0, 0)
-                else
-                    GearHelper:Print(item.itemLink ..
-                        " better than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
-                    tooltip.NineSlice:SetBorderColor(0, 255, 150)
-                end
-            end
+            tooltipSettings = GearHelper:GenerateTooltipSettings(result)
         elseif ShouldDisplayNotEquippable(item) then -- Item not equippable, red overlay on tooltip
             GearHelper:Print("OnToolTipSetItem - Item not equippable, applying red overlay")
-            table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
-            tooltip.NineSlice:SetBorderColor(255, 0, 0)
+            table.insert(tooltipSettings.lines, GearHelper:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
+            tooltipSettings.borderColor = ITEM_DOWNGRADE_TOOLTIP_BORDER
         end
+        GearHelper:Print(item)
+        GearHelper:Print(tooltipSettings)
 
-        -- Add droprate to tooltip
-        GearHelper:GetDropInfo(linesToAdd, itemLink)
+        tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)        
+        tooltipSettings.lines = GearHelper:TableConcat(tooltipSettings.lines, GearHelper:GetDropInfo(item))
+
         GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
 
-        LAST_OPENED_TOOLTIP_LINES = linesToAdd
+        LAST_OPENED_TOOLTIP_LINES = tooltipSettings.lines
     end
 
     TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnToolTipSetItem)

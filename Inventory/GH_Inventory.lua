@@ -24,9 +24,8 @@ function GearHelper:GetSlotsByEquipLoc(equipLoc)
             operator = GearHelper.operators.OR
         }
     else
-        if INVTYPE_1H_WEAPONS[equipLoc] and IsPlayerEquippedWith2HandsWeapon() then
-            GearHelper:Print("Testing 1H against 2H")
-
+        if GearHelper:IsComparedItem1HTestedAgainst2HWeapon(equipLoc) then
+            GearHelper:Print("Comparing 1H against 2H, returning main hand slot")
             equipSlots = GearHelper.itemSlot["INVTYPE_2HWEAPON"]
         else
             equipSlots = GearHelper.itemSlot[equipLoc]
@@ -34,6 +33,14 @@ function GearHelper:GetSlotsByEquipLoc(equipLoc)
     end
 
     return equipSlots
+end
+
+function GearHelper:IsComparedItem1HTestedAgainst2HWeapon(comparedItemEquipLoc)
+    if (INVTYPE_1H_MAINHAND[comparedItemEquipLoc] or INVTYPE_1H_OFFHAND[comparedItemEquipLoc]) and IsPlayerEquippedWith2HandsWeapon() then
+        return true
+    end
+
+    return false
 end
 
 function GearHelper:GetEquippedItems(equipLoc)
@@ -48,4 +55,34 @@ function GearHelper:GetEquippedItems(equipLoc)
     end
 
     return result
+end
+
+function GearHelper:UpdateItemsInBags(bagId)
+    for j = 1, C_Container.GetContainerNumSlots(bagId) do
+        local itemlink = C_Container.GetContainerItemLink(bagId, j);
+
+        if GearHelperVars.bagsItems[bagId] == nil then
+            GearHelperVars.bagsItems[bagId] = {}
+        end
+
+
+        local item = GHItem:Create(itemlink)
+
+        if not item.isEmpty then
+            GearHelperVars.bagsItems[bagId][itemlink] = item 
+        end
+    end
+end
+
+function GearHelper:FindItemInBags(equipLocs)
+    local matchedItems = {}
+    for _, items in pairs(GearHelperVars.bagsItems) do
+        for _, item in pairs(items) do
+            if equipLocs[item.equipLoc] then
+                table.insert(matchedItems, item)
+            end
+        end
+    end
+
+    return matchedItems
 end

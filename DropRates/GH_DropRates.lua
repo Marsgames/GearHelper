@@ -4,14 +4,15 @@ function GearHelper:LoadDropRates(value)
     itemsDropRates = value
 end
 
-function GearHelper:GetDropInfo(linesToAdd, itemLink)
-    local _, _, _, _, itemId = string.find(tostring(itemLink), "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
-
-    if (itemsDropRates ~= nil and itemsDropRates[itemId] ~= nil) then
-        table.insert(linesToAdd, self.locals["DropRate"] .. itemsDropRates[itemId]["Rate"] .. "%")
-        if itemsDropRates[itemId]["Zone"] ~= "" then
-            table.insert(linesToAdd, self.locals["DropZone"] .. itemsDropRates[itemId]["Zone"])
+function GearHelper:GetDropInfo(item)
+    local lines = {}
+    if (itemsDropRates ~= nil and itemsDropRates[item.id] ~= nil) then
+        table.insert(lines, self.locals["DropRate"] .. itemsDropRates[item.id]["Rate"] .. "%")
+        if itemsDropRates[item.id]["Zone"] ~= "" then
+            table.insert(lines, self.locals["DropZone"] .. itemsDropRates[item.id]["Zone"])
         end
-        table.insert(linesToAdd, self.locals["DropBy"] .. itemsDropRates[itemId]["Drop"])
+        table.insert(lines, self.locals["DropBy"] .. itemsDropRates[item.id]["Drop"])
     end
+
+    return lines
 end

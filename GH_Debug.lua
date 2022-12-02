@@ -1,3 +1,5 @@
+local DT = {}
+
 local function GetDebugChatFrame()
     local found
     for i = 1, NUM_CHAT_WINDOWS do
@@ -138,4 +140,20 @@ function GearHelper:Print(object)
             GetDebugChatFrame():AddMessage(WrapTextInColorCode("[GearHelper] ", "FF00FF96") .. WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9") .. " - " .. tostring(object))
         end
     end
+end
+
+DT.functionSymbols = {}
+DT.userdataSymbols = {}
+
+local funcSyms = DT.functionSymbols
+local userSyms = DT.userdataSymbols
+
+for k,v in pairs(getfenv(0)) do
+	if (type(v) == 'function') then
+		table.insert(funcSyms, k);
+	elseif (type(v) == 'table') then
+		if (type(rawget(v,0)) == 'userdata') then
+			table.insert(userSyms, k);
+		end
+	end
 end

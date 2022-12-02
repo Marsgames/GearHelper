@@ -114,6 +114,7 @@ GearHelperVars = {
     prefixAddon = "GeARHeLPeRPReFIX",
     addonTruncatedVersion = 3,
     waitSpeTimer = nil,
+    lastBagUpdateEvent = {},
     charInventory = {
         [INVSLOT_HEAD] = GHItem:CreateEmpty(),
         [INVSLOT_NECK] = GHItem:CreateEmpty(),
@@ -132,7 +133,7 @@ GearHelperVars = {
         [INVSLOT_OFFHAND] = GHItem:CreateEmpty(),
         [INVSLOT_BACK] = GHItem:CreateEmpty()
     },
-    hasCharacterStuffChanged = true
+    bagsItems = {}
 }
 
 GearHelper.slotToNameMapping = {
@@ -261,12 +262,15 @@ GearHelper.itemSlot = {
     }
 }
 
-INVTYPE_1H_WEAPONS = {
-    INVTYPE_RANGEDRIGHT = true,
+INVTYPE_1H_OFFHAND = {
     INVTYPE_HOLDABLE = true,
     INVTYPE_WEAPONOFFHAND = true,
-    INVTYPE_WEAPON = true,
     INVTYPE_SHIELD = true
+}
+
+INVTYPE_1H_MAINHAND = {
+    INVTYPE_RANGEDRIGHT = true,
+    INVTYPE_WEAPON = true
 }
 
 INVTYPE_TO_IGNORE = {
@@ -536,3 +540,7 @@ ITEM_TYPES_EQUIPPABLE_BY_CLASS = {
 
 LAST_OPENED_TOOLTIP_ITEMLINK = ""
 LAST_OPENED_TOOLTIP_LINES = {}
+
+ITEM_UPGRADE_TOOLTIP_BORDER = {r = 0, g = 255, b = 150}
+ITEM_DOWNGRADE_TOOLTIP_BORDER = {r = 255, g = 0, b = 0}
+ITEM_EQUAL_TOOLTIP_BORDER = FACTION_YELLOW_COLOR
