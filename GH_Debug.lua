@@ -129,8 +129,6 @@ function GearHelper:DevToolsDump(value, startKey)
 	DevTools_RunDump(value, context);
 end
 
-
-
 function GearHelper:Print(object)
     local file, ln = strmatch(debugstack(2, 1, 0), "([%w_]*%.lua).*%:(%d+)")
 

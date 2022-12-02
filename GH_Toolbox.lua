@@ -210,12 +210,15 @@ function GearHelper:HexColorToRGB(hexColor)
     return tonumber(rhex, 16), tonumber(ghex, 16), tonumber(bhex, 16)
 end
 
-function GearHelper:NilTableValues(tableToReset)
-    for key, v in pairs(tableToReset) do
-        if type(tableToReset[key]) == "table" then
-            GearHelper:NilTableValues(tableToReset[key])
-        else
-            tableToReset[key] = nil
-        end
+function GearHelper:GetArraySize(tab)
+    if (type(tab) ~= "table") then
+        error(GHExceptionParameterIsNotAnArray)
     end
+
+    local count = 0
+    for _, _ in pairs(tab) do
+        count = count + 1
+    end
+
+    return count
 end

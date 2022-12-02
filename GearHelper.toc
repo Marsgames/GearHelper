@@ -38,6 +38,8 @@ embeds.xml
 GH_Exceptions.lua
 GH_Core.lua
 GH_Debug.lua
+Hooks\GH_ItemTooltip.lua
+Hooks\GH_MoneyTooltip.lua
 Gear\GH_Template.lua
 Gear\GH_Items.lua
 GH_Constants.lua

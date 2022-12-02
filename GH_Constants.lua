@@ -34,10 +34,9 @@ GearHelper.defaultSettings = {
         defaultWeightForStat = 1
     },
     global = {
-        ItemCache = {},
+        SellPrices = {},
         itemWaitList = {},
         myNames = "",
-        buildVersion = 7,
         equipLocInspect = {},
         messages = {
             enUS = {
@@ -260,6 +259,14 @@ GearHelper.itemSlot = {
         slots = {INVSLOT_MAINHAND},
         operator = GearHelper.operators.UNDEFINED
     }
+}
+
+INVTYPE_1H_WEAPONS = {
+    INVTYPE_RANGEDRIGHT = true,
+    INVTYPE_HOLDABLE = true,
+    INVTYPE_WEAPONOFFHAND = true,
+    INVTYPE_WEAPON = true,
+    INVTYPE_SHIELD = true
 }
 
 INVTYPE_TO_IGNORE = {
