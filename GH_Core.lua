@@ -1,20 +1,6 @@
 GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "AceEvent-3.0")
 GearHelper.locals = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
-function GearHelper:Print(object)
-    local file, ln = strmatch(debugstack(2, 1, 0), "([%w_]*%.lua).*%:(%d+)")
-
-    if (GearHelper.db.profile.debug) then
-        if type(object) == "table" then
-            print(WrapTextInColorCode("[GearHelper]", "FF00FF96"), WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9"), "\n-------------- TABLE --------------\n")
-            DevTools_Dump(object)
-            print("-------------- ENDTABLE -----------")
-        else
-            print(WrapTextInColorCode("[GearHelper]", "FF00FF96"), WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9"), "-", object or tostring(nil))
-        end
-    end
-end
-
 function GearHelper:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("GearHelperDB", GearHelper.defaultSettings)
     self.db.RegisterCallback(self, "OnProfileChanged", "OnRefreshConfig")
