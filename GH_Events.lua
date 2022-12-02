@@ -66,7 +66,7 @@ local function OnMerchantShow()
     if GearHelperVars.isCharInvInitialized == false then
         GearHelper:ScanCharacter()
     end
-    
+
     GearHelper:SetDotOnIcons()
 end
 
@@ -298,11 +298,8 @@ local function QuestDetail()
     local prixTriee = prixTable
     table.sort(prixTriee)
 
-    local xDif = 0
     if nil ~= maxWeight and maxWeight > 0 and not isBetter then
         local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
-        -- GearHelper.ButtonQuestReward = {}
-        -- table.insert(GearHelper.ButtonQuestReward, button)
         if nil ~= button then
             if button.overlay then
                 button.overlay:SetShown(false)
@@ -312,10 +309,9 @@ local function QuestDetail()
             if not button.overlay then
                 button.overlay = button:CreateTexture(nil, "OVERLAY")
                 button.overlay:SetSize(18, 18)
-                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-                button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+                button.overlay:SetPoint("TOPLEFT")
+                button.overlay:SetAtlas("bags-greenarrow", true)
                 button.overlay:SetShown(true)
-                xDif = xDif + 11
             end
 
             isBetter = true
@@ -329,11 +325,10 @@ local function QuestDetail()
             end
             if not button.overlay then
                 button.overlay = button:CreateTexture(nil, "OVERLAY")
-                button.overlay:SetSize(18, 18)
-                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-                button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
+                button.overlay:SetSize(20, 22)
+                button.overlay:SetPoint("TOPLEFT")
+                button.overlay:SetAtlas("bags-junkcoin", true)
                 button.overlay:SetShown(true)
-                xDif = xDif + 11
             end
 
             local objetI = GetQuestItemLink("choice", keyPrix)
