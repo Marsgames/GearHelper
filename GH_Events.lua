@@ -474,13 +474,6 @@ local function UnitInventoryChanged(_, _, target)
 
     GearHelper:Print("EVENT UNIT_INVENTORY_CHANGED")
     GearHelper:ScanCharacter()
-    
-    if GearHelperVars.charInventory[INVSLOT_MAINHAND].subType == FISHINGTOOLSLOT then --Disabling auto equip best stuff when fishing
-        GearHelper.db.profile.autoEquipLooted.previous = GearHelper.db.profile.autoEquipLooted.actual
-        GearHelper.db.profile.autoEquipLooted.actual = false
-    else
-        GearHelper.db.profile.autoEquipLooted.actual = GearHelper.db.profile.autoEquipLooted.previous
-    end
 end
 
 local function QuestTurnedIn()

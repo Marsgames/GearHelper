@@ -146,7 +146,6 @@ TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnToolTipSetI
 GameTooltip:HookScript(
     "OnHide",
     function(tooltip)
-        GearHelper:Print("ON HIDE GAMETOOLTIP")
         -- Reset tooltip border color when hiding toltip (to avoid something like player tooltip to be red)
         tooltip.NineSlice:SetBorderColor(1, 1, 1)
     end
