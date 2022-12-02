@@ -3,7 +3,6 @@
 -- Check why kill a mob trigger a bunch of "OnToolTipSetItem"
 -- SetDotOnIcons is pete
 -- On bag change do not trigger all items compare, only the new one
--- Fix custom weight
 -- Move harcoded lines on tooltip to localization
 -- Manage find a pairable item to compare with
 
@@ -96,7 +95,6 @@ local function ShouldDisplayNotEquippable(item)
 end
 
 local function OnToolTipSetItem(tooltip, data)
-
     local tooltipItemLink = select(2, TooltipUtil.GetDisplayedItem(tooltip))
     if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip or tooltipItemLink == LAST_OPENED_TOOLTIP_ITEMLINK then
         GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
