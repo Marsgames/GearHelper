@@ -42,11 +42,12 @@ function GearHelper:showMessageSMN(channel, sender, msg)
 end
 
 function GearHelper:ScanCharacter()
-    for slotID, _ in pairs(GearHelperVars.charInventory) do
+    for slotID, itemCached in pairs(GearHelperVars.charInventory) do
         local item = Item:CreateFromEquipmentSlot(slotID)
+
         if item:IsItemEmpty() then
             GearHelperVars.charInventory[slotID] = GHItem:CreateEmpty()
-        else
+        elseif not itemCached.itemLink == item:GetItemLink() then
             if (item:IsItemDataCached() == false) then
                 self:Print("Item in slot " .. slotID .. " not in cache")
             end
@@ -59,8 +60,6 @@ function GearHelper:ScanCharacter()
             )
         end
     end
-
-    GearHelperVars.isCharInvInitialized = true
 end
 
 function GearHelper:SetDotOnIcons()
@@ -151,6 +150,7 @@ TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnToolTipSetI
 GameTooltip:HookScript(
     "OnHide",
     function(tooltip)
+        GearHelper:Print("ON HIDE GAMETOOLTIP")
         -- Reset tooltip border color when hiding toltip (to avoid something like player tooltip to be red)
         tooltip.NineSlice:SetBorderColor(1, 1, 1)
     end

@@ -86,28 +86,6 @@ function GearHelper:GetEquippableTypes()
     return CombineArraysOfEquippableTypes(ITEM_TYPES_EQUIPPABLE_BY_CLASS)
 end
 
-function GearHelper:GetGemValue()
-    local _, gemItemLink = GetItemInfo("151585")
-    if gemItemLink == nil then
-        return 0
-    end
-    local tip = ""
-
-    tip = myTooltipFromTemplate or CreateFrame("GAMETOOLTIP", "myTooltipFromTemplate", nil, "GameTooltipTemplate", BackdropTemplateMixin and "BackdropTemplate")
-    tip:SetOwner(WorldFrame, "ANCHOR_NONE")
-    tip:SetHyperlink(gemItemLink)
-
-    for i = 1, tip:NumLines() do
-        local line = _G["myTooltipFromTemplateTextLeft" .. i]
-        local text = line:GetText()
-        if text then
-            if string.match(text, "%+%d+") then
-                return tonumber(string.match(text, "%d+"))
-            end
-        end
-    end
-end
-
 function GearHelper:ReturnGoodLink(itemLink, target, tar)
     local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
     local _, itemId = strsplit(":", itemString)

@@ -63,10 +63,7 @@ local function OnMerchantShow()
     GearHelper:SellGreyItems()
     GearHelper:RepairEquipment()
 
-    if GearHelperVars.isCharInvInitialized == false then
-        GearHelper:ScanCharacter()
-    end
-    
+    GearHelper:ScanCharacter()
     GearHelper:SetDotOnIcons()
 end
 
@@ -169,6 +166,7 @@ local function ItemPush(_, _, bag)
             return
         end
     end
+    GearHelper:Print("EVENT ITEM_PUSH")
 
     local theBag = bag
     if bag == 23 then
@@ -368,11 +366,9 @@ local function BagUpdate()
         end
     end
     lastBagUpdateEvent = time()
+    GearHelper:Print("EVENT BAG_UPDATE")
 
-    if GearHelperVars.isCharInvInitialized == false then
-        GearHelper:ScanCharacter()
-    end
-
+    GearHelper:ScanCharacter()
     GearHelper:SetDotOnIcons()
 end
 
@@ -474,28 +470,17 @@ local function ChatMsgYell(_, _, msg, sender, _, _)
     GearHelper:showMessageSMN("Yell", sender, msg)
 end
 
-local function UnitInventoryChanged(_, _, joueur)
-    if not GearHelper.db.profile.addonEnabled then
-        do
-            return
-        end
-    end
-    if joueur ~= "player" then
+local function UnitInventoryChanged(_, _, target)
+    if not GearHelper.db.profile.addonEnabled or target ~= "player"then
         do
             return
         end
     end
 
+    GearHelper:Print("EVENT UNIT_INVENTORY_CHANGED")
     GearHelper:ScanCharacter()
-
-    if not GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")) then
-        do
-            return
-        end
-    end
-
-    local _, _, _, _, _, _, subclass = GetItemInfo(GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot")))
-    if subclass == FISHINGTOOLSLOT then
+    
+    if GearHelperVars.charInventory[INVSLOT_MAINHAND].subType == FISHINGTOOLSLOT then --Disabling auto equip best stuff when fishing
         GearHelper.db.profile.autoEquipLooted.previous = GearHelper.db.profile.autoEquipLooted.actual
         GearHelper.db.profile.autoEquipLooted.actual = false
     else
@@ -571,7 +556,7 @@ end
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
 GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
-GearHelper:RegisterEvent("ITEM_PUSH", ItemPush, ...)
+GearHelper:RegisterEvent("ITEM_PUSH", ItemPush, ...) --Fired when item is pushed onto the inventory stack
 GearHelper:RegisterEvent("QUEST_COMPLETE", QuestComplete)
 GearHelper:RegisterEvent("QUEST_DETAIL", QuestDetail)
 GearHelper:RegisterEvent("MERCHANT_CLOSED", MerchantClosed)
@@ -592,7 +577,6 @@ GearHelper:RegisterEvent("CHAT_MSG_SAY", ChatMsgSay, ...)
 GearHelper:RegisterEvent("CHAT_MSG_YELL", ChatMsgYell, ...)
 GearHelper:RegisterEvent("UNIT_INVENTORY_CHANGED", UnitInventoryChanged, ...)
 GearHelper:RegisterEvent("QUEST_TURNED_IN", QuestTurnedIn)
-GearHelper:RegisterEvent("GET_ITEM_INFO_RECEIVED", GetItemInfoReceived, ...)
 GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
