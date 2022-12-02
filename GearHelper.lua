@@ -4,6 +4,8 @@
 -- SetDotOnIcons is pete
 -- On bag change do not trigger all items compare, only the new one
 -- Add line on tooltip compare
+-- Fix custom weight
+--Display score on item 
 
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then

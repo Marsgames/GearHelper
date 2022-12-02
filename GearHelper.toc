@@ -37,9 +37,9 @@ Localizations\zhTW.lua
 embeds.xml
 GH_Exceptions.lua
 GH_Core.lua
+GH_Debug.lua
 Gear\GH_Template.lua
 Gear\GH_Items.lua
-
 GH_Constants.lua
 Inventory\GH_Inventory.lua
 Inventory\GH_AutoSell.lua
