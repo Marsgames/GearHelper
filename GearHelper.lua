@@ -3,9 +3,9 @@
 -- Check why kill a mob trigger a bunch of "OnToolTipSetItem"
 -- SetDotOnIcons is pete
 -- On bag change do not trigger all items compare, only the new one
--- Add line on tooltip compare
 -- Fix custom weight
---Display score on item 
+-- Move harcoded lines on tooltip to localization
+-- Manage find a pairable item to compare with
 
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then
@@ -45,7 +45,7 @@ function GearHelper:ScanCharacter()
 
         if item:IsItemEmpty() then
             GearHelperVars.charInventory[slotID] = GHItem:CreateEmpty()
-        elseif not itemCached.itemLink == item:GetItemLink() then
+        elseif not (itemCached.itemLink == item:GetItemLink()) then
             if (item:IsItemDataCached() == false) then
                 self:Print("Item in slot " .. slotID .. " not in cache")
             end
@@ -96,12 +96,15 @@ local function ShouldDisplayNotEquippable(item)
 end
 
 local function OnToolTipSetItem(tooltip, data)
+
     local tooltipItemLink = select(2, TooltipUtil.GetDisplayedItem(tooltip))
     if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip or tooltipItemLink == LAST_OPENED_TOOLTIP_ITEMLINK then
+        GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
         return
     end
 
     LAST_OPENED_TOOLTIP_ITEMLINK = tooltipItemLink
+
     local item = GHItem:Create(tooltipItemLink)
     if not item then
         return
@@ -114,10 +117,11 @@ local function OnToolTipSetItem(tooltip, data)
         tooltip.NineSlice:SetBorderColor(FACTION_YELLOW_COLOR.r, FACTION_YELLOW_COLOR.g, FACTION_YELLOW_COLOR.b)
         table.insert(linesToAdd, GearHelper:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
     elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
-        --linesToAdd = GearHelper:LinesToAddToTooltip(result)
+        --
         GearHelper:Print("OnToolTipSetItem - Item not equipped, computing value...")
         local result = GearHelper:CompareWithEquipped(item)
-        for slotId, scoreDelta in pairs(result) do
+        linesToAdd = GearHelper:GenerateScoreLines(result)
+        for slotId, scoreDelta in pairs(result.delta) do
             local floorValue = math.floor(scoreDelta)
             if (floorValue < 0) then
                 GearHelper:Print(item.itemLink .. " worser than " .. _G[GearHelper.slotToNameMapping[slotId]]:lower() .. " by " .. scoreDelta)
@@ -135,13 +139,9 @@ local function OnToolTipSetItem(tooltip, data)
 
     -- Add droprate to tooltip
     GearHelper:GetDropInfo(linesToAdd, itemLink)
+    GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
 
-    if linesToAdd then
-        tooltip:AddLine(" ")
-        for _, v in pairs(linesToAdd) do
-            tooltip:AddLine(v)
-        end
-    end
+    LAST_OPENED_TOOLTIP_LINES = linesToAdd
 end
 
 TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnToolTipSetItem)

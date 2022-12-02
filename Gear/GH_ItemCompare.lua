@@ -5,7 +5,7 @@ function GearHelper:IsItemBetter(itemLink)
 
     if not item or (not item:IsEquippableByMe() and not IsEquippedItem(item.id))then return false end
 
-    local res = self:CompareWithEquipped(item)
+    local res = self:CompareWithEquipped(item).delta
 
     for _, result in pairs(res) do
         if result > 0 then
@@ -103,8 +103,10 @@ function GearHelper:CompareWithEquipped(item)
     local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
     local equippedItemsScore = GearHelper:GetEquippedItemsScore(equippedItems)
 
+    result.comparedItemScore = item:GetScore()
+    result.delta = {}
     for slotId, score in pairs(equippedItemsScore) do
-        result[slotId] = item:GetScore() - score
+        result.delta[slotId] = result.comparedItemScore - score
     end
 
     self:Print("Result score is : ")

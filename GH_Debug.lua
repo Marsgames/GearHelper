@@ -140,7 +140,7 @@ function GearHelper:Print(object)
             GearHelper:DevToolsDump(object)
             GetDebugChatFrame():AddMessage("-------------- ENDTABLE -----------")
         else
-            GetDebugChatFrame():AddMessage(WrapTextInColorCode("[GearHelper] ", "FF00FF96")..WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9").." - "..object or tostring(nil))
+            GetDebugChatFrame():AddMessage(WrapTextInColorCode("[GearHelper] ", "FF00FF96")..WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9").." - "..tostring(object))
         end
     end
 end

@@ -1,31 +1,29 @@
+function GearHelper:AddLinesOnTooltip(tooltip, linesToAdd)
+    for _, v in pairs(linesToAdd) do
+        tooltip:AddLine(v)
+    end
+    tooltip:AddLine(" ")
+end
+
 function GearHelper:GenerateScoreLines(result)
 
     local linesToAdd = {}
 
-    if self:GetArraySize(result) == 1 then
-        for _, v in pairs(result) do
-            local flooredValue = math.floor(v)
-            if (flooredValue < 0) then
-                table.insert(linesToAdd, self:ColorizeString(self.locals["itemLessThanGeneral"], "LightRed"))
-            elseif (flooredValue > 0) then
-                table.insert(linesToAdd, self:ColorizeString(self.locals["itemBetterThanGeneral"], "Better") .. flooredValue)
-            else
-                table.insert(linesToAdd, self.locals["itemEgal"])
-            end
-        end
-    elseif self:GetArraySize(result) == 2 then
-        for slot, weight in pairs(result) do
-            local slotId = GetInventorySlotInfo(slot .. "Slot")
-            local itemLink = self:GetEquippedItemLink(slotId, slot)
+    local slotUpgrade = "It's an upgrade to your %s by %.1f"
+    local slotDowngrade = "It's a downgrade to your %s by %.1f"
+    local pairUpgrade = "Paired with %s, it's an upgrade to your %s by %.1f"
 
-            local flooredValue = math.floor(weight)
-            if (flooredValue < 0) then
-                table.insert(linesToAdd, self:ColorizeString(self.locals["itemLessThan"], "LightRed") .. " " .. itemLink)
-            elseif (flooredValue > 0) then
-                table.insert(linesToAdd, self:ColorizeString(self.locals["itemBetterThan"], "Better") .. " " .. itemLink .. " " .. self:ColorizeString(self.locals["itemBetterThan2"], "Better") .. flooredValue)
-            else
-                table.insert(linesToAdd, self.locals["itemEgala"] .. " " .. itemLink)
-            end
+    for slotId, deltaScore in pairs(result.delta) do
+        local localizedSlotName = _G[GearHelper.slotToNameMapping[slotId]]:lower()
+        if slotId == 0 then
+            localizedSlotName = AUCTION_CATEGORY_WEAPONS:lower()
+        end
+        if (deltaScore < 0) then
+            table.insert(linesToAdd, self:ColorizeString(string.format(slotDowngrade, localizedSlotName, deltaScore), "LightRed"))
+        elseif (deltaScore > 0) then
+            table.insert(linesToAdd, self:ColorizeString(string.format(slotUpgrade, localizedSlotName, deltaScore), "Better"))
+        else
+            table.insert(linesToAdd, self.locals["itemEgal"])
         end
     end
     return linesToAdd
