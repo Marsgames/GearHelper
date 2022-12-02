@@ -43,8 +43,6 @@ function GearHelper:HookItemTooltip()
             table.insert(tooltipSettings.lines, GearHelper:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
             tooltipSettings.borderColor = ITEM_DOWNGRADE_TOOLTIP_BORDER
         end
-        GearHelper:Print(item)
-        GearHelper:Print(tooltipSettings)
 
         tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)        
         tooltipSettings.lines = GearHelper:TableConcat(tooltipSettings.lines, GearHelper:GetDropInfo(item))
