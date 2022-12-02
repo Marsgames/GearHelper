@@ -12,12 +12,17 @@ function GearHelper:GenerateScoreLines(result)
     local slotUpgrade = "It's an upgrade to your %s by %.1f"
     local slotDowngrade = "It's a downgrade to your %s by %.1f"
     local pairUpgrade = "Paired with %s, it's an upgrade to your %s by %.1f"
+    local itemIdx = 1
 
     for slotId, deltaScore in pairs(result.delta) do
         local localizedSlotName = _G[GearHelper.slotToNameMapping[slotId]]:lower()
-        if slotId == 0 then
+
+        if slotId == 0 then --Special slotId returned when we want to display that it's simply better/worser than your weapons combo 
             localizedSlotName = AUCTION_CATEGORY_WEAPONS:lower()
+        elseif self:GetArraySize(result.delta) == 2 then --Format to add which trinket/ring index
+            localizedSlotName = localizedSlotName.." "..itemIdx
         end
+
         if (deltaScore < 0) then
             table.insert(linesToAdd, self:ColorizeString(string.format(slotDowngrade, localizedSlotName, deltaScore), "LightRed"))
         elseif (deltaScore > 0) then
@@ -25,6 +30,7 @@ function GearHelper:GenerateScoreLines(result)
         else
             table.insert(linesToAdd, self.locals["itemEgal"])
         end
+        itemIdx = itemIdx + 1
     end
     return linesToAdd
 end
