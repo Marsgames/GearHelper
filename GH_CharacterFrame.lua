@@ -58,20 +58,19 @@ local function CharFrameShow(_)
                 local name = slotConverter[slotID]
                 local pFrame = _G[name]
 
-                local button = _G["charIlvlSlot" .. slotID] or CreateFrame("Frame", "charIlvlSlot" .. slotID, CharacterFrame) --    Our frame
+                local button = _G["charIlvlSlotFrame" .. slotID] or CreateFrame("Frame", "charIlvlSlotFrame" .. slotID, CharacterFrame) --    Our frame
                 button:SetPoint(childAnchor, pFrame, parentAnchor, xOffset, yOffset)
                 button:SetSize(50, 25)
                 button:SetFrameStrata("HIGH")
 
                 --  FontStrings only need a position set. By default, they size automatically according to the text shown.
-                local text = button:CreateFontString(nil, "OVERLAY", "GameFontNormal") --    Our text area
+                local text = button.charIlvlSlotText or button:CreateFontString("charIlvlSlotText", "OVERLAY", "GameFontNormal") --    Our text area
                 text:SetPoint(childAnchor, pFrame, parentAnchor, xOffset, yOffset)
 
                 local itemScan = GHItem:Create(item.itemLink)
                 local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
 
                 if (itemLevel > 0) then
-                    button:ClearLines()
                     text:SetText(itemLevel)
                     local r, g, b = GetItemQualityColor(iR and iR or 0)
                     text:SetTextColor(r, g, b, 1)
@@ -94,9 +93,8 @@ function GearHelper:HideIlvlOnCharFrame()
     table.foreach(
         GearHelperVars.charInventory,
         function(slotID, _)
-            if (_G["charIlvlSlot" .. slotID]) then
-                _G["charIlvlSlot" .. slotID]:Hide()
-                _G["charIlvlSlot" .. slotID]:ClearLines()
+            if (_G["charIlvlSlotFrame" .. slotID]) then
+                _G["charIlvlSlotFrame" .. slotID]:Hide()
             end
         end
     )
