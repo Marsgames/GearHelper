@@ -64,7 +64,7 @@ local function CharFrameShow(_)
                 button:SetFrameStrata("HIGH")
 
                 --  FontStrings only need a position set. By default, they size automatically according to the text shown.
-                local text = button.charIlvlSlotText or button:CreateFontString("charIlvlSlotText", "OVERLAY", "GameFontNormal") --    Our text area
+                local text = _G["charIlvlSlotText" .. slotID] or button:CreateFontString("charIlvlSlotText" .. slotID, "OVERLAY", "GameFontNormal") --    Our text area
                 text:SetPoint(childAnchor, pFrame, parentAnchor, xOffset, yOffset)
 
                 local itemScan = GHItem:Create(item.itemLink)
@@ -74,7 +74,9 @@ local function CharFrameShow(_)
                     text:SetText(itemLevel)
                     local r, g, b = GetItemQualityColor(iR and iR or 0)
                     text:SetTextColor(r, g, b, 1)
+                    text:Show()
                 end
+                button:Show()
             end
         end
     )
@@ -101,8 +103,8 @@ function GearHelper:HideIlvlOnCharFrame()
 end
 
 function GearHelper:ResetIlvlOnCharFrame()
-    CharFrameHide()
-    if (PaperDollItemsFrame:IsShown()) then
+    GearHelper:HideIlvlOnCharFrame()
+    if (PaperDollItemsFrame:IsVisible()) then
         CharFrameShow()
     end
 end

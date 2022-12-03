@@ -359,7 +359,7 @@ local function BagUpdate(_, _, bagId)
             return
         end
     end
-    
+
     GearHelperVars.lastBagUpdateEvent[bagId] = time()
     GearHelper:UpdateItemsInBags(bagId)
     GearHelper:ScanCharacter()
@@ -465,7 +465,7 @@ local function ChatMsgYell(_, _, msg, sender, _, _)
 end
 
 local function UnitInventoryChanged(_, _, target)
-    if not GearHelper.db.profile.addonEnabled or target ~= "player"then
+    if not GearHelper.db.profile.addonEnabled or target ~= "player" then
         do
             return
         end
@@ -510,6 +510,10 @@ local function ReadyCheck()
     end
 end
 
+local function UnitInventoryChanged()
+    GearHelper:ScheduledTimer(GearHelper.ResetIlvlOnCharFrame, 0.1)
+end
+
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
 GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
@@ -537,3 +541,4 @@ GearHelper:RegisterEvent("QUEST_TURNED_IN", QuestTurnedIn)
 GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
+GearHelper:RegisterEvent("UNIT_INVENTORY_CHANGED", UnitInventoryChanged, ...)
