@@ -69,7 +69,10 @@ function GearHelper:UpdateItemsInBags(bagId)
         local item = GHItem:Create(itemlink)
 
         if not item.isEmpty then
-            GearHelperVars.bagsItems[bagId][itemlink] = item 
+            GearHelperVars.bagsItems[bagId][itemlink] = {
+                item = item,
+                slot = j
+            } 
         end
     end
 end
@@ -78,8 +81,8 @@ function GearHelper:FindItemInBags(equipLocs)
     local matchedItems = {}
     for _, items in pairs(GearHelperVars.bagsItems) do
         for _, item in pairs(items) do
-            if equipLocs[item.equipLoc] then
-                table.insert(matchedItems, item)
+            if equipLocs[item.item.equipLoc] then
+                table.insert(matchedItems, item.item)
             end
         end
     end

@@ -52,7 +52,7 @@ function GearHelper:SlashDot()
     GearHelper:BuildCWTable()
     -- GearHelper:SendAskVersion()
     GearHelper:ScanCharacter()
-    GearHelper:SetDotOnIcons()
+    GearHelper:ShowUpgradeOnItemsIcons()
 end
 
 function GearHelper:SlashSuppDot()

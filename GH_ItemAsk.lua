@@ -91,18 +91,14 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
 
             if quality ~= nil and quality < 5 then
                 nameLink = self:ReturnGoodLink(itemLink, target, tar)
-
-                local isItemBetter = self:IsItemBetter(itemLink)
+                local item = GHItem:Create(itemLink)
+                local isItemBetter = self:IsItemBetter(item)
                 if (isItemBetter) then
                     UIErrorsFrame:AddMessage(self:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. self:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
                     print(self:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. self:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink)
                     PlaySound(5274, "Master")
                 end
             end
-        -- else
-        -- 	if (err ~= GHExceptionNotEquippable) then
-        -- 		error(err)
-        -- 	end
         end
     end
 end

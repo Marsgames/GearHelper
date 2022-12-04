@@ -335,7 +335,7 @@ local function BagUpdate(_, _, bagId)
     GearHelper:UpdateItemsInBags(bagId)
     GearHelper:AutoEquip(bagId)
     GearHelper:ScanCharacter()
-    GearHelper:SetDotOnIcons()
+    GearHelper:ShowUpgradeOnItemsIcons()
 end
 
 local function ActiveTalentGroupChanged()
@@ -353,7 +353,7 @@ local function ActiveTalentGroupChanged()
         BagUpdate(nil, nil, bag)
     end
 
-    GearHelper:SetDotOnIcons()
+    GearHelper:ShowUpgradeOnItemsIcons()
 end
 
 local function ChatMsgChannel(_, _, msg, sender, lang, channel)

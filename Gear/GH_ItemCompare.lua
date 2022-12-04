@@ -1,19 +1,25 @@
-function GearHelper:IsItemBetter(itemLink)
-    GearHelper:Print("IsItemBetter - "..itemLink)
+function GearHelper:IsItemBetter(item)
+    GearHelper:Print("IsItemBetter - "..item.itemLink)
 
-    local item = GHItem:Create(itemLink)
+    if item.isEmpty or not item:IsEquippableByMe() or IsEquippedItem(item.item.id) then
+        return false
+    end
 
-    if not item or (not item:IsEquippableByMe() and not IsEquippedItem(item.id))then return false end
+    local result = self:CompareWithEquipped(item).delta
+    local isBetter = false
 
-    local res = self:CompareWithEquipped(item).delta
-
-    for _, result in pairs(res) do
-        if result > 0 then
-            return true
+    if result.combinable and result.combinable.combinedScoreDelta > 0 then
+        isBetter = true
+    else
+        local shouldEquip = false
+        for _, deltaScore in pairs(result.delta) do
+            if deltaScore > 0 then
+                isBetter = true
+            end
         end
     end
 
-    return false
+    return isBetter
 end
 
 function GearHelper:GetEquippedItemsScore(equippedItems)
