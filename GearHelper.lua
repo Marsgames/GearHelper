@@ -4,8 +4,8 @@
 -- SetDotOnIcons is pete
 -- On bag change do not trigger all items compare, only the new one
 -- Move harcoded lines on tooltip to localization
--- Manage find a pairable item to compare with
 -- Fix version messages ask/answer
+-- Add option to remove glow on icon and set a corner mark of the color
 
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then

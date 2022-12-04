@@ -12,18 +12,21 @@ function GearHelper:HookItemTooltip()
     local OnToolTipSetItem = function(tooltip, data)
 
         local tooltipItemLink = select(2, TooltipUtil.GetDisplayedItem(tooltip))
-        if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip or
-            tooltipItemLink == LAST_OPENED_TOOLTIP_ITEMLINK then
-            GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
+        if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip then
             return
         end
-
-        LAST_OPENED_TOOLTIP_ITEMLINK = tooltipItemLink
 
         local item = GHItem:Create(tooltipItemLink)
         if item.isEmpty then
             return
         end
+
+        if item.itemLink == LAST_OPENED_TOOLTIP_ITEMLINK then
+            GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
+            return
+        end
+
+        LAST_OPENED_TOOLTIP_ITEMLINK = tooltipItemLink
 
         local tooltipSettings = {
             lines = {},

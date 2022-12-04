@@ -1,11 +1,8 @@
--- local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
-
 local lfrCheckIsChecked = false
 local waitSpeFrame = CreateFrame("Frame")
 local delaySpeTimer = 0.5
 local moneyFlux = 0
 
--- GearHelperVars.waitSpeFrame:Hide()
 waitSpeFrame:Hide()
 
 --------------------------------- Functions ---------------------------------
@@ -61,9 +58,6 @@ local function OnMerchantShow()
 
     GearHelper:SellGreyItems()
     GearHelper:RepairEquipment()
-
-    GearHelper:ScanCharacter()
-    GearHelper:SetDotOnIcons()
 end
 
 -- TODO: Split this shit too
@@ -84,7 +78,6 @@ local function PlayerEnteringWorld()
     if GearHelper.db.profile.addonEnabled == true then
         GearHelper:SendAskVersion()
         GearHelper:ScanCharacter()
-        GearHelper:SetDotOnIcons()
 
         if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
             GearHelper.db.global.myNames = GearHelper.db.global.myNames .. GetUnitName("player") .. ","
@@ -157,28 +150,6 @@ local function ChatMsgAddon(_, _, prefixMessage, message, _, sender)
     if prefVersion == "askVersion" then
         GearHelper:SendAnswerVersion()
     end
-end
-
-local function ItemPush(_, _, bag)
-    if not GearHelper.db.profile.autoEquipLooted.actual then
-        do
-            return
-        end
-    end
-    GearHelper:Print("EVENT ITEM_PUSH")
-
-    local theBag = bag
-    if bag == 23 then
-        theBag = 4
-    elseif bag == 22 then
-        theBag = 3
-    elseif bag == 21 then
-        theBag = 2
-    elseif bag == 20 then
-        theBag = 1
-    end
-
-    GearHelper:EquipItem(theBag)
 end
 
 local function QuestComplete()
@@ -354,7 +325,7 @@ local function MerchantClosed()
 end
 
 local function BagUpdate(_, _, bagId)
-    if time() - (GearHelperVars.lastBagUpdateEvent[bagId] or 0) < 1 then
+    if time() - (GearHelperVars.lastBagUpdateEvent[bagId] or 0) < 1 or AUTO_EQUIP_ONGOING then
         do
             return
         end
@@ -362,6 +333,7 @@ local function BagUpdate(_, _, bagId)
 
     GearHelperVars.lastBagUpdateEvent[bagId] = time()
     GearHelper:UpdateItemsInBags(bagId)
+    GearHelper:AutoEquip(bagId)
     GearHelper:ScanCharacter()
     GearHelper:SetDotOnIcons()
 end
@@ -375,13 +347,11 @@ local function ActiveTalentGroupChanged()
     end
 
     GearHelperVars.waitSpeTimer = time()
-    -- GearHelperVars.waitSpeFrame:Show()
     waitSpeFrame:Show()
-    GearHelper:EquipItem(0)
-    GearHelper:EquipItem(1)
-    GearHelper:EquipItem(2)
-    GearHelper:EquipItem(3)
-    GearHelper:EquipItem(4)
+
+    for bag = Enum.BagIndex.Backpack, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
+        BagUpdate(nil, nil, bag)
+    end
 
     GearHelper:SetDotOnIcons()
 end
@@ -517,7 +487,6 @@ end
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
 GearHelper:RegisterEvent("PLAYER_ENTERING_WORLD", PlayerEnteringWorld)
 GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
-GearHelper:RegisterEvent("ITEM_PUSH", ItemPush, ...) --Fired when item is pushed onto the inventory stack
 GearHelper:RegisterEvent("QUEST_COMPLETE", QuestComplete)
 GearHelper:RegisterEvent("QUEST_DETAIL", QuestDetail)
 GearHelper:RegisterEvent("MERCHANT_CLOSED", MerchantClosed)

@@ -159,6 +159,8 @@ GearHelper.slotToNameMapping = {
     [INVSLOT_TABARD] = "TABARDSLOT"
 }
 
+AUTO_EQUIP_ONGOING = false --Used to prevent BAG_UPDATE events fired during auto equip to be processed
+
 -- WEAPON both hand for Dual Wield class / spe
 -- Dual Wield = Rogue / DH / Frost DK / Fury War / Enhancement Shaman / Brewmaster and Windwalker Monk = IsPlayerSpell(674)
 GearHelper.operators = {
