@@ -60,6 +60,10 @@ local function OnMerchantShow()
     GearHelper:RepairEquipment()
 end
 
+local function test(bagId)
+    GearHelper:Print("BAG "..bagId.."OPENED")
+end
+
 -- TODO: Split this shit too
 local function PlayerEnteringWorld()
     local used = false
@@ -77,6 +81,8 @@ local function PlayerEnteringWorld()
     GearHelper:BuildCWTable()
     if GearHelper.db.profile.addonEnabled == true then
         GearHelper:SendAskVersion()
+        GearHelper:UpdateItemsInBags(0) -- Backpack is the only bag to not throw BAG_UPDATE on login
+        
         GearHelper:ScanCharacter()
 
         if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
