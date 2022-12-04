@@ -49,7 +49,7 @@ Inventory\GH_ShowUpgradeIcon.lua
 Gear\GH_ItemCompare.lua
 Gear\GH_Tooltip.lua
 Gear\GH_Repair.lua
-Gear\GH_AutoEquip.lua.lua
+Gear\GH_AutoEquip.lua
 DropRates\GH_DropRates.lua
 DropRates\items.lua
 GH_ItemAsk.lua

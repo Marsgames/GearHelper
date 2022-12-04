@@ -1,17 +1,16 @@
 function GearHelper:IsItemBetter(item)
     GearHelper:Print("IsItemBetter - "..item.itemLink)
 
-    if item.isEmpty or not item:IsEquippableByMe() or IsEquippedItem(item.item.id) then
+    if item.isEmpty or not item:IsEquippableByMe() or IsEquippedItem(item.id) then
         return false
     end
 
-    local result = self:CompareWithEquipped(item).delta
+    local result = self:CompareWithEquipped(item)
     local isBetter = false
 
     if result.combinable and result.combinable.combinedScoreDelta > 0 then
         isBetter = true
     else
-        local shouldEquip = false
         for _, deltaScore in pairs(result.delta) do
             if deltaScore > 0 then
                 isBetter = true
