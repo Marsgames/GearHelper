@@ -7,7 +7,9 @@
 -- Add option to remove glow on icon and set a corner mark of the color
 -- Fix ItemAsk
 -- Remove Gearhelper.lua and split remaining function in appropriate folders/files
-
+-- Investigate BAG_UPDATE_DELAYED to replace BAG_UPDATE
+-- Check if "ornemental"  in GHItem to skip them
+--Display iLvl in icon instead of next to it
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then
         return
