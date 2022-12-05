@@ -57,9 +57,10 @@ function GearHelper:MySlashCommand(input)
     end
 
     if input == "" then
-        -- InterfaceOptionsFrame_OpenToCategory(GearHelper.cwFrame)
-        -- InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
-        -- TODO: Find a way to show subpanel (ex OpenToCategory)
+        -- TODO: Find a way to show expand GH options
+        -- Open to category with sub panels doesn't seem to work
+        Settings.OpenToCategory(GearHelper.locals["customWeights"])
+        Settings.OpenToCategory(GearHelper.locals["secondaryOptions"])
         Settings.OpenToCategory("GearHelper")
     else
         slashCmd["help"]()

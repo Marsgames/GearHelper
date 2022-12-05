@@ -29,7 +29,7 @@ function GearHelper:SlashVersion()
     print("|cFF00FF00GearHelper|r|cFFFFFF00 version : " .. GearHelperVars.version)
 end
 
-function GearHelper:SlashIm()
+function GearHelper:SlashIm(msg)
     GearHelper:setInviteMessage(tostring(msg:sub(4)))
 end
 
@@ -60,8 +60,8 @@ function GearHelper:SlashSuppDot()
 end
 
 function GearHelper:SlashCw()
-    InterfaceOptionsFrame:Show()
-    InterfaceOptionsFrame_OpenToCategory(GearHelper.cwFrame)
+    Settings.OpenToCategory("GearHelper")
+    Settings.OpenToCategory(GearHelper.locals["customWeights"])
 end
 
 function GearHelper:SlashAin()
