@@ -51,12 +51,12 @@ function GearHelper:RepairEquipment()
 
     if 1 == ghRepair then
         RepairAllItems(false)
-        print(GearHelper:ColorizeString(self.locals["repairCost"], "Pink") .. math.floor(price / 10000) .. self.locals["dot"] .. math.floor((price % 10000) / 100) .. self.locals["gold"])
+        print(GHToolbox:ColorizeString(self.locals["repairCost"], "Pink") .. math.floor(price / 10000) .. self.locals["dot"] .. math.floor((price % 10000) / 100) .. self.locals["gold"])
     elseif guildIsAbleToRepair then
         RepairAllItems(true)
-        print(GearHelper:ColorizeString(self.locals["guildRepairCost"], "Pink") .. math.floor(price / 10000) .. self.locals["dot"] .. math.floor((price % 10000) / 100) .. self.locals["gold"])
+        print(GHToolbox:ColorizeString(self.locals["guildRepairCost"], "Pink") .. math.floor(price / 10000) .. self.locals["dot"] .. math.floor((price % 10000) / 100) .. self.locals["gold"])
     else
         RepairAllItems(false)
-        print(GearHelper:ColorizeString(self.locals["repairCost"], "Pink") .. math.floor(price / 10000) .. self.locals["dot"] .. math.floor((price % 10000) / 100) .. self.locals["gold"])
+        print(GHToolbox:ColorizeString(self.locals["repairCost"], "Pink") .. math.floor(price / 10000) .. self.locals["dot"] .. math.floor((price % 10000) / 100) .. self.locals["gold"])
     end
 end

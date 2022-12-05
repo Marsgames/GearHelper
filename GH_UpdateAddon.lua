@@ -30,7 +30,7 @@ function GearHelper:ReceiveAnswer(msgV, msgC)
         return
     end
 
-    message(self.locals["maj1"] .. self:ColorizeString(GearHelperVars.version, "LightRed") .. self.locals["maj2"] .. self:ColorizeString(msgV, "LightGreen") .. self.locals["maj3"] .. msgC .. " (Curse)")
+    message(self.locals["maj1"] .. GHToolbox:ColorizeString(GearHelperVars.version, "LightRed") .. self.locals["maj2"] .. GHToolbox:ColorizeString(msgV, "LightGreen") .. self.locals["maj3"] .. msgC .. " (Curse)")
     askTime = nil
     waitAnswerFrame:Hide()
     updateAddonReminderCount = updateAddonReminderCount - 1

@@ -12,7 +12,7 @@ local function AskIfHeNeed(link, sendTo)
     local className, classFile, classID = UnitClass(sendTo)
     local itemTable = GHItem:Create(link)
     local itemLink = itemTable["itemLink"]
-    local lienPerso = tostring(GearHelper:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
+    local lienPerso = tostring(GHToolbox:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
     StaticPopupDialogs["AskIfHeNeed"] = {
         text = GearHelper.locals["demande1"] .. lienPerso .. GearHelper.locals["demande2"] .. itemLink .. " ?",
         button1 = GearHelper.locals["yes"],
@@ -60,7 +60,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
     local tar = ""
 
     if classFile ~= nil then
-        tar = self:GetClassColor(classFile) .. tostring(target) .. "|r"
+        tar = GHToolbox:GetClassColor(classFile) .. tostring(target) .. "|r"
     end
 
     local nameLink
@@ -87,15 +87,15 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         local shouldBeCompared, err = pcall(self.ShouldBeCompared, nil, itemLink)
         if (shouldBeCompared) then
             local item = GHItem:Create(itemLink)
-            local quality = GearHelper:GetQualityFromColor(item.rarity)
+            local quality = GHToolbox:GetQualityFromColor(item.rarity)
 
             if quality ~= nil and quality < 5 then
-                nameLink = self:ReturnGoodLink(itemLink, target, tar)
+                nameLink = GHToolbox:ReturnGoodLink(itemLink, target, tar)
                 local item = GHItem:Create(itemLink)
                 local isItemBetter = self:IsItemBetter(item)
                 if (isItemBetter) then
-                    UIErrorsFrame:AddMessage(self:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. self:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
-                    print(self:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. self:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink)
+                    UIErrorsFrame:AddMessage(GHToolbox:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. GHToolbox:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
+                    print(GHToolbox:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. GHToolbox:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink)
                     PlaySound(5274, "Master")
                 end
             end

@@ -27,12 +27,12 @@ end
 
 function GearHelper:OnEnable()
     if not self.db.profile.addonEnabled then
-        print(self:ColorizeString(self.locals["Addon"], "LightGreen") .. self:ColorizeString(self.locals["DeactivatedRed"], "LightRed"))
+        print(GHToolbox:ColorizeString(self.locals["Addon"], "LightGreen") .. GHToolbox:ColorizeString(self.locals["DeactivatedRed"], "LightRed"))
         return
     end
 
-    print(self:ColorizeString(self.locals["Addon"], "LightGreen") .. self:ColorizeString(self.locals["ActivatedGreen"], "LightGreen"))
-    print(GearHelper:ColorizeString(self.locals["merci"], "LightGreen"))
+    print(GHToolbox:ColorizeString(self.locals["Addon"], "LightGreen") .. GHToolbox:ColorizeString(self.locals["ActivatedGreen"], "LightGreen"))
+    print(GHToolbox:ColorizeString(self.locals["merci"], "LightGreen"))
 
     --self.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 end

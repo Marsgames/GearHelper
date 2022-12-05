@@ -1,4 +1,7 @@
-function GearHelper:MySplit(inputString, separator)
+GHToolbox = {}
+GHToolbox.__index = GHToolbox
+
+function GHToolbox:MySplit(inputString, separator)
     if separator == nil then
         separator = "%s"
     end
@@ -11,7 +14,7 @@ function GearHelper:MySplit(inputString, separator)
     return t
 end
 
-function GearHelper:ReturnGoodLink(itemLink, target, tar)
+function GHToolbox:ReturnGoodLink(itemLink, target, tar)
     local itemString = select(3, strfind(itemLink, "|H(.+)|h"))
     local _, itemId = strsplit(":", itemString)
 
@@ -22,7 +25,7 @@ function GearHelper:ReturnGoodLink(itemLink, target, tar)
     return "|HGHWhispWhenClick:askIfHeNeed_" .. target .. "_" .. itemId .. "_|h" .. tar .. "|h"
 end
 
-function GearHelper:GetClassColor(classFileName)
+function GHToolbox:GetClassColor(classFileName)
     local color = RAID_CLASS_COLORS[classFileName]
 
     return "|c" .. color.colorStr
@@ -54,25 +57,25 @@ local function GetActiveTemplate()
     return returnValue
 end
 
-function GearHelper:FindHighestStatInTemplate()
-    local template = GetActiveTemplate()
+-- function GearHelper:FindHighestStatInTemplate()
+--     local template = GetActiveTemplate()
 
-    if (nil == template) then
-        error(GHExceptionTemplateIsNil)
-    end
+--     if (nil == template) then
+--         error(GHExceptionTemplateIsNil)
+--     end
 
-    local maxV = 0
-    local maxK = template[0]
+--     local maxV = 0
+--     local maxK = template[0]
 
-    for k, v in pairs(template) do
-        if (tonumber(v) and tonumber(v) > maxV) then
-            maxV = v
-            maxK = k
-        end
-    end
+--     for k, v in pairs(template) do
+--         if (tonumber(v) and tonumber(v) > maxV) then
+--             maxV = v
+--             maxK = k
+--         end
+--     end
 
-    return maxK
-end
+--     return maxK
+-- end
 
 local function GetColor(name)
     local colorList = {}
@@ -89,7 +92,7 @@ local function GetColor(name)
     return colorList[name:lower()]
 end
 
-function GearHelper:ColorizeString(text, color)
+function GHToolbox:ColorizeString(text, color)
     if GetColor(color) ~= nil then
         return GetColor(color) .. text
     else
@@ -119,7 +122,7 @@ function GearHelper:GetQualityFromColor(color)
     end
 end
 
-function GearHelper:GetArraySize(tab)
+function GHToolbox:GetArraySize(tab)
     if (type(tab) ~= "table") then
         error(GHExceptionParameterIsNotAnArray)
     end
@@ -132,14 +135,14 @@ function GearHelper:GetArraySize(tab)
     return count
 end
 
-function GearHelper:TableConcat(t1, t2)
+function GHToolbox:TableConcat(t1, t2)
     for i = 1, #t2 do
         t1[#t1 + 1] = t2[i]
     end
     return t1
 end
 
-function GearHelper:ScheduledTimer(func, delay, ...)
+function GHToolbox:DelayCallback(func, delay, ...)
     local args = {...}
     C_Timer.After(
         delay,

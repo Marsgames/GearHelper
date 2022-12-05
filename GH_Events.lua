@@ -61,7 +61,7 @@ local function OnMerchantShow()
 end
 
 local function test(bagId)
-    GearHelper:Print("BAG "..bagId.."OPENED")
+    GearHelper:Print("BAG " .. bagId .. "OPENED")
 end
 
 -- TODO: Split this shit too
@@ -82,7 +82,7 @@ local function PlayerEnteringWorld()
     if GearHelper.db.profile.addonEnabled == true then
         GearHelper:SendAskVersion()
         GearHelper:UpdateItemsInBags(0) -- Backpack is the only bag to not throw BAG_UPDATE on login
-        
+
         GearHelper:ScanCharacter()
 
         if (not string.match(GearHelper.db.global.myNames, GetUnitName("player") .. ",")) then
@@ -234,7 +234,7 @@ local function QuestDetail()
                 end
             end
 
-            if GearHelper:GetArraySize(tmpTable) == 0 then
+            if GHToolbox:GetArraySize(tmpTable) == 0 then
                 table.insert(weightTable, -10)
                 table.insert(prixTable, item.sellPrice)
                 table.insert(altTable, item.sellPrice, item.itemLink)
@@ -325,7 +325,7 @@ local function MerchantClosed()
     local moneyEarned = actualMoney - moneyFlux
 
     if (moneyEarned > 0 and moneyEarned ~= actualMoney) then
-        print(GearHelper:ColorizeString(GearHelper.locals["moneyEarned"], "LightGreen") .. math.floor(moneyEarned / 10000) .. GearHelper.locals["dot"] .. math.floor((moneyEarned % 10000) / 100) .. GearHelper.locals["gold"])
+        print(GHToolbox:ColorizeString(GearHelper.locals["moneyEarned"], "LightGreen") .. math.floor(moneyEarned / 10000) .. GearHelper.locals["dot"] .. math.floor((moneyEarned % 10000) / 100) .. GearHelper.locals["gold"])
         moneyFlux = 0
     end
 end
@@ -486,8 +486,13 @@ local function ReadyCheck()
     end
 end
 
-local function UnitInventoryChanged()
-    GearHelper:ScheduledTimer(GearHelper.ResetIlvlOnCharFrame, 0.1)
+-- local function UnitInventoryChanged()
+--     GHToolbox:DelayCallback(GearHelper.ResetIlvlOnCharFrame, 0.1)
+-- end
+
+local function BagUpdateDelayed()
+    -- Update char frame when the bag is update because original UNIT_INVENTORY_CHANGED event is not fired when the player change trinkets or fingers
+    GearHelper:ResetIlvlOnCharFrame()
 end
 
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
@@ -517,3 +522,4 @@ GearHelper:RegisterEvent("PLAYER_LOGIN", PlayerLogin, ...)
 GearHelper:RegisterEvent("LFG_UPDATE", LfgUpdate, ...)
 GearHelper:RegisterEvent("READY_CHECK", ReadyCheck, ...)
 GearHelper:RegisterEvent("UNIT_INVENTORY_CHANGED", UnitInventoryChanged, ...)
+GearHelper:RegisterEvent("BAG_UPDATE_DELAYED", BagUpdateDelayed, ...)

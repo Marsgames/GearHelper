@@ -37,7 +37,7 @@ function GearHelper:GetQuestReward()
                     end
                 end
 
-                if self:GetArraySize(tmpTable) == 0 then
+                if GHToolbox:GetArraySize(tmpTable) == 0 then
                     table.insert(weightTable, -10)
                     table.insert(prixTable, item.sellPrice)
                     table.insert(altTable, item.sellPrice, item.itemLink)

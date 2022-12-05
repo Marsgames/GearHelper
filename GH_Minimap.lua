@@ -2,26 +2,26 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local function OnMinimapTooltipShow(tooltip)
     tooltip:SetOwner(LibDBIcon10_GHIcon, "ANCHOR_TOPRIGHT", -15, -100)
-    tooltip:SetText(GearHelper:ColorizeString("GearHelper", GearHelper.db.profile.addonEnabled and "LightGreen" or "LightRed"))
+    tooltip:SetText(GHToolbox:ColorizeString("GearHelper", GearHelper.db.profile.addonEnabled and "LightGreen" or "LightRed"))
 
     if not GearHelper.db.profile.addonEnabled then
-        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["Addon"], "Yellow") .. GearHelper:ColorizeString(GearHelper.locals["DeactivatedRed"], "LightRed"), 1, 1, 1)
+        tooltip:AddLine(GHToolbox:ColorizeString(GearHelper.locals["Addon"], "Yellow") .. GHToolbox:ColorizeString(GearHelper.locals["DeactivatedRed"], "LightRed"), 1, 1, 1)
     end
 
-    tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtLClick"], "Yellow"), 1, 1, 1)
+    tooltip:AddLine(GHToolbox:ColorizeString(GearHelper.locals["MmTtLClick"], "Yellow"), 1, 1, 1)
 
     if GearHelper.db.profile.addonEnabled then
-        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
+        tooltip:AddLine(GHToolbox:ColorizeString(GearHelper.locals["MmTtRClickDeactivate"], "Yellow"), 1, 1, 1)
 
         if GearHelper.db.profile.minimap.isLock then
-            tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
+            tooltip:AddLine(GHToolbox:ColorizeString(GearHelper.locals["MmTtClickUnlock"], "Yellow"), 1, 1, 1)
         else
-            tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtClickLock"], "Yellow"), 1, 1, 1)
+            tooltip:AddLine(GHToolbox:ColorizeString(GearHelper.locals["MmTtClickLock"], "Yellow"), 1, 1, 1)
         end
 
-        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
+        tooltip:AddLine(GHToolbox:ColorizeString(GearHelper.locals["MmTtCtrlClick"], "Yellow"), 1, 1, 1)
     else
-        tooltip:AddLine(GearHelper:ColorizeString(GearHelper.locals["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
+        tooltip:AddLine(GHToolbox:ColorizeString(GearHelper.locals["MmTtRClickActivate"], "Yellow"), 1, 1, 1)
     end
 
     tooltip:Show()

@@ -5,11 +5,11 @@
 -- Move harcoded lines on tooltip to localization
 -- Fix version messages ask/answer
 -- Add option to remove glow on icon and set a corner mark of the color
--- Fix ItemAsk
 -- Remove Gearhelper.lua and split remaining function in appropriate folders/files
 -- Investigate BAG_UPDATE_DELAYED to replace BAG_UPDATE
 -- Check if "ornemental"  in GHItem to skip them
---Display iLvl in icon instead of next to it
+-- Fix todo in GH_Items.lua
+
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then
         return
@@ -25,7 +25,7 @@ function GearHelper:showMessageSMN(channel, sender, msg)
     end
 
     local stop = false
-    local arrayNames = self:MySplit(self.db.global.myNames, ",")
+    local arrayNames = GHToolbox:MySplit(self.db.global.myNames, ",")
     if arrayNames[1] == nil then
         return
     end
