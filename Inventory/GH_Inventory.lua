@@ -12,15 +12,16 @@ function GearHelper:GetSlotsByEquipLoc(equipLoc)
     local equipSlots = {}
     local canDualWield = IsPlayerSpell(674) --Dual Wield spellId
 
-    GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield ? "..tostring(canDualWield))
+    GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield ? " .. tostring(canDualWield))
 
-    if canDualWield and (
-        (equipLoc == "INVTYPE_2HWEAPON" and IsPlayerSpell(46917))  --Titan's Grip War Fury spellId
-        or equipLoc == "INVTYPE_WEAPON") 
-    then
-        GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield and it's a "..equipLoc)
+    if
+        canDualWield and
+            ((equipLoc == "INVTYPE_2HWEAPON" and IsPlayerSpell(46917)) or --Titan's Grip War Fury spellId
+                equipLoc == "INVTYPE_WEAPON")
+     then
+        GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield and it's a " .. equipLoc)
         equipSlots = {
-            slots = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
+            slots = {INVSLOT_MAINHAND, INVSLOT_OFFHAND},
             operator = GearHelper.operators.OR
         }
     else
@@ -44,13 +45,13 @@ function GearHelper:IsComparedItem1HTestedAgainst2HWeapon(comparedItemEquipLoc)
 end
 
 function GearHelper:GetEquippedItems(equipLoc)
-    self:Print("GetEquippedItems - Gettin' slots ID for "..equipLoc)
+    self:Print("GetEquippedItems - Gettin' slots ID for " .. equipLoc)
 
     local result = GearHelper:GetSlotsByEquipLoc(equipLoc)
 
     result.items = {}
 
-    for i,slotId in ipairs(result.slots) do
+    for i, slotId in ipairs(result.slots) do
         result.items[slotId] = GearHelperVars.charInventory[slotId]
     end
 
@@ -58,13 +59,17 @@ function GearHelper:GetEquippedItems(equipLoc)
 end
 
 function GearHelper:UpdateItemsInBags(bagId)
+    if (bagId == nil) then
+        do
+            return
+        end
+    end
     for j = 1, C_Container.GetContainerNumSlots(bagId) do
-        local itemlink = C_Container.GetContainerItemLink(bagId, j);
+        local itemlink = C_Container.GetContainerItemLink(bagId, j)
 
         if GearHelperVars.bagsItems[bagId] == nil then
             GearHelperVars.bagsItems[bagId] = {}
         end
-
 
         local item = GHItem:Create(itemlink)
 
@@ -72,7 +77,7 @@ function GearHelper:UpdateItemsInBags(bagId)
             GearHelperVars.bagsItems[bagId][itemlink] = {
                 item = item,
                 slot = j
-            } 
+            }
         end
     end
 end
