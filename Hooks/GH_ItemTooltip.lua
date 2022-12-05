@@ -10,7 +10,6 @@ end
 
 function GearHelper:HookItemTooltip()
     local OnToolTipSetItem = function(tooltip, data)
-
         local tooltipItemLink = select(2, TooltipUtil.GetDisplayedItem(tooltip))
         if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip then
             return
@@ -37,7 +36,7 @@ function GearHelper:HookItemTooltip()
             GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay")
             tooltipSettings.borderColor = ITEM_EQUAL_TOOLTIP_BORDER
             table.insert(tooltipSettings.lines, GearHelper:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
-        elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
+        elseif GHItem:IsEquippableByMe(item) and not IsEquippedItem(item.id) then
             GearHelper:Print("OnToolTipSetItem - Item not equipped, comparing score...")
             local result = GearHelper:CompareWithEquipped(item)
             tooltipSettings = GearHelper:GenerateTooltipSettings(result)
@@ -47,7 +46,7 @@ function GearHelper:HookItemTooltip()
             tooltipSettings.borderColor = ITEM_DOWNGRADE_TOOLTIP_BORDER
         end
 
-        tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)        
+        tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)
         tooltipSettings.lines = GearHelper:TableConcat(tooltipSettings.lines, GearHelper:GetDropInfo(item))
 
         GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)

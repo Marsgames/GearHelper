@@ -1,7 +1,7 @@
 function GearHelper:IsItemBetter(item)
-    GearHelper:Print("IsItemBetter - "..item.itemLink)
+    GearHelper:Print("IsItemBetter - " .. item.itemLink)
 
-    if item.isEmpty or not item:IsEquippableByMe() or IsEquippedItem(item.id) then
+    if item.isEmpty or not GHItem:IsEquippableByMe(item) or IsEquippedItem(item.id) then
         return false
     end
 
@@ -67,7 +67,7 @@ function GearHelper:CompareWithEquipped(item)
         result.combinable = {
             item = GetItemWithBestScore(pairableItems)
         }
-        GearHelper:Print("Best item to pair is "..result.combinable.item.itemLink)
+        GearHelper:Print("Best item to pair is " .. result.combinable.item.itemLink)
         result.combinable.combinedScoreDelta = (item:GetScore() + result.combinable.item:GetScore()) - equippedItemsScore[0]
     end
 

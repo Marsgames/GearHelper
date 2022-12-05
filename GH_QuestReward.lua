@@ -16,9 +16,9 @@ function GearHelper:GetQuestReward()
         local altTable = {}
 
         for i = 1, numQuestChoices do
-            local item = self:GetItemByLink(GetQuestItemLink("choice", i), "GH_QuestReward.GetQuestReward()")
+            local item = GHItem:Create(GetQuestItemLink("choice", i))
 
-            if item.type ~= self.locals["armor"] and item.type ~= self.locals["weapon"] then
+            if item.type ~= ARMOR and item.type ~= WEAPON then
                 return
             end
 

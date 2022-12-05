@@ -42,6 +42,8 @@ function GHItem:Create(itemLink)
     this.name = item:GetItemName()
     this.iLvl = item:GetCurrentItemLevel()
     this.isEmpty = false
+    -- TODO: Fix this to call item.IsEquippableByMe()
+    -- this.IsEquippableByMe = GHItem.IsEquippableByMe
 
     return this
 end
@@ -107,8 +109,16 @@ function GHItem:GetStats()
     return self.stats
 end
 
-function GHItem:IsEquippableByMe()
-    local inventoryType = C_Item.GetItemInventoryTypeByID(self.id)
+-- TODO: Remove item from args and replace item with self in function
+-- Then replace all occurences of GHItem:IsEquippableByMe(item) with item:IsEquippableByMe()
+function GHItem:IsEquippableByMe(item)
+    -- print("id : " .. tostring(item.id))
+    if (item.id == nil) then
+        do
+            return
+        end
+    end
+    local inventoryType = C_Item.GetItemInventoryTypeByID(item.id)
 
     if INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
         GearHelper:Print("IsEquippableByMe - InvType to ignore")
@@ -119,19 +129,19 @@ function GHItem:IsEquippableByMe()
     local _, myClass = UnitClass("player")
     local playerSpec = GetSpecializationInfo(GetSpecialization())
 
-    if self.levelRequired > myLevel then
+    if item.levelRequired > myLevel then
         GearHelper:Print("IsEquippableByMe - Required level not met")
         return false
-    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
+    elseif item.equipLoc == "INVTYPE_FINGER" or item.equipLoc == "INVTYPE_NECK" or item.equipLoc == "INVTYPE_TRINKET" or item.equipLoc == "INVTYPE_CLOAK" and item.subType == MISCELLANEOUS or item.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
         return true
-    elseif self.rarity == 6 then -- Artifacts
-        if type(ARTIFACTS[tostring(playerSpec)]) == "string" and tostring(self.id) == ARTIFACTS[tostring(playerSpec)] then
+    elseif item.rarity == 6 then -- Artifacts
+        if type(ARTIFACTS[tostring(playerSpec)]) == "string" and tostring(item.id) == ARTIFACTS[tostring(playerSpec)] then
             return true
         else
             table.foreach(
                 ARTIFACTS[tostring(playerSpec)],
                 function(_, v)
-                    if tostring(self.id) == v then
+                    if tostring(item.id) == v then
                         return true
                     end
                 end
@@ -142,7 +152,7 @@ function GHItem:IsEquippableByMe()
         table.foreach(
             ITEM_TYPES_EQUIPPABLE_BY_CLASS[tostring(myClass)],
             function(_, v)
-                if self.subType == v then
+                if item.subType == v then
                     isEquippable = true
                 end
             end

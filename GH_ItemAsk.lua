@@ -10,13 +10,13 @@ end
 
 local function AskIfHeNeed(link, sendTo)
     local className, classFile, classID = UnitClass(sendTo)
-    local itemTable = GearHelper:GetItemByLink(link, "GH_ItemAsk.AskIfHeNeed()")
+    local itemTable = GHItem:Create(link)
     local itemLink = itemTable["itemLink"]
     local lienPerso = tostring(GearHelper:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
     StaticPopupDialogs["AskIfHeNeed"] = {
-        text = self.locals["demande1"] .. lienPerso .. self.locals["demande2"] .. itemLink .. " ?",
-        button1 = self.locals["yes"],
-        button2 = self.locals["no"],
+        text = GearHelper.locals["demande1"] .. lienPerso .. GearHelper.locals["demande2"] .. itemLink .. " ?",
+        button1 = GearHelper.locals["yes"],
+        button2 = GearHelper.locals["no"],
         OnAccept = function(GearHelper2, data, data2)
             local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
             local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
@@ -24,12 +24,12 @@ local function AskIfHeNeed(link, sendTo)
                 unitLocale = "enUS"
             end
 
-            local theSource = GearHelper.db.global.messages[unitLocale].demande4 or self.locals["demande4enUS"]
-            local theSource2 = GearHelper.db.global.messages[unitLocale].demande42 or self.locals["demande4enUS2"]
+            local theSource = GearHelper.db.global.messages[unitLocale].demande4 or GearHelper.locals["demande4enUS"]
+            local theSource2 = GearHelper.db.global.messages[unitLocale].demande42 or GearHelper.locals["demande4enUS2"]
             local msg = theSource .. itemLink .. theSource2 .. "?"
-            local rep = GearHelper.db.global.messages[unitLocale].rep or self.locals["repenUS"]
+            local rep = GearHelper.db.global.messages[unitLocale].rep or GearHelper.locals["repenUS"]
             local rep2 = GearHelper.db.global.messages[unitLocale].rep2 or ""
-            local msgRep = rep .. self.locals["maLangue" .. unitLocale] .. rep2
+            local msgRep = rep .. GearHelper.locals["maLangue" .. unitLocale] .. rep2
 
             SendChatMessage(msg, "WHISPER", "Common", sendTo)
             SendChatMessage(msgRep, "WHISPER", "Common", sendTo)
@@ -74,7 +74,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         if func == "askIfHeNeed" then
             local _, nomPerso, itID, persoLink = strsplit("_", link)
             local _, theItemLink = GetItemInfo(itID)
-            local itemTable = self:GetItemByLink(theItemLink, "GH_ItemAsk.SetItemRef")
+            local itemTable = GHItem:Create(theItemLink)
             local itLink1 = itemTable.itemLink
 
             AskIfHeNeed(itLink1, nomPerso)
@@ -86,7 +86,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
     for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
         local shouldBeCompared, err = pcall(self.ShouldBeCompared, nil, itemLink)
         if (shouldBeCompared) then
-            local item = self:GetItemByLink(itemLink, "GH_ItemAsk.CreatreLinkAskIfHeNeeds")
+            local item = GHItem:Create(itemLink)
             local quality = GearHelper:GetQualityFromColor(item.rarity)
 
             if quality ~= nil and quality < 5 then
