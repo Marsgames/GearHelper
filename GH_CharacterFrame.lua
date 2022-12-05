@@ -34,7 +34,7 @@ local function CharFrameShow(_)
                 }
 
                 local xOffset = 0
-                local yOffset = 0
+                local yOffset = -2
                 local parentAnchor = ""
                 local childAnchor = ""
 
