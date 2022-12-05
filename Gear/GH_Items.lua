@@ -179,8 +179,6 @@ function GHItem:GetScore()
     for statName, statValue in pairs(self:GetStats()) do
         valueItem = valueItem + GearHelper:GetStatFromActiveTemplate(statName) * statValue
     end
-    GearHelper:Print(self)
-    GearHelper:Print(self.itemLink .. " Score : " .. valueItem)
 
     return valueItem
 end
