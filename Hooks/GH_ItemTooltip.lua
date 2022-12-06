@@ -9,7 +9,7 @@ local function ShouldDisplayNotEquippable(item)
 end
 
 function GearHelper:HookItemTooltip()
-    local OnToolTipSetItem = function(tooltip, data)
+    local OnToolTipSetItem = function(tooltip, _)
         local tooltipItemLink = select(2, TooltipUtil.GetDisplayedItem(tooltip))
         if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip then
             return
@@ -36,7 +36,7 @@ function GearHelper:HookItemTooltip()
             GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay")
             tooltipSettings.borderColor = ITEM_EQUAL_TOOLTIP_BORDER
             table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
-        elseif GHItem:IsEquippableByMe(item) and not IsEquippedItem(item.id) then
+        elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
             GearHelper:Print("OnToolTipSetItem - Item not equipped, comparing score...")
             local result = GearHelper:CompareWithEquipped(item)
             tooltipSettings = GearHelper:GenerateTooltipSettings(result)
