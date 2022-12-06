@@ -75,12 +75,7 @@ L["maLangueruRU"] = "немецкий"
 L["maLanguezhCN"] = "德国"
 L["maLanguezhTW"] = "德國"
 L["miscOptions"] = "Diverse Optionen"
-L["MmTtClickLock"] = "Umschalt + Klick, um das Minimap Icon zu  |cFFFF0000fixieren|cFFFFFF00"
-L["MmTtClickUnlock"] = "Umschalt + Klick, um das Minimap Icon |cFFFF0000freizugeben|cFFFFFF00"
-L["MmTtCtrlClick"] = "Strg + Klick, um das Minimap Icon zu  |cFFFF0000verstecken|cFFFFFF00"
-L["MmTtLClick"] = "Links-Klick zum Öffnen der Optionen"
-L["MmTtRClickActivate"] = "Rechts-Klick zum Einschalten von GearHelper"
-L["MmTtRClickDeactivate"] = "Rechts-Klick zum Ausschalten von GearHelper"
+
 L["moneyEarned"] = "Geld verdient durch Verkauf:"
 L["no"] = "Nein"
 L["noxxicWeights"] = "Noxxic Gewichtungen"
@@ -117,8 +112,6 @@ L["UIIlvlInspectFrame"] = "ilvl beim betrachten"
 L["UIIlvlInspectFrameDesc"] = "Zeigt das iLvl Ihres Ziels beim betrachten an"
 L["UIinviteMessage"] = "Einladungsnachricht"
 L["UIinviteMessageDesc"] = "Einladungsnachricht, die dir gesendet werden muss, um eingeladen zu werden"
-L["UIMinimapIcon"] = "Minimap Icon"
-L["UIMinimapIconDesc"] = "Zeige das Minimap Icon"
 L["UIMyNames"] = "Namen"
 L["UIMyNamesDesc"] = "Namen für die Warnungen. Getrennt durch Kommata (keine Leerzeichen)"
 L["UIprintWhenEquip"] = "Nachricht beim automatischen ausrüsten"
@@ -132,29 +125,3 @@ L["yes"] = "Ja"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
------
-
-L["Tooltip"] = {
-    Stat = {
-        ["Intellect"] = ITEM_MOD_INTELLECT_SHORT,
-        ["Haste"] = ITEM_MOD_HASTE_RATING_SHORT,
-        ["CriticalStrike"] = ITEM_MOD_CRIT_RATING_SHORT,
-        ["Versatility"] = ITEM_MOD_VERSATILITY,
-        ["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT,
-        ["Agility"] = ITEM_MOD_AGILITY_SHORT,
-        ["Stamina"] = ITEM_MOD_STAMINA_SHORT,
-        ["Strength"] = ITEM_MOD_STRENGTH_SHORT,
-        ["Armor"] = RESISTANCE0_NAME,
-        ["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
-        ["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
-        ["Leech"] = "Lebensraub",
-        ["Avoidance"] = "Vermeidung",
-        ["MovementSpeed"] = "Bewegungsgeschwindigkeit"
-    },
-    ["ItemLevel"] = "^Gegenstandsstufe",
-    ["LevelRequired"] = "^Benötigt Stufe",
-    ["GemSocketEmpty"] = "Sockel",
-    ["BonusGem"] = "^Sockelbonus"
-    --["MainDroite"] = "Dégâts main droite",
-    --["MainGauche"] = "Dégâts main gauche"
-}

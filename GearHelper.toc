@@ -1,11 +1,11 @@
-## Interface: 90200
+## Interface: 100002
 ## Title: |cFF00FF00GearHelper|r
 ## Notes: Un addon qui permet de choisir pour vous le stuff le plus approprié à votre classe / spé
 ## Notes-enUS: Manage your gear during your level up and after
 ### Notes-deDE: Manage your gear during your level up and after
 ## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
 ## Author:  Marsgames & Tempaxe
-## Version: 3.2
+## Version: 3.3.1
 ## DefaultState: enabled
 
 
@@ -19,7 +19,6 @@
 
 ## SavedVariables: GearHelperDB
 
-embeds.xml
 
 ########## Localizations ##########
 Localizations\enUS.lua
@@ -35,27 +34,34 @@ Localizations\esES.lua
 Localizations\zhTW.lua
 
 ########## Addon ##########
-GH_Benchmark.lua
+embeds.xml
 GH_Exceptions.lua
-GH_Minimap.lua
-GH_CharacterFrame.lua
-GH_InspectFrame.lua
-GH_Cache.lua
+GH_Core.lua
+GH_Debug.lua
+Hooks\GH_ItemTooltip.lua
+Hooks\GH_MoneyTooltip.lua
+Gear\GH_Template.lua
+Gear\GH_Items.lua
+GH_Constants.lua
+Inventory\GH_Inventory.lua
+Inventory\GH_AutoSell.lua
+Inventory\GH_ShowUpgradeIcon.lua
+Gear\GH_ItemCompare.lua
+Gear\GH_Tooltip.lua
+Gear\GH_Repair.lua
+Gear\GH_AutoEquip.lua
 DropRates\GH_DropRates.lua
 DropRates\items.lua
 GH_ItemAsk.lua
 GH_QuestReward.lua
 GH_RaidFinder.lua
 GH_UpdateAddon.lua
-Gear\GH_TooltipHelper.lua
-Gear\GH_Template.lua
-Gear\GH_Inventory.lua
-Gear\GH_StatComputation.lua
-GearHelper.lua
-WeightValues.lua
 Commands\GH_SlashMethods.lua
 Commands\GH_Slash.lua
-GH_Bags.lua
-GH_Events.lua
 GH_Options.lua
+Options\GH_Messages.lua
+Options\GH_Thanks.lua
+GH_Events.lua
 GH_Toolbox.lua
+GH_CharacterFrame.lua
+GearHelper.lua

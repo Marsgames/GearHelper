@@ -3,12 +3,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 function GearHelper:SlashDisplayHelp()
     GearHelper:Print("state - Display the addon status")
     GearHelper:Print("list - Run a scanBag + scanCharacter")
-    print(L["helpConfig"])
-    print(L["helpCW"])
-    print(L["helpVersion"])
+    print(self.locals["helpConfig"])
+    print(self.locals["helpCW"])
+    print(self.locals["helpVersion"])
     GearHelper:Print("im 'newMsg' - Change the auto invite token by newMsg")
     GearHelper:Print("createItemLink - Generate a fake itemLink")
-    print(L["helpDebug"])
+    print(self.locals["helpDebug"])
     -- GearHelper:Print("askLoot - Enable the feature (auto ask for loot)")
     GearHelper:Print("dot - Enable the dot on better items icons")
     GearHelper:Print("suppDot - Disable the dot on better items icons")
@@ -20,36 +20,6 @@ function GearHelper:SlashDisplayHelp()
     -- GearHelper:Print("test - run unit tests")
 end
 
-function GearHelper:SlashCountCache()
-    GearHelper:Print(GearHelper:GetArraySize(GearHelper.db.global.ItemCache))
-end
-
-function GearHelper:SlashPrintCache()
-    for k, v in pairs(GearHelper.db.global.ItemCache) do
-        GearHelper:Print("--- " .. k)
-        if (GearHelper.db.profile.debug) then
-            for kk, vv in pairs(v) do
-                print("   " .. kk .. " - " .. tostring(vv))
-            end
-        end
-    end
-end
-
-function GearHelper:SlashList()
-    for bag = 0, 4 do
-        for slot = 1, GetContainerNumSlots(bag) do
-            local _, _, _, _, _, _, link = GetContainerItemInfo(bag, slot)
-            if link ~= nil then
-                if (strfind(link, "|H(.+)|h") ~= nil) then
-                    link = "|cff9d9d9d" .. link .. "|h|h|r"
-                end
-                GearHelper:Print(bag .. " " .. slot)
-                GearHelper:Print(link)
-            end
-        end
-    end
-end
-
 function GearHelper:SlashConfig()
     InterfaceOptionsFrame:Show()
     InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
@@ -59,7 +29,7 @@ function GearHelper:SlashVersion()
     print("|cFF00FF00GearHelper|r|cFFFFFF00 version : " .. GearHelperVars.version)
 end
 
-function GearHelper:SlashIm()
+function GearHelper:SlashIm(msg)
     GearHelper:setInviteMessage(tostring(msg:sub(4)))
 end
 
@@ -82,7 +52,7 @@ function GearHelper:SlashDot()
     GearHelper:BuildCWTable()
     -- GearHelper:SendAskVersion()
     GearHelper:ScanCharacter()
-    GearHelper:SetDotOnIcons()
+    GearHelper:ShowUpgradeOnItemsIcons()
 end
 
 function GearHelper:SlashSuppDot()
@@ -90,8 +60,8 @@ function GearHelper:SlashSuppDot()
 end
 
 function GearHelper:SlashCw()
-    InterfaceOptionsFrame:Show()
-    InterfaceOptionsFrame_OpenToCategory(GearHelper.cwFrame)
+    Settings.OpenToCategory("GearHelper")
+    Settings.OpenToCategory(GearHelper.locals["customWeights"])
 end
 
 function GearHelper:SlashAin()
@@ -139,8 +109,8 @@ function GearHelper:SlashCheck()
     if (not lfrCheckButton_GlobalName) then
         lfrCheckButton = CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
         lfrCheckButton:SetPoint("TOPRIGHT", -325, -45)
-        lfrCheckButton_GlobalNameText:SetText(L["lfrCheckButtonText"])
-        lfrCheckButton.tooltip = L["lfrCheckButtonTooltip"]
+        lfrCheckButton_GlobalNameText:SetText(self.locals["lfrCheckButtonText"])
+        lfrCheckButton.tooltip = self.locals["lfrCheckButtonTooltip"]
         lfrCheckButton:SetScript(
             "OnClick",
             function()
