@@ -63,6 +63,5 @@ Options\GH_Messages.lua
 Options\GH_Thanks.lua
 GH_Events.lua
 GH_Toolbox.lua
-GH_Minimap.lua
 GH_CharacterFrame.lua
 GearHelper.lua

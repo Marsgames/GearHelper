@@ -41,6 +41,4 @@ L["UIIlvlCharFrameDesc"] = "캐릭터창 아이템에 템렙을 표시합니다.
 L["UIIlvlInspectFrame"] = "살펴보기 시 템렙"
 L["UIIlvlInspectFrameDesc"] = "살펴보기 할 때 대상의 템렙을 표시합니다."
 L["UIinviteMessage"] = "초대 메시지"
-L["UIMinimapIcon"] = "미니맵 아이콘"
-L["UIMinimapIconDesc"] = "미니맵 아이콘 표시"
 L["UISayMyNameDesc"] = "누군가 내 이름을 부를 때 소리와 함께 경고를 표시합니다."
