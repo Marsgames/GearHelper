@@ -52,6 +52,7 @@ function GearHelper:EquipItem(inThisBag)
                 return
             end
             for itemLink, item in pairs(bagsItems) do
+                item = GHItem:Create(itemLink)
                 if item:IsEquippableByMe() and not IsEquippedItem(item.item.id) then
                     GearHelper:Print("AutoEquipItem - Item not equipped, comparing score...")
                     local result = GearHelper:CompareWithEquipped(item.item)
