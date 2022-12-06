@@ -37,19 +37,19 @@ local function BossesKilledFunctions()
     hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelectCursor)
 end
 
-local function delayBetweenEquip(frame)
-    if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
-        return
-    end
-    for bag = 0, 4 do
-        numBag = bag
-        GearHelper:EquipItem()
-    end
-    frame:Hide()
-end
+-- local function delayBetweenEquip(frame)
+--     if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
+--         return
+--     end
+--     for bag = 0, 4 do
+--         numBag = bag
+--         GearHelper:EquipItem()
+--     end
+--     frame:Hide()
+-- end
 
--- GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
-waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+-- -- GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+-- waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 -----------------------------------------------------------------------------
 ----------------------------------- Events ----------------------------------
@@ -330,19 +330,19 @@ local function MerchantClosed()
     end
 end
 
-local function BagUpdate(_, _, bagId)
-    if time() - (GearHelperVars.lastBagUpdateEvent[bagId] or 0) < 1 or AUTO_EQUIP_ONGOING then
-        do
-            return
-        end
-    end
+-- local function BagUpdate(_, _, bagId)
+--     if time() - (GearHelperVars.lastBagUpdateEvent[bagId] or 0) < 1 or AUTO_EQUIP_ONGOING then
+--         do
+--             return
+--         end
+--     end
 
-    GearHelperVars.lastBagUpdateEvent[bagId] = time()
-    GearHelper:UpdateItemsInBags(bagId)
-    GearHelper:AutoEquip(bagId)
-    GearHelper:ScanCharacter()
-    GearHelper:ShowUpgradeOnItemsIcons()
-end
+--     GearHelperVars.lastBagUpdateEvent[bagId] = time()
+--     GearHelper:UpdateItemsInBags(bagId)
+--     GearHelper:AutoEquip(bagId)
+--     GearHelper:ScanCharacter()
+--     GearHelper:ShowUpgradeOnItemsIcons()
+-- end
 
 local function ActiveTalentGroupChanged()
     if not GearHelper.db.profile.autoEquipWhenSwitchSpe then
@@ -493,6 +493,11 @@ end
 local function BagUpdateDelayed()
     -- Update char frame when the bag is update because original UNIT_INVENTORY_CHANGED event is not fired when the player change trinkets or fingers
     GearHelper:ResetIlvlOnCharFrame()
+
+    GearHelper:UpdateItemsInBags(bagId)
+    GearHelper:AutoEquip(bagId)
+    GearHelper:ScanCharacter()
+    GearHelper:ShowUpgradeOnItemsIcons()
 end
 
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)
@@ -501,7 +506,7 @@ GearHelper:RegisterEvent("CHAT_MSG_ADDON", ChatMsgAddon, ...)
 GearHelper:RegisterEvent("QUEST_COMPLETE", QuestComplete)
 GearHelper:RegisterEvent("QUEST_DETAIL", QuestDetail)
 GearHelper:RegisterEvent("MERCHANT_CLOSED", MerchantClosed)
-GearHelper:RegisterEvent("BAG_UPDATE", BagUpdate, ...)
+-- GearHelper:RegisterEvent("BAG_UPDATE", BagUpdate, ...)
 GearHelper:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", ActiveTalentGroupChanged)
 GearHelper:RegisterEvent("CHAT_MSG_CHANNEL", ChatMsgChannel, ...)
 GearHelper:RegisterEvent("CHAT_MSG_WHISPER", ChatMsgWhisper, ...)

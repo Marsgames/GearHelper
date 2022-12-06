@@ -17,7 +17,7 @@ function GearHelper:AutoEquip(bag)
         theBag = 1
     end
 
-    GearHelper:Print("Auto equip best items in bag " .. theBag)
+    GearHelper:Print("Auto equip best items in bag " .. tostring(theBag))
 
     GearHelper:EquipItem(theBag)
     AUTO_EQUIP_ONGOING = false
