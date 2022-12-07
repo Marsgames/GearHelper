@@ -20,7 +20,6 @@ function GearHelper:OnInitialize()
 
     GearHelper:LoadBaseStatTemplates()
 
-    self:CreateMinimapIcon()
     self:HookItemTooltip()
     self:HookMoneyTooltip()
 end

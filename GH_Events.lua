@@ -37,19 +37,19 @@ local function BossesKilledFunctions()
     hooksecurefunc("RaidFinderQueueFrame_SetRaid", GearHelper.UpdateSelectCursor)
 end
 
-local function delayBetweenEquip(frame)
-    if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
-        return
-    end
-    for bag = 0, 4 do
-        numBag = bag
-        GearHelper:EquipItem()
-    end
-    frame:Hide()
-end
+-- local function delayBetweenEquip(frame)
+--     if time() <= GearHelperVars.waitSpeTimer + delaySpeTimer then
+--         return
+--     end
+--     for bag = 0, 4 do
+--         numBag = bag
+--         GearHelper:EquipItem()
+--     end
+--     frame:Hide()
+-- end
 
--- GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
-waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+-- -- GearHelperVars.waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
+-- waitSpeFrame:SetScript("OnUpdate", delayBetweenEquip)
 
 -----------------------------------------------------------------------------
 ----------------------------------- Events ----------------------------------
@@ -331,17 +331,18 @@ local function MerchantClosed()
 end
 
 local function BagUpdate(_, _, bagId)
-    if time() - (GearHelperVars.lastBagUpdateEvent[bagId] or 0) < 1 or AUTO_EQUIP_ONGOING then
-        do
-            return
-        end
-    end
+    -- if time() - (GearHelperVars.lastBagUpdateEvent[bagId] or 0) < 1 or AUTO_EQUIP_ONGOING then
+    --     do
+    --         return
+    --     end
+    -- end
 
-    GearHelperVars.lastBagUpdateEvent[bagId] = time()
+    -- GearHelperVars.lastBagUpdateEvent[bagId] = time()
+    GearHelper:HideUpgradeItemsIcon(bagId)
     GearHelper:UpdateItemsInBags(bagId)
     GearHelper:AutoEquip(bagId)
-    GearHelper:ScanCharacter()
-    GearHelper:ShowUpgradeOnItemsIcons()
+    -- GearHelper:ScanCharacter()
+    -- GearHelper:ShowUpgradeOnItemsIcons()
 end
 
 local function ActiveTalentGroupChanged()
@@ -493,6 +494,9 @@ end
 local function BagUpdateDelayed()
     -- Update char frame when the bag is update because original UNIT_INVENTORY_CHANGED event is not fired when the player change trinkets or fingers
     GearHelper:ResetIlvlOnCharFrame()
+
+    GearHelper:ScanCharacter()
+    GearHelper:ShowUpgradeOnItemsIcons()
 end
 
 GearHelper:RegisterEvent("MERCHANT_SHOW", OnMerchantShow)

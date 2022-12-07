@@ -1,6 +1,58 @@
 GHItem = {}
 GHItem.__index = GHItem
 
+local function IsEquippableByMe(self)
+    -- print("id : " .. tostring(item.id))
+    if (self.id == nil) then
+        do
+            return
+        end
+    end
+    local inventoryType = C_Item.GetItemInventoryTypeByID(self.id)
+
+    if INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
+        GearHelper:Print("IsEquippableByMe - InvType to ignore")
+        return false
+    end
+
+    local myLevel = UnitLevel("player")
+    local _, myClass = UnitClass("player")
+    local playerSpec = GetSpecializationInfo(GetSpecialization())
+
+    if self.levelRequired > myLevel then
+        GearHelper:Print("IsEquippableByMe - Required level not met")
+        return false
+    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or
+        self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or
+        self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
+        return true
+    elseif self.rarity == 6 then -- Artifacts
+        if type(ARTIFACTS[tostring(playerSpec)]) == "string" and tostring(self.id) == ARTIFACTS[tostring(playerSpec)] then
+            return true
+        else
+            table.foreach(
+                ARTIFACTS[tostring(playerSpec)],
+                function(_, v)
+                    if tostring(self.id) == v then
+                        return true
+                    end
+                end
+            )
+        end
+    else
+        local isEquippable = false
+        table.foreach(
+            ITEM_TYPES_EQUIPPABLE_BY_CLASS[tostring(myClass)],
+            function(_, v)
+                if self.subType == v then
+                    isEquippable = true
+                end
+            end
+        )
+        return isEquippable
+    end
+end
+
 function GHItem:Create(itemLink)
     local this = {
         itemLink = "",
@@ -42,8 +94,7 @@ function GHItem:Create(itemLink)
     this.name = item:GetItemName()
     this.iLvl = item:GetCurrentItemLevel()
     this.isEmpty = false
-    -- TODO: Fix this to call item.IsEquippableByMe()
-    -- this.IsEquippableByMe = GHItem.IsEquippableByMe
+    this.IsEquippableByMe = IsEquippableByMe
 
     return this
 end
@@ -121,15 +172,15 @@ function GHItem:IsEquippableByMe()
         GearHelper:Print("IsEquippableByMe - InvType to ignore")
         return false
     end
-
     local myLevel = UnitLevel("player")
     local _, myClass = UnitClass("player")
     local playerSpec = GetSpecializationInfo(GetSpecialization())
-
     if self.levelRequired > myLevel then
         GearHelper:Print("IsEquippableByMe - Required level not met")
         return false
-    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
+    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or
+        self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or
+        self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
         return true
     elseif self.rarity == 6 then -- Artifacts
         if type(ARTIFACTS[tostring(playerSpec)]) == "string" and tostring(self.id) == ARTIFACTS[tostring(playerSpec)] then
