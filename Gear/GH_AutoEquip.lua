@@ -51,14 +51,13 @@ function GearHelper:EquipItem(inThisBag)
                 self:Hide()
                 return
             end
-            for itemLink, item in pairs(bagsItems) do
-                item = GHItem:Create(itemLink)
-                if item:IsEquippableByMe() and not IsEquippedItem(item.item.id) then
+            for _, slotData in pairs(bagsItems) do
+                if slotData.item:IsEquippableByMe() and not IsEquippedItem(slotData.item.id) then
                     GearHelper:Print("AutoEquipItem - Item not equipped, comparing score...")
-                    local result = GearHelper:CompareWithEquipped(item.item)
+                    local result = GearHelper:CompareWithEquipped(slotData.item)
 
                     if result.combinable and result.combinable.combinedScoreDelta > 0 then
-                        EquipItemByName(item.item.itemLink)
+                        EquipItemByName(slotData.item.itemLink)
                         EquipItemByName(result.combinable.item.itemLink)
                     else
                         local shouldEquip = false
@@ -69,7 +68,7 @@ function GearHelper:EquipItem(inThisBag)
                         end
 
                         if shouldEquip then
-                            EquipItemByName(item.item.itemLink)
+                            EquipItemByName(slotData.item.itemLink)
                         end
                     end
                 end
