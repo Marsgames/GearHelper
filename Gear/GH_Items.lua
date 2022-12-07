@@ -109,10 +109,7 @@ function GHItem:GetStats()
     return self.stats
 end
 
--- TODO: Remove item from args and replace item with self in function
--- Then replace all occurences of item:IsEquippableByMe() with item:IsEquippableByMe()
 function GHItem:IsEquippableByMe()
-    -- print("id : " .. tostring(item.id))
     if (self.id == nil) then
         do
             return
