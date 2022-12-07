@@ -23,3 +23,14 @@ function GearHelper:ShowUpgradeOnItemsIcons()
 
     ContainerFrame_UpdateAll()
 end
+
+function GearHelper:HideUpgradeItemsIcon(bagId)
+    local bagSize = C_Container.GetContainerNumSlots(bagId)
+    for slot = 1, C_Container.GetContainerNumSlots(bagId) do
+        local button = _G["ContainerFrame" .. bagId + 1 .. "Item" .. (bagSize + 1) - slot]
+        if button and button.overlay then
+            button.overlay:SetShown(false)
+            button.overlay = nil
+        end
+    end
+end

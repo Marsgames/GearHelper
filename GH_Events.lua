@@ -338,6 +338,7 @@ local function BagUpdate(_, _, bagId)
     -- end
 
     -- GearHelperVars.lastBagUpdateEvent[bagId] = time()
+    GearHelper:HideUpgradeItemsIcon(bagId)
     GearHelper:UpdateItemsInBags(bagId)
     GearHelper:AutoEquip(bagId)
     -- GearHelper:ScanCharacter()
