@@ -10,6 +10,7 @@
 -- Check if "ornemental"  in GHItem to skip them
 -- Fix todo in GH_Items.lua
 -- Remove ARTIFACT constants
+--Fix item compare display info on wrong tooltip
 
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then
@@ -57,7 +58,7 @@ function GearHelper:ScanCharacter()
             item:ContinueOnItemLoad(
                 function()
                     self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
-                    GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())
+                    GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())                                              
                 end
             )
         end
