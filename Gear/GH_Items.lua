@@ -22,23 +22,8 @@ local function IsEquippableByMe(self)
     if self.levelRequired > myLevel then
         GearHelper:Print("IsEquippableByMe - Required level not met")
         return false
-    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or
-        self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or
-        self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
+    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
         return true
-    elseif self.rarity == 6 then -- Artifacts
-        if type(ARTIFACTS[tostring(playerSpec)]) == "string" and tostring(self.id) == ARTIFACTS[tostring(playerSpec)] then
-            return true
-        else
-            table.foreach(
-                ARTIFACTS[tostring(playerSpec)],
-                function(_, v)
-                    if tostring(self.id) == v then
-                        return true
-                    end
-                end
-            )
-        end
     else
         local isEquippable = false
         table.foreach(
@@ -178,23 +163,8 @@ function GHItem:IsEquippableByMe()
     if self.levelRequired > myLevel then
         GearHelper:Print("IsEquippableByMe - Required level not met")
         return false
-    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or
-        self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or
-        self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
+    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
         return true
-    elseif self.rarity == 6 then -- Artifacts
-        if type(ARTIFACTS[tostring(playerSpec)]) == "string" and tostring(self.id) == ARTIFACTS[tostring(playerSpec)] then
-            return true
-        else
-            table.foreach(
-                ARTIFACTS[tostring(playerSpec)],
-                function(_, v)
-                    if tostring(self.id) == v then
-                        return true
-                    end
-                end
-            )
-        end
     else
         local isEquippable = false
         table.foreach(
