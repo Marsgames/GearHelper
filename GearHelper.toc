@@ -65,3 +65,9 @@ GH_Events.lua
 GH_Toolbox.lua
 GH_CharacterFrame.lua
 GearHelper.lua
+Events\GH_Bag.lua
+Events\GH_Chat.lua
+Events\GH_Group.lua
+Events\GH_Merchant.lua
+Events\GH_Player.lua
+Events\GH_Quest.lua

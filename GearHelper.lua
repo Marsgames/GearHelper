@@ -4,10 +4,7 @@
 -- SetDotOnIcons is pete
 -- Move harcoded lines on tooltip to localization
 -- Fix version messages ask/answer
--- Add option to remove glow on icon and set a corner mark of the color
 -- Remove Gearhelper.lua and split remaining function in appropriate folders/files
--- Investigate BAG_UPDATE_DELAYED to replace BAG_UPDATE
--- Check if "ornemental"  in GHItem to skip them
 -- Fix todo in GH_Items.lua
 -- Fix item compare display info on wrong tooltip
 

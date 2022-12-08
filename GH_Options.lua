@@ -51,21 +51,6 @@ local ghOptionsTable = {
             type = "group",
             inline = true,
             args = {
-                enable = {
-                    order = 0,
-                    name = GearHelper.locals["enable"] .. " GearHelper",
-                    desc = GearHelper.locals["UIGHCheckBoxAddon"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.addonEnabled = val
-                        if val == false then
-                            PlaySoundFile(67898, "MASTER")
-                        end
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.addonEnabled
-                    end
-                },
                 debug = {
                     order = 1,
                     name = "Debug",

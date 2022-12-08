@@ -11,7 +11,7 @@ end
 function GearHelper:HookItemTooltip()
     local OnToolTipSetItem = function(tooltip, _)
         local tooltipItemLink = select(2, TooltipUtil.GetDisplayedItem(tooltip))
-        if not GearHelper.db or not GearHelper.db.profile.addonEnabled or not tooltip == GameTooltip then
+        if not GearHelper.db or not tooltip == GameTooltip then
             return
         end
 
