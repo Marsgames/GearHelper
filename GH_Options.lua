@@ -1,3 +1,6 @@
+GHOptions = {}
+GHOptions.__index = GHOptions
+
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 local function GetInvMsg()
@@ -1250,55 +1253,14 @@ function GearHelper:BuildCWTable()
     LibStub("AceConfigRegistry-3.0"):NotifyChange(GearHelper.locals["customWeights"])
 end
 
-local aboutTable = {
-    name = "About",
-    type = "group",
-    args = {
-        version = {
-            order = 0,
-            fontSize = "medium",
-            name = "\n\n\n\n\n                |cFFFFFF00Version :|r " .. GearHelperVars.version .. "\n",
-            type = "description"
-        },
-        author = {
-            order = 1,
-            fontSize = "medium",
-            name = "                |cFFFFFF00Author :|r Marsgames - Temple Noir\n                               Tempaxe - Temple Noir" --[[Ta mère]] .. " \n",
-            type = "description"
-        },
-        email = {
-            order = 2,
-            fontSize = "medium",
-            name = "                |cFFFFFF00E-Mail :|r marsgames@gmail.com" .. " \n",
-            type = "description"
-        },
-        bug = {
-            order = 3,
-            fontSize = "medium",
-            name = "                |cFFFFFF00BugReport :|r http://vu.fr/GearHelperbugs  \n",
-            type = "description"
-        },
-        credits = {
-            order = 4,
-            fontSize = "medium",
-            name = "                |cFFFFFF00Credits :|r Big up\n",
-            type = "description"
-        },
-        bug2 = {
-            name = "                   |cFFFFFF00BugReport : ",
-            desc = "Click then ctrl + A to select and ctrl + C to copy",
-            type = "input",
-            get = function()
-                return "|cFF4477c9https://github.com/Marsgames/GearHelper/issues"
-            end,
-            width = "double"
-        }
-    }
-}
+function GHOptions:GenerateOptions()
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["secondaryOptions"], ghSecondaryOptionsTable)
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
+    GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["secondaryOptions"], GearHelper.locals["secondaryOptions"], "GearHelper")
+    GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["customWeights"], GearHelper.locals["customWeights"], "GearHelper")
 
-LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
-LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["secondaryOptions"], ghSecondaryOptionsTable)
-LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
-GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["secondaryOptions"], GearHelper.locals["secondaryOptions"], "GearHelper")
-GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["customWeights"], GearHelper.locals["customWeights"], "GearHelper")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["messages"], GHOptions:GenerateMessagesTable())
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["messages"], GearHelper.locals["messages"], "GearHelper")
+end

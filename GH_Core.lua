@@ -19,6 +19,7 @@ function GearHelper:OnInitialize()
     self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 
     GearHelper:LoadBaseStatTemplates()
+    GHOptions:GenerateOptions()
 end
 
 function GearHelper:OnEnable()

@@ -34,9 +34,9 @@ GearHelper.defaultSettings = {
     },
     global = {
         SellPrices = {},
-        itemWaitList = {},
+        --itemWaitList = {},
         myNames = "",
-        equipLocInspect = {},
+        --equipLocInspect = {},
         messages = {
             enUS = {
                 demande4 = L["demande4enUS"],
