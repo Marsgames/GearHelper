@@ -7,7 +7,6 @@
 -- Remove Gearhelper.lua and split remaining function in appropriate folders/files
 -- Fix todo in GH_Items.lua
 -- Fix item compare display info on wrong tooltip
--- Remove LibAboutPanel
 
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then
