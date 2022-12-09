@@ -92,7 +92,7 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
                 name = "|cffffff00Result",
                 fontSize = "small"
             },
-            -- TODO: Update this message when Ask1 or Ask2 is updated
+            -- TODO: Update UI when Ask1 or Ask2 is updated
             ResultQuestion = {
                 order = 11,
                 type = "description",
@@ -154,7 +154,7 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
                 name = "|cffffff00Result",
                 fontSize = "small"
             },
-            -- TODO: Update this message when Answer1 or Answer2 is updated
+            -- TODO: Update UI when Answer1 or Answer2 is updated
             ResultAns = {
                 order = 25,
                 type = "description",

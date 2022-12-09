@@ -1,12 +1,22 @@
--- Cleanup Trad data
--- Cleanup settings / db
+-- Remove unused localization
+-- Localize all plain text found in code
+-- Cleanup settings
+-- Make bosses killed icons update when reopening LFG panel
 -- Check why kill a mob trigger a bunch of "OnToolTipSetItem"
--- SetDotOnIcons is pete
--- Move harcoded lines on tooltip to localization
+-- Remove dot icon when equiping an item
+-- Ensure that poseDot works for every bags
 -- Fix version messages ask/answer
 -- Remove Gearhelper.lua and split remaining function in appropriate folders/files
--- Fix todo in GH_Items.lua
 -- Fix item compare display info on wrong tooltip
+-- Fix TODOs in GH_QuestReward.lua
+-- Fix TODOs in GH_RaidFinder.lua
+-- Fix TODOs in GH_Slash.lua
+-- Fix TODOs in GH_Group.lua
+-- Fix TODOs in GH_Player.lua
+-- Fix TODOs in GH_Quest.lua
+-- Fix TODOs in GH_AutoEquip.lua
+-- Fix TODOs in GH_Items.lua
+-- Fix TODOs in GH_Messages.lua
 
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then

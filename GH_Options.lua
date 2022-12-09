@@ -2,8 +2,31 @@ GHOptions = {}
 GHOptions.__index = GHOptions
 
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+--[[ Proposition for a single page, with a scroll view - Each option on a new line (as actual Blizzard options)
+    Debug options
 
-local function GetInvMsg()
+    ----- Gear Options -----
+    Show border color on tooltip
+    Red tooltip + message when item is not equippable
+    Alert loot in instance + ask if the player needs
+    Auto equip best item
+    Verbose equip
+    Auto sell grey items
+    Auto repair
+
+    ----- Messages options -----
+    Auto invite on whisper
+    Invite message
+    Alert when someone whisper you
+    Alert when you name is written in any channel
+    Wich names to alert
+
+    ----- Misc options -----
+    Auto accept quest reward
+    Bosses killed on LFG panel
+    Show ilvl on char panel
+    Show ilvl on inspect panel
+]] local function GetInvMsg()
     return GearHelper.db.profile.inviteMessage
 end
 
@@ -32,7 +55,7 @@ local function ValidateInputPattern(val, type, info)
                     sum = sum + (v / 50) * 100
                 end
             end
-            if sum > 99 then --Value is stored and if validation failed it's removed so it's taken into account
+            if sum > 99 then -- Value is stored and if validation failed it's removed so it's taken into account
                 return "Percentage sum is more than 100"
             else
                 return true
@@ -53,15 +76,15 @@ local ghOptionsTable = {
             name = " ",
             type = "group",
             inline = true,
+            hidden = function()
+                if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Niisha" then
+                    return true
+                end
+            end,
             args = {
                 debug = {
                     order = 1,
                     name = "Debug",
-                    hidden = function()
-                        if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Niisha" then
-                            return true
-                        end
-                    end,
                     desc = GearHelper.locals["UIGHCheckBoxAddon"],
                     type = "toggle",
                     set = function(_, val)
@@ -89,6 +112,7 @@ local ghOptionsTable = {
                     name = GearHelper.locals["autoEquipLootedStuff"],
                     desc = GearHelper.locals["UIGHCheckBoxAutoEquipLootedStuff"],
                     type = "toggle",
+                    width = "double",
                     set = function(_, val)
                         GearHelper.db.profile.autoEquipLooted.actual = val
                         GearHelper.db.profile.autoEquipLooted.previous = val
@@ -154,15 +178,12 @@ local ghOptionsTable = {
                     width = "double"
                 }
             }
-        }
-    }
-}
-
-local ghSecondaryOptionsTable = {
-    name = GearHelper.locals["secondaryOptions"],
-    type = "group",
-    childGroups = "select",
-    args = {
+        },
+        spacer2 = {
+            order = 3,
+            name = GearHelper.locals["secondaryOptions"],
+            type = "header"
+        },
         group3 = {
             order = 4,
             name = " ",
@@ -234,6 +255,7 @@ local ghSecondaryOptionsTable = {
                         return GearHelper.locals["UIGHCheckBoxAutoInvite"] .. GHToolbox:ColorizeString(GetInvMsg(), "LightGreen")
                     end,
                     type = "toggle",
+                    width = "double",
                     set = function(_, val)
                         GearHelper.db.profile.autoInvite = val
                     end,
@@ -299,6 +321,7 @@ local ghSecondaryOptionsTable = {
                     name = GearHelper.locals["UIBossesKilled"],
                     desc = GearHelper.locals["UIBossesKilledDesc"],
                     type = "toggle",
+                    -- width = "full",
                     set = function(_, val)
                         GearHelper.db.profile.bossesKilled = val
                         if val == false then
@@ -1255,10 +1278,8 @@ end
 
 function GHOptions:GenerateOptions()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["secondaryOptions"], ghSecondaryOptionsTable)
     LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
     GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["secondaryOptions"], GearHelper.locals["secondaryOptions"], "GearHelper")
     GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["customWeights"], GearHelper.locals["customWeights"], "GearHelper")
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["messages"], GHOptions:GenerateMessagesTable())
