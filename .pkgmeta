@@ -14,7 +14,6 @@ externals:
  Libs/AceLocale-3.0: https://repos.wowace.com/wow/ace3/trunk/AceLocale-3.0
  Libs/AceAddon-3.0: https://repos.wowace.com/wow/ace3/trunk/AceAddon-3.0
  Libs/LibBabble-Inventory-3.0: https://repos.wowace.com/wow/libbabble-inventory-3-0/trunk
- Libs/LibAboutPanel: git://github.com/Ackis/LibAboutPanel.git
  Libs/LibRealmInfo: git://github.com/phanx-wow/LibRealmInfo.git
 
 enable-nolib-creation: no
