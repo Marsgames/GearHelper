@@ -7,6 +7,8 @@ local function ResetProfileOnMajorUpdate()
     if not (dbMajorAddonVersion == currentAddonVersion) then
         GearHelper:Print("Major update detected, resetting whole database...")
         GearHelper.db:ResetDB()
+        print("Major update detected database has been reset. Please verify your settings.")
+        Settings.OpenToCategory("GearHelper")
     end
 end
 
