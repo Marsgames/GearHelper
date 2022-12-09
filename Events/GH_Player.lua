@@ -29,7 +29,7 @@ local function BossesKilledFunctions()
 end
 
 -- TODO: Split this shit too
-function GearHelperEvents:PlayerEnteringWorld()
+function GHEvents:PLAYER_ENTERING_WORLD()
     local used = false
     for i = 1, NUM_CHAT_WINDOWS do
         local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
@@ -64,15 +64,16 @@ function GearHelperEvents:PlayerEnteringWorld()
             end
         end
 
-        lfrCheckButton = lfrCheckButton_GlobalName or
-                             CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent,
-                "ChatConfigCheckButtonTemplate")
+        lfrCheckButton = lfrCheckButton_GlobalName or CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
         lfrCheckButton:SetPoint("TOPRIGHT", -325, -50)
         lfrCheckButton_GlobalNameText:SetText(self.locals["lfrCheckButtonText"])
         lfrCheckButton.tooltip = self.locals["lfrCheckButtonTooltip"]
-        lfrCheckButton:SetScript("OnClick", function()
-            lfrCheckIsChecked = lfrCheckButton:GetChecked()
-        end)
+        lfrCheckButton:SetScript(
+            "OnClick",
+            function()
+                lfrCheckIsChecked = lfrCheckButton:GetChecked()
+            end
+        )
         -- else
         lfrCheckButton_GlobalName:Show()
         lfrCheckButton_GlobalName:SetChecked(lfrCheckIsChecked)
@@ -84,12 +85,9 @@ function GearHelperEvents:PlayerEnteringWorld()
     end
 end
 
-function GearHelperEvents:ActiveTalentGroupChanged()
+function GHEvents:ACTIVE_TALENT_GROUP_CHANGED()
     if not GearHelper.db.profile.autoEquipWhenSwitchSpe then
-        GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " ..
-                                                       (GetSpecialization() and
-                                                           select(2, GetSpecializationInfo(GetSpecialization())) or
-                                                           "None")
+        GearHelper.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
         do
             return
         end
@@ -99,13 +97,13 @@ function GearHelperEvents:ActiveTalentGroupChanged()
     waitSpeFrame:Show()
 
     for bag = Enum.BagIndex.Backpack, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
-        GearHelperEvents:BagUpdate(nil, nil, bag)
+        GHEvents:BagUpdate(nil, nil, bag)
     end
 
     GearHelper:ShowUpgradeOnItemsIcons()
 end
 
-function GearHelperEvents:UnitInventoryChanged(_, _, target)
+function GHEvents:UNIT_INVENTORY_CHANGED(target)
     if target ~= "player" then
         do
             return
@@ -116,7 +114,7 @@ function GearHelperEvents:UnitInventoryChanged(_, _, target)
     GearHelper:ScanCharacter()
 end
 
-function GearHelperEvents:PlayerLogin()
+function GHEvents:PLAYER_LOGIN()
     if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
         BossesKilledFunctions()
     end

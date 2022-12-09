@@ -1,4 +1,4 @@
-function GearHelperEvents:ChatMsgChannel(_, _, msg, sender, lang, channel)
+function GHEvents:CHAT_MSG_CHANNEL(msg, sender, lang, channel)
     if not GearHelper.db.profile.autoInvite or not msg then
         GearHelper:showMessageSMN(channel, sender, msg)
         do
@@ -17,7 +17,7 @@ function GearHelperEvents:ChatMsgChannel(_, _, msg, sender, lang, channel)
     GearHelper:showMessageSMN(channel, sender, msg)
 end
 
-function GearHelperEvents:ChatMsgWhisper(_, _, msg, sender)
+function GHEvents:CHAT_MSG_WHISPER(msg, sender)
     if GearHelper.db.profile.autoInvite and msg ~= nil then
         local playerIsNotMe = not string.find(sender, GetUnitName("player"))
         if msg:lower() == GearHelper.db.profile.inviteMessage:lower() and playerIsNotMe and GetNumGroupMembers() == 5 then
@@ -32,53 +32,51 @@ function GearHelperEvents:ChatMsgWhisper(_, _, msg, sender)
     end
 end
 
-function GearHelperEvents:ChatMsgLoot(_, _, message, language, sender, channelString, target, flags, unknown1,
-    channelNumber, channelName, unknown2, counter)
-    GearHelper:CreateLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1,
-        channelNumber, channelName, unknown2, counter)
+function GHEvents:CHAT_MSG_LOOT(message, language, sender, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
+    GearHelper:CreateLinkAskIfHeNeeds(0, message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter)
 end
 
-function GearHelperEvents:ChatMsgEmote(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_EMOTE(msg, sender)
     GearHelper:showMessageSMN("Emote", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgGuild(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_GUILD(msg, sender)
     GearHelper:showMessageSMN("Guild", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgOfficer(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_OFFICER(msg, sender)
     GearHelper:showMessageSMN("Officer", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgParty(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_PARTY(msg, sender)
     GearHelper:showMessageSMN("Party", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgPartyLeader(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_PARTY_LEADER(msg, sender)
     GearHelper:showMessageSMN("Party", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgRaid(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_RAID(msg, sender)
     GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgRaidLeader(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_RAID_LEADER(msg, sender)
     GearHelper:showMessageSMN("Raid", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgRaidWarning(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_RAID_WARNING(msg, sender)
     GearHelper:showMessageSMN("Raid_warning", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgSay(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_SAY(msg, sender)
     GearHelper:showMessageSMN("Say", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgYell(_, _, msg, sender, _, _)
+function GHEvents:CHAT_MSG_YELL(msg, sender)
     GearHelper:showMessageSMN("Yell", sender, msg)
 end
 
-function GearHelperEvents:ChatMsgAddon(_, _, prefixMessage, message, _, sender)
+function GHEvents:CHAT_MSG_ADDON(prefixMessage, message, _, sender)
     if prefixMessage ~= GearHelperVars.prefixAddon then
         do
             return

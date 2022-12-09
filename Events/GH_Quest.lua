@@ -1,5 +1,5 @@
 -- TODO: Split that shit
-function GearHelperEvents:QuestDetail()
+function GHEvents:QUEST_DETAIL()
     local weightTable = {}
     local prixTable = {}
     local altTable = {}
@@ -126,7 +126,7 @@ function GearHelperEvents:QuestDetail()
     end
 end
 
-function GearHelperEvents:QuestTurnedIn()
+function GHEvents:QUEST_TURNED_IN()
     if not GearHelper.db.profile.autoEquipLooted.actual then
         do
             return
@@ -138,24 +138,30 @@ function GearHelperEvents:QuestTurnedIn()
     waitSpeFrame:Show()
 end
 
-function GearHelperEvents:QuestFinished()
+function GHEvents:QUEST_FINISHED()
     if (nil == GearHelper.ButtonQuestReward) then
         do
             return
         end
     end
 
-    table.foreach(GearHelper.ButtonQuestReward, function(button)
-        if button.overlay then
-            button.overlay:SetShown(false)
-            button.overlay = nil
+    table.foreach(
+        GearHelper.ButtonQuestReward,
+        function(button)
+            if button.overlay then
+                button.overlay:SetShown(false)
+                button.overlay = nil
+            end
         end
-    end)
+    )
 end
 
-function GearHelperEvents:QuestComplete()
-    GearHelper.GetQuestRewardCoroutine = coroutine.create(function()
-        GearHelper:GetQuestReward()
-    end)
+function GHEvents:QUEST_COMPLETE()
+    GearHelper.GetQuestRewardCoroutine =
+        coroutine.create(
+        function()
+            GearHelper:GetQuestReward()
+        end
+    )
     coroutine.resume(GearHelper.GetQuestRewardCoroutine)
 end

@@ -1,8 +1,8 @@
-function GearHelperEvents:LfgUpdate()
+function GHEvents:LFG_UPDATE()
     GearHelper:UpdateGHLfrButton()
 end
 
-function GearHelperEvents:ReadyCheck()
+function GHEvents:READY_CHECK()
     if lfrCheckIsChecked then
         ConfirmReadyCheck(1)
         ReadyCheckFrame:Hide()
