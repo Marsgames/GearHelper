@@ -1,3 +1,37 @@
+local function Header(text, order)
+    return {
+        order = order,
+        type = "header",
+        name = text
+    }
+end
+
+local function Space(order)
+    return {
+        order = order,
+        type = "description",
+        name = " ",
+        fontSize = "medium"
+    }
+end
+
+local function Sample(text, order)
+    local samp1 = {
+        order = order,
+        type = "description",
+        name = "|cffffff00Sample: ",
+        fontSize = "small"
+    }
+    local samp2 = {
+        order = order + 0.1,
+        type = "description",
+        name = "    " .. text,
+        fontSize = "small"
+    }
+
+    return samp1, samp2
+end
+
 local function GenerateTableForLang(languageName, msgDB, order, locale)
     local lang = {
         order = order,
@@ -5,11 +39,7 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
         desc = "If your target is " .. languageName .. ", GearHelper will send this messages to him",
         type = "group",
         args = {
-            QuestionTitle = {
-                order = 0,
-                type = "header",
-                name = "Question"
-            },
+            QuestionTitle = Header("Question", 0),
             SampleDescription = {
                 order = 1,
                 type = "description",
@@ -22,18 +52,8 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
                 name = "    " .. GearHelper.locals["demande4" .. locale] .. " |cff1eff00[random item]|h|r " .. GearHelper.locals["demande4" .. locale .. "2"] .. "?",
                 fontSize = "small"
             },
-            Empty1 = {
-                order = 3,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
-            Empty2 = {
-                order = 4,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
+            Empty1 = Space(3),
+            Empty2 = Space(4),
             Ask1 = {
                 order = 5,
                 name = "",
@@ -64,18 +84,8 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
                     msgDB.demande42 = val
                 end
             },
-            Empty3 = {
-                order = 8,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
-            Empty4 = {
-                order = 9,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
+            Empty3 = Space(8),
+            Empty4 = Space(9),
             ResultDescription = {
                 order = 10,
                 type = "description",
@@ -89,23 +99,9 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
                 name = "    " .. tostring(msgDB.demande4) .. "|cff1eff00[random item]|h|r" .. tostring(msgDB.demande42) .. "?",
                 fontSize = "small"
             },
-            Empty4 = {
-                order = 12,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
-            Empty5 = {
-                order = 13,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
-            AnswerTitle = {
-                order = 14,
-                type = "header",
-                name = "Answer"
-            },
+            Empty4 = Space(12),
+            Empty5 = Space(13),
+            AnswerTitle = Header("Answer", 14),
             SampleAnsDescription = {
                 order = 15,
                 type = "description",
@@ -118,18 +114,8 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
                 name = "    " .. GearHelper.locals["rep" .. locale] .. GearHelper.locals["maLangue" .. locale] .. GearHelper.locals["rep" .. locale .. "2"],
                 fontSize = "small"
             },
-            Empty6 = {
-                order = 17,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
-            Empty7 = {
-                order = 18,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
+            Empty6 = Space(17),
+            Empty7 = Space(18),
             Answer1 = {
                 order = 19,
                 name = "",
@@ -160,18 +146,8 @@ local function GenerateTableForLang(languageName, msgDB, order, locale)
                     msgDB.rep2 = val
                 end
             },
-            Empty8 = {
-                order = 22,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
-            Empty9 = {
-                order = 23,
-                type = "description",
-                name = " ",
-                fontSize = "medium"
-            },
+            Empty8 = Space(22),
+            Empty9 = Space(23),
             ResultAnsDescription = {
                 order = 24,
                 type = "description",
