@@ -1,5 +1,7 @@
 # GearHelper | World of Warcraft addon
 
+*Autors: [Marsgames](https://www.github.com/Marsgames) & [Mantis](https://github.com/Mantisis)*
+
 ## A world of Warcraft addon create to manage your gear during your journey in Azeroth (or other planets, or other dimensions, or elsewhere).
 
 The main purpose of this addon is to help the player to chose the best item for its character.
