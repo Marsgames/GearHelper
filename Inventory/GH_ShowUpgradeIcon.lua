@@ -5,10 +5,6 @@ function GearHelper:ShowUpgradeOnItemsIcons()
             local button = _G["ContainerFrame" .. bagId + 1 .. "Item" .. (bagSize + 1) - itemInfo.slot]
 
             if button then
-                if button.overlay then
-                    button.overlay:SetShown(false)
-                    button.overlay = nil
-                end
                 if self:IsItemBetter(itemInfo.item) and not button.overlay then
                     GearHelper:Print("ShowUpgradeOnItemsIcons - " .. itemInfo.item.itemLink .. " is better")
                     button.overlay = button:CreateTexture(nil, "OVERLAY")
@@ -24,13 +20,17 @@ function GearHelper:ShowUpgradeOnItemsIcons()
     ContainerFrame_UpdateAll()
 end
 
-function GearHelper:HideUpgradeItemsIcon(bagId)
-    local bagSize = C_Container.GetContainerNumSlots(bagId)
-    for slot = 1, C_Container.GetContainerNumSlots(bagId) do
-        local button = _G["ContainerFrame" .. bagId + 1 .. "Item" .. (bagSize + 1) - slot]
-        if button and button.overlay then
-            button.overlay:SetShown(false)
-            button.overlay = nil
+function GearHelper:HideAllUpgradeItemIcons()
+    for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+        local bagSize = C_Container.GetContainerNumSlots(bagId)
+        for slotId = 1, bagSize do
+            local button = _G["ContainerFrame" .. bagId + 1 .. "Item" .. (bagSize + 1) - slotId]
+            if button and button.overlay then
+                -- print("hidding icon for slot " .. slotId)
+                -- print("ContainerFrame" .. bagId + 1 .. "Item" .. (bagSize + 1) - slotId)
+                button.overlay:SetShown(false)
+                button.overlay = nil
+            end
         end
     end
 end

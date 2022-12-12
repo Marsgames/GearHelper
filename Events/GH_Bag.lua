@@ -6,7 +6,6 @@ function GHEvents:BAG_UPDATE(bagId)
     end
 
     GearHelperVars.lastBagUpdateEvent[bagId] = time()
-    GearHelper:HideUpgradeItemsIcon(bagId)
     GearHelper:UpdateItemsInBags(bagId)
     GearHelper:AutoEquip(bagId)
 end
@@ -16,5 +15,6 @@ function GHEvents:BAG_UPDATE_DELAYED()
     GearHelper:ResetIlvlOnCharFrame()
 
     GearHelper:ScanCharacter()
+    GearHelper:HideAllUpgradeItemIcons()
     GearHelper:ShowUpgradeOnItemsIcons()
 end

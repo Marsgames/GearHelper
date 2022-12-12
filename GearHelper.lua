@@ -2,7 +2,7 @@
 -- Localize all plain text found in code
 -- Cleanup settings
 -- Make bosses killed icons update when reopening LFG panel
--- Check why kill a mob trigger a bunch of "OnToolTipSetItem"
+-- Check why kill a mob trigger a bunch of "OnTooltipSetItem"
 -- Remove dot icon when equiping an item
 -- Ensure that poseDot works for every bags
 -- Fix version messages ask/answer
