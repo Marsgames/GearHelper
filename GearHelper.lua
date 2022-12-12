@@ -4,7 +4,6 @@
 -- Make bosses killed icons update when reopening LFG panel
 -- Check why kill a mob trigger a bunch of "OnTooltipSetItem"
 -- Remove dot icon when equiping an item
--- Ensure that poseDot works for every bags
 -- Fix version messages ask/answer
 -- Remove Gearhelper.lua and split remaining function in appropriate folders/files
 -- Fix TODOs in GH_QuestReward.lua
