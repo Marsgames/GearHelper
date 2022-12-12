@@ -7,7 +7,6 @@
 -- Ensure that poseDot works for every bags
 -- Fix version messages ask/answer
 -- Remove Gearhelper.lua and split remaining function in appropriate folders/files
--- Fix item compare display info on wrong tooltip
 -- Fix TODOs in GH_QuestReward.lua
 -- Fix TODOs in GH_RaidFinder.lua
 -- Fix TODOs in GH_Slash.lua

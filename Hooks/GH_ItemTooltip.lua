@@ -20,13 +20,6 @@ function GearHelper:HookItemTooltip()
             return
         end
 
-        if item.itemLink == LAST_OPENED_TOOLTIP_ITEMLINK then
-            GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
-            return
-        end
-
-        LAST_OPENED_TOOLTIP_ITEMLINK = tooltipItemLink
-
         local tooltipSettings = {
             lines = {},
             borderColor = nil
@@ -49,9 +42,7 @@ function GearHelper:HookItemTooltip()
         tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)
         tooltipSettings.lines = GHToolbox:TableConcat(tooltipSettings.lines, GearHelper:GetDropInfo(item))
 
-        GearHelper:AddLinesOnTooltip(tooltip, LAST_OPENED_TOOLTIP_LINES)
-
-        LAST_OPENED_TOOLTIP_LINES = tooltipSettings.lines
+        GearHelper:AddLinesOnTooltip(tooltip, tooltipSettings.lines)
     end
 
     TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnToolTipSetItem)
