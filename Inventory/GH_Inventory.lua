@@ -64,7 +64,7 @@ function GearHelper:UpdateItemsInBags(bagId)
             return
         end
     end
-    
+
     GearHelperVars.bagsItems[bagId] = {}
     for j = 1, C_Container.GetContainerNumSlots(bagId) do
         local itemlink = C_Container.GetContainerItemLink(bagId, j)
