@@ -64,12 +64,10 @@ function GearHelper:UpdateItemsInBags(bagId)
             return
         end
     end
+    
+    GearHelperVars.bagsItems[bagId] = {}
     for j = 1, C_Container.GetContainerNumSlots(bagId) do
         local itemlink = C_Container.GetContainerItemLink(bagId, j)
-
-        if GearHelperVars.bagsItems[bagId] == nil then
-            GearHelperVars.bagsItems[bagId] = {}
-        end
 
         local item = GHItem:Create(itemlink)
 
