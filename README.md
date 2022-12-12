@@ -1,6 +1,6 @@
 # GearHelper | World of Warcraft addon
 
-*Autors: [Marsgames](https://www.github.com/Marsgames) & [Mantis](https://github.com/Mantisis)*
+_Autors: [Marsgames](https://www.github.com/Marsgames) & [Mantis](https://github.com/Mantisis)_
 
 ## A world of Warcraft addon create to manage your gear during your journey in Azeroth (or other planets, or other dimensions, or elsewhere).
 
