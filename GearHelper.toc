@@ -68,6 +68,7 @@ GearHelper.lua
 Events\GH_Bag.lua
 Events\GH_Chat.lua
 Events\GH_Group.lua
+Events\GH_Inspect.lua
 Events\GH_Merchant.lua
 Events\GH_Player.lua
 Events\GH_Quest.lua

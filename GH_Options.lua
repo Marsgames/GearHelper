@@ -349,7 +349,7 @@ local ghOptionsTable = {
                         if (val) then
                             GearHelper:AddIlvlOnCharFrame()
                         else
-                            GearHelper:HideIlvlOnCharFrame()
+                            GearHelper:ResetIlvlOnCharFrame()
                         end
                     end,
                     get = function()

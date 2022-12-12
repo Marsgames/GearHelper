@@ -83,6 +83,10 @@ function GHEvents:PLAYER_ENTERING_WORLD()
             lfrCheckButton_GlobalName:Hide()
         end
     end
+
+    if (PaperDollItemsFrame) then
+        GearHelper:AddIlvlOnCharFrame()
+    end
 end
 
 function GHEvents:ACTIVE_TALENT_GROUP_CHANGED()
@@ -117,9 +121,5 @@ end
 function GHEvents:PLAYER_LOGIN()
     if RaidFinderQueueFrame and RaidFinderQueueFrame_SetRaid then
         BossesKilledFunctions()
-    end
-
-    if (PaperDollItemsFrame) then
-        GearHelper:AddIlvlOnCharFrame()
     end
 end

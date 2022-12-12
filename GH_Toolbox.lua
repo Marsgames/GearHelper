@@ -142,7 +142,7 @@ function GHToolbox:TableConcat(t1, t2)
     return t1
 end
 
-function GHToolbox:DelayCallback(func, delay, ...)
+function GHToolbox:DelayedCallback(func, delay, ...)
     local args = {...}
     C_Timer.After(
         delay,
