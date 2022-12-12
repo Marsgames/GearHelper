@@ -19,12 +19,12 @@ function GHItem:Create(itemLink)
 
     setmetatable(this, GHItem)
 
-    if not itemLink or IsCosmeticItem(itemLink) then
+    if not itemLink or IsCosmeticItem(itemLink) or INVTYPE_TO_IGNORE[C_Item.GetItemInventoryTypeByID(GetItemInfoInstant(itemLink))] then
         return this
     end
 
     local item = Item:CreateFromItemLink(itemLink)
-
+    
     if item:IsItemEmpty() or GearHelper.itemSlot[select(4, GetItemInfoInstant(itemLink))] == nil then
         return this
     end
