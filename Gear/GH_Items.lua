@@ -1,43 +1,6 @@
 GHItem = {}
 GHItem.__index = GHItem
 
-local function IsEquippableByMe(self)
-    -- print("id : " .. tostring(item.id))
-    if (self.id == nil) then
-        do
-            return
-        end
-    end
-    local inventoryType = C_Item.GetItemInventoryTypeByID(self.id)
-
-    if INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
-        GearHelper:Print("IsEquippableByMe - InvType to ignore")
-        return false
-    end
-
-    local myLevel = UnitLevel("player")
-    local _, myClass = UnitClass("player")
-    local playerSpec = GetSpecializationInfo(GetSpecialization())
-
-    if self.levelRequired > myLevel then
-        GearHelper:Print("IsEquippableByMe - Required level not met")
-        return false
-    elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
-        return true
-    else
-        local isEquippable = false
-        table.foreach(
-            ITEM_TYPES_EQUIPPABLE_BY_CLASS[tostring(myClass)],
-            function(_, v)
-                if self.subType == v then
-                    isEquippable = true
-                end
-            end
-        )
-        return isEquippable
-    end
-end
-
 function GHItem:Create(itemLink)
     local this = {
         itemLink = "",
@@ -79,7 +42,6 @@ function GHItem:Create(itemLink)
     this.name = item:GetItemName()
     this.iLvl = item:GetCurrentItemLevel()
     this.isEmpty = false
-    this.IsEquippableByMe = IsEquippableByMe
 
     return this
 end
@@ -157,9 +119,10 @@ function GHItem:IsEquippableByMe()
         GearHelper:Print("IsEquippableByMe - InvType to ignore")
         return false
     end
+
     local myLevel = UnitLevel("player")
     local _, myClass = UnitClass("player")
-    local playerSpec = GetSpecializationInfo(GetSpecialization())
+
     if self.levelRequired > myLevel then
         GearHelper:Print("IsEquippableByMe - Required level not met")
         return false
@@ -176,6 +139,22 @@ function GHItem:IsEquippableByMe()
             end
         )
         return isEquippable
+    end
+end
+
+function GHItem:IsEquipped()
+    if not IsEquippedItem(self.itemLink) then --Quick check, we can rely on value returned here
+        return false
+    else --However we can't rely on IsEquippedItem because it behaves weirdly on items with different bonusIDs
+        local equippedItems = GearHelper:GetEquippedItems(self.equipLoc)
+
+        for _, equippedItem in pairs(equippedItems.items) do
+            if equippedItem.itemLink == self.itemLink then
+                return true
+            end
+        end
+
+        return false
     end
 end
 

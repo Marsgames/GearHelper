@@ -25,11 +25,11 @@ function GearHelper:HookItemTooltip()
             borderColor = nil
         }
 
-        if IsEquippedItem(item.itemLink) then -- Item equipped, yellow overlay on tooltip
+        if item:IsEquipped() then -- Item equipped, yellow overlay on tooltip
             GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay")
             tooltipSettings.borderColor = ITEM_EQUAL_TOOLTIP_BORDER
             table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
-        elseif item:IsEquippableByMe() and not IsEquippedItem(item.id) then
+        elseif item:IsEquippableByMe() then
             GearHelper:Print("OnToolTipSetItem - Item not equipped, comparing score...")
             local result = GearHelper:CompareWithEquipped(item)
             tooltipSettings = GearHelper:GenerateTooltipSettings(result)
