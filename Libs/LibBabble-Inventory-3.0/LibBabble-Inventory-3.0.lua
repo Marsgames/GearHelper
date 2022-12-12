@@ -913,7 +913,7 @@ elseif GAME_LOCALE == "esES" then
 	["Wand"] = "Varita",
 	["Wands"] = "Varitas",
 	--[[Translation missing --]]
-	--[[ ["Warglaives"] = "Warglaives",--]] 
+	--[[ ["Warglaives"] = "Warglaives",--]]
 	["Warlock"] = "Brujo",
 	["Warrior"] = "Guerrero",
 	["Weapon"] = "Arma",
@@ -1214,7 +1214,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Mount"] = "Montaria",
 	["Mounts"] = "Montarias",
 	--[[Translation missing --]]
-	--[[ ["Naval Equipment"] = "Naval Equipment",--]] 
+	--[[ ["Naval Equipment"] = "Naval Equipment",--]]
 	["Neck"] = "Pescoço",
 	["Off Hand"] = "Mão Secundária",
 	["One-Hand"] = "Uma Mão",
@@ -1275,7 +1275,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Wand"] = "Varinha",
 	["Wands"] = "Varinhas",
 	--[[Translation missing --]]
-	--[[ ["Warglaives"] = "Warglaives",--]] 
+	--[[ ["Warglaives"] = "Warglaives",--]]
 	["Warlock"] = "Bruxo",
 	["Warrior"] = "Guerreiro",
 	["Weapon"] = "Arma",
