@@ -39,7 +39,9 @@ function GearHelper:HookItemTooltip()
             tooltipSettings.borderColor = ITEM_DOWNGRADE_TOOLTIP_BORDER
         end
 
-        tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)
+        if tooltipSettings.borderColor then
+            tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)
+        end
         tooltipSettings.lines = GHToolbox:TableConcat(tooltipSettings.lines, GearHelper:GetDropInfo(item))
 
         GearHelper:AddLinesOnTooltip(tooltip, tooltipSettings.lines)
