@@ -1,4 +1,4 @@
-package-as: GearHelper
+package-as: GearHelper @project-version@
 
 ignore:
  - README.md
