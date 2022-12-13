@@ -14,6 +14,7 @@
 -- Fix TODOs in GH_AutoEquip.lua
 -- Fix TODOs in GH_Items.lua
 -- Fix TODOs in GH_Messages.lua
+-- Fix error when deactivating Bosses Killed option
 
 function GearHelper:setInviteMessage(newMessage)
     if newMessage == nil then
