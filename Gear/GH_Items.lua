@@ -24,7 +24,7 @@ function GHItem:Create(itemLink)
     end
 
     local item = Item:CreateFromItemLink(itemLink)
-    
+
     if item:IsItemEmpty() or GearHelper.itemSlot[select(4, GetItemInfoInstant(itemLink))] == nil then
         return this
     end

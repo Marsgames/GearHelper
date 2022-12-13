@@ -1,23 +1,18 @@
-﻿LibRealmInfo
-===============
+﻿# LibRealmInfo
 
 Library to provide information about realms.
 
-* [Download on CurseForge](https://wow.curseforge.com/projects/librealminfo)
-* [Download on WoWInterface](https://www.wowinterface.com/downloads/info22987-LibRealmInfo.html)
-* [Source Code on GitHub](https://github.com/phanx-wow/LibRealmInfo)
-* [Issue Tracker on GitHub](https://github.com/phanx-wow/LibRealmInfo/issues)
+- [Download on CurseForge](https://wow.curseforge.com/projects/librealminfo)
+- [Download on WoWInterface](https://www.wowinterface.com/downloads/info22987-LibRealmInfo.html)
+- [Source Code on GitHub](https://github.com/phanx-wow/LibRealmInfo)
+- [Issue Tracker on GitHub](https://github.com/phanx-wow/LibRealmInfo/issues)
 
+## Documentation
 
-Documentation
-----------------
+- [API functions](https://github.com/phanx-wow/LibRealmInfo/wiki/API)
+- [Adding LibRealmInfo to your addon](https://github.com/Phanx/LibRealmInfo/wiki/Embedding)
 
-* [API functions](https://github.com/phanx-wow/LibRealmInfo/wiki/API)
-* [Adding LibRealmInfo to your addon](https://github.com/Phanx/LibRealmInfo/wiki/Embedding)
-
-
-Caveats
-----------
+## Caveats
 
 If you only need to know the names of realms connected to the player's current realm, you should just use [GetAutoCompleteRealms](http://wowpedia.org/API_GetAutoCompleteRealms) instead of this library.
 
