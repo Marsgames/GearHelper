@@ -19,7 +19,7 @@ function GHItem:Create(itemLink)
 
     setmetatable(this, GHItem)
 
-    if not itemLink or IsCosmeticItem(itemLink) or INVTYPE_TO_IGNORE[C_Item.GetItemInventoryTypeByID(GetItemInfoInstant(itemLink))] then
+    if not itemLink or IsCosmeticItem(itemLink) or INVTYPE_TO_IGNORE[C_Item.GetItemInventoryTypeByID(itemLink)] then
         return this
     end
 

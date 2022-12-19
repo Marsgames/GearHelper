@@ -273,9 +273,18 @@ INVTYPE_1H_MAINHAND = {
 }
 
 INVTYPE_TO_IGNORE = {
+    [Enum.InventoryType.IndexNonEquipType] = true,
     [Enum.InventoryType.IndexBodyType] = true,
     [Enum.InventoryType.IndexBagType] = true,
-    [Enum.InventoryType.IndexTabardType] = true
+    [Enum.InventoryType.IndexTabardType] = true,
+    [Enum.InventoryType.IndexQuiverType] = true,
+    [Enum.InventoryType.IndexRelicType] = true,
+    [Enum.InventoryType.IndexProfessionToolType] = true,
+    [Enum.InventoryType.IndexProfessionGearType] = true,
+    [Enum.InventoryType.IndexEquipablespellOffensiveType] = true,
+    [Enum.InventoryType.IndexEquipablespellUtilityType] = true,
+    [Enum.InventoryType.IndexEquipablespellDefensiveType] = true,
+    [Enum.InventoryType.IndexEquipablespellMobilityType] = true
 }
 
 local BabbleI = LibStub("LibBabble-Inventory-3.0")
