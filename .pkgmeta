@@ -1,4 +1,5 @@
 package-as: GearHelper @project-version@
+enable-nolib-creation: no
 
 ignore:
  - README.md
