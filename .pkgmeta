@@ -1,4 +1,4 @@
-package-as: GearHelper @project-version@
+package-as: GearHelper
 enable-nolib-creation: no
 
 ignore:
