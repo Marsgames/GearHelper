@@ -41,31 +41,4 @@ L["UIIlvlCharFrameDesc"] = "캐릭터창 아이템에 템렙을 표시합니다.
 L["UIIlvlInspectFrame"] = "살펴보기 시 템렙"
 L["UIIlvlInspectFrameDesc"] = "살펴보기 할 때 대상의 템렙을 표시합니다."
 L["UIinviteMessage"] = "초대 메시지"
-L["UIMinimapIcon"] = "미니맵 아이콘"
-L["UIMinimapIconDesc"] = "미니맵 아이콘 표시"
 L["UISayMyNameDesc"] = "누군가 내 이름을 부를 때 소리와 함께 경고를 표시합니다."
-
-L["Tooltip"] = {
-    Stat = {
-        ["Intellect"] = ITEM_MOD_INTELLECT_SHORT,
-        ["Haste"] = ITEM_MOD_HASTE_RATING_SHORT,
-        ["CriticalStrike"] = ITEM_MOD_CRIT_RATING_SHORT,
-        ["Versatility"] = ITEM_MOD_VERSATILITY,
-        ["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT,
-        ["Agility"] = ITEM_MOD_AGILITY_SHORT,
-        ["Stamina"] = ITEM_MOD_STAMINA_SHORT,
-        ["Strength"] = ITEM_MOD_STRENGTH_SHORT,
-        ["Armor"] = RESISTANCE0_NAME,
-        ["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
-        ["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
-        ["Leech"] = "생기흡수",
-        ["Avoidance"] = "광역회피",
-        ["MovementSpeed"] = "이동 속도"
-    },
-    ["ItemLevel"] = "^아이템 레벨",
-    ["LevelRequired"] = "^요구 레벨",
-    ["GemSocketEmpty"] = "보석 홈",
-    ["BonusGem"] = "^보석 장착 보너스"
-    --["MainDroite"] = "Dégâts main droite",
-    --["MainGauche"] = "Dégâts main gauche"
-}

@@ -1,5 +1,30 @@
+local slotConverter = {
+    -- Left
+    [1] = "HeadSlotFrame",
+    [2] = "NeckSlotFrame",
+    [3] = "ShoulderSlotFrame",
+    [15] = "BackSlotFrame",
+    [5] = "ChestSlotFrame",
+    [4] = "ShirtSlotFrame",
+    [19] = "TabardSlotFrame",
+    [9] = "WristSlotFrame",
+    --- Right
+    [10] = "HandsSlotFrame",
+    [6] = "WaistSlotFrame",
+    [7] = "LegsSlotFrame",
+    [8] = "FeetSlotFrame",
+    [11] = "Finger0SlotFrame",
+    [12] = "Finger1SlotFrame",
+    [13] = "Trinket0SlotFrame",
+    [14] = "Trinket1SlotFrame",
+    -- Bottom
+    [16] = "MainHandSlotFrame",
+    [17] = "SecondaryHandSlotFrame"
+}
+
+-- ! ////////// ////////// Character Frame \\\\\\\\\\ \\\\\\\\\\ ! --
+
 local function CharFrameShow(_)
-    GearHelper:BenchmarkCountFuncCall("CharFrameShow")
     if not GearHelper.db.profile.ilvlCharFrame then
         do
             return
@@ -8,86 +33,154 @@ local function CharFrameShow(_)
 
     table.foreach(
         GearHelperVars.charInventory,
-        function(slotName, item, number)
+        function(slotID, item, number)
             if (item ~= -1) then
-                local arrayPos = {
-                    xHead = -204,
-                    xNeck = -204,
-                    xShoulder = -204,
-                    xBack = -204,
-                    xChest = -204,
-                    xWrist = -204,
-                    xMainHand = -125,
-                    xHands = -3,
-                    xWaist = -3,
-                    xLegs = -3,
-                    xFeet = -3,
-                    xFinger0 = -3,
-                    xFinger1 = -3,
-                    xTrinket0 = -3,
-                    xTrinket1 = -3,
-                    xSecondaryHand = -77,
-                    yHead = 140 - 15,
-                    yNeck = 99 - 15,
-                    yShoulder = 58 - 15,
-                    yBack = 17 - 15,
-                    yChest = -24 - 15,
-                    yWrist = -147 - 15,
-                    yMainHand = -140,
-                    yHands = 140,
-                    yWaist = 99 - 15,
-                    yLegs = 58 - 15,
-                    yFeet = 17 - 15,
-                    yFinger0 = -24 - 15,
-                    yFinger1 = -65 - 15,
-                    yTrinket0 = -106 - 15,
-                    yTrinket1 = -147 - 15,
-                    ySecondaryHand = -140
-                }
+                local xOffset = 0
+                local yOffset = -2
+                local parentAnchor = ""
+                local childAnchor = ""
 
-                local button = _G["charIlvlButton" .. slotName] or CreateFrame("Button", "charIlvlButton" .. slotName, PaperDollItemsFrame)
-                button:SetPoint("CENTER", PaperDollItemsFrame, "CENTER", arrayPos["x" .. slotName], arrayPos["y" .. slotName])
-                button:SetSize(1, 1)
-
-                if (item ~= 0) then
-                    local itemScan = GearHelper:GetItemByLink(item, "GH_CharacterFrame.CharFrameShow()")
-                    local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
-                    iR = ((iR == "9d9d9d" and 0) or (iR == "ffffff" and 1) or (iR == "1eff00" and 2) or (iR == "0070dd" and 3) or (iR == "a335ee" and 4) or (iR == "ff8000" and 5) or (iR == "e6cc80" and 6) or (iR == "00ccff" and 7))
-
-                    button:SetText(itemLevel)
-                    button:SetNormalFontObject("GameFontNormalSmall")
-
-                    local font = _G["charIlvlFont" .. slotName] or CreateFont("charIlvlFont" .. slotName)
-                    local r, g, b = GetItemQualityColor(iR ~= nil and iR or 0)
-                    font:SetTextColor(r, g, b, 1)
-                    button:SetNormalFontObject(font)
+                if (slotID < 6 or slotID == 9 or slotID == 15 or slotID == 19) then
+                    xOffset = 5
+                    yOffset = 0
+                    parentAnchor = "RIGHT"
+                    childAnchor = "LEFT"
+                elseif (slotID < 16) then
+                    xOffset = -5
+                    yOffset = 0
+                    parentAnchor = "LEFT"
+                    childAnchor = "RIGHT"
+                else
+                    xOffset = 0
+                    yOffset = 5
+                    parentAnchor = "TOP"
+                    childAnchor = "BOTTOM"
                 end
+
+                local name = "Character" .. slotConverter[slotID]
+                local pFrame = _G[name]
+
+                local button = _G["charIlvlSlotFrame" .. slotID] or CreateFrame("Frame", "charIlvlSlotFrame" .. slotID, CharacterFrame) --    Our frame
+                button:SetPoint(childAnchor, pFrame, parentAnchor, xOffset, yOffset)
+                button:SetSize(50, 25)
+                button:SetFrameStrata("HIGH")
+
+                --  FontStrings only need a position set. By default, they size automatically according to the text shown.
+                local text = _G["charIlvlSlotText" .. slotID] or button:CreateFontString("charIlvlSlotText" .. slotID, "OVERLAY", "GameFontNormal") --    Our text area
+                text:SetPoint(childAnchor, pFrame, parentAnchor, xOffset, yOffset)
+
+                local itemScan = GHItem:Create(item.itemLink)
+                local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
+
+                if (itemLevel > 0) then
+                    text:SetText(itemLevel)
+                    local r, g, b = GetItemQualityColor(iR and iR or 0)
+                    text:SetTextColor(r, g, b, 1)
+                    text:Show()
+                end
+                button:Show()
             end
         end
     )
 end
 
 local function CharFrameHide()
-    GearHelper:BenchmarkCountFuncCall("CharFrameHide")
-    GearHelper:HideIlvlOnCharFrame()
+    table.foreach(
+        GearHelperVars.charInventory,
+        function(slotID, _)
+            if (_G["charIlvlSlotFrame" .. slotID]) then
+                _G["charIlvlSlotFrame" .. slotID]:Hide()
+            end
+        end
+    )
 end
 
 function GearHelper:AddIlvlOnCharFrame()
-    self:BenchmarkCountFuncCall("GearHelper:AddIlvlOnCharFrame")
-
     PaperDollItemsFrame:HookScript("OnShow", CharFrameShow)
     PaperDollItemsFrame:HookScript("OnHide", CharFrameHide)
 end
 
-function GearHelper:HideIlvlOnCharFrame()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:HideIlvlOnCharFrame")
+function GearHelper:ResetIlvlOnCharFrame()
+    CharFrameHide()
+    if (PaperDollItemsFrame:IsVisible()) then
+        CharFrameShow()
+    end
+end
+
+-- ! ////////// ////////// Inspect Frame \\\\\\\\\\ \\\\\\\\\\ ! --
+
+local function InspectFrameShow()
+    if not GearHelper.db.profile.ilvlInspectFrame then
+        do
+            return
+        end
+    end
+
+    -- For ids in slotConverter
+    for slotID, slotName in pairs(slotConverter) do
+        local itemLink = GetInventoryItemLink("target", slotID)
+        if (itemLink) and (itemLink ~= -1) then
+            local xOffset = 0
+            local yOffset = -2
+            local parentAnchor = ""
+            local childAnchor = ""
+
+            if (slotID < 6 or slotID == 9 or slotID == 15 or slotID == 19) then
+                xOffset = 5
+                yOffset = 0
+                parentAnchor = "RIGHT"
+                childAnchor = "LEFT"
+            elseif (slotID < 16) then
+                xOffset = -5
+                yOffset = 0
+                parentAnchor = "LEFT"
+                childAnchor = "RIGHT"
+            else
+                xOffset = 0
+                yOffset = 5
+                parentAnchor = "TOP"
+                childAnchor = "BOTTOM"
+            end
+
+            local name = "Inspect" .. slotConverter[slotID]
+            local pFrame = _G[name]
+
+            local button = _G["inspectIlvlSlotFrame" .. slotID] or CreateFrame("Frame", "inspectIlvlSlotFrame" .. slotID, InspectPaperDollItemsFrame) --    Our frame
+            button:SetPoint(childAnchor, pFrame, parentAnchor, xOffset, yOffset)
+            button:SetSize(50, 25)
+            button:SetFrameStrata("TOOLTIP")
+
+            --  FontStrings only need a position set. By default, they size automatically according to the text shown.
+            local text = _G["inspectIlvlSlotText" .. slotID] or button:CreateFontString("inspectIlvlSlotText" .. slotID, "OVERLAY", "GameFontNormal") --    Our text area
+            text:SetPoint(childAnchor, pFrame, parentAnchor, xOffset, yOffset)
+
+            local itemScan = GHItem:Create(itemLink)
+            local itemLink, iR, itemLevel, itemEquipLoc = itemScan.itemLink, itemScan.rarity, itemScan.iLvl, itemScan.equipLoc
+
+            if (itemLevel > 0) then
+                text:SetText(itemLevel)
+                local r, g, b = GetItemQualityColor(iR and iR or 0)
+                text:SetTextColor(r, g, b, 1)
+                text:Show()
+            end
+            button:Show()
+        end
+    end
+end
+
+local function InspectFrameHide()
     table.foreach(
-        GearHelperVars.charInventory,
-        function(slotName, _)
-            if (_G["charIlvlButton" .. slotName]) then
-                _G["charIlvlButton" .. slotName]:Hide()
-                _G["charIlvlButton" .. slotName] = nil
+        slotConverter,
+        function(slotID, _)
+            if (_G["inspectIlvlSlotFrame" .. slotID]) then
+                _G["inspectIlvlSlotFrame" .. slotID]:Hide()
             end
         end
     )
+    GearHelperVars.unitInspected = nil
+end
+
+function GearHelper:HookInspectFrame()
+    InspectPaperDollItemsFrame:HookScript("OnShow", InspectFrameShow)
+    InspectPaperDollItemsFrame:HookScript("OnHide", InspectFrameHide)
 end

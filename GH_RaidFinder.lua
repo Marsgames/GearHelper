@@ -1,7 +1,6 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
 function GearHelper:CreateLfrButtons(frameParent)
-    self:BenchmarkCountFuncCall("GearHelper:CreateLfrButtons")
     local nbInstance = GetNumRFDungeons()
     local scale = min(480 / ((nbInstance - 6) * 24), 1) --> Adjust size of buttons depending on number of buttons
 
@@ -85,8 +84,6 @@ function GearHelper:CreateLfrButtons(frameParent)
 end
 
 function GearHelper:UpdateButtonsAndTooltips(frameParent)
-    self:BenchmarkCountFuncCall("GearHelper:UpdateButtonsAndTooltips")
-
     local buttons = frameParent.GHLfrButtons
 
     for id, button in pairs(buttons) do
@@ -100,10 +97,10 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
             local bossName, _, isDead = GetLFGDungeonEncounterInfo(id, i)
 
             if (isDead and bossName) then
-                textBoss = self:ColorizeString(bossName, "Red") .. self:ColorizeString(" " .. L["isDead"], "LightRed")
+                textBoss = GHToolbox:ColorizeString(bossName, "Red") .. GHToolbox:ColorizeString(" " .. self.locals["isDead"], "LightRed")
                 bossKilled = bossKilled + 1
             elseif (not isDead and bossName) then
-                textBoss = self:ColorizeString(bossName, "Green") .. self:ColorizeString(" " .. L["isAlive"], "LightGreen")
+                textBoss = GHToolbox:ColorizeString(bossName, "Green") .. GHToolbox:ColorizeString(" " .. self.locals["isAlive"], "LightGreen")
             end
             table.insert(tooltip, textBoss)
         end
@@ -112,11 +109,11 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
         button.tooltip = tooltip
         local result = bossKilled .. "/" .. bossCount
         if (bossKilled == bossCount) then
-            result = self:ColorizeString(result, "LightRed")
+            result = GHToolbox:ColorizeString(result, "LightRed")
         elseif (bossKilled == 0) then
-            result = self:ColorizeString(result, "LightGreen")
+            result = GHToolbox:ColorizeString(result, "LightGreen")
         else
-            result = self:ColorizeString(result, "Yellow")
+            result = GHToolbox:ColorizeString(result, "Yellow")
         end
 
         if (button.number.SetFormattedText) then
@@ -128,8 +125,6 @@ function GearHelper:UpdateButtonsAndTooltips(frameParent)
 end
 
 function GearHelper:UpdateSelectCursor()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:UpdateSelectCursor")
-
     if not GearHelper.cursor then
         local cursor = GroupFinderFrame:CreateTexture("GHLfrCursor", "ARTWORK")
         cursor:SetTexture("Interface\\Minimap\\MinimapArrow")
@@ -154,7 +149,6 @@ function GearHelper:UpdateSelectCursor()
 end
 
 function GearHelper:UpdateGHLfrButton()
-    self:BenchmarkCountFuncCall("GearHelper:UpdateGHLfrButton")
     if not RaidFinderQueueFrame.GHLfrButtons then
         return
     end
@@ -172,7 +166,6 @@ function GearHelper:UpdateGHLfrButton()
 end
 
 function GearHelper:HideLfrButtons(frameParent)
-    self:BenchmarkCountFuncCall("GearHelper:HideLfrButtons")
     local nbInstance = GetNumRFDungeons()
 
     for i = 1, nbInstance do

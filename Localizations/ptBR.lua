@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("GearHelper", "ptBR")
 if not L then
-	return
+    return
 end
 
 L["merci"] = "|cFF00FF00Thank you to MaYcKe25 for Brazilian Portuguese translation"
@@ -69,7 +69,7 @@ L["maLangue"] = "Português Brasileiro"
 L["maLanguedeDE"] = "Brasilianisches Portugiesisch"
 L["maLangueenUS"] = "Brazilian portuguese"
 L["maLangueesES"] = "Portugués brasileño"
-L["maLangueesEX"] = "Portugués brasileño"
+L["maLangueesMX"] = "Portugués brasileño"
 L["maLanguefrFR"] = "Portugais brésilien"
 L["maLangueitIT"] = "Portoghese brasiliano"
 L["maLanguekoKR"] = "브라질 포르투갈어"
@@ -78,12 +78,6 @@ L["maLangueruRU"] = "Бразильский португальский"
 L["maLanguezhCN"] = "巴西葡萄牙语"
 L["maLanguezhTW"] = "巴西葡萄牙語"
 L["miscOptions"] = "Opções diversas"
-L["MmTtClickLock"] = "Shift + clique para |cFFFF0000travar|cFFFFFF00 o ícone do minimapa"
-L["MmTtClickUnlock"] = "Shift + clique para |cFF00FF00destravar|cFFFFFF00 o ícone do minimapa"
-L["MmTtCtrlClick"] = "Ctrl + clique para |cFF00FF00esconder|cFFFFFF00 o ícone do minimapa"
-L["MmTtLClick"] = "Clique esquerdo para abrir as opções"
-L["MmTtRClickActivate"] = "Clique direito para ativar o GearHelper"
-L["MmTtRClickDeactivate"] = "Clique direito para desativar o GearHelper"
 L["moneyEarned"] = "Dinheiro ganho pela venda:"
 L["no"] = "Não"
 L["noxxicWeights"] = "Noxxic Weights"
@@ -122,8 +116,7 @@ L["UIIlvlInspectFrame"] = "Item level no inspecionar"
 L["UIIlvlInspectFrameDesc"] = "Mostra o Item level do alvo quando inspecionado"
 L["UIinviteMessage"] = "Mensagem para convite automático"
 L["UIinviteMessageDesc"] = "Mensagem que deve ser enviada a você para ser convidado"
-L["UIMinimapIcon"] = "Ícone no minimapa"
-L["UIMinimapIconDesc"] = "Mostra o ícone no minimapa"
+
 L["UIMyNames"] = "Nomes"
 L["UIMyNamesDesc"] = "Lista de nomes para o alerta. Separa por vírgula (sem espaços)"
 L["UIprintWhenEquip"] = "Avisar quando equipar automaticamente"
@@ -134,28 +127,3 @@ L["UItemplateName"] = "Novo modelo"
 L["UIWhisperAlert"] = "Alerta de sussurro"
 L["UIWhisperAlertDesc"] = "Toca um som quando recebe um sussurro"
 L["yes"] = "Sim"
-
-L["Tooltip"] = {
-	Stat = {
-		["Intellect"] = ITEM_MOD_INTELLECT_SHORT,
-		["Haste"] = ITEM_MOD_HASTE_RATING_SHORT,
-		["CriticalStrike"] = ITEM_MOD_CRIT_RATING_SHORT,
-		["Versatility"] = ITEM_MOD_VERSATILITY,
-		["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT,
-		["Agility"] = ITEM_MOD_AGILITY_SHORT,
-		["Stamina"] = ITEM_MOD_STAMINA_SHORT,
-		["Strength"] = ITEM_MOD_STRENGTH_SHORT,
-		["Armor"] = RESISTANCE0_NAME,
-		["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
-		["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
-		["Leech"] = "Sorver",
-		["Avoidance"] = "Evasiva",
-		["MovementSpeed"] = "Velocidade"
-	},
-	["ItemLevel"] = "^Nível do Item",
-	["LevelRequired"] = "^Requer Nível",
-	["GemSocketEmpty"] = "Engastes",
-	["BonusGem"] = "^Bônus de engaste"
-	--["MainDroite"] = "Dégâts main droite",
-	--["MainGauche"] = "Dégâts main gauche"
-}

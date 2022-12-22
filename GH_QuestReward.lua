@@ -3,8 +3,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 -- TODO: Overlay buttons needs to be rework, because they don't seems to work
 -- TODO: Split that shit
 function GearHelper:GetQuestReward()
-    self:BenchmarkCountFuncCall("GearHelper:GetQuestReward")
-
     local numQuestChoices = GetNumQuestChoices()
     local isBetter = false
 
@@ -18,9 +16,9 @@ function GearHelper:GetQuestReward()
         local altTable = {}
 
         for i = 1, numQuestChoices do
-            local item = self:GetItemByLink(GetQuestItemLink("choice", i), "GH_QuestReward.GetQuestReward()")
+            local item = GHItem:Create(GetQuestItemLink("choice", i))
 
-            if item.type ~= L["armor"] and item.type ~= L["weapon"] then
+            if item.type ~= ARMOR and item.type ~= WEAPON then
                 return
             end
 
@@ -39,7 +37,7 @@ function GearHelper:GetQuestReward()
                     end
                 end
 
-                if self:GetArraySize(tmpTable) == 0 then
+                if GHToolbox:GetArraySize(tmpTable) == 0 then
                     table.insert(weightTable, -10)
                     table.insert(prixTable, item.sellPrice)
                     table.insert(altTable, item.sellPrice, item.itemLink)
@@ -77,7 +75,6 @@ function GearHelper:GetQuestReward()
         local prixTriee = prixTable
         table.sort(prixTriee)
 
-        local xDif = 0
         if maxWeight > 0 and not isBetter then
             local button = _G["QuestInfoRewardsFrameQuestInfoItem" .. keyWeight]
             -- table.insert(GearHelper.ButtonQuestReward, button)
@@ -90,10 +87,9 @@ function GearHelper:GetQuestReward()
             if not button.overlay then
                 button.overlay = button:CreateTexture(nil, "OVERLAY")
                 button.overlay:SetSize(18, 18)
-                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-                button.overlay:SetTexture("Interface\\AddOns\\GearHelper\\Textures\\flecheUp")
+                button.overlay:SetPoint("TOPLEFT")
+                button.overlay:SetAtlas("bags-greenarrow", true)
                 button.overlay:SetShown(true)
-                xDif = xDif + 11
             end
 
             if GearHelper.db.profile.autoAcceptQuestReward then
@@ -117,10 +113,9 @@ function GearHelper:GetQuestReward()
             if not button.overlay then
                 button.overlay = button:CreateTexture(nil, "OVERLAY")
                 button.overlay:SetSize(18, 18)
-                button.overlay:SetPoint("TOPLEFT", -9 + xDif, 9)
-                button.overlay:SetTexture("Interface\\Icons\\INV_Misc_Coin_01")
+                button.overlay:SetPoint("TOPLEFT")
+                button.overlay:SetAtlas("bags-junkcoin", true)
                 button.overlay:SetShown(true)
-                xDif = xDif + 11
             end
 
             local objetI = GetQuestItemLink("choice", keyPrix)

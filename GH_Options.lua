@@ -1,47 +1,36 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+GHOptions = {}
+GHOptions.__index = GHOptions
 
-local function GetInvMsg()
-    GearHelper:BenchmarkCountFuncCall("GetInvMsg")
+local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
+--[[ Proposition for a single page, with a scroll view - Each option on a new line (as actual Blizzard options)
+    Debug options
+
+    ----- Gear Options -----
+    Show border color on tooltip
+    Red tooltip + message when item is not equippable
+    Alert loot in instance + ask if the player needs
+    Auto equip best item
+    Verbose equip
+    Auto sell grey items
+    Auto repair
+
+    ----- Messages options -----
+    Auto invite on whisper
+    Invite message
+    Alert when someone whisper you
+    Alert when you name is written in any channel
+    Wich names to alert
+
+    ----- Misc options -----
+    Auto accept quest reward
+    Bosses killed on LFG panel
+    Show ilvl on char panel
+    Show ilvl on inspect panel
+]] local function GetInvMsg()
     return GearHelper.db.profile.inviteMessage
 end
 
-local function GetMyNames()
-    GearHelper:BenchmarkCountFuncCall("GetMyNames")
-    if (GearHelper.db.global.myNames == {}) then
-        table.insert(GearHelper.db.global.myNames, GetUnitName("player") .. ",")
-    end
-
-    return GearHelper.db.global.myNames
-end
-
-local function GetStatCW(info, stat, bool)
-    GearHelper:BenchmarkCountFuncCall("GetStatCW")
-    if bool then
-        local currentSpec = GetSpecializationInfo(GetSpecialization())
-        return tostring(GearHelper.db.global.templates[(currentSpec)]["NOX"][stat])
-    else
-        if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
-            local valAsPercentage = (GearHelper.db.profile.CW[info[1]][stat] / 50) * 100
-            return tostring(valAsPercentage)
-        else
-            return tostring(GearHelper.db.profile.CW[info[1]][stat])
-        end
-    end
-end
-
-local function SetStatCW(info, val, stat)
-    GearHelper:BenchmarkCountFuncCall("SetStatCW")
-    if GearHelper.db.profile.CW[info[1]].DisplayAsPercentage then
-        GearHelper.db.profile.CW[info[1]][stat] = (tonumber(val) / 100) * 50
-        return tostring(GearHelper.db.profile.CW[info[1]][stat])
-    else
-        GearHelper.db.profile.CW[info[1]][stat] = tonumber(val)
-        return tostring(GearHelper.db.profile.CW[info[1]][stat])
-    end
-end
-
 local function ValidateInputPattern(val, type, info)
-    GearHelper:BenchmarkCountFuncCall("ValidateInputPattern")
     if type == "number" then
         if (string.len(val) > 0 and tonumber(val)) then
             return true
@@ -66,7 +55,7 @@ local function ValidateInputPattern(val, type, info)
                     sum = sum + (v / 50) * 100
                 end
             end
-            if sum > 99 then --Value is stored and if validation failed it's removed so it's taken into account
+            if sum > 99 then -- Value is stored and if validation failed it's removed so it's taken into account
                 return "Percentage sum is more than 100"
             else
                 return true
@@ -87,39 +76,16 @@ local ghOptionsTable = {
             name = " ",
             type = "group",
             inline = true,
+            hidden = function()
+                if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Niisha" then
+                    return true
+                end
+            end,
             args = {
-                enable = {
-                    order = 0,
-                    name = L["enable"] .. " GearHelper",
-                    desc = L["UIGHCheckBoxAddon"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.addonEnabled = val
-                        if val == false then
-                            PlaySoundFile(67898, "MASTER")
-                        end
-                        ---------- A ETUDIER --------
-                        local icon = LibStub("LibDBIcon-1.0")
-                        local ghIcon = icon:GetMinimapButton("GHIcon")
-                        if (ghIcon) then
-                            ghIcon.icon = GearHelper.db.profile.addonEnabled and "Interface\\AddOns\\GearHelper\\Textures\\flecheUp" or "Interface\\AddOns\\GearHelper\\Textures\\flecheUpR"
-                            icon:Refresh("GHIcon")
-                        end
-                        -----------------------------
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.addonEnabled
-                    end
-                },
                 debug = {
                     order = 1,
                     name = "Debug",
-                    hidden = function()
-                        if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Faerlia" then
-                            return true
-                        end
-                    end,
-                    desc = L["UIGHCheckBoxAddon"],
+                    desc = GearHelper.locals["UIGHCheckBoxAddon"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.debug = val
@@ -127,31 +93,12 @@ local ghOptionsTable = {
                     get = function()
                         return GearHelper.db.profile.debug
                     end
-                },
-                -- minimapButton = {
-                --     order = 2,
-                --     name = L["UIMinimapIcon"],
-                --     --hidden = function() if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" then return true end end,
-                --     desc = L["UIMinimapIconDesc"],
-                --     type = "toggle",
-                --     set = function(_, val)
-                --         GearHelper.db.profile.minimap = {hide = not val}
-                --         local icon = LibStub("LibDBIcon-1.0")
-                --         if (val) then
-                --             icon:Show("GHIcon")
-                --         else
-                --             icon:Hide("GHIcon")
-                --         end
-                --     end,
-                --     get = function()
-                --         return not GearHelper.db.profile.minimap.hide
-                --     end
-                -- }
+                }
             }
         },
         spacer1 = {
             order = 1,
-            name = L["gearOptions"],
+            name = GearHelper.locals["gearOptions"],
             type = "header"
         },
         group2 = {
@@ -162,9 +109,10 @@ local ghOptionsTable = {
             args = {
                 autoEquipLootedStuff = {
                     order = 4,
-                    name = L["autoEquipLootedStuff"],
-                    desc = L["UIGHCheckBoxAutoEquipLootedStuff"],
+                    name = GearHelper.locals["autoEquipLootedStuff"],
+                    desc = GearHelper.locals["UIGHCheckBoxAutoEquipLootedStuff"],
                     type = "toggle",
+                    width = "double",
                     set = function(_, val)
                         GearHelper.db.profile.autoEquipLooted.actual = val
                         GearHelper.db.profile.autoEquipLooted.previous = val
@@ -175,7 +123,7 @@ local ghOptionsTable = {
                 },
                 printWhenEquip = {
                     order = 5,
-                    name = L["UIprintWhenEquip"],
+                    name = GearHelper.locals["UIprintWhenEquip"],
                     disabled = function()
                         if GearHelper.db.profile.autoEquipWhenSwitchSpe == false and GearHelper.db.profile.autoEquipLooted.actual == false then
                             return true
@@ -192,8 +140,8 @@ local ghOptionsTable = {
                 },
                 askLootRaid = {
                     order = 6,
-                    name = L["lootInRaidAlert"],
-                    desc = L["UIGHCheckBoxlootInRaidAlert"],
+                    name = GearHelper.locals["lootInRaidAlert"],
+                    desc = GearHelper.locals["UIGHCheckBoxlootInRaidAlert"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.askLootRaid = val
@@ -205,8 +153,8 @@ local ghOptionsTable = {
                 },
                 autoEquipWhenSwitchSpe = {
                     order = 7,
-                    name = L["autoEquipSpecChangedStuff"],
-                    desc = L["UIGHCheckBoxAutoEquipWhenSwitchSpe"],
+                    name = GearHelper.locals["autoEquipSpecChangedStuff"],
+                    desc = GearHelper.locals["UIGHCheckBoxAutoEquipWhenSwitchSpe"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.autoEquipWhenSwitchSpe = val
@@ -218,8 +166,8 @@ local ghOptionsTable = {
                 },
                 computeNotEquippable = {
                     order = 8,
-                    name = L["UIGlobalComputeNotEquippable"],
-                    desc = L["UIGlobalComputeNotEquippableDescription"],
+                    name = GearHelper.locals["UIGlobalComputeNotEquippable"],
+                    desc = GearHelper.locals["UIGlobalComputeNotEquippableDescription"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.computeNotEquippable = val
@@ -230,15 +178,12 @@ local ghOptionsTable = {
                     width = "double"
                 }
             }
-        }
-    }
-}
-
-local ghSecondaryOptionsTable = {
-    name = L["secondaryOptions"],
-    type = "group",
-    childGroups = "select",
-    args = {
+        },
+        spacer2 = {
+            order = 3,
+            name = GearHelper.locals["secondaryOptions"],
+            type = "header"
+        },
         group3 = {
             order = 4,
             name = " ",
@@ -247,8 +192,8 @@ local ghSecondaryOptionsTable = {
             args = {
                 autoSell = {
                     order = 0,
-                    name = L["sellGrey"],
-                    desc = L["UIGHCheckBoxSellGrey"],
+                    name = GearHelper.locals["sellGrey"],
+                    desc = GearHelper.locals["UIGHCheckBoxSellGrey"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.sellGreyItems = val
@@ -259,8 +204,8 @@ local ghSecondaryOptionsTable = {
                 },
                 autoAcceptQuestReward = {
                     order = 1,
-                    name = L["questRewars"],
-                    desc = L["UIGHCheckBoxAutoAcceptQuestReward"],
+                    name = GearHelper.locals["questRewars"],
+                    desc = GearHelper.locals["UIGHCheckBoxAutoAcceptQuestReward"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.autoAcceptQuestReward = val
@@ -272,13 +217,13 @@ local ghSecondaryOptionsTable = {
                 },
                 autoRepair = {
                     order = 2,
-                    name = L["auto-repair"],
-                    desc = L["auto-repairDesc"],
+                    name = GearHelper.locals["auto-repair"],
+                    desc = GearHelper.locals["auto-repairDesc"],
                     type = "select",
                     values = {
-                        [0] = L["DNR"],
-                        [1] = L["AutoRepair"],
-                        [2] = L["GuildAutoRepair"]
+                        [0] = GearHelper.locals["DNR"],
+                        [1] = GearHelper.locals["AutoRepair"],
+                        [2] = GearHelper.locals["GuildAutoRepair"]
                     },
                     set = function(info, val)
                         GearHelper.db.profile.autoRepair = val
@@ -292,7 +237,7 @@ local ghSecondaryOptionsTable = {
                 autoTell = {
                     order = 3,
                     name = "Loot Announcement",
-                    desc = L["checkGHAutoTell"],
+                    desc = GearHelper.locals["checkGHAutoTell"],
                     hidden = true,
                     type = "toggle",
                     width = "full",
@@ -305,11 +250,12 @@ local ghSecondaryOptionsTable = {
                 },
                 autoInvite = {
                     order = 4,
-                    name = L["UIautoInvite"],
+                    name = GearHelper.locals["UIautoInvite"],
                     desc = function()
-                        return L["UIGHCheckBoxAutoInvite"] .. GearHelper:ColorizeString(GetInvMsg(), "LightGreen")
+                        return GearHelper.locals["UIGHCheckBoxAutoInvite"] .. GHToolbox:ColorizeString(GetInvMsg(), "LightGreen")
                     end,
                     type = "toggle",
+                    width = "double",
                     set = function(_, val)
                         GearHelper.db.profile.autoInvite = val
                     end,
@@ -319,8 +265,8 @@ local ghSecondaryOptionsTable = {
                 },
                 inviteMessage = {
                     order = 5,
-                    name = L["UIinviteMessage"],
-                    desc = L["UIinviteMessageDesc"],
+                    name = GearHelper.locals["UIinviteMessage"],
+                    desc = GearHelper.locals["UIinviteMessageDesc"],
                     type = "input",
                     set = function(_, val)
                         GearHelper:setInviteMessage(val)
@@ -331,8 +277,8 @@ local ghSecondaryOptionsTable = {
                 },
                 whisperAlert = {
                     order = 6,
-                    name = L["UIWhisperAlert"],
-                    desc = L["UIWhisperAlertDesc"],
+                    name = GearHelper.locals["UIWhisperAlert"],
+                    desc = GearHelper.locals["UIWhisperAlertDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.whisperAlert = val
@@ -343,8 +289,8 @@ local ghSecondaryOptionsTable = {
                 },
                 sayMyName = {
                     order = 7,
-                    name = L["UISayMyName"],
-                    desc = L["UISayMyNameDesc"],
+                    name = GearHelper.locals["UISayMyName"],
+                    desc = GearHelper.locals["UISayMyNameDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.sayMyName = val
@@ -355,8 +301,8 @@ local ghSecondaryOptionsTable = {
                 },
                 myNames = {
                     order = 8,
-                    name = L["UIMyNames"],
-                    desc = L["UIMyNamesDesc"],
+                    name = GearHelper.locals["UIMyNames"],
+                    desc = GearHelper.locals["UIMyNamesDesc"],
                     type = "input",
                     width = "full",
                     set = function(_, val)
@@ -372,9 +318,10 @@ local ghSecondaryOptionsTable = {
                 },
                 bossesKilled = {
                     order = 9,
-                    name = L["UIBossesKilled"],
-                    desc = L["UIBossesKilledDesc"],
+                    name = GearHelper.locals["UIBossesKilled"],
+                    desc = GearHelper.locals["UIBossesKilledDesc"],
                     type = "toggle",
+                    -- width = "full",
                     set = function(_, val)
                         GearHelper.db.profile.bossesKilled = val
                         if val == false then
@@ -394,15 +341,15 @@ local ghSecondaryOptionsTable = {
                 },
                 ilvlCharFrame = {
                     order = 10,
-                    name = L["UIIlvlCharFrame"],
-                    desc = L["UIIlvlCharFrameDesc"],
+                    name = GearHelper.locals["UIIlvlCharFrame"],
+                    desc = GearHelper.locals["UIIlvlCharFrameDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.ilvlCharFrame = val
                         if (val) then
                             GearHelper:AddIlvlOnCharFrame()
                         else
-                            GearHelper:HideIlvlOnCharFrame()
+                            GearHelper:ResetIlvlOnCharFrame()
                         end
                     end,
                     get = function()
@@ -411,8 +358,8 @@ local ghSecondaryOptionsTable = {
                 },
                 ilvlInspectFrame = {
                     order = 11,
-                    name = L["UIIlvlInspectFrame"],
-                    desc = L["UIIlvlInspectFrameDesc"],
+                    name = GearHelper.locals["UIIlvlInspectFrame"],
+                    desc = GearHelper.locals["UIIlvlInspectFrameDesc"],
                     type = "toggle",
                     set = function(_, val)
                         GearHelper.db.profile.ilvlInspectFrame = val
@@ -434,20 +381,18 @@ local ghSecondaryOptionsTable = {
 }
 
 local function DeleteTemplate(info)
-    GearHelper:BenchmarkCountFuncCall("DeleteTemplate")
-    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(L["customWeights"], "dialog", "GearHelper-1.0")
+    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(GearHelper.locals["customWeights"], "dialog", "GearHelper-1.0")
 
     configTable.args.TemplateSelection.values[info[1]] = nil
     configTable.args.TemplateSelection.values = configTable.args.TemplateSelection.values
     configTable.args[info[1]] = nil
     GearHelper.db.profile.CW[info[1]] = nil
 
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], configTable)
-    LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], configTable)
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(GearHelper.locals["customWeights"])
 end
 
 local function CreateNewTemplate(templateName)
-    GearHelper:BenchmarkCountFuncCall("CreateNewTemplate")
     for _, v in pairs(GearHelper.db.profile.CW) do
         if (v.Name == templateName) then
             return
@@ -484,8 +429,8 @@ local function CreateNewTemplate(templateName)
         args = {
             asPercentage = {
                 order = 0,
-                name = L["UICWasPercentage"],
-                desc = L["UICWasPercentageDescription"],
+                name = GearHelper.locals["UICWasPercentage"],
+                desc = GearHelper.locals["UICWasPercentageDescription"],
                 type = "toggle",
                 hidden = true, ---------------------------------------------------- REMOVE HERE TO RESTORE STATS AS PERCENTAGE ----------------------------------------------------
                 width = "double",
@@ -508,7 +453,7 @@ local function CreateNewTemplate(templateName)
             },
             Intell = {
                 order = 1,
-                name = L["Tooltip"]["Stat"]["Intellect"],
+                name = ITEM_MOD_INTELLECT_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -518,15 +463,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Intellect")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Intellect")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_INTELLECT_SHORT, val)
                 end
             },
             Strength = {
                 order = 2,
-                name = L["Tooltip"]["Stat"]["Strength"],
+                name = ITEM_MOD_STRENGTH_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -536,15 +481,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Strength")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Strength")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STRENGTH_SHORT, val)
                 end
             },
             Agility = {
                 order = 3,
-                name = L["Tooltip"]["Stat"]["Agility"],
+                name = ITEM_MOD_AGILITY_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -554,15 +499,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Agility")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Agility")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_AGILITY_SHORT, val)
                 end
             },
             Stamina = {
                 order = 4,
-                name = L["Tooltip"]["Stat"]["Stamina"],
+                name = ITEM_MOD_STAMINA_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -572,15 +517,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Stamina")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Stamina")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STAMINA_SHORT, val)
                 end
             },
             Haste = {
                 order = 5,
-                name = L["Tooltip"]["Stat"]["Haste"],
+                name = ITEM_MOD_HASTE_RATING_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -591,15 +536,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Haste")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Haste")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT, val)
                 end
             },
             Mastery = {
                 order = 6,
-                name = L["Tooltip"]["Stat"]["Mastery"],
+                name = ITEM_MOD_MASTERY_RATING_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -609,15 +554,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Mastery")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Mastery")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT, val)
                 end
             },
             Critic = {
                 order = 7,
-                name = L["Tooltip"]["Stat"]["CriticalStrike"],
+                name = ITEM_MOD_CRIT_RATING_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -627,15 +572,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "CriticalStrike")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "CriticalStrike")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT, val)
                 end
             },
             Armor = {
                 order = 8,
-                name = L["Tooltip"]["Stat"]["Armor"],
+                name = ITEM_MOD_EXTRA_ARMOR_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -645,15 +590,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Armor")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Armor")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT, val)
                 end
             },
             Versatility = {
                 order = 9,
-                name = L["Tooltip"]["Stat"]["Versatility"],
+                name = ITEM_MOD_VERSATILITY,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -663,15 +608,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Versatility")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Versatility")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_VERSATILITY, val)
                 end
             },
             Leech = {
                 order = 10,
-                name = L["Tooltip"]["Stat"]["Leech"],
+                name = ITEM_MOD_CR_LIFESTEAL_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -681,15 +626,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Leech")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Leech")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT, val)
                 end
             },
             Avoidance = {
                 order = 11,
-                name = L["Tooltip"]["Stat"]["Avoidance"],
+                name = ITEM_MOD_CR_AVOIDANCE_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -699,15 +644,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "Avoidance")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "Avoidance")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT, val)
                 end
             },
             MovementSpeed = {
                 order = 14,
-                name = L["Tooltip"]["Stat"]["MovementSpeed"],
+                name = ITEM_MOD_CR_SPEED_SHORT,
                 validate = function(info, val)
                     if GearHelper.db.profile.CW[templateName].DisplayAsPercentage then
                         return ValidateInputPattern(val, "numberAnd100", info)
@@ -717,15 +662,15 @@ local function CreateNewTemplate(templateName)
                 end,
                 type = "input",
                 get = function(info)
-                    return GetStatCW(info, "MovementSpeed")
+                    return GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT)
                 end,
                 set = function(info, val)
-                    return SetStatCW(info, val, "MovementSpeed")
+                    return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_SPEED_SHORT, val)
                 end
             },
             ButtonDelete = {
                 order = 15,
-                name = L["remove"],
+                name = GearHelper.locals["remove"],
                 func = function(info)
                     DeleteTemplate(info)
                 end,
@@ -733,26 +678,26 @@ local function CreateNewTemplate(templateName)
             }
         }
     }
-    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(L["customWeights"], "dialog", "GearHelper-1.0")
+    local configTable = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(GearHelper.locals["customWeights"], "dialog", "GearHelper-1.0")
     configTable.args[templateName] = newGroup
     configTable.args.TemplateSelection.values[templateName] = templateName
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], configTable)
-    LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], configTable)
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(GearHelper.locals["customWeights"])
 end
 
 GearHelper.cwTable = {
-    name = L["customWeights"],
+    name = GearHelper.locals["customWeights"],
     type = "group",
     childGroups = "tree",
     args = {
         Select = {
             order = 0,
-            name = L["UIstatsTemplateToUse"],
+            name = GearHelper.locals["UIstatsTemplateToUse"],
             type = "select",
             style = "radio",
             values = {
-                [0] = L["noxxicWeights"],
-                [1] = L["customWeights"]
+                [0] = GearHelper.locals["noxxicWeights"],
+                [1] = GearHelper.locals["customWeights"]
             },
             get = function()
                 if GearHelper.db.profile.weightTemplate == "NOX" then
@@ -763,11 +708,11 @@ GearHelper.cwTable = {
             end,
             set = function(_, val)
                 if val == 1 then
-                    if GearHelper:GetArraySize(GearHelper.db.profile.CW) == 0 or not GearHelper.db.profile.lastWeightTemplate then --To avoid error if we select custome weight and we do not create a template
+                    if GHToolbox:GetArraySize(GearHelper.db.profile.CW) == 0 or not GearHelper.db.profile.lastWeightTemplate then --To avoid error if we select custome weight and we do not create a template
                         GearHelper.db.profile.weightTemplate = "NOX_ByDefault"
                     else
                         GearHelper.db.profile.weightTemplate = GearHelper.db.profile.lastWeightTemplate
-                        LibStub("AceConfigDialog-3.0"):SelectGroup(L["customWeights"], GearHelper.db.profile.weightTemplate)
+                        LibStub("AceConfigDialog-3.0"):SelectGroup(GearHelper.locals["customWeights"], GearHelper.db.profile.weightTemplate)
                     end
                 elseif val == 0 then
                     GearHelper.db.profile.lastWeightTemplate = GearHelper.db.profile.weightTemplate
@@ -783,7 +728,7 @@ GearHelper.cwTable = {
             args = {
                 GemSocketCompute = {
                     order = 1,
-                    name = L["UIcwGemSocketCompute"],
+                    name = GearHelper.locals["UIcwGemSocketCompute"],
                     type = "toggle",
                     width = "double",
                     --width = "double",
@@ -796,7 +741,7 @@ GearHelper.cwTable = {
                 },
                 IlvlOption = {
                     order = 2,
-                    name = L["UIcwIlvlOption"],
+                    name = GearHelper.locals["UIcwIlvlOption"],
                     type = "toggle",
                     get = function()
                         return GearHelper.db.profile.iLvlOption
@@ -807,7 +752,7 @@ GearHelper.cwTable = {
                 },
                 IlvlWeight = {
                     order = 3,
-                    name = L["UIcwIlvlWeight"],
+                    name = GearHelper.locals["UIcwIlvlWeight"],
                     width = "half",
                     type = "input",
                     disabled = function()
@@ -827,7 +772,7 @@ GearHelper.cwTable = {
         },
         templateName = {
             order = 4,
-            name = L["UItemplateName"],
+            name = GearHelper.locals["UItemplateName"],
             type = "input",
             width = "double",
             validate = function(_, val)
@@ -837,12 +782,12 @@ GearHelper.cwTable = {
             end,
             set = function(_, val)
                 CreateNewTemplate(val)
-                LibStub("AceConfigDialog-3.0"):SelectGroup(L["customWeights"], val)
+                LibStub("AceConfigDialog-3.0"):SelectGroup(GearHelper.locals["customWeights"], val)
             end
         },
         TemplateSelection = {
             order = 3,
-            name = L["UIcwTemplateToUse"],
+            name = GearHelper.locals["UIcwTemplateToUse"],
             type = "select",
             style = "dropdown",
             disabled = function()
@@ -855,7 +800,7 @@ GearHelper.cwTable = {
             end,
             set = function(_, val)
                 GearHelper.db.profile.weightTemplate = val
-                LibStub("AceConfigDialog-3.0"):SelectGroup(L["customWeights"], val)
+                LibStub("AceConfigDialog-3.0"):SelectGroup(GearHelper.locals["customWeights"], val)
             end,
             values = {}
         },
@@ -865,13 +810,13 @@ GearHelper.cwTable = {
             args = {
                 Intell = {
                     order = 1,
-                    name = L["Tooltip"]["Stat"]["Intellect"],
+                    name = ITEM_MOD_INTELLECT_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Intellect", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Intellect", 1) == 0 then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -881,45 +826,45 @@ GearHelper.cwTable = {
                 },
                 Strength = {
                     order = 2,
-                    name = L["Tooltip"]["Stat"]["Strength"],
+                    name = ITEM_MOD_STRENGTH_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Strength", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT))
                     end,
                     disabled = function()
                         return true
                     end,
                     hidden = function(info)
-                        if GetStatCW(info, "Agility", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT) == 0 then
                             return true
                         end
                     end
                 },
                 Agility = {
                     order = 3,
-                    name = L["Tooltip"]["Stat"]["Agility"],
+                    name = ITEM_MOD_AGILITY_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Agility", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT))
                     end,
                     disabled = function()
                         return true
                     end,
                     hidden = function()
-                        if GetStatCW("", "Agility", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT) == 0 then
                             return true
                         end
                     end
                 },
                 Stamina = {
                     order = 4,
-                    name = L["Tooltip"]["Stat"]["Stamina"],
+                    name = ITEM_MOD_STAMINA_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Stamina", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Stamina", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -929,13 +874,13 @@ GearHelper.cwTable = {
                 },
                 Haste = {
                     order = 5,
-                    name = L["Tooltip"]["Stat"]["Haste"],
+                    name = ITEM_MOD_HASTE_RATING_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Haste", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Haste", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -945,13 +890,13 @@ GearHelper.cwTable = {
                 },
                 Mastery = {
                     order = 6,
-                    name = L["Tooltip"]["Stat"]["Mastery"],
+                    name = ITEM_MOD_MASTERY_RATING_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Mastery", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Mastery", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -961,13 +906,13 @@ GearHelper.cwTable = {
                 },
                 Critic = {
                     order = 7,
-                    name = L["Tooltip"]["Stat"]["CriticalStrike"],
+                    name = ITEM_MOD_CRIT_RATING_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "CriticalStrike", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "CriticalStrike", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -977,13 +922,13 @@ GearHelper.cwTable = {
                 },
                 Armor = {
                     order = 8,
-                    name = L["Tooltip"]["Stat"]["Armor"],
+                    name = ITEM_MOD_EXTRA_ARMOR_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Armor", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Armor", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -993,13 +938,13 @@ GearHelper.cwTable = {
                 },
                 Versatility = {
                     order = 9,
-                    name = L["Tooltip"]["Stat"]["Versatility"],
+                    name = ITEM_MOD_VERSATILITY,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Versatility", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Versatility", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY) == 0 then
                             return true
                         end
                     end,
@@ -1009,13 +954,13 @@ GearHelper.cwTable = {
                 },
                 Leech = {
                     order = 10,
-                    name = L["Tooltip"]["Stat"]["Leech"],
+                    name = ITEM_MOD_CR_LIFESTEAL_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Leech", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Leech", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -1025,13 +970,13 @@ GearHelper.cwTable = {
                 },
                 Avoidance = {
                     order = 11,
-                    name = L["Tooltip"]["Stat"]["Avoidance"],
+                    name = ITEM_MOD_CR_AVOIDANCE_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "Avoidance", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "Avoidance", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -1041,13 +986,13 @@ GearHelper.cwTable = {
                 },
                 MovementSpeed = {
                     order = 14,
-                    name = L["Tooltip"]["Stat"]["MovementSpeed"],
+                    name = ITEM_MOD_CR_SPEED_SHORT,
                     type = "input",
                     get = function(info)
-                        return GetStatCW(info, "MovementSpeed", 1)
+                        return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT))
                     end,
                     hidden = function()
-                        if GetStatCW("", "MovementSpeed", 1) == "0" then
+                        if GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT) == 0 then
                             return true
                         end
                     end,
@@ -1061,7 +1006,6 @@ GearHelper.cwTable = {
 }
 
 function GearHelper:BuildCWTable()
-    GearHelper:BenchmarkCountFuncCall("GearHelper:BuildCWTable")
     for _, v in pairs(self.db.profile.CW) do
         if (v.Name ~= nil) then
             local newGroup = {
@@ -1075,8 +1019,8 @@ function GearHelper:BuildCWTable()
                 args = {
                     asPercentage = {
                         order = 0,
-                        name = L["UICWasPercentage"],
-                        desc = L["UICWasPercentageDescription"],
+                        name = GearHelper.locals["UICWasPercentage"],
+                        desc = GearHelper.locals["UICWasPercentageDescription"],
                         type = "toggle",
                         hidden = true, ---------------------------------------------------- REMOVE HERE TO RESTORE STATS AS PERCENTAGE ----------------------------------------------------
                         width = "double",
@@ -1099,7 +1043,7 @@ function GearHelper:BuildCWTable()
                     },
                     Intell = {
                         order = 1,
-                        name = L["Tooltip"]["Stat"]["Intellect"],
+                        name = ITEM_MOD_INTELLECT_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1109,15 +1053,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Intellect")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_INTELLECT_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Intellect")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_INTELLECT_SHORT, val)
                         end
                     },
                     Strength = {
                         order = 2,
-                        name = L["Tooltip"]["Stat"]["Strength"],
+                        name = ITEM_MOD_STRENGTH_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1127,15 +1071,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Strength")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STRENGTH_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Strength")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STRENGTH_SHORT, val)
                         end
                     },
                     Agility = {
                         order = 3,
-                        name = L["Tooltip"]["Stat"]["Agility"],
+                        name = ITEM_MOD_AGILITY_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1145,15 +1089,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Agility")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_AGILITY_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Agility")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_AGILITY_SHORT, val)
                         end
                     },
                     Stamina = {
                         order = 4,
-                        name = L["Tooltip"]["Stat"]["Stamina"],
+                        name = ITEM_MOD_STAMINA_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1163,15 +1107,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Stamina")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_STAMINA_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Stamina")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_STAMINA_SHORT, val)
                         end
                     },
                     Haste = {
                         order = 5,
-                        name = L["Tooltip"]["Stat"]["Haste"],
+                        name = ITEM_MOD_HASTE_RATING_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1181,15 +1125,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Haste")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Haste")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_HASTE_RATING_SHORT, val)
                         end
                     },
                     Mastery = {
                         order = 6,
-                        name = L["Tooltip"]["Stat"]["Mastery"],
+                        name = ITEM_MOD_MASTERY_RATING_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1199,15 +1143,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Mastery")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Mastery")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_MASTERY_RATING_SHORT, val)
                         end
                     },
                     Critic = {
                         order = 7,
-                        name = L["Tooltip"]["Stat"]["CriticalStrike"],
+                        name = ITEM_MOD_CRIT_RATING_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1217,15 +1161,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "CriticalStrike")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "CriticalStrike")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CRIT_RATING_SHORT, val)
                         end
                     },
                     Armor = {
                         order = 8,
-                        name = L["Tooltip"]["Stat"]["Armor"],
+                        name = ITEM_MOD_EXTRA_ARMOR_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1235,15 +1179,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Armor")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Armor")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_EXTRA_ARMOR_SHORT, val)
                         end
                     },
                     Versatility = {
                         order = 9,
-                        name = L["Tooltip"]["Stat"]["Versatility"],
+                        name = ITEM_MOD_VERSATILITY,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1253,15 +1197,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Versatility")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_VERSATILITY))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Versatility")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_VERSATILITY, val)
                         end
                     },
                     Leech = {
                         order = 10,
-                        name = L["Tooltip"]["Stat"]["Leech"],
+                        name = ITEM_MOD_CR_LIFESTEAL_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1271,15 +1215,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Leech")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Leech")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_LIFESTEAL_SHORT, val)
                         end
                     },
                     Avoidance = {
                         order = 11,
-                        name = L["Tooltip"]["Stat"]["Avoidance"],
+                        name = ITEM_MOD_CR_AVOIDANCE_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1289,15 +1233,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "Avoidance")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "Avoidance")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_AVOIDANCE_SHORT, val)
                         end
                     },
                     MovementSpeed = {
                         order = 14,
-                        name = L["Tooltip"]["Stat"]["MovementSpeed"],
+                        name = ITEM_MOD_CR_SPEED_SHORT,
                         validate = function(info, val)
                             if v.DisplayAsPercentage then
                                 return ValidateInputPattern(val, "numberAnd100", info)
@@ -1307,15 +1251,15 @@ function GearHelper:BuildCWTable()
                         end,
                         type = "input",
                         get = function(info)
-                            return GetStatCW(info, "MovementSpeed")
+                            return tostring(GearHelper:GetStatFromActiveTemplate(ITEM_MOD_CR_SPEED_SHORT))
                         end,
                         set = function(info, val)
-                            return SetStatCW(info, val, "MovementSpeed")
+                            return GearHelper:SetStatToActiveTemplate(ITEM_MOD_CR_SPEED_SHORT, val)
                         end
                     },
                     ButtonDelete = {
                         order = 15,
-                        name = L["remove"],
+                        name = GearHelper.locals["remove"],
                         func = function(info)
                             DeleteTemplate(info)
                         end,
@@ -1328,1765 +1272,16 @@ function GearHelper:BuildCWTable()
             GearHelper.cwTable.args.TemplateSelection.values[v.Name] = v.Name
         end
     end
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwTable)
-    LibStub("AceConfigRegistry-3.0"):NotifyChange(L["customWeights"])
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(GearHelper.locals["customWeights"])
 end
 
-local phrasesTable = {
-    name = L["phrases"],
-    type = "group",
-    args = {
-        english = {
-            order = 0,
-            name = "English",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "english",
-                    fontSize = "medium"
-                },
-                -- Rep2 = {
-                --     order = 15,
-                --     name = "",
-                --     type = "input",
-                --     width = "double",
-                --     get = function(info)
-                --         return GearHelper.db.global.phrases.enUS.rep2
-                --     end,
-                --     set = function(info, val)
-                --         GearHelper.db.global.phrases.enUS.rep2 = val
-                --     end
-                -- },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.enUS = {}
-                        GearHelper.db.global.phrases.enUS.demande4 = L["demande4enUS"]
-                        GearHelper.db.global.phrases.enUS.demande42 = L["demande4enUS2"]
-                        GearHelper.db.global.phrases.enUS.rep = L["repenUS"]
-                        GearHelper.db.global.phrases.enUS.rep2 = L["repenUS2"]
-                    end
-                }
-            }
-        },
-        french = {
-            order = 1,
-            name = "French",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.frFR.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.frFR.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.frFR.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.frFR.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.frFR.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.frFR.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "français",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.frFR.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.frFR.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.frFR = {}
-                        GearHelper.db.global.phrases.frFR.demande4 = L["demande4frFR"]
-                        GearHelper.db.global.phrases.frFR.demande42 = L["demande4frFR2"]
-                        GearHelper.db.global.phrases.frFR.rep = L["repfrFR"]
-                        GearHelper.db.global.phrases.frFR.rep2 = L["repfrFR2"]
-                    end
-                }
-            }
-        },
-        German = {
-            order = 2,
-            name = "German",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.deDE.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.deDE.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.deDE.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.deDE.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.deDE.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.deDE.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "deutsch",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.deDE.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.deDE.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.deDE = {}
-                        GearHelper.db.global.phrases.deDE.demande4 = L["demande4deDE"]
-                        GearHelper.db.global.phrases.deDE.demande42 = L["demande4deDE2"]
-                        GearHelper.db.global.phrases.deDE.rep = L["repdeDE"]
-                        GearHelper.db.global.phrases.deDE.rep2 = L["repdeDE2"]
-                    end
-                }
-            }
-        },
-        Spanish = {
-            order = 3,
-            name = "Spanish",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esES.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esES.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esES.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esES.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esES.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esES.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "español",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esES.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esES.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.esES = {}
-                        GearHelper.db.global.phrases.esES.demande4 = L["demande4esES"]
-                        GearHelper.db.global.phrases.esES.demande42 = L["demande4esES2"]
-                        GearHelper.db.global.phrases.esES.rep = L["repesES"]
-                        GearHelper.db.global.phrases.esES.rep2 = L["repesES2"]
-                    end
-                }
-            }
-        },
-        Mexican = {
-            order = 4,
-            name = "Mexican",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esMX.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esMX.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esMX.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esMX.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esMX.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esMX.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "español",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.esMX.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.esMX.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.esMX = {}
-                        GearHelper.db.global.phrases.esMX.demande4 = L["demande4esMX"]
-                        GearHelper.db.global.phrases.esMX.demande42 = L["demande4esMX2"]
-                        GearHelper.db.global.phrases.esMX.rep = L["repesMX"]
-                        GearHelper.db.global.phrases.esMX.rep2 = L["repesMX2"]
-                    end
-                }
-            }
-        },
-        Italian = {
-            order = 5,
-            name = "Italian",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.itIT.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.itIT.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.itIT.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.itIT.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "italiano",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.itIT.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.itIT.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.itIT = {}
-                        GearHelper.db.global.phrases.itIT.demande4 = L["demande4itIT"]
-                        GearHelper.db.global.phrases.itIT.demande42 = L["demande4itIT2"]
-                        GearHelper.db.global.phrases.itIT.rep = L["repitIT"]
-                        GearHelper.db.global.phrases.itIT.rep2 = L["repitIT2"]
-                    end
-                }
-            }
-        },
-        Korean = {
-            order = 6,
-            name = "Korean",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.koKR.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.koKR.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.koKR.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.koKR.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "한국어",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.koKR.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.koKR.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.koKR = {}
-                        GearHelper.db.global.phrases.koKR.demande4 = L["demande4koKR"]
-                        GearHelper.db.global.phrases.koKR.demande42 = L["demande4koKR2"]
-                        GearHelper.db.global.phrases.koKR.rep = L["repkoKR"]
-                        GearHelper.db.global.phrases.koKR.rep2 = L["repkoKR2"]
-                    end
-                }
-            }
-        },
-        Portuguese = {
-            order = 7,
-            name = "Portuguese",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.ptBR.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.ptBR.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.ptBR.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.ptBR.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "Português",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.ptBR.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.ptBR.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.ptBR = {}
-                        GearHelper.db.global.phrases.ptBR.demande4 = L["demande4ptBR"]
-                        GearHelper.db.global.phrases.ptBR.demande42 = L["demande4ptBR2"]
-                        GearHelper.db.global.phrases.ptBR.rep = L["repptBR"]
-                        GearHelper.db.global.phrases.ptBR.rep2 = L["repptBR2"]
-                    end
-                }
-            }
-        },
-        Russian = {
-            order = 8,
-            name = "Russian",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.ruRU.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.ruRU.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.ruRU.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.ruRU.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "русский",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.ruRU.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.ruRU.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.ruRU = {}
-                        GearHelper.db.global.phrases.ruRU.demande4 = L["demande4ruRU"]
-                        GearHelper.db.global.phrases.ruRU.demande42 = L["demande4ruRU2"]
-                        GearHelper.db.global.phrases.ruRU.rep = L["repruRU"]
-                        GearHelper.db.global.phrases.ruRU.rep2 = L["repruRU2"]
-                    end
-                }
-            }
-        },
-        SimplifiedChinese = {
-            order = 9,
-            name = "Simplified Chinese",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.zhCN.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.zhCN.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.zhCN.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.zhCN.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "中文",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.zhCN.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.zhCN.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.zhCN = {}
-                        GearHelper.db.global.phrases.zhCN.demande4 = L["demande4zhCN"]
-                        GearHelper.db.global.phrases.zhCN.demande42 = L["demande4zhCN2"]
-                        GearHelper.db.global.phrases.zhCN.rep = L["repzhCN"]
-                        GearHelper.db.global.phrases.zhCN.rep2 = L["repzhCN2"]
-                    end
-                }
-            }
-        },
-        TraditionalChinese = {
-            order = 10,
-            name = "Traditional Chinese",
-            type = "group",
-            args = {
-                Ask1 = {
-                    order = 0,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.enUS.demande4
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.enUS.demande4 = val
-                    end
-                },
-                Empty1 = {
-                    order = 1,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                ItemLink = {
-                    order = 2,
-                    type = "description",
-                    name = "|cff1eff00|Hitem:36156:0:0:0:0:0:-18:1209139262:76:0:0:0:0|h[Wendigo Boots of Agility]|h|r",
-                    fontSize = "medium"
-                },
-                Empty2 = {
-                    order = 3,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Ask2 = {
-                    order = 4,
-                    name = "",
-                    type = "input",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.zhTW.demande42
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.zhTW.demande42 = val
-                    end
-                },
-                Empty7 = {
-                    order = 5,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                QuestionMark = {
-                    order = 6,
-                    type = "description",
-                    name = "?",
-                    fontSize = "medium"
-                },
-                Empty8 = {
-                    order = 7,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty3 = {
-                    order = 8,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty4 = {
-                    order = 9,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Header = {
-                    order = 10,
-                    type = "header",
-                    name = "Answer"
-                },
-                Empty5 = {
-                    order = 11,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Empty6 = {
-                    order = 12,
-                    type = "description",
-                    name = "",
-                    fontSize = "medium"
-                },
-                Rep = {
-                    order = 13,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.zhTW.rep
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.zhTW.rep = val
-                    end
-                },
-                myLang = {
-                    order = 14,
-                    type = "description",
-                    name = "中文",
-                    fontSize = "medium"
-                },
-                Rep2 = {
-                    order = 15,
-                    name = "",
-                    type = "input",
-                    width = "double",
-                    get = function(info)
-                        return GearHelper.db.global.phrases.zhTW.rep2
-                    end,
-                    set = function(info, val)
-                        GearHelper.db.global.phrases.zhTW.rep2 = val
-                    end
-                },
-                ResetButton = {
-                    order = 16,
-                    type = "execute",
-                    name = "Reset",
-                    func = function()
-                        GearHelper.db.global.phrases.zhTW = {}
-                        GearHelper.db.global.phrases.zhTW.demande4 = L["demande4zhTW"]
-                        GearHelper.db.global.phrases.zhTW.demande42 = L["demande4zhTW2"]
-                        GearHelper.db.global.phrases.zhTW.rep = L["repzhTW"]
-                        GearHelper.db.global.phrases.zhTW.rep2 = L["repzhTW2"]
-                    end
-                }
-            }
-        }
-    }
-}
+function GHOptions:GenerateOptions()
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
+    GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
+    GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["customWeights"], GearHelper.locals["customWeights"], "GearHelper")
 
-local aboutTable = {
-    name = "About",
-    type = "group",
-    args = {
-        version = {
-            order = 0,
-            fontSize = "medium",
-            name = "\n\n\n\n\n                |cFFFFFF00Version :|r " .. GearHelperVars.version .. "\n",
-            type = "description"
-        },
-        author = {
-            order = 1,
-            fontSize = "medium",
-            name = "                |cFFFFFF00Author :|r Marsgames - Temple Noir\n                               Tempaxe - Temple Noir" --[[Ta mère]] .. " \n",
-            type = "description"
-        },
-        email = {
-            order = 2,
-            fontSize = "medium",
-            name = "                |cFFFFFF00E-Mail :|r marsgames@gmail.com" .. " \n",
-            type = "description"
-        },
-        bug = {
-            order = 3,
-            fontSize = "medium",
-            name = "                |cFFFFFF00BugReport :|r http://vu.fr/GearHelperbugs  \n",
-            type = "description"
-        },
-        credits = {
-            order = 4,
-            fontSize = "medium",
-            name = "                |cFFFFFF00Credits :|r Big up\n",
-            type = "description"
-        },
-        bug2 = {
-            name = "                   |cFFFFFF00BugReport : ",
-            desc = "Click then ctrl + A to select and ctrl + C to copy",
-            type = "input",
-            get = function()
-                return "|cFF4477c9https://github.com/Marsgames/GearHelper/issues"
-            end,
-            width = "double"
-        }
-    }
-}
-
-local thanksTable = {
-    name = L["thanksPanel"],
-    type = "group",
-    args = {
-        name1 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Nirek |r - Bug report + bug fix",
-            type = "description"
-        },
-        name2 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 titaniumcoder |r - Bug report + bug fix",
-            type = "description"
-        },
-        name3 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 deathcore01 |r - Bug report + DE translation",
-            type = "description"
-        },
-        name4 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Ricosoft |r - DE translation",
-            type = "description"
-        },
-        name5 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 gOOvER |r - DE translation",
-            type = "description"
-        },
-        name6 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 yasen |r - ZH translation",
-            type = "description"
-        },
-        name7 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 ArnosEmpero |r - Bug report",
-            type = "description"
-        },
-        name8 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Schwoops |r - Bug report",
-            type = "description"
-        },
-        name9 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 666cursed666 |r - Bug report",
-            type = "description"
-        },
-        name10 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 xevilgrin |r - Bug report",
-            type = "description"
-        },
-        name11 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Comicus |r - Bug report",
-            type = "description"
-        },
-        name12 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Merxion |r - Bug report",
-            type = "description"
-        },
-        name13 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 treyer75 |r - Bug report",
-            type = "description"
-        },
-        name14 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 canlo21 |r - Bug report",
-            type = "description"
-        },
-        name15 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Veritias |r - Bug report",
-            type = "description"
-        },
-        name16 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 aresyyywang |r - Bug report",
-            type = "description"
-        },
-        name17 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Seanross19 |r - Bug report",
-            type = "description"
-        },
-        name18 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 jmac420 |r - Bug report",
-            type = "description"
-        },
-        name19 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 cptcl |r - Bug report",
-            type = "description"
-        },
-        name20 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 NaomiErin |r - Bug report",
-            type = "description"
-        },
-        name21 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 CeloSG |r - Bug report + DE translation",
-            type = "description"
-        },
-        name22 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 MaYcKe25 |r - BR translation",
-            type = "description"
-        },
-        name23 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 john_yasen |r - CN translation",
-            type = "description"
-        },
-        name24 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Imna1975 |r - Bug report",
-            type = "description"
-        },
-        name25 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 the777ahmad |r - Bug report",
-            type = "description"
-        },
-        name26 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Newill-Kristin |r - Bug report",
-            type = "description"
-        },
-        name27 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 zloy-online |r - Bug report",
-            type = "description"
-        },
-        name28 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 vaendryl |r - Bug report",
-            type = "description"
-        },
-        name29 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 TheRedBull |r - Bug report",
-            type = "description"
-        },
-        name30 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 MarshallBuhl |r - Bug report",
-            type = "description"
-        },
-        name31 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 Zallanon |r - Bug report",
-            type = "description"
-        },
-        name32 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 cz016m |r - Bug report",
-            type = "description"
-        },
-        name33 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 tomas352000 |r - Bug report",
-            type = "description"
-        },
-        name34 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 keithgeeker |r - Bug report + improvement",
-            type = "description"
-        },
-        name35 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 knightfire120 |r - Bug report",
-            type = "description"
-        },
-        name36 = {
-            fontSize = "medium",
-            name = "        |cFFFFFF00 netaras |r - KR translation",
-            type = "description"
-        }
-    }
-}
-
-LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["secondaryOptions"], ghSecondaryOptionsTable)
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["customWeights"], GearHelper.cwTable)
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["phrases"], phrasesTable)
-LibStub("AceConfig-3.0"):RegisterOptionsTable(L["thanksPanel"], thanksTable)
-GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["secondaryOptions"], L["secondaryOptions"], "GearHelper")
-GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["customWeights"], L["customWeights"], "GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["phrases"], L["phrases"], "GearHelper")
-LibStub("LibAboutPanel").new("GearHelper", "GearHelper")
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(L["thanksPanel"], L["thanksPanel"], "GearHelper")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["messages"], GHOptions:GenerateMessagesTable())
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["messages"], GearHelper.locals["messages"], "GearHelper")
+end
