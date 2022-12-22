@@ -1,22 +1,23 @@
--- TODO: Add \n\n~*~*~*~*~*~*~*~*~*~* PLEASE FILL A BUG REPORT @ https://github.com/Marsgames/GearHelper/issues *~*~*~*~*~*~*~*~*~*~\n\n to every exceptions
-GHExceptionMissingID = "Invalid or missing id"
+local bugReport = "\n\n~*~*~*~*~*~*~*~*~*~* PLEASE FILL A BUG REPORT @ https://github.com/Marsgames/GearHelper/issues *~*~*~*~*~*~*~*~*~*~\n\n"
 
-GHExceptionInvalidItem = "Unable to build item from tooltip"
+GHExceptionMissingID = "Invalid or missing id" .. bugReport
 
-GHExceptionInvalidItemLink = "ItemLink is not valid"
+GHExceptionInvalidItem = "Unable to build item from tooltip" .. bugReport
 
-GHExceptionNotEquippable = "This item is not equippable"
+GHExceptionInvalidItemLink = "ItemLink is not valid" .. bugReport
 
-GHExceptionAlreadyEquipped = "This item is already equipped"
+GHExceptionNotEquippable = "This item is not equippable" .. bugReport
 
-GHExceptionInventoryNotCached = "Inventory haven't been cached"
+GHExceptionAlreadyEquipped = "This item is already equipped" .. bugReport
 
-GHExceptionMissingNoxTemplate = "Nox template is missing"
+GHExceptionInventoryNotCached = "Inventory haven't been cached" .. bugReport
 
-GHExceptionMissingCustomTemplate = "Custom template is missing"
+GHExceptionMissingNoxTemplate = "Nox template is missing" .. bugReport
 
-GHExceptionTemplateIsNil = "Current active template is nil"
+GHExceptionMissingCustomTemplate = "Custom template is missing" .. bugReport
 
-GHExceptionParameterIsNotAnArray = "Invalid parameter, an array is expected"
+GHExceptionTemplateIsNil = "Current active template is nil" .. bugReport
 
-GHExceptionMissingDefaultWeight = "GearHelper.db.profile.defaultWeightForStat is nil"
+GHExceptionParameterIsNotAnArray = "Invalid parameter, an array is expected" .. bugReport
+
+GHExceptionMissingDefaultWeight = "GearHelper.db.profile.defaultWeightForStat is nil" .. bugReport

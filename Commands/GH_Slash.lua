@@ -2,12 +2,6 @@ local slashCmd = {
     help = function()
         GearHelper:SlashDisplayHelp()
     end,
-    printCache = function()
-        GearHelper:SlashPrintCache()
-    end,
-    list = function()
-        GearHelper:SlashList()
-    end,
     config = function()
         GearHelper:SlashConfig()
     end,
@@ -17,12 +11,6 @@ local slashCmd = {
     im = function()
         GearHelper:SlashIm()
     end,
-    createItemlink = function()
-        GearHelper:SlashCreateItemLink()
-    end,
-    -- askLoot = function()
-    -- 	GearHelper:SlashAskLoot()
-    -- end,
     dot = function()
         GearHelper:SlashDot()
     end,
@@ -52,18 +40,6 @@ local slashCmd = {
     end,
     test = function()
         GearHelper:SlashTest()
-    end,
-    benchmark = function()
-        GearHelper:SlashBenchmark()
-    end,
-    benchmarkCountResult = function()
-        GearHelper:SlashBenchmarkCountResult()
-    end,
-    benchmarkResetCountResult = function()
-        GearHelper:SlashBenchmarkResetCountResult()
-    end,
-    countCache = function()
-        GearHelper:SlashCountCache()
     end
 }
 
@@ -81,9 +57,9 @@ function GearHelper:MySlashCommand(input)
     end
 
     if input == "" then
-        -- InterfaceOptionsFrame_OpenToCategory(GearHelper.cwFrame)
-        -- InterfaceOptionsFrame_OpenToCategory(GearHelper.optionsFrame)
-        -- TODO: Find a way to show subpanel (ex OpenToCategory)
+        -- TODO: Find a way to show expand GH options
+        -- Open to category with sub panels doesn't seem to work
+        Settings.OpenToCategory(GearHelper.locals["customWeights"])
         Settings.OpenToCategory("GearHelper")
     else
         slashCmd["help"]()

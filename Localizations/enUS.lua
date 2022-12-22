@@ -1,4 +1,3 @@
-GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):NewLocale("GearHelper", "enUS", true)
 -- local BT = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 
@@ -68,25 +67,25 @@ L["demande4zhTW2"] = " that you just won "
 L["repfrFR"] --[[don't translate this]] = "S'il te plait, réponds en "
 L["repfrFR2"] --[[don't translate this]] = " ou en anglais."
 L["repenUS"] --[[don't translate this]] = "Please, answer in "
-L["repenUS2"] --[[don't translate this]] = ""
+L["repenUS2"] --[[don't translate this]] = " or in english"
 L["repdeDE"] = "Please, answer in "
-L["repdeDE2"] = "or in english."
+L["repdeDE2"] = " or in english."
 L["repitIT"] = "Please, answer in "
-L["repitIT2"] = "or in english."
+L["repitIT2"] = " or in english."
 L["repruRU"] = "Please, answer in "
-L["repruRU2"] = "or in english."
+L["repruRU2"] = " or in english."
 L["repesES"] --[[don't translate this]] = "Por favor, contesta en "
-L["repesES2"] --[[don't translate this]] = "o en inglès."
+L["repesES2"] --[[don't translate this]] = " o en inglès."
 L["repesMX"] = "Please, answer in "
-L["repesMX2"] = "or in english."
+L["repesMX2"] = " or in english."
 L["repkoKR"] = "Please, answer in "
-L["repkoKR2"] = "or in english."
+L["repkoKR2"] = " or in english."
 L["repptBR"] = "Please, answer in "
-L["repptBR2"] = "or in english."
+L["repptBR2"] = " or in english."
 L["repzhCN"] = "Please, answer in "
-L["repzhCN2"] = "or in english."
+L["repzhCN2"] = " or in english."
 L["repzhTW"] = "Please, answer in "
-L["repzhTW2"] = "or in english."
+L["repzhTW2"] = " or in english."
 L["maLangue"] = "english."
 L["maj1"] = "You are using version "
 L["maj2"] = "|r of GearHelper. Version "
@@ -128,14 +127,6 @@ L["UISayMyNameDesc"] = "Show an alert with sound when someone call your name"
 L["UIMyNames"] = "Names"
 L["UIMyNamesDesc"] = "Names list for the alert. Separates by comma (no spaces)"
 L["itemEquipped"] = "This item is equipped"
-L["UIMinimapIcon"] = "Minimap icon"
-L["UIMinimapIconDesc"] = "Show the minimap icon"
-L["MmTtLClick"] = "Left click to open options"
-L["MmTtRClickActivate"] = "Right click to activate GearHelper"
-L["MmTtRClickDeactivate"] = "Right click to deactivate GearHelper"
-L["MmTtClickUnlock"] = "Shift + click to |cFF00FF00unlock|cFFFFFF00 minimap icon"
-L["MmTtClickLock"] = "Shift + click to |cFFFF0000lock|cFFFFFF00 minimap icon"
-L["MmTtCtrlClick"] = "Ctrl + click to |cFF00FF00hide|cFFFFFF00 minimap icon"
 L["DropRate"] = "Drop rate : "
 L["DropZone"] = "Location : "
 L["DropBy"] = "Dropped by : "
@@ -150,7 +141,7 @@ L["getLoot"] = "receives" -- text when another player get a loot ()
 L["maLangueenUS"] = "English."
 L["maLanguefrFR"] = "Anglais."
 L["maLangueesES"] = "Inglés."
-L["maLangueesEX"] = "Inglés."
+L["maLangueesMX"] = "Inglés."
 L["maLanguedeDE"] = "Englisch."
 L["maLangueitIT"] = "Inglese."
 L["maLangueruRU"] = "Английский."
@@ -172,330 +163,7 @@ L["helpConfig"] = "config - Open the config panel"
 L["helpVersion"] = "version - Print your actual version of GH"
 L["helpCW"] = "cw - Open the Custom Weights panel"
 L["helpDebug"] = "debug - Enable the debug print mode"
-L["phrases"] = "Phrases"
+L["messages"] = "Messages"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
 
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------
------
-
-L["Tooltip"] = {
-    Stat = {
-        ["Intellect"] = ITEM_MOD_INTELLECT_SHORT,
-        ["Haste"] = ITEM_MOD_HASTE_RATING_SHORT,
-        ["CriticalStrike"] = ITEM_MOD_CRIT_RATING_SHORT,
-        ["Versatility"] = ITEM_MOD_VERSATILITY,
-        ["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT,
-        ["Agility"] = ITEM_MOD_AGILITY_SHORT,
-        ["Stamina"] = ITEM_MOD_STAMINA_SHORT,
-        ["Strength"] = ITEM_MOD_STRENGTH_SHORT,
-        ["Armor"] = RESISTANCE0_NAME,
-        ["Multistrike"] = ITEM_MOD_CR_MULTISTRIKE_SHORT,
-        ["DPS"] = ITEM_MOD_DAMAGE_PER_SECOND_SHORT,
-        ["Leech"] = "Leech",
-        ["Avoidance"] = "Avoidance",
-        ["MovementSpeed"] = "Speed"
-    },
-    ["ItemLevel"] = "^Item Level",
-    ["LevelRequired"] = "^Requires Level",
-    ["GemSocketEmpty"] = "^Sockets",
-    ["BonusGem"] = "^Socket bonus"
-}
-
-L["Artifact"] = {
-    ["251"] = {
-        "128293",
-        "128292"
-    },
-    ["259"] = {
-        "128869",
-        "128870"
-    },
-    ["260"] = {
-        "128872",
-        "134552"
-    },
-    ["103"] = {
-        "128859",
-        "128860"
-    },
-    ["104"] = {
-        "128821",
-        "128822"
-    },
-    ["269"] = {
-        "128940",
-        "133948"
-    },
-    ["66"] = {
-        "128866",
-        "128867"
-    },
-    ["258"] = {
-        "128827",
-        "133958"
-    },
-    ["262"] = {
-        "128935",
-        "128936"
-    },
-    ["263"] = {
-        "128819",
-        "128873"
-    },
-    ["264"] = {
-        "128911",
-        "128934"
-    },
-    ["266"] = {
-        "128943",
-        "137246"
-    },
-    ["72"] = {
-        "128908",
-        "134553"
-    },
-    ["73"] = {
-        "128289",
-        "128288"
-    },
-    ["577"] = {
-        "127829",
-        "127830"
-    },
-    ["581"] = {
-        "128832",
-        "128831"
-    },
-    ["250"] = "128402",
-    ["252"] = "128403",
-    ["102"] = "128858",
-    ["105"] = "128306",
-    ["253"] = "128861",
-    ["254"] = "128826",
-    ["255"] = "128808",
-    ["62"] = "127857",
-    ["63"] = "128820",
-    ["64"] = "128862",
-    ["268"] = "128938",
-    ["270"] = "128937",
-    ["65"] = "128823",
-    ["70"] = "120978",
-    ["256"] = "128868",
-    ["257"] = "128825",
-    ["261"] = "128476",
-    ["265"] = "128942",
-    ["267"] = "128941",
-    ["71"] = "128910"
-}
-
-local BabbleI = LibStub("LibBabble-Inventory-3.0")
-local BT = BabbleI:GetLookupTable()
-
-L["armor"] = BT["Armor"]
-L["weapon"] = BT["Weapon"]
-L["divers"] = BT["Miscellaneous"]
-L["cannapeche"] = BT["Fishing Poles"] -- supprimer le doublon ?
-L["monture"] = BT["Mount"]
-L["mascotte"] = BT["Companion Pets"]
-L["TypeToNotNeed"] = {
-    ["sac"] = BT["Bag"],
-    ["conteneur"] = BT["Container"],
-    ["consommable"] = BT["Consumable"],
-    ["autre"] = BT["Other"],
-    ["glyphe"] = BT["Glyph"],
-    ["artisanat"] = BT["Trade Goods"],
-    ["element"] = BT["Parts"],
-    ["recette"] = BT["Recipe"],
-    ["gemme"] = BT["Gem"],
-    ["relique"] = BT["Relic"],
-    ["divers"] = BT["Miscellaneous"],
-    ["camelote"] = BT["Junk"],
-    ["quete"] = BT["Quest"],
-    ["cle"] = BT["Key"],
-    ["monture"] = BT["Mount"],
-    ["mascotte"] = BT["Companion Pets"],
-    ["cosmetique"] = BT["Cosmetic"],
-    ["elixir"] = BT["Elixir"],
-    ["cannapeche"] = BT["Fishing Poles"]
-}
-
-L["IsEquippable"] = {
-    -- War
-    ["WARRIOR"] = {
-        ["Plaque"] = BT["Plate"],
-        ["Maille"] = BT["Mail"],
-        ["Cuir"] = BT["Leather"],
-        ["Bouclier"] = BT["Shield"],
-        ["Boucliers"] = BT["Shields"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Pugilat"] = BT["Fist Weapon"],
-        ["Pugilats"] = BT["Fist Weapons"],
-        ["Hache1H"] = BT["One-Handed Axes"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Epee1H"] = BT["One-Handed Swords"],
-        ["Hast"] = BT["Polearm"],
-        ["Hasts"] = BT["Polearms"],
-        ["Baton"] = BT["Staff"],
-        ["Batons"] = BT["Staves"],
-        ["Hache2H"] = BT["Two-Handed Axes"],
-        ["Epee2H"] = BT["Two-Handed Swords"],
-        ["Mace2H"] = BT["Two-Handed Maces"],
-        ["Jet"] = BT["Thrown"],
-        ["Arbalete"] = BT["Crossbow"],
-        ["Arbaletes"] = BT["Crossbows"],
-        ["Arc"] = BT["Bow"],
-        ["Arcs"] = BT["Bows"],
-        ["TenuMainGauche"] = BT["Held in Off-Hand"],
-        ["MainGauche"] = BT["Off Hand"],
-        ["UneMain"] = BT["One-Hand"],
-        ["Holdable"] = BT["Miscellaneous"],
-        ["Gun"] = BT["Gun"],
-        ["ArmeAFeus"] = BT["Guns"]
-    },
-    -- Pala
-    ["PALADIN"] = {
-        ["Plaque"] = BT["Plate"],
-        ["Maille"] = BT["Mail"],
-        ["Cuir"] = BT["Leather"],
-        ["Bouclier"] = BT["Shield"],
-        ["Boucliers"] = BT["Shields"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Masse2H"] = BT["Two-Handed Maces"],
-        ["Hache1H"] = BT["One-Handed Axes"],
-        ["Hache2H"] = BT["Two-Handed Axes"],
-        ["Epee1H"] = BT["One-Handed Swords"],
-        ["Epee2H"] = BT["Two-Handed Swords"],
-        ["Hast"] = BT["Polearm"],
-        ["Hasts"] = BT["Polearms"],
-        ["Holdable"] = BT["Miscellaneous"],
-        ["UneMain"] = BT["One-Hand"]
-    },
-    -- Chassou
-    ["HUNTER"] = {
-        ["Maille"] = BT["Mail"],
-        ["Arc"] = BT["Bow"],
-        ["Arcs"] = BT["Bows"],
-        ["Arbalete"] = BT["Crossbow"],
-        ["Arbaletes"] = BT["Crossbows"],
-        ["ArmeAFeus"] = BT["Guns"],
-        ["Hast"] = BT["Polearm"],
-        ["Hasts"] = BT["Polearms"]
-    },
-    -- Fufu
-    ["ROGUE"] = {
-        ["Cuir"] = BT["Leather"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Pugilat"] = BT["Fist Weapon"],
-        ["Pugilats"] = BT["Fist Weapons"],
-        ["Hache1H"] = BT["One-Handed Axes"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Epee1H"] = BT["One-Handed Swords"]
-    },
-    -- Priest
-    ["PRIEST"] = {
-        ["Tissu"] = BT["Cloth"],
-        ["Baguette"] = BT["Wand"],
-        ["Baguettes"] = BT["Wands"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Baton"] = BT["Staff"],
-        ["Batons"] = BT["Staves"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Holdable"] = BT["Miscellaneous"]
-    },
-    -- DK
-    ["DEATHKNIGHT"] = {
-        ["Plaque"] = BT["Plate"],
-        ["Hache1H"] = BT["One-Handed Axes"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Epee1H"] = BT["One-Handed Swords"],
-        ["Hast"] = BT["Polearm"],
-        ["Hasts"] = BT["Polearms"],
-        ["Hache2H"] = BT["Two-Handed Axes"],
-        ["Masse2H"] = BT["Two-Handed Maces"],
-        ["Epee2H"] = BT["Two-Handed Swords"]
-    },
-    -- Sham
-    ["SHAMAN"] = {
-        ["Maille"] = BT["Mail"],
-        ["Bouclier"] = BT["Shield"],
-        ["Boucliers"] = BT["Shields"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Pugilat"] = BT["Fist Weapon"],
-        ["Pugilats"] = BT["Fist Weapons"],
-        ["Hache1H"] = BT["One-Handed Axes"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Baton"] = BT["Staff"],
-        ["Batons"] = BT["Staves"],
-        ["Hache2H"] = BT["Two-Handed Axes"],
-        ["Masse2H"] = BT["Two-Handed Maces"],
-        ["Holdable"] = BT["Miscellaneous"]
-    },
-    -- Mage
-    ["MAGE"] = {
-        ["Tissu"] = BT["Cloth"],
-        ["Baguette"] = BT["Wand"],
-        ["Baguettes"] = BT["Wands"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Epee1H"] = BT["One-Handed Swords"],
-        ["Baton"] = BT["Staff"],
-        ["Batons"] = BT["Staves"],
-        ["Holdable"] = BT["Miscellaneous"]
-    },
-    -- Démo
-    ["WARLOCK"] = {
-        ["Tissu"] = BT["Cloth"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Epee1H"] = BT["One-Handed Swords"],
-        ["Baton"] = BT["Staff"],
-        ["Batons"] = BT["Staves"],
-        ["Baguette"] = BT["Wand"],
-        ["Baguettes"] = BT["Wands"],
-        ["Holdable"] = BT["Miscellaneous"]
-    },
-    -- Monk
-    ["MONK"] = {
-        ["Cuir"] = BT["Leather"],
-        ["Pugilat"] = BT["Fist Weapon"],
-        ["Pugilats"] = BT["Fist Weapons"],
-        ["Hache1H"] = BT["One-Handed Axes"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Epee1H"] = BT["One-Handed Swords"],
-        ["Hast"] = BT["Polearm"],
-        ["Hasts"] = BT["Polearms"],
-        ["Baton"] = BT["Staff"],
-        ["Batons"] = BT["Staves"],
-        ["Holdable"] = BT["Miscellaneous"]
-    },
-    -- Druide de la tribue de Dana
-    ["DRUID"] = {
-        ["Cuir"] = BT["Leather"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Pugilat"] = BT["Fist Weapon"],
-        ["Pugilats"] = BT["Fist Weapons"],
-        ["Masse1H"] = BT["One-Handed Maces"],
-        ["Hast"] = BT["Polearm"],
-        ["Hasts"] = BT["Polearms"],
-        ["Baton"] = BT["Staff"],
-        ["Batons"] = BT["Staves"],
-        ["Masse2H"] = BT["Two-Handed Maces"],
-        ["Holdable"] = BT["Miscellaneous"]
-    },
-    -- DH
-    ["DEMONHUNTER"] = {
-        ["Cuir"] = BT["Leather"],
-        ["Glaives"] = BT["Warglaives"],
-        ["Dague"] = BT["Dagger"],
-        ["Dagues"] = BT["Daggers"],
-        ["Pugilat"] = BT["Fist Weapon"],
-        ["Pugilats"] = BT["Fist Weapons"],
-        ["Hache1H"] = BT["One-Handed Axes"],
-        ["Epee1H"] = BT["One-Handed Swords"]
-    }
-}
