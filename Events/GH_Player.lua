@@ -66,8 +66,8 @@ function GHEvents:PLAYER_ENTERING_WORLD()
 
         lfrCheckButton = lfrCheckButton_GlobalName or CreateFrame("CheckButton", "lfrCheckButton_GlobalName", UIParent, "ChatConfigCheckButtonTemplate")
         lfrCheckButton:SetPoint("TOPRIGHT", -325, -50)
-        lfrCheckButton_GlobalNameText:SetText(self.locals["lfrCheckButtonText"])
-        lfrCheckButton.tooltip = self.locals["lfrCheckButtonTooltip"]
+        lfrCheckButton_GlobalNameText:SetText(GearHelper.locals["lfrCheckButtonText"])
+        lfrCheckButton.tooltip = GearHelper.locals["lfrCheckButtonTooltip"]
         lfrCheckButton:SetScript(
             "OnClick",
             function()
