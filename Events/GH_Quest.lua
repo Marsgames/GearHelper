@@ -1,3 +1,7 @@
+local waitSpeFrame = CreateFrame("Frame")
+
+waitSpeFrame:Hide()
+
 -- TODO: Split that shit
 function GHEvents:QUEST_DETAIL()
     local weightTable = {}

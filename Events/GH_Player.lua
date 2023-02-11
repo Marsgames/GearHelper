@@ -1,3 +1,7 @@
+local waitSpeFrame = CreateFrame("Frame")
+
+waitSpeFrame:Hide()
+
 local function BossesKilledFunctions()
     local theFrame = nil
     -- When the LFR frame shows up
