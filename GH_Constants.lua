@@ -283,8 +283,7 @@ INVTYPE_TO_IGNORE = {
     [Enum.InventoryType.IndexProfessionGearType] = true,
     [Enum.InventoryType.IndexEquipablespellOffensiveType] = true,
     [Enum.InventoryType.IndexEquipablespellUtilityType] = true,
-    [Enum.InventoryType.IndexEquipablespellDefensiveType] = true,
-    [Enum.InventoryType.IndexEquipablespellMobilityType] = true
+    [Enum.InventoryType.IndexEquipablespellDefensiveType] = true
 }
 
 local BabbleI = LibStub("LibBabble-Inventory-3.0")
