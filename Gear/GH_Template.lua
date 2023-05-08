@@ -103,107 +103,107 @@ local baseStatTemplates = {
     -- DEATH KNIGHT BLOOD --
     [250] = {
         ["NOX"] = {
-            [ARMOR] = -0.02,
             [ITEM_MOD_STRENGTH_SHORT] = 4.07,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 3.44,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.82,
-            [ITEM_MOD_VERSATILITY] = 2.09,
-            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.04,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 2.12,
-            [ITEM_MOD_EXTRA_ARMOR_SHORT] = -0.02,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.08,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 20.61,
-            [ITEM_MOD_STAMINA_SHORT] = -0.03,
+            [ITEM_MOD_STAMINA_SHORT] = -0.01,
+            [ARMOR] = -0.04,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.88,
+            [ITEM_MOD_VERSATILITY] = 2.16,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 21.09,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 2.16,
+            [ITEM_MOD_EXTRA_ARMOR_SHORT] = -0.03,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 3.48,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 1.75,
+            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.02,
         }
     },
     -- DEATH KNIGHT FROST --
     [251] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.29,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 5.74,
-            [ITEM_MOD_STRENGTH_SHORT] = 9.34,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.35,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.89,
-            [ITEM_MOD_VERSATILITY] = 4.1,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 23.71,
+            [ITEM_MOD_STRENGTH_SHORT] = 9.89,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.3,
+            [ITEM_MOD_VERSATILITY] = 4.38,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 24.17,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 6.38,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 5.93,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 5.48,
         }
     },
     -- DEATH KNIGHT UNHOLY --
     [252] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.33,
-            [ITEM_MOD_VERSATILITY] = 4.51,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.65,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 6.97,
-            [ITEM_MOD_STRENGTH_SHORT] = 9.86,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 42.09,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.83,
+            [ITEM_MOD_STRENGTH_SHORT] = 10.53,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.39,
+            [ITEM_MOD_VERSATILITY] = 4.93,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 44.7,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 5.03,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.59,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 6.1,
         }
     },
     -- DEMON HUNTER HAVOC --
     [577] = {
         ["NOX"] = {
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.35,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.98,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 40.13,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.87,
-            [ITEM_MOD_VERSATILITY] = 3.91,
-            [ITEM_MOD_AGILITY_SHORT] = 8.26,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.67,
+            [ITEM_MOD_AGILITY_SHORT] = 8.48,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.46,
+            [ITEM_MOD_VERSATILITY] = 4.07,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 40.44,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.82,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.08,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.44,
         }
     },
     -- DEMON HUNTER VENGEANCE --
     [581] = {
         ["NOX"] = {
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 20.58,
-            [ITEM_MOD_AGILITY_SHORT] = 3.86,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.02,
-            [ITEM_MOD_EXTRA_ARMOR_SHORT] = 0.01,
-            [ITEM_MOD_CR_LIFESTEAL_SHORT] = 0.01,
-            [ITEM_MOD_STAMINA_SHORT] = 0.01,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 1.6,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.84,
-            [ARMOR] = 0.01,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 3.86,
-            [ITEM_MOD_VERSATILITY] = 1.89,
+            [ITEM_MOD_STAMINA_SHORT] = 0,
+            [ITEM_MOD_AGILITY_SHORT] = 3.95,
+            [ARMOR] = -0.01,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.88,
+            [ITEM_MOD_VERSATILITY] = 1.93,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 21.47,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 1.98,
+            [ITEM_MOD_EXTRA_ARMOR_SHORT] = 0,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 3.98,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 1.59,
+            [ITEM_MOD_CR_LIFESTEAL_SHORT] = 0,
         }
     },
     -- DRUID BALANCE --
     [102] = {
         ["NOX"] = {
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.18,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.18,
-            [ITEM_MOD_VERSATILITY] = 3.62,
-            [ITEM_MOD_SPELL_POWER_SHORT] = 7.12,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.86,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.12,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.47,
+            [ITEM_MOD_VERSATILITY] = 3.84,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.41,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 7.41,
+            [ITEM_MOD_INTELLECT_SHORT] = 8.17,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.35,
         }
     },
     -- DRUID FERAL --
     [103] = {
         ["NOX"] = {
-            [ITEM_MOD_VERSATILITY] = 3.92,
-            [ITEM_MOD_AGILITY_SHORT] = 8.21,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.95,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.82,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.57,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 47.09,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.81,
+            [ITEM_MOD_AGILITY_SHORT] = 8.49,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.52,
+            [ITEM_MOD_VERSATILITY] = 4.05,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 48.52,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.94,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.07,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 3.31,
         }
     },
     -- DRUID GUARDIAN --
     [104] = {
         ["NOX"] = {
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 16.32,
-            [ITEM_MOD_AGILITY_SHORT] = 2.74,
-            [ARMOR] = 0.04,
-            [ITEM_MOD_VERSATILITY] = 1.59,
-            [ITEM_MOD_CR_LIFESTEAL_SHORT] = 0.05,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 2.75,
-            [ITEM_MOD_STAMINA_SHORT] = 0.04,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.22,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 1.35,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 1.53,
+            [ITEM_MOD_STAMINA_SHORT] = -0.02,
+            [ITEM_MOD_AGILITY_SHORT] = 5.2,
+            [ARMOR] = 0.51,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.87,
+            [ITEM_MOD_VERSATILITY] = 2.46,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 23.34,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 2.4,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 3.88,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 2.08,
+            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.02,
         }
     },
     -- DRUID RESTORATION --
@@ -219,12 +219,12 @@ local baseStatTemplates = {
     -- EVOKER DEVASTATION --
     [1467] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.6,
-            [ITEM_MOD_VERSATILITY] = 4.12,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.1,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.98,
-            [ITEM_MOD_SPELL_POWER_SHORT] = 7.6,
-            [ITEM_MOD_INTELLECT_SHORT] = 8.39,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.15,
+            [ITEM_MOD_VERSATILITY] = 4.18,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 5.04,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 7.65,
+            [ITEM_MOD_INTELLECT_SHORT] = 8.43,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.57,
         }
     },
     -- EVOKER PRESERVATION --
@@ -240,74 +240,74 @@ local baseStatTemplates = {
     -- HUNTER MARKSMANSHIP --
     [254] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.19,
-            [ITEM_MOD_AGILITY_SHORT] = 8.55,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 48.57,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.42,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.73,
+            [ITEM_MOD_AGILITY_SHORT] = 8.96,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.88,
             [ITEM_MOD_VERSATILITY] = 4.14,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.14,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 51.61,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.02,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.54,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.26,
         }
     },
     -- HUNTER SURVIVAL --
     [255] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 9.83,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 9.36,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.31,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.71,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 47.55,
-            [ITEM_MOD_VERSATILITY] = 4.35,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.5,
+            [ITEM_MOD_AGILITY_SHORT] = 9.58,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.11,
+            [ITEM_MOD_VERSATILITY] = 4.11,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 46.82,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.56,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 9.13,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 5.21,
         }
     },
     -- MAGE ARCANE --
     [62] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.7,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.55,
-            [ITEM_MOD_VERSATILITY] = 3.92,
-            [ITEM_MOD_INTELLECT_SHORT] = 8.66,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.55,
+            [ITEM_MOD_VERSATILITY] = 3.91,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.65,
             [ITEM_MOD_SPELL_POWER_SHORT] = 7.25,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.56,
+            [ITEM_MOD_INTELLECT_SHORT] = 8.66,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 3.53,
         }
     },
     -- MAGE FIRE --
     [63] = {
         ["NOX"] = {
-            [ITEM_MOD_SPELL_POWER_SHORT] = 7.5,
-            [ITEM_MOD_INTELLECT_SHORT] = 8.74,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.35,
-            [ITEM_MOD_VERSATILITY] = 4.14,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.8,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.99,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.31,
+            [ITEM_MOD_VERSATILITY] = 4.11,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 2.81,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 7.44,
+            [ITEM_MOD_INTELLECT_SHORT] = 8.67,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 3.83,
         }
     },
     -- MAGE FROST --
     [64] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.62,
-            [ITEM_MOD_VERSATILITY] = 4.65,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.24,
-            [ITEM_MOD_SPELL_POWER_SHORT] = 8.45,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.35,
-            [ITEM_MOD_INTELLECT_SHORT] = 9.33,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.29,
+            [ITEM_MOD_VERSATILITY] = 4.59,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 5.5,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 8.4,
+            [ITEM_MOD_INTELLECT_SHORT] = 9.25,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 5.27,
         }
     },
     -- MONK BREWMASTER --
     [268] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 0.85,
-            [ARMOR] = 0.01,
-            [ITEM_MOD_STAMINA_SHORT] = 0.06,
-            [ITEM_MOD_CR_LIFESTEAL_SHORT] = 0,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 3.94,
-            [ITEM_MOD_AGILITY_SHORT] = 3.94,
-            [ITEM_MOD_EXTRA_ARMOR_SHORT] = 0.02,
-            [ITEM_MOD_VERSATILITY] = 2.04,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.57,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 20.39,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.21,
+            [ITEM_MOD_STAMINA_SHORT] = -0.11,
+            [ITEM_MOD_AGILITY_SHORT] = 3.59,
+            [ARMOR] = -0.07,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.46,
+            [ITEM_MOD_VERSATILITY] = 1.92,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 18.31,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 2.07,
+            [ITEM_MOD_EXTRA_ARMOR_SHORT] = -0.04,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 3.55,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 2.04,
+            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.03,
         }
     },
     -- MONK MISTWEAVER --
@@ -323,14 +323,14 @@ local baseStatTemplates = {
     -- MONK WINDWALKER --
     [269] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.99,
-            [ITEM_MOD_VERSATILITY] = 2.96,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 2.09,
-            [ITEM_MOD_STAMINA_SHORT] = 0.12,
-            [ITEM_MOD_AGILITY_SHORT] = 6.64,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.6,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 6.31,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 28.89,
+            [ITEM_MOD_STAMINA_SHORT] = 0.1,
+            [ITEM_MOD_AGILITY_SHORT] = 7.03,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.78,
+            [ITEM_MOD_VERSATILITY] = 3.14,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 30.39,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.04,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 6.71,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 2.54,
         }
     },
     -- PALADIN HOLY --
@@ -346,29 +346,29 @@ local baseStatTemplates = {
     -- PALADIN PROTECTION --
     [66] = {
         ["NOX"] = {
-            [ITEM_MOD_VERSATILITY] = 2.3,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 2.85,
-            [ARMOR] = 0,
-            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.02,
-            [ITEM_MOD_EXTRA_ARMOR_SHORT] = 0,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 4.25,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 25.58,
-            [ITEM_MOD_STRENGTH_SHORT] = 4.74,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.23,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.33,
-            [ITEM_MOD_STAMINA_SHORT] = -0.03,
+            [ITEM_MOD_STRENGTH_SHORT] = 5.82,
+            [ITEM_MOD_STAMINA_SHORT] = -0.05,
+            [ARMOR] = -0.07,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.49,
+            [ITEM_MOD_VERSATILITY] = 2.48,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 31.43,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 2.54,
+            [ITEM_MOD_EXTRA_ARMOR_SHORT] = -0.06,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 5.19,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 3.77,
+            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.09,
         }
     },
     -- PALADIN RETRIBUTION --
     [70] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.03,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.47,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 6.72,
-            [ITEM_MOD_VERSATILITY] = 3.26,
-            [ITEM_MOD_STRENGTH_SHORT] = 7.16,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.5,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 40.34,
+            [ITEM_MOD_STRENGTH_SHORT] = 8.26,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.43,
+            [ITEM_MOD_VERSATILITY] = 3.56,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 45.2,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.25,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.57,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 2.91,
         }
     },
     -- PRIEST DISCIPLINE --
@@ -394,70 +394,71 @@ local baseStatTemplates = {
     -- PRIEST SHADOW --
     [258] = {
         ["NOX"] = {
-            [ITEM_MOD_VERSATILITY] = 4.38,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.3,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.77,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.62,
-            [ITEM_MOD_INTELLECT_SHORT] = 8.43,
-            [ITEM_MOD_SPELL_POWER_SHORT] = 7.61,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.18,
+            [ITEM_MOD_VERSATILITY] = 4.42,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.35,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 8,
+            [ITEM_MOD_INTELLECT_SHORT] = 8.81,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.51,
         }
     },
     -- ROGUE ASSASSINATION --
     [259] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.02,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 47.12,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.11,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.12,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.27,
-            [ITEM_MOD_AGILITY_SHORT] = 8.69,
-            [ITEM_MOD_VERSATILITY] = 3.85,
+            [ITEM_MOD_AGILITY_SHORT] = 8.66,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.06,
+            [ITEM_MOD_VERSATILITY] = 3.79,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 47.19,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.29,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.24,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.01,
         }
     },
     -- ROGUE OUTLAW --
     [260] = {
         ["NOX"] = {
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.22,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.16,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 1.97,
-            [ITEM_MOD_VERSATILITY] = 3.15,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.84,
-            [ITEM_MOD_AGILITY_SHORT] = 7.59,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 38.71,
+            [ITEM_MOD_AGILITY_SHORT] = 7.6,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.12,
+            [ITEM_MOD_VERSATILITY] = 3.12,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 38.93,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 2.78,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.23,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 1.92,
         }
     },
     -- ROGUE SUBTLETY --
     [261] = {
         ["NOX"] = {
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.73,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.52,
-            [ITEM_MOD_AGILITY_SHORT] = 8.12,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 2.43,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 45.08,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.59,
-            [ITEM_MOD_VERSATILITY] = 3.57,
+            [ITEM_MOD_AGILITY_SHORT] = 8.2,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.66,
+            [ITEM_MOD_VERSATILITY] = 3.64,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 45.2,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.65,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.8,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 2.28,
         }
     },
     -- SHAMAN ELEMENTAL --
     [262] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.05,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.05,
-            [ITEM_MOD_INTELLECT_SHORT] = 5.56,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.96,
-            [ITEM_MOD_VERSATILITY] = 4.05,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.85,
+            [ITEM_MOD_VERSATILITY] = 4.14,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.6,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 8.6,
+            [ITEM_MOD_INTELLECT_SHORT] = 9.49,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 3.58,
         }
     },
     -- SHAMAN ENHANCEMENT --
     [263] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.73,
-            [ITEM_MOD_VERSATILITY] = 3.92,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 36.27,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.41,
-            [ITEM_MOD_AGILITY_SHORT] = 8.44,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.04,
+            [ITEM_MOD_AGILITY_SHORT] = 8.48,
             [ITEM_MOD_MASTERY_RATING_SHORT] = 4.52,
+            [ITEM_MOD_VERSATILITY] = 3.95,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 36.37,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.48,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 8.06,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 3.65,
         }
     },
     -- SHAMAN RESTORATION --
@@ -473,74 +474,74 @@ local baseStatTemplates = {
     -- WARLOCK AFFLICTION --
     [265] = {
         ["NOX"] = {
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.57,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.87,
-            [ITEM_MOD_INTELLECT_SHORT] = 8.88,
-            [ITEM_MOD_SPELL_POWER_SHORT] = 8.06,
-            [ITEM_MOD_VERSATILITY] = 4.14,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.2,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.17,
+            [ITEM_MOD_VERSATILITY] = 4.48,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.54,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 8.67,
+            [ITEM_MOD_INTELLECT_SHORT] = 9.56,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 5.02,
         }
     },
     -- WARLOCK DEMONOLOGY --
     [266] = {
         ["NOX"] = {
-            [ITEM_MOD_SPELL_POWER_SHORT] = 7.37,
-            [ITEM_MOD_VERSATILITY] = 3.77,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.81,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3,
-            [ITEM_MOD_INTELLECT_SHORT] = 8.13,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.72,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.42,
+            [ITEM_MOD_VERSATILITY] = 4.48,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.26,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 8.97,
+            [ITEM_MOD_INTELLECT_SHORT] = 9.88,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.01,
         }
     },
     -- WARLOCK DESTRUCTION --
     [267] = {
         ["NOX"] = {
-            [ITEM_MOD_INTELLECT_SHORT] = 9.16,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.7,
-            [ITEM_MOD_VERSATILITY] = 4.17,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.43,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.93,
-            [ITEM_MOD_SPELL_POWER_SHORT] = 8.31,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.62,
+            [ITEM_MOD_VERSATILITY] = 4.85,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 5.14,
+            [ITEM_MOD_SPELL_POWER_SHORT] = 9.47,
+            [ITEM_MOD_INTELLECT_SHORT] = 10.41,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 6.44,
         }
     },
     -- WARRIOR ARMS --
     [71] = {
         ["NOX"] = {
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.49,
-            [ITEM_MOD_VERSATILITY] = 3.97,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.5,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 42.69,
-            [ITEM_MOD_STRENGTH_SHORT] = 8.42,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.47,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.08,
+            [ITEM_MOD_STRENGTH_SHORT] = 8.38,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.45,
+            [ITEM_MOD_VERSATILITY] = 3.94,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 42.61,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 4.45,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 7.04,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.43,
         }
     },
     -- WARRIOR FURY --
     [72] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.26,
-            [ITEM_MOD_STRENGTH_SHORT] = 7.62,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.81,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 6.45,
-            [ITEM_MOD_VERSATILITY] = 3.84,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 26.13,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.68,
+            [ITEM_MOD_STRENGTH_SHORT] = 7.45,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.71,
+            [ITEM_MOD_VERSATILITY] = 3.82,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 25.81,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.2,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 6.33,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 4.01,
         }
     },
     -- WARRIOR PROTECTION --
     [73] = {
         ["NOX"] = {
-            [ITEM_MOD_VERSATILITY] = 2.45,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 2.57,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 2.64,
-            [ITEM_MOD_EXTRA_ARMOR_SHORT] = 0.21,
-            [ITEM_MOD_ATTACK_POWER_SHORT] = 4.26,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 25.67,
-            [ITEM_MOD_STRENGTH_SHORT] = 4.62,
-            [ARMOR] = 0.21,
-            [ITEM_MOD_STAMINA_SHORT] = -0.02,
-            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.02,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.23,
+            [ITEM_MOD_STRENGTH_SHORT] = 5.09,
+            [ITEM_MOD_STAMINA_SHORT] = -0.01,
+            [ARMOR] = 0.29,
+            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.41,
+            [ITEM_MOD_VERSATILITY] = 2.66,
+            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 28.05,
+            [ITEM_MOD_CRIT_RATING_SHORT] = 3.5,
+            [ITEM_MOD_EXTRA_ARMOR_SHORT] = 0.29,
+            [ITEM_MOD_ATTACK_POWER_SHORT] = 4.66,
+            [ITEM_MOD_HASTE_RATING_SHORT] = 2.83,
+            [ITEM_MOD_CR_LIFESTEAL_SHORT] = -0.01,
         }
     },
 }
