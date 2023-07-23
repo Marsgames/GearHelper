@@ -39,6 +39,22 @@ function GearHelper:OnDisable()
     --self.cwTable.args["NoxGroup"].name = "Noxxic " .. (GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or "None")
 end
 
+function GHEvents:ADDON_ACTION_BLOCKED(addonName, addonFunc)
+    if (addonName == "GearHelper") then
+        GearHelper:Print("----- ADDON_ACTION_BLOCKED -----")
+        GearHelper:Print(addonFunc .. " function is blocked by Blizzard")
+        GearHelper:Print(debugstack())
+    end
+end
+
+function GHEvents:ADDON_ACTION_FORBIDDEN(addonName, addonFunc)
+    if (addonName == "GearHelper") then
+        GearHelper:Print("----- ADDON_ACTION_FORBIDDEN -----")
+        GearHelper:Print(addonFunc .. " function is forbidden by Blizzard")
+        GearHelper:Print(debugstack())
+    end
+end
+
 function GHEvents:RegisterEvents()
     GearHelper:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", self.ACTIVE_TALENT_GROUP_CHANGED)
     GearHelper:RegisterEvent("BAG_UPDATE", self.BAG_UPDATE)
@@ -68,6 +84,9 @@ function GHEvents:RegisterEvents()
     GearHelper:RegisterEvent("QUEST_TURNED_IN", self.QUEST_TURNED_IN)
     GearHelper:RegisterEvent("READY_CHECK", self.READY_CHECK)
     GearHelper:RegisterEvent("UNIT_INVENTORY_CHANGED", self.UNIT_INVENTORY_CHANGED)
+
+    GearHelper:RegisterEvent("ADDON_ACTION_BLOCKED", self.ADDON_ACTION_BLOCKED)
+    GearHelper:RegisterEvent("ADDON_ACTION_FORBIDDEN", self.ADDON_ACTION_FORBIDDEN)
 end
 
 function GHEvents:UnregisterEvents()

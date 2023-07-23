@@ -40,6 +40,9 @@ local slashCmd = {
     end,
     test = function()
         GearHelper:SlashTest()
+    end,
+    reload = function()
+        GearHelper:SlashReload()
     end
 }
 

@@ -164,3 +164,7 @@ end
 function GearHelper:SlashBenchmarkResetCountResult()
     GearHelper:ResetBenchmark("Count")
 end
+
+function GearHelper:SlashReload()
+    ReloadUI()
+end

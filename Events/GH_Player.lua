@@ -48,6 +48,7 @@ function GHEvents:PLAYER_ENTERING_WORLD()
 
     GearHelper:BuildCWTable()
     GearHelper:SendAskVersion()
+    -- This UpdateItemsInBags is causing an issue
     GearHelper:UpdateItemsInBags(0) -- Backpack is the only bag to not throw BAG_UPDATE on login
 
     GearHelper:ScanCharacter()

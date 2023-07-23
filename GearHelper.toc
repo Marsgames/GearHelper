@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: |cFF00FF00GearHelper|r
 ## Notes: Un addon qui permet de choisir pour vous le stuff le plus approprié à votre classe / spé
 ## Notes-enUS: Manage your gear during your level up and after
