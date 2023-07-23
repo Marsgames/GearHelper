@@ -32,6 +32,9 @@ local slashCmd = {
     debug = function()
         GearHelper:SlashDebug()
     end,
+    resetDebug = function()
+        GearHelper:SlashResetDebug()
+    end,
     inspect = function()
         GearHelper:SlashInspect()
     end,

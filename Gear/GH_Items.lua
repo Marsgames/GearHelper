@@ -11,6 +11,7 @@ function GHItem:Create(itemLink)
         type = "",
         subType = "",
         equipLoc = "",
+        equipLocIndex = 0,
         name = "",
         stats = {},
         iLvl = 0,
@@ -30,7 +31,7 @@ function GHItem:Create(itemLink)
     end
 
     if (item:IsItemDataCached() == false) then
-        GearHelper:Print("GHItem:Create - Item " .. itemLink .. " not in cache aborting waiting for loading")
+        GearHelper:Print("GHItem:Create - Item " .. itemLink .. " not in cache aborting waiting for loading", "item")
         return this
     end
 
@@ -100,8 +101,8 @@ function GHItem:GetStats()
             end
         end
 
-        GearHelper:Print("Statistics extracted from tooltip for " .. self.itemLink)
-        GearHelper:Print(self.stats)
+        GearHelper:Print("Statistics extracted from tooltip for " .. self.itemLink, "item")
+        GearHelper:Print(self.stats, "item")
     end
 
     return self.stats
@@ -116,7 +117,7 @@ function GHItem:IsEquippableByMe()
     local inventoryType = C_Item.GetItemInventoryTypeByID(self.id)
 
     if INVTYPE_TO_IGNORE[inventoryType] or inventoryType == 0 then
-        GearHelper:Print("IsEquippableByMe - InvType to ignore")
+        GearHelper:Print("IsEquippableByMe - InvType to ignore", "item")
         return false
     end
 
@@ -124,12 +125,22 @@ function GHItem:IsEquippableByMe()
     local _, myClass = UnitClass("player")
 
     if self.levelRequired > myLevel then
-        GearHelper:Print("IsEquippableByMe - Required level not met")
+        GearHelper:Print("IsEquippableByMe - Required level not met", "item")
         return false
     elseif self.equipLoc == "INVTYPE_FINGER" or self.equipLoc == "INVTYPE_NECK" or self.equipLoc == "INVTYPE_TRINKET" or self.equipLoc == "INVTYPE_CLOAK" and self.subType == MISCELLANEOUS or self.subType == ITEM_TYPES_EQUIPPABLE_BY_CLASS.PRIEST.Tissu then -- Things that any class can equip
         return true
     else
         local isEquippable = false
+
+        -- TODO: Find a better way to do this
+        -- Assassination Rogues can only wear daggers
+        if myClass == "ROGUE" and GetSpecialization() == 1 then
+            -- if subtype is not "Cuir", "Dague", or "Dagues" return false
+            if self.subType ~= ITEM_TYPES_EQUIPPABLE_BY_CLASS[myClass].Cuir and self.subType ~= ITEM_TYPES_EQUIPPABLE_BY_CLASS[myClass].Dague and self.subType ~= ITEM_TYPES_EQUIPPABLE_BY_CLASS[myClass].Dagues then
+                return false
+            end 
+        end
+
         table.foreach(
             ITEM_TYPES_EQUIPPABLE_BY_CLASS[tostring(myClass)],
             function(_, v)

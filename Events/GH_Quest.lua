@@ -37,9 +37,9 @@ function GHEvents:QUEST_DETAIL()
 
         local status, res = pcall(GearHelper.NewWeightCalculation, self, item)
         if (false == status) then
-            GearHelper:Print('-----------------("if (true ~= status and true ~= res) then")-----------------')
-            GearHelper:Print("status : " .. tostring(status))
-            GearHelper:Print("status res : " .. tostring(res))
+            GearHelper:Print('-----------------("if (true ~= status and true ~= res) then")-----------------', "quest")
+            GearHelper:Print("status : " .. tostring(status), "quest")
+            GearHelper:Print("status res : " .. tostring(res), "quest")
         end
 
         if status then

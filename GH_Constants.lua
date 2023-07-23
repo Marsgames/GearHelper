@@ -18,7 +18,19 @@ GearHelper.defaultSettings = {
         inviteMessage = "+GH123-",
         askLootRaid = true,
         printWhenEquip = true,
-        debug = false,
+        debug = {
+            general = false,
+            bypassAll = false,
+            itemCompare = false,
+            events = false,
+            quest = false,
+            autoEquip = false,
+            item = false,
+            showUpgradeIcon = false,
+            inventory = false,
+            itemTooltip = false,
+            template = false
+        },
         CW = {},
         iLvlOption = false,
         iLvlWeight = 10,
@@ -155,6 +167,36 @@ GearHelper.slotToNameMapping = {
     [INVSLOT_RANGED] = "RANGEDSLOT",
     [INVSLOT_TABARD] = "TABARDSLOT"
 }
+
+-- GearHelper.typeToSlotMapping = {
+--     ["INVTYPE_AMMO"] = { [1] = 0 },
+--     ["INVTYPE_HEAD"] = { [1] = 1 },
+--     ["INVTYPE_NECK"] = { [1] = 2 },
+--     ["INVTYPE_SHOULDER"] = { [1] = 3 },
+--     ["INVTYPE_BODY"] = { [1] = 4 },
+--     ["INVTYPE_CHEST"] = { [1] = 5 },
+--     ["INVTYPE_ROBE"] = { [1] = 5 },
+--     ["INVTYPE_WAIST"] = { [1] = 6 },
+--     ["INVTYPE_LEGS"] = { [1] = 7 },
+--     ["INVTYPE_FEET"] = { [1] = 8 },
+--     ["INVTYPE_WRIST"] = { [1] = 9 },
+--     ["INVTYPE_HAND"] = { [1] = 10 },
+--     ["INVTYPE_FINGER"] = { [1] = 11, [2] = 12 },
+--     ["INVTYPE_TRINKET"] = { [1] = 13, [2] = 14 },
+--     ["INVTYPE_CLOAK"] = { [1] = 15 },
+--     ["INVTYPE_WEAPON"] = { [1] = 16, [2] = 17 },
+--     ["INVTYPE_SHIELD"] = { [1] = 17 },
+--     ["INVTYPE_2HWEAPON"] = { [1] = 16 },
+--     ["INVTYPE_WEAPONMAINHAND"] = { [1] = 16 },
+--     ["INVTYPE_WEAPONOFFHAND"] = { [1] = 17 },
+--     ["INVTYPE_HOLDABLE"] = { [1] = 17 },
+--     ["INVTYPE_RANGED"] = { [1] = 18 },
+--     ["INVTYPE_THROWN"] = { [1] = 18 },
+--     ["INVTYPE_RANGEDRIGHT"] = { [1] = 18 },
+--     ["INVTYPE_RELIC"] = { [1] = 18 },
+--     ["INVTYPE_TABARD"] = { [1] = 19 },
+--     ["INVTYPE_BAG"] = { [1] = 20, [2] = 21, [3] = 22, [4] = 23 }
+-- }
 
 AUTO_EQUIP_ONGOING = false --Used to prevent BAG_UPDATE events fired during auto equip to be processed
 

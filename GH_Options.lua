@@ -88,10 +88,10 @@ local ghOptionsTable = {
                     desc = GearHelper.locals["UIGHCheckBoxAddon"],
                     type = "toggle",
                     set = function(_, val)
-                        GearHelper.db.profile.debug = val
+                        GearHelper.db.profile.debug.general = val
                     end,
                     get = function()
-                        return GearHelper.db.profile.debug
+                        return GearHelper.db.profile.debug.general
                     end
                 }
             }
@@ -107,37 +107,38 @@ local ghOptionsTable = {
             type = "group",
             inline = true,
             args = {
-                autoEquipLootedStuff = {
-                    order = 4,
-                    name = GearHelper.locals["autoEquipLootedStuff"],
-                    desc = GearHelper.locals["UIGHCheckBoxAutoEquipLootedStuff"],
-                    type = "toggle",
-                    width = "double",
-                    set = function(_, val)
-                        GearHelper.db.profile.autoEquipLooted.actual = val
-                        GearHelper.db.profile.autoEquipLooted.previous = val
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.autoEquipLooted.actual
-                    end
-                },
-                printWhenEquip = {
-                    order = 5,
-                    name = GearHelper.locals["UIprintWhenEquip"],
-                    disabled = function()
-                        if GearHelper.db.profile.autoEquipWhenSwitchSpe == false and GearHelper.db.profile.autoEquipLooted.actual == false then
-                            return true
-                        end
-                    end,
-                    desc = "Enables / disables print when equip",
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.printWhenEquip = val
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.printWhenEquip
-                    end
-                },
+                -- TODO: Fix autoEquip
+                -- autoEquipLootedStuff = {
+                --     order = 4,
+                --     name = GearHelper.locals["autoEquipLootedStuff"],
+                --     desc = GearHelper.locals["UIGHCheckBoxAutoEquipLootedStuff"],
+                --     type = "toggle",
+                --     width = "double",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.autoEquipLooted.actual = val
+                --         GearHelper.db.profile.autoEquipLooted.previous = val
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.autoEquipLooted.actual
+                --     end
+                -- },
+                -- printWhenEquip = {
+                --     order = 5,
+                --     name = GearHelper.locals["UIprintWhenEquip"],
+                --     disabled = function()
+                --         if GearHelper.db.profile.autoEquipWhenSwitchSpe == false and GearHelper.db.profile.autoEquipLooted.actual == false then
+                --             return true
+                --         end
+                --     end,
+                --     desc = "Enables / disables print when equip",
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.printWhenEquip = val
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.printWhenEquip
+                --     end
+                -- },
                 askLootRaid = {
                     order = 6,
                     name = GearHelper.locals["lootInRaidAlert"],
@@ -1276,6 +1277,125 @@ function GearHelper:BuildCWTable()
     LibStub("AceConfigRegistry-3.0"):NotifyChange(GearHelper.locals["customWeights"])
 end
 
+-- Add Debug options table
+local debugOptionTable = {
+    name = "Debug Options",
+    type = "group",
+    args = {
+        BypassAll = {
+            order = 0,
+            name = "BypassAll",
+            desc = "Will print everything, even if the option for specific messages is disabled. Chat will be very messy...",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.bypassAll
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.bypassAll = val
+            end
+        },
+        ItemCompare = {
+            name = "ItemCompare",
+            desc = "Toggle prints from file GH_ItemCompare.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.itemCompare
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.itemCompare = val
+            end
+        },
+        Events = {
+            name = "Events",
+            desc = "Toggle prints from file GH_Events.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.events
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.events = val
+            end
+        },
+        Quest = {
+            name = "Quest",
+            desc = "Toggle prints from file GH_Quest.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.quest
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.quest = val
+            end
+        },
+        AutoEquip = {
+            name = "AutoEquip",
+            desc = "Toggle prints from file GH_AutoEquip.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.autoEquip
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.autoEquip = val
+            end
+        },
+        Item = {
+            name = "Item",
+            desc = "Toggle prints from file GH_Item.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.item
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.item = val
+            end
+        },
+        ShowUpgradeIcon = {
+            name = "ShowUpgradeIcon",
+            desc = "Toggle prints from file GH_ShowUpgradeIcon.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.showUpgradeIcon
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.showUpgradeIcon = val
+            end
+        },
+        Inventory = {
+            name = "Inventory",
+            desc = "Toggle prints from file GH_Inventory.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.inventory
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.inventory = val
+            end
+        },
+        ItemTooltip = {
+            name = "ItemTooltip",
+            desc = "Toggle prints from file GH_ItemTooltip.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.itemTooltip
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.itemTooltip = val
+            end
+        },
+        Template = {
+            name = "Template",
+            desc = "Toggle prints from file GH_Template.lua",
+            type = "toggle",
+            get = function()
+                return GearHelper.db.profile.debug.template
+            end,
+            set = function(_, val)
+                GearHelper.db.profile.debug.template = val
+            end
+        },
+    }
+}
+
 function GHOptions:GenerateOptions()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
     LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
@@ -1283,5 +1403,14 @@ function GHOptions:GenerateOptions()
     GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["customWeights"], GearHelper.locals["customWeights"], "GearHelper")
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["messages"], GHOptions:GenerateMessagesTable())
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["messages"], GearHelper.locals["messages"], "GearHelper")
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["messages"], GearHelper.locals["messages"], "GearHelper")        
+
+    if GearHelper.db.profile.debug then
+        LibStub("AceConfig-3.0"):RegisterOptionsTable("Debug Options", debugOptionTable)
+        LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Debug Options", "Debug Options", "GearHelper")
+    end
+end
+
+function GHOptions:OpenCategory()
+    LibStub("AceConfigDialog-3.0"):Open("GearHelper", "Debug Options")
 end

@@ -119,7 +119,7 @@ function GHEvents:UNIT_INVENTORY_CHANGED(target)
         end
     end
 
-    GearHelper:Print("EVENT UNIT_INVENTORY_CHANGED")
+    GearHelper:Print("EVENT UNIT_INVENTORY_CHANGED", "events")
     GearHelper:ScanCharacter()
 end
 

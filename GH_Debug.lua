@@ -128,16 +128,17 @@ function GearHelper:DevToolsDump(value, startKey)
     DevTools_RunDump(value, context)
 end
 
-function GearHelper:Print(object)
+function GearHelper:Print(object, debugType)
     local file, ln = strmatch(debugstack(2, 1, 0), "([%w_]*%.lua).*%:(%d+)")
 
-    if (GearHelper.db.profile.debug) then
+    if (GearHelper.db.profile.debug.bypassAll or (debugType == nil and GearHelper.db.profile.debug.general) or GearHelper.db.profile.debug[debugType]) then
+        local prefix = debugType and "[" .. debugType .. "] " or ""
         if type(object) == "table" then
-            GetDebugChatFrame():AddMessage(WrapTextInColorCode("[GearHelper] ", "FF00FF96") .. WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9") .. "\n-------------- TABLE --------------\n")
+            GetDebugChatFrame():AddMessage(WrapTextInColorCode(prefix .. "[GearHelper] ", "FF00FF96") .. WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9") .. "\n-------------- TABLE --------------\n")
             GearHelper:DevToolsDump(object)
             GetDebugChatFrame():AddMessage("-------------- ENDTABLE -----------")
         else
-            GetDebugChatFrame():AddMessage(WrapTextInColorCode("[GearHelper] ", "FF00FF96") .. WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9") .. " - " .. tostring(object))
+            GetDebugChatFrame():AddMessage(WrapTextInColorCode(prefix .. "[GearHelper] ", "FF00FF96") .. WrapTextInColorCode(tostring(file) .. ":" .. tostring(ln), "FF9482C9") .. " - " .. tostring(object))
         end
     end
 end

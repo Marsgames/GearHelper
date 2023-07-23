@@ -87,8 +87,16 @@ function GearHelper:SlashResetCache()
 end
 
 function GearHelper:SlashDebug()
-    GearHelper.db.profile.debug = not GearHelper.db.profile.debug
-    print("debug mode set to " .. tostring(GearHelper.db.profile.debug))
+    GearHelper.db.profile.debug.general = not GearHelper.db.profile.debug.general
+    print("debug mode set to " .. tostring(GearHelper.db.profile.debug.general))
+
+    GHOptions:GenerateOptions()
+end
+
+function GearHelper:SlashResetDebug()
+    GearHelper.db.profile.debug = GearHelper.defaultSettings.debug
+
+    GHOptions:GenerateOptions()
 end
 
 function GearHelper:SlashInspect()

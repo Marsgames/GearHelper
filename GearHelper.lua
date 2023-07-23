@@ -61,7 +61,7 @@ function GearHelper:ScanCharacter()
 
             item:ContinueOnItemLoad(
                 function()
-                    self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
+                    -- self:Print("Scanning character slot " .. slotID .. " = " .. item:GetItemLink())
                     GearHelperVars.charInventory[slotID] = GHItem:Create(item:GetItemLink())
                 end
             )

@@ -26,15 +26,15 @@ function GearHelper:HookItemTooltip()
         }
 
         if item:IsEquipped() then -- Item equipped, yellow overlay on tooltip
-            GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay")
+            GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay", "itemTooltip")
             tooltipSettings.borderColor = ITEM_EQUAL_TOOLTIP_BORDER
             table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
         elseif item:IsEquippableByMe() then
-            GearHelper:Print("OnToolTipSetItem - Item not equipped, comparing score...")
+            GearHelper:Print("OnToolTipSetItem - Item not equipped, comparing score...", "itemTooltip")
             local result = GearHelper:CompareWithEquipped(item)
             tooltipSettings = GearHelper:GenerateTooltipSettings(result)
         elseif ShouldDisplayNotEquippable(item) then -- Item not equippable, red overlay on tooltip
-            GearHelper:Print("OnToolTipSetItem - Item not equippable, applying red overlay")
+            GearHelper:Print("OnToolTipSetItem - Item not equippable, applying red overlay", "itemTooltip")
             table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
             tooltipSettings.borderColor = ITEM_DOWNGRADE_TOOLTIP_BORDER
         end

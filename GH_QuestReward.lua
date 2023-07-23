@@ -24,9 +24,9 @@ function GearHelper:GetQuestReward()
 
             local status, res = pcall(self.NewWeightCalculation, self, item)
             if (false == status) then
-                self:Print('-----------------("if (true ~= status and true ~= res) then")-----------------')
-                self:Print("status : " .. tostring(status))
-                self:Print("status res : " .. tostring(res))
+                self:Print('-----------------("if (true ~= status and true ~= res) then")-----------------', 'quest')
+                self:Print("status : " .. tostring(status), 'quest')
+                self:Print("status res : " .. tostring(res), 'quest')
             end
 
             if status then

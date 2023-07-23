@@ -1,6 +1,6 @@
 function GearHelper:GetStatFromActiveTemplate(statName)
     if (nil == self.db.profile.weightTemplate) then
-        self:Print("WeightTemplate was nil, new value is NOX")
+        self:Print("WeightTemplate was nil, new value is NOX", "template")
         self.db.profile.weightTemplate = "NOX"
     end
 
@@ -14,7 +14,7 @@ end
 
 function GearHelper:SetStatToActiveTemplate(statName, value)
     if (nil == self.db.profile.weightTemplate) then
-        self:Print("WeightTemplate was nil, new value is NOX")
+        self:Print("WeightTemplate was nil, new value is NOX", "template")
         self.db.profile.weightTemplate = "NOX"
     end
     value = tonumber(value) or 0

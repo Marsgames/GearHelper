@@ -17,7 +17,7 @@ function GearHelper:AutoEquip(bag)
         theBag = 1
     end
 
-    GearHelper:Print("Auto equip best items in bag " .. tostring(theBag))
+    GearHelper:Print("Auto equip best items in bag " .. tostring(theBag), "autoEquip")
 
     GearHelper:EquipItem(theBag)
     AUTO_EQUIP_ONGOING = false
@@ -53,7 +53,7 @@ function GearHelper:EquipItem(inThisBag)
             end
             for _, slotData in pairs(bagsItems) do
                 if slotData.item:IsEquippableByMe() and not IsEquippedItem(slotData.item.id) then
-                    GearHelper:Print("AutoEquipItem - Item not equipped, comparing score...")
+                    GearHelper:Print("AutoEquipItem - Item not equipped, comparing score...", "autoEquip")
                     local result = GearHelper:CompareWithEquipped(slotData.item)
 
                     if result.combinable and result.combinable.combinedScoreDelta > 0 then

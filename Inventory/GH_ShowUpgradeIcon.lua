@@ -6,7 +6,7 @@ function GearHelper:ShowUpgradeOnItemsIcons()
 
             if button then
                 if self:IsItemBetter(itemInfo.item) and not button.overlay then
-                    GearHelper:Print("ShowUpgradeOnItemsIcons - " .. itemInfo.item.itemLink .. " is better")
+                    GearHelper:Print("ShowUpgradeOnItemsIcons - " .. itemInfo.item.itemLink .. " is better", "showUpgradeIcon")
                     button.overlay = button:CreateTexture(nil, "OVERLAY")
                     button.overlay:SetSize(18, 18)
                     button.overlay:SetPoint("TOPLEFT")

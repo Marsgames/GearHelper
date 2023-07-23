@@ -17,6 +17,13 @@ function GearHelper:OnInitialize()
 
     ResetProfileOnMajorUpdate()
 
+    if (type(GearHelper.db.profile.debug) == "boolean") then
+        GearHelper:SlashResetDebug()
+    end
+
+    -- TODO: Remove this when autoEquip will be fixed
+    GearHelper.db.profile.autoEquipLooted.actual = false
+
     self.db.global.addonVersion = GearHelperVars.version
     self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 
