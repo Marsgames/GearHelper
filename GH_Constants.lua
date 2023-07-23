@@ -331,6 +331,7 @@ INVTYPE_TO_IGNORE = {
 local BabbleI = LibStub("LibBabble-Inventory-3.0")
 local BT = BabbleI:GetLookupTable()
 
+-- https://worldofwarcraft.blizzard.com/en-us/game/classes
 ITEM_TYPES_EQUIPPABLE_BY_CLASS = {
     ["WARRIOR"] = {
         ["Plaque"] = BT["Plate"],
@@ -497,6 +498,17 @@ ITEM_TYPES_EQUIPPABLE_BY_CLASS = {
         ["Pugilats"] = BT["Fist Weapons"],
         ["Hache1H"] = BT["One-Handed Axes"],
         ["Epee1H"] = BT["One-Handed Swords"]
+    },
+    ["EVOKER"] = {
+        ["Maille"] = BT["Mail"],
+        ["Dague"] = BT["Dagger"],
+        ["Dagues"] = BT["Daggers"],
+        ["Pugilat"] = BT["Fist Weapon"],
+        ["Pugilats"] = BT["Fist Weapons"],
+        ["Hache1H"] = BT["One-Handed Axes"],
+        ["Masse1H"] = BT["One-Handed Maces"],
+        ["Epee1H"] = BT["One-Handed Swords"],
+        ["Holdable"] = BT["Miscellaneous"]
     }
 }
 

@@ -1410,7 +1410,3 @@ function GHOptions:GenerateOptions()
         LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Debug Options", "Debug Options", "GearHelper")
     end
 end
-
-function GHOptions:OpenCategory()
-    LibStub("AceConfigDialog-3.0"):Open("GearHelper", "Debug Options")
-end
