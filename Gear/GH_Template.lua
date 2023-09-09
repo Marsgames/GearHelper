@@ -1,3 +1,31 @@
+local function IgnoreSpec(currentSpec)
+    -- We want to ignore initial specs
+
+    -- https://wowpedia.fandom.com/wiki/SpecializationID
+    local ignoredSpec = {
+        [1455] = true,
+        [1456] = true,
+        [1447] = true,
+        [1465] = true,
+        [1448] = true,
+        [1449] = true,
+        [1450] = true,
+        [1451] = true,
+        [1452] = true,
+        [1453] = true,
+        [1444] = true,
+        [1454] = true,
+        [1446] = true,
+    }
+
+    if (ignoredSpec[currentSpec] ~= nil) then
+        return true
+    end
+
+    return false
+end
+
+
 function GearHelper:GetStatFromActiveTemplate(statName)
     if (nil == self.db.profile.weightTemplate) then
         self:Print("WeightTemplate was nil, new value is NOX", "template")
@@ -6,10 +34,27 @@ function GearHelper:GetStatFromActiveTemplate(statName)
 
     if (self.db.profile.weightTemplate == "NOX" or self.db.profile.weightTemplate == "NOX_ByDefault") then
         local currentSpec = GetSpecializationInfo(GetSpecialization())
-        return self.db.global.templates[currentSpec]["NOX"][statName] or 0
+
+        if (IgnoreSpec(currentSpec)) then
+            return 0
+        end
+
+        if (self.db.global.templates[currentSpec] ~= nil) then
+            if (self.db.global.templates[currentSpec]["NOX"] ~= nil) then
+                if (self.db.global.templates[currentSpec]["NOX"][statName] ~= nil) then
+                    return self.db.global.templates[currentSpec]["NOX"][statName]
+                end
+            end
+        end
     else
-        return self.db.profile.CW[self.db.profile.weightTemplate][statName] or 0
+        if (self.db.profile.CW[self.db.profile.weightTemplate] ~= nil) then
+            if (self.db.profile.CW[self.db.profile.weightTemplate][statName] ~= nil) then
+                return self.db.profile.CW[self.db.profile.weightTemplate][statName]
+            end
+        end
     end
+
+    return 0
 end
 
 function GearHelper:SetStatToActiveTemplate(statName, value)
