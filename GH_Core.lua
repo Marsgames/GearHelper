@@ -28,7 +28,7 @@ function GearHelper:OnInitialize()
     self.LFG_UPDATE = GearHelper.UpdateGHLfrButton
 
     GearHelper:LoadBaseStatTemplates()
-    GHOptions:GenerateOptions()
+    securecall(GHOptions.GenerateOptions)
 end
 
 function GearHelper:OnEnable()

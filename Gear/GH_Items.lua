@@ -38,7 +38,7 @@ function GHItem:Create(itemLink)
     this.itemLink = itemLink
     this.itemString = string.match(this.itemLink, "item[%-?%d:]+")
     this.rarity = item:GetItemQuality()
-    _, _, _, _, this.levelRequired = GetItemInfo(itemLink)
+    _, _, _, _, this.levelRequired = securecall(GetItemInfo, this.itemLink)
     this.id, this.type, this.subType, this.equipLoc = GetItemInfoInstant(this.itemLink)
     this.name = item:GetItemName()
     this.iLvl = item:GetCurrentItemLevel()

@@ -11,7 +11,7 @@ function GearHelper:SellGreyItems()
             if (infos) then
                 local quality = infos.quality
                 if (quality and quality == 0) then
-                    C_Container.UseContainerItem(bag, slot)
+                    securecall(UseContainerItem, bag, slot)
                 end
             end
         end
