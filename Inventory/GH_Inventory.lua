@@ -10,13 +10,13 @@ end
 
 function GearHelper:GetSlotsByEquipLoc(equipLoc)
     local equipSlots = {}
-    local canDualWield = IsPlayerSpell(674) --Dual Wield spellId
+    local canDualWield = securecall(IsPlayerSpell, 674) --Dual Wield spellId
 
     GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield ? " .. tostring(canDualWield), "inventory")
 
     if
         canDualWield and
-            ((equipLoc == "INVTYPE_2HWEAPON" and IsPlayerSpell(46917)) or --Titan's Grip War Fury spellId
+            ((equipLoc == "INVTYPE_2HWEAPON" and securecall(IsPlayerSpell, 46917)) or --Titan's Grip War Fury spellId
                 equipLoc == "INVTYPE_WEAPON")
      then
         GearHelper:Print("GetSlotsByEquipLoc - Player can dual wield and it's a " .. equipLoc, "inventory")
@@ -66,8 +66,8 @@ function GearHelper:UpdateItemsInBags(bagId)
     end
 
     GearHelperVars.bagsItems[bagId] = {}
-    for j = 1, C_Container.GetContainerNumSlots(bagId) do
-        local itemlink = C_Container.GetContainerItemLink(bagId, j)
+    for j = 1, securecall(C_Container.GetContainerNumSlots, bagId) do
+        local itemlink = securecall(C_Container.GetContainerItemLink, bagId, j)
 
         local item = GHItem:Create(itemlink)
 
