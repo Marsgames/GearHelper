@@ -20,13 +20,13 @@ function GHItem:Create(itemLink)
 
     setmetatable(this, GHItem)
 
-    if not itemLink or IsCosmeticItem(itemLink) or INVTYPE_TO_IGNORE[C_Item.GetItemInventoryTypeByID(itemLink)] then
+    if not itemLink or securecall(IsCosmeticItem, itemLink) or INVTYPE_TO_IGNORE[C_Item.GetItemInventoryTypeByID(itemLink)] then
         return this
     end
 
     local item = Item:CreateFromItemLink(itemLink)
 
-    if item:IsItemEmpty() or GearHelper.itemSlot[select(4, GetItemInfoInstant(itemLink))] == nil then
+    if item:IsItemEmpty() or GearHelper.itemSlot[select(4, securecall(GetItemInfoInstant, itemLink))] == nil then
         return this
     end
 
@@ -39,7 +39,7 @@ function GHItem:Create(itemLink)
     this.itemString = string.match(this.itemLink, "item[%-?%d:]+")
     this.rarity = item:GetItemQuality()
     _, _, _, _, this.levelRequired = securecall(GetItemInfo, this.itemLink)
-    this.id, this.type, this.subType, this.equipLoc = GetItemInfoInstant(this.itemLink)
+    this.id, this.type, this.subType, this.equipLoc = securecall(GetItemInfoInstant, this.itemLink)
     this.name = item:GetItemName()
     this.iLvl = item:GetCurrentItemLevel()
     this.isEmpty = false
