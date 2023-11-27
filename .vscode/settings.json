@@ -124,5 +124,25 @@
         "CALENDAR_STATUS_NOT_SIGNEDUP",
         "GRAY_FONT_COLOR",
         "CALENDAR_STATUS_TENTATIVE"
-    ]
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#343434",
+        "activityBar.background": "#343434",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#787828",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#343434",
+        "statusBar.background": "#1b1b1b",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#343434",
+        "statusBarItem.remoteBackground": "#1b1b1b",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#1b1b1b",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#1b1b1b99",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#1b1b1b"
 }

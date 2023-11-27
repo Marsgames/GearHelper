@@ -1,6 +1,8 @@
 GearHelper = LibStub("AceAddon-3.0"):NewAddon("GearHelper", "AceConsole-3.0", "AceEvent-3.0")
 GearHelper.locals = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
+GHToolbox = _G["GHToolbox"]
+
 local function ResetProfileOnMajorUpdate()
     local dbMajorAddonVersion = tonumber(string.match(GearHelper.db.global.addonVersion or "0", "%d+"))
     local currentAddonVersion = tonumber(string.match(GearHelperVars.version, "%d+"))

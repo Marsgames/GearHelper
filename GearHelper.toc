@@ -8,6 +8,9 @@
 ## Version: 3.3.12
 ## DefaultState: enabled
 
+## Dependencies: GH_Utils
+# ## OptionalDeps: GH_SellGrey, GH_AutoRepair, GH_DropRate, GH_ChatAlert, GH_AutoGroup, GH_Inspect, GH_LFG
+
 
 ## X-Author-Faction: Horde
 ## X-Author-Server: (EU) Temple-Noir
@@ -36,7 +39,6 @@ Localizations\esES.lua
 Localizations\zhTW.lua
 
 ########## Addon ##########
-GH_Exceptions.lua
 GH_Events.lua
 GH_Core.lua
 GH_Debug.lua
@@ -63,7 +65,6 @@ Commands\GH_Slash.lua
 GH_Options.lua
 Options\GH_Messages.lua
 Options\GH_Thanks.lua
-GH_Toolbox.lua
 GH_CharacterFrame.lua
 GearHelper.lua
 Events\GH_Bag.lua

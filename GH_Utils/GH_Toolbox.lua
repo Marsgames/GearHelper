@@ -31,31 +31,31 @@ function GHToolbox:GetClassColor(classFileName)
     return "|c" .. color.colorStr
 end
 
-local function GetActiveTemplate()
-    local returnValue
+-- local function GetActiveTemplate()
+--     local returnValue
 
-    -- Can occurs if you select CustomTemplate but you did not set a template
-    if (nil == GearHelper.db.profile.weightTemplate or "" == GearHelper.db.profile.weightTemplate) then
-        GearHelper.db.profile.weightTemplate = "NOX"
-    end
+--     -- Can occurs if you select CustomTemplate but you did not set a template
+--     if (nil == GearHelper.db.profile.weightTemplate or "" == GearHelper.db.profile.weightTemplate) then
+--         GearHelper.db.profile.weightTemplate = "NOX"
+--     end
 
-    if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
-        local currentSpec = GetSpecializationInfo(GetSpecialization())
-        if GearHelper.db.global.templates[currentSpec]["NOX"] == nil then
-            error(GHExceptionMissingNoxTemplate)
-        end
+--     if GearHelper.db.profile.weightTemplate == "NOX" or GearHelper.db.profile.weightTemplate == "NOX_ByDefault" then
+--         local currentSpec = GetSpecializationInfo(GetSpecialization())
+--         if GearHelper.db.global.templates[currentSpec]["NOX"] == nil then
+--             error(GHExceptionMissingNoxTemplate)
+--         end
 
-        returnValue = GearHelper.db.global.templates[currentSpec]["NOX"]
-    else
-        if (nil == GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]) then
-            error(GHExceptionMissingCustomTemplate)
-        end
+--         returnValue = GearHelper.db.global.templates[currentSpec]["NOX"]
+--     else
+--         if (nil == GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]) then
+--             error(GHExceptionMissingCustomTemplate)
+--         end
 
-        returnValue = GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]
-    end
+--         returnValue = GearHelper.db.profile.CW[GearHelper.db.profile.weightTemplate]
+--     end
 
-    return returnValue
-end
+--     return returnValue
+-- end
 
 -- function GearHelper:FindHighestStatInTemplate()
 --     local template = GetActiveTemplate()
@@ -100,7 +100,7 @@ function GHToolbox:ColorizeString(text, color)
     end
 end
 
-function GearHelper:GetQualityFromColor(color)
+function GHToolbox:GetQualityFromColor(color)
     if (color == "9d9d9d") then
         return 0
     elseif (color == "ffffff") then
@@ -147,7 +147,7 @@ function GHToolbox:DelayedCallback(func, delay, ...)
     C_Timer.After(
         delay,
         function()
-            func(unpack(args))
+            func(table.unpack(args))
         end
     )
 end

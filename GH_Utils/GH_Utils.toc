@@ -1,0 +1,13 @@
+## Interface: 100200
+## Title: GearHelper Utils
+## Notes: Lib for GearHelper addons
+## Author: Marsgames
+## Version: 1.0
+
+## X-BugReport: https://github.com/Marsgames/GearHelper/issues
+
+## SavedVariables: GearHelperUtilsDB
+
+########## Addon Files ##########
+GH_Exceptions.lua
+GH_Toolbox.lua
