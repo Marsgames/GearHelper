@@ -63,10 +63,10 @@ function GearHelper:GetTooltipDataForItem(itemLink)
     --This is required to populate .lefttext like fields
     --TooltipUtil.SurfaceArgs(tooltipData)
     --Magic happens in there, before processInfo data are wrong (same than GetItemStats)
-    ScanningTooltip:ProcessInfo(tooltipData)
-    for _, line in ipairs(tooltipData.lines) do
-        TooltipUtil.SurfaceArgs(line)
-    end
+    -- ScanningTooltip:ProcessInfo(tooltipData)
+    -- for _, line in ipairs(tooltipData.lines) do
+    --     TooltipUtil.SurfaceArgs(line)
+    -- end
 
     return tooltipData
 end

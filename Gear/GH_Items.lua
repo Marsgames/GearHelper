@@ -20,13 +20,13 @@ function GHItem:Create(itemLink)
 
     setmetatable(this, GHItem)
 
-    if not itemLink or securecall(IsCosmeticItem, itemLink) or INVTYPE_TO_IGNORE[C_Item.GetItemInventoryTypeByID(itemLink)] then
+    if not itemLink or securecall(C_Item.IsCosmeticItem, itemLink) or INVTYPE_TO_IGNORE[C_Item.GetItemInventoryTypeByID(itemLink)] then
         return this
     end
 
     local item = Item:CreateFromItemLink(itemLink)
 
-    if item:IsItemEmpty() or GearHelper.itemSlot[select(4, securecall(GetItemInfoInstant, itemLink))] == nil then
+    if item:IsItemEmpty() or GearHelper.itemSlot[select(4, securecall(C_Item.GetItemInfoInstant, itemLink))] == nil then
         return this
     end
 
@@ -38,8 +38,8 @@ function GHItem:Create(itemLink)
     this.itemLink = itemLink
     this.itemString = string.match(this.itemLink, "item[%-?%d:]+")
     this.rarity = item:GetItemQuality()
-    _, _, _, _, this.levelRequired = securecall(GetItemInfo, this.itemLink)
-    this.id, this.type, this.subType, this.equipLoc = securecall(GetItemInfoInstant, this.itemLink)
+    _, _, _, _, this.levelRequired = securecall(C_Item.GetItemInfo, this.itemLink)
+    this.id, this.type, this.subType, this.equipLoc = securecall(C_Item.GetItemInfoInstant, this.itemLink)
     this.name = item:GetItemName()
     this.iLvl = item:GetCurrentItemLevel()
     this.isEmpty = false
@@ -91,12 +91,21 @@ function GHItem:GetStats()
         for _, line in ipairs(tooltipData.lines) do
             if GetBasicStatFromLine(line) then
                 local statName, statValue = GetBasicStatFromLine(line)
+                if statName == nil then
+                    return
+                end
                 self.stats[statName] = tonumber(statValue)
             elseif GetArmorFromLine(line) then
                 local statName, statValue = GetArmorFromLine(line)
+                if statName == nil then
+                    return
+                end
                 self.stats[statName] = tonumber(statValue)
             elseif GetDPSFromLine(line) then
                 local statName, statValue = GetDPSFromLine(line)
+                if statName == nil then
+                    return
+                end
                 self.stats[statName] = tonumber(statValue)
             end
         end
@@ -154,7 +163,7 @@ function GHItem:IsEquippableByMe()
 end
 
 function GHItem:IsEquipped()
-    if not IsEquippedItem(self.itemLink) then --Quick check, we can rely on value returned here
+    if not C_Item.IsEquippedItem(self.itemLink) then --Quick check, we can rely on value returned here
         return false
     else --However we can't rely on IsEquippedItem because it behaves weirdly on items with different bonusIDs
         local equippedItems = GearHelper:GetEquippedItems(self.equipLoc)

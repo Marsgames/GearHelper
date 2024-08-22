@@ -68,7 +68,11 @@ function GearHelper:UpdateItemsInBags(bagId)
     GearHelperVars.bagsItems[bagId] = {}
     for j = 1, securecall(C_Container.GetContainerNumSlots, bagId) do
         local itemlink = securecall(C_Container.GetContainerItemLink, bagId, j)
-
+        if (itemlink == nil) then
+            do
+                return
+            end
+        end
         local item = GHItem:Create(itemlink)
 
         if not item.isEmpty then

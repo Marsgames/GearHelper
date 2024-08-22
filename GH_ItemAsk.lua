@@ -55,7 +55,6 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         end
     end
 
-    local couleur, tar = ""
     local _, classFile = UnitClass(target)
     local tar = ""
 
@@ -73,7 +72,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         local func = strmatch(link, "^GHWhispWhenClick:(%a+)")
         if func == "askIfHeNeed" then
             local _, nomPerso, itID, persoLink = strsplit("_", link)
-            local _, theItemLink = GetItemInfo(itID)
+            local _, theItemLink = C_Item.GetItemInfo(itID)
             local itemTable = GHItem:Create(theItemLink)
             local itLink1 = itemTable.itemLink
 

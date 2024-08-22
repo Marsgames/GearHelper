@@ -26,9 +26,10 @@ local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
     Bosses killed on LFG panel
     Show ilvl on char panel
     Show ilvl on inspect panel
-]] local function GetInvMsg()
-    return GearHelper.db.profile.inviteMessage
-end
+]] 
+-- local function GetInvMsg()
+--     return GearHelper.db.profile.inviteMessage
+-- end
 
 local function ValidateInputPattern(val, type, info)
     if type == "number" then
@@ -152,19 +153,19 @@ local ghOptionsTable = {
                     end,
                     width = "double"
                 },
-                autoEquipWhenSwitchSpe = {
-                    order = 7,
-                    name = GearHelper.locals["autoEquipSpecChangedStuff"],
-                    desc = GearHelper.locals["UIGHCheckBoxAutoEquipWhenSwitchSpe"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.autoEquipWhenSwitchSpe = val
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.autoEquipWhenSwitchSpe
-                    end,
-                    width = "double"
-                },
+                -- autoEquipWhenSwitchSpe = {
+                --     order = 7,
+                --     name = GearHelper.locals["autoEquipSpecChangedStuff"],
+                --     desc = GearHelper.locals["UIGHCheckBoxAutoEquipWhenSwitchSpe"],
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.autoEquipWhenSwitchSpe = val
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.autoEquipWhenSwitchSpe
+                --     end,
+                --     width = "double"
+                -- },
                 computeNotEquippable = {
                     order = 8,
                     name = GearHelper.locals["UIGlobalComputeNotEquippable"],
@@ -235,147 +236,147 @@ local ghOptionsTable = {
                     style = "dropdown",
                     width = "double"
                 },
-                autoTell = {
-                    order = 3,
-                    name = "Loot Announcement",
-                    desc = GearHelper.locals["checkGHAutoTell"],
-                    hidden = true,
-                    type = "toggle",
-                    width = "full",
-                    set = function(_, val)
-                        GearHelper.db.profile.autoTell = val
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.autoTell
-                    end
-                },
-                autoInvite = {
-                    order = 4,
-                    name = GearHelper.locals["UIautoInvite"],
-                    desc = function()
-                        return GearHelper.locals["UIGHCheckBoxAutoInvite"] .. GHToolbox:ColorizeString(GetInvMsg(), "LightGreen")
-                    end,
-                    type = "toggle",
-                    width = "double",
-                    set = function(_, val)
-                        GearHelper.db.profile.autoInvite = val
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.autoInvite
-                    end
-                },
-                inviteMessage = {
-                    order = 5,
-                    name = GearHelper.locals["UIinviteMessage"],
-                    desc = GearHelper.locals["UIinviteMessageDesc"],
-                    type = "input",
-                    set = function(_, val)
-                        GearHelper:setInviteMessage(val)
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.inviteMessage
-                    end
-                },
-                whisperAlert = {
-                    order = 6,
-                    name = GearHelper.locals["UIWhisperAlert"],
-                    desc = GearHelper.locals["UIWhisperAlertDesc"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.whisperAlert = val
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.whisperAlert
-                    end
-                },
-                sayMyName = {
-                    order = 7,
-                    name = GearHelper.locals["UISayMyName"],
-                    desc = GearHelper.locals["UISayMyNameDesc"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.sayMyName = val
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.sayMyName
-                    end
-                },
-                myNames = {
-                    order = 8,
-                    name = GearHelper.locals["UIMyNames"],
-                    desc = GearHelper.locals["UIMyNamesDesc"],
-                    type = "input",
-                    width = "full",
-                    set = function(_, val)
-                        if not val then
-                            return
-                        end
+                -- autoTell = {
+                --     order = 3,
+                --     name = "Loot Announcement",
+                --     desc = GearHelper.locals["checkGHAutoTell"],
+                --     hidden = true,
+                --     type = "toggle",
+                --     width = "full",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.autoTell = val
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.autoTell
+                --     end
+                -- },
+                -- autoInvite = {
+                --     order = 4,
+                --     name = GearHelper.locals["UIautoInvite"],
+                --     desc = function()
+                --         return GearHelper.locals["UIGHCheckBoxAutoInvite"] .. GHToolbox:ColorizeString(GetInvMsg(), "LightGreen")
+                --     end,
+                --     type = "toggle",
+                --     width = "double",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.autoInvite = val
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.autoInvite
+                --     end
+                -- },
+                -- inviteMessage = {
+                --     order = 5,
+                --     name = GearHelper.locals["UIinviteMessage"],
+                --     desc = GearHelper.locals["UIinviteMessageDesc"],
+                --     type = "input",
+                --     set = function(_, val)
+                --         GearHelper:setInviteMessage(val)
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.inviteMessage
+                --     end
+                -- },
+                -- whisperAlert = {
+                --     order = 6,
+                --     name = GearHelper.locals["UIWhisperAlert"],
+                --     desc = GearHelper.locals["UIWhisperAlertDesc"],
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.whisperAlert = val
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.whisperAlert
+                --     end
+                -- },
+                -- sayMyName = {
+                --     order = 7,
+                --     name = GearHelper.locals["UISayMyName"],
+                --     desc = GearHelper.locals["UISayMyNameDesc"],
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.sayMyName = val
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.sayMyName
+                --     end
+                -- },
+                -- myNames = {
+                --     order = 8,
+                --     name = GearHelper.locals["UIMyNames"],
+                --     desc = GearHelper.locals["UIMyNamesDesc"],
+                --     type = "input",
+                --     width = "full",
+                --     set = function(_, val)
+                --         if not val then
+                --             return
+                --         end
 
-                        GearHelper.db.global.myNames = tostring(val .. ",")
-                    end,
-                    get = function()
-                        return GearHelper.db.global.myNames
-                    end
-                },
-                bossesKilled = {
-                    order = 9,
-                    name = GearHelper.locals["UIBossesKilled"],
-                    desc = GearHelper.locals["UIBossesKilledDesc"],
-                    type = "toggle",
-                    -- width = "full",
-                    set = function(_, val)
-                        GearHelper.db.profile.bossesKilled = val
-                        if val == false then
-                            GearHelper:HideLfrButtons()
-                        elseif (RaidFinderQueueFrame) then
-                            GearHelper:CreateLfrButtons(RaidFinderQueueFrame)
-                            GearHelper:UpdateButtonsAndTooltips(RaidFinderQueueFrame)
-                            GearHelper:UpdateGHLfrButton()
-                            GearHelper:UpdateSelectCursor()
-                            GearHelper:RegisterEvent("LFG_UPDATE")
-                            GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
-                        end
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.bossesKilled
-                    end
-                },
-                ilvlCharFrame = {
-                    order = 10,
-                    name = GearHelper.locals["UIIlvlCharFrame"],
-                    desc = GearHelper.locals["UIIlvlCharFrameDesc"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.ilvlCharFrame = val
-                        if (val) then
-                            GearHelper:AddIlvlOnCharFrame()
-                        else
-                            GearHelper:ResetIlvlOnCharFrame()
-                        end
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.ilvlCharFrame
-                    end
-                },
-                ilvlInspectFrame = {
-                    order = 11,
-                    name = GearHelper.locals["UIIlvlInspectFrame"],
-                    desc = GearHelper.locals["UIIlvlInspectFrameDesc"],
-                    type = "toggle",
-                    set = function(_, val)
-                        GearHelper.db.profile.ilvlInspectFrame = val
-                        if (val) then
-                            if (InspectPaperDollItemsFrame and UnitGUID("target")) then
-                                GearHelper:AddIlvlOnInspectFrame()
-                            end
-                        else
-                            GearHelper:HideIlvlOnInspectFrame()
-                        end
-                    end,
-                    get = function()
-                        return GearHelper.db.profile.ilvlInspectFrame
-                    end
-                }
+                --         GearHelper.db.global.myNames = tostring(val .. ",")
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.global.myNames
+                --     end
+                -- },
+                -- bossesKilled = {
+                --     order = 9,
+                --     name = GearHelper.locals["UIBossesKilled"],
+                --     desc = GearHelper.locals["UIBossesKilledDesc"],
+                --     type = "toggle",
+                --     -- width = "full",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.bossesKilled = val
+                --         if val == false then
+                --             GearHelper:HideLfrButtons()
+                --         elseif (RaidFinderQueueFrame) then
+                --             GearHelper:CreateLfrButtons(RaidFinderQueueFrame)
+                --             GearHelper:UpdateButtonsAndTooltips(RaidFinderQueueFrame)
+                --             GearHelper:UpdateGHLfrButton()
+                --             GearHelper:UpdateSelectCursor()
+                --             GearHelper:RegisterEvent("LFG_UPDATE")
+                --             GearHelper.LFG_UPDATE = GearHelper.UpdateGHLfrButton
+                --         end
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.bossesKilled
+                --     end
+                -- },
+                -- ilvlCharFrame = {
+                --     order = 10,
+                --     name = GearHelper.locals["UIIlvlCharFrame"],
+                --     desc = GearHelper.locals["UIIlvlCharFrameDesc"],
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.ilvlCharFrame = val
+                --         if (val) then
+                --             GearHelper:AddIlvlOnCharFrame()
+                --         else
+                --             GearHelper:ResetIlvlOnCharFrame()
+                --         end
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.ilvlCharFrame
+                --     end
+                -- },
+                -- ilvlInspectFrame = {
+                --     order = 11,
+                --     name = GearHelper.locals["UIIlvlInspectFrame"],
+                --     desc = GearHelper.locals["UIIlvlInspectFrameDesc"],
+                --     type = "toggle",
+                --     set = function(_, val)
+                --         GearHelper.db.profile.ilvlInspectFrame = val
+                --         if (val) then
+                --             if (InspectPaperDollItemsFrame and UnitGUID("target")) then
+                --                 GearHelper:AddIlvlOnInspectFrame()
+                --             end
+                --         else
+                --             GearHelper:HideIlvlOnInspectFrame()
+                --         end
+                --     end,
+                --     get = function()
+                --         return GearHelper.db.profile.ilvlInspectFrame
+                --     end
+                -- }
             }
         }
     }

@@ -7,14 +7,22 @@ function GHEvents:BAG_UPDATE(bagId)
 
     GearHelperVars.lastBagUpdateEvent[bagId] = time()
     GearHelper:UpdateItemsInBags(bagId)
-    GearHelper:AutoEquip(bagId)
 end
 
 function GHEvents:BAG_UPDATE_DELAYED()
-    -- Update char frame when the bag is update because original UNIT_INVENTORY_CHANGED event is not fired when the player change trinkets or fingers
-    GearHelper:ResetIlvlOnCharFrame()
-
+    for i = 0, NUM_BAG_SLOTS do
+        GearHelper:UpdateItemsInBags(i)
+    end
     GearHelper:ScanCharacter()
-    GearHelper:HideAllUpgradeItemIcons()
+    GearHelper:HideUpgradeOnItemsIcons()
+    GearHelper:ShowUpgradeOnItemsIcons()
+end
+
+function GHEvents:BAG_UPDATE_COOLDOWN()
+    for i = 0, NUM_BAG_SLOTS do
+        GearHelper:UpdateItemsInBags(i)
+    end
+    GearHelper:ScanCharacter()
+    GearHelper:HideUpgradeOnItemsIcons()
     GearHelper:ShowUpgradeOnItemsIcons()
 end

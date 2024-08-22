@@ -9,13 +9,13 @@ GearHelper.defaultSettings = {
             actual = false,
             previous = false
         },
-        autoEquipWhenSwitchSpe = false,
+        -- autoEquipWhenSwitchSpe = false,
         weightTemplate = "NOX",
         lastWeightTemplate = "",
         autoRepair = 0,
-        autoInvite = true,
-        autoTell = true,
-        inviteMessage = "+GH123-",
+        -- autoInvite = true,
+        -- autoTell = true,
+        -- inviteMessage = "+GH123-",
         askLootRaid = true,
         printWhenEquip = true,
         debug = {
@@ -36,17 +36,17 @@ GearHelper.defaultSettings = {
         iLvlWeight = 10,
         includeSocketInCompute = true,
         computeNotEquippable = true,
-        whisperAlert = true,
-        sayMyName = true,
-        bossesKilled = true,
-        ilvlCharFrame = true,
-        ilvlInspectFrame = true,
+        -- whisperAlert = true,
+        -- sayMyName = true,
+        -- bossesKilled = true,
+        -- ilvlCharFrame = true,
+        -- ilvlInspectFrame = true,
         inspectAin = {waitingIlvl = false, equipLoc = nil, ilvl = nil, linkItemReceived = nil, message = nil, target = nil},
         defaultWeightForStat = 1
     },
     global = {
         SellPrices = {},
-        myNames = "",
+        -- myNames = "",
         messages = {
             enUS = {
                 demande4 = L["demande4enUS"],
@@ -119,10 +119,10 @@ GearHelper.defaultSettings = {
 }
 
 GearHelperVars = {
-    version = GetAddOnMetadata("GearHelper", "Version"),
+    version = C_AddOns.GetAddOnMetadata("GearHelper", "Version"),
     prefixAddon = "GeARHeLPeRPReFIX",
     addonTruncatedVersion = 3,
-    waitSpeTimer = nil,
+    -- waitSpeTimer = nil,
     lastBagUpdateEvent = {},
     charInventory = {
         [INVSLOT_HEAD] = GHItem:CreateEmpty(),

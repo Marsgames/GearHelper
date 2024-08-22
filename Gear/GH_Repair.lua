@@ -11,7 +11,7 @@ function GearHelper:RepairEquipment()
     local ownedGolds = GetMoney()
     local price = GetRepairAllCost()
     local canRepairWithGuild = nil
-    local guildGolds = ""
+    local guildGolds = 0
     local guildIsAbleToRepair = false
 
     if price <= 0 then
