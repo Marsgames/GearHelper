@@ -6,7 +6,7 @@ local function GetNameOrID(frame)
     end
 end
 
-local function AddIconTo(frame, icon, suffix)
+local function AddIconTo(frame, suffix)
     if not frame then
         return
     end
@@ -42,70 +42,66 @@ local function AddIconTo(frame, icon, suffix)
 end
 
 function GearHelper:ShowUpgradeOnItemsIcons()
-    for bagId, items in pairs(GearHelperVars.bagsItems) do
-        -- if not IsBagOpen(bagId) then
-        --     print("Skip bag " .. bagId)
-        --     do return end
-        -- end
+    for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+        -- local bagSize = C_Container.GetContainerNumSlots(bagId)
+        local container = _G["ContainerFrame" .. bagId + 1]
 
-        local bagSize = C_Container.GetContainerNumSlots(bagId)
-        for _, itemInfo in pairs(items) do
-            local container = _G["ContainerFrame" .. bagId + 1] -- .. "Item" .. (bagSize + 1) - itemInfo.slot]
-            -- print("------------")
-            -- print("item : " .. tostring(itemInfo.item))
-            -- print("slot : " .. tostring((bagSize + 1) - itemInfo.slot))
-            local frame = container.Items[(bagSize + 1) - itemInfo.slot]
-            if not frame then
-               do return end
+        -- Continue if there is no equiped bag
+        if container == nil then
+            do return end
+        end
+
+        for slotId, slot in pairs(container.Items) do
+            -- Simple check to remove everything that is not a single item
+            local count = slot.count
+            if count == 1 then
+                -- print("bag" .. bagId + 1 .. " slot" .. slotId .. " count: " .. count)
+                -- local success, wowItemLink = pcall(slot.GetItemInfo)
+                -- if success then
+                    local wowItemLink = slot:GetItemLink()
+                    local ghItemLink = GHItem:Create(wowItemLink)
+
+                    -- Check if item is equippable
+                    if wowItemLink and C_Item.IsEquippableItem(wowItemLink) then
+                        local suffix = GetNameOrID(slot:GetParent()) .. "." .. GetNameOrID(slot)
+
+                        if ghItemLink and self:IsItemBetter(ghItemLink) then
+                        AddIconTo(slot, suffix)
+                            print("Add icon")
+                        end
+                    end
+                -- end
             end
-            local suffix = GetNameOrID(frame:GetParent()) .. "." .. GetNameOrID(frame)
-
-            if self:IsItemBetter(itemInfo.item) then
-                AddIconTo(frame, "", suffix)
-            end
-
-            -- if button then
-            --     if self:IsItemBetter(itemInfo.item) and not button.overlay then
-            --         GearHelper:Print("ShowUpgradeOnItemsIcons - " .. itemInfo.item.itemLink .. " is better", "showUpgradeIcon")
-            --         button.overlay = button:CreateTexture(nil, "OVERLAY")
-            --         button.overlay:SetSize(18, 18)
-            --         button.overlay:SetPoint("TOPLEFT")
-            --         button.overlay:SetAtlas("bags-greenarrow", true)
-            --         button.overlay:SetShown(true)
-            --     end
-            -- end
         end
     end
-
+    
     ContainerFrame_UpdateAll()
 end
 
 function GearHelper:HideUpgradeOnItemsIcons()
     for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-        local bagSize = C_Container.GetContainerNumSlots(bagId)
-        for slotId = 1, bagSize do
-            local container = _G["ContainerFrame" .. bagId + 1] -- .. "Item" .. (bagSize + 1) - itemInfo.slot]
-            -- print("------------")
-            -- print("item : " .. tostring(itemInfo.item))
-            -- print("slot : " .. tostring((bagSize + 1) - itemInfo.slot))
-            local frame = container.Items[(bagSize + 1) - slotId]
-            if not frame then
-                do return end
+        -- local bagSize = C_Container.GetContainerNumSlots(bagId)
+        local container = _G["ContainerFrame" .. bagId + 1]
+
+        -- Continue if there is no equiped bag
+        if container == nil then
+            do return end
+        end
+
+        for slotId, slot in pairs(container.Items) do
+            -- Simple check to remove everything that is not a single item
+            local count = slot.count
+            if count == 1 then
+                local wowItemLink = slot:GetItemLink()
+
+                -- Check if item is equippable
+                if wowItemLink and C_Item.IsEquippableItem(wowItemLink) then
+                    if slot and slot.GearHelperOverlay then
+                        slot.GearHelperOverlay:Hide()
+                        slot.GearHelperOverlay = nil
+                    end
+                end
             end
-            if frame and frame.GearHelperOverlay then
-                frame.GearHelperOverlay:Hide()
-                frame.GearHelperOverlay = nil
-            end
-
-
-
-            -- local button = _G["ContainerFrame" .. bagId + 1 .. "Item" .. (bagSize + 1) - slotId]
-            -- if button and button.overlay then
-            --     -- print("hidding icon for slot " .. slotId)
-            --     -- print("ContainerFrame" .. bagId + 1 .. "Item" .. (bagSize + 1) - slotId)
-            --     button.overlay:SetShown(false)
-            --     button.overlay = nil
-            -- end
         end
     end
 end
