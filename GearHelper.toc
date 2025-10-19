@@ -5,7 +5,7 @@
 ### Notes-deDE: Manage your gear during your level up and after
 ## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
 ## Author:  Marsgames & Tempaxe
-## Version: 5.0
+## Version: 3.3.14
 ## DefaultState: enabled
 ## IconTexture: Interface\ICONS\INV_Misc_Bag_08
 
@@ -22,7 +22,6 @@
 ## X-BugReport: https://github.com/Marsgames/GearHelper/issues
 
 ## SavedVariables: GearHelperDB
-
 
 ########## Libs ##########
 embeds.xml
@@ -54,7 +53,7 @@ Inventory\GH_Inventory.lua
 Inventory\GH_AutoSell.lua
 Inventory\GH_ShowUpgradeIcon.lua
 Gear\GH_ItemCompare.lua
-VALIDATED\GH_Tooltip.lua
+Gear\GH_Tooltip.lua
 Gear\GH_Repair.lua
 # Gear\GH_AutoEquip.lua
 DropRates\GH_DropRates.lua

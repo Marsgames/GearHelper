@@ -33,6 +33,7 @@ function GearHelper:OnEnable()
     GHEvents:RegisterEvents()
     self:HookItemTooltip()
     self:HookMoneyTooltip()
+    self:HookBagOpen()
 end
 
 function GearHelper:OnDisable()

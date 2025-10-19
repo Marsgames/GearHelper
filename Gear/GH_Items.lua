@@ -117,6 +117,22 @@ function GHItem:GetStats()
     return self.stats
 end
 
+function GHItem:IsEquippedItem(ghLink)
+    -- If WoW API says that it's not equipped, we are sure it's not equipped
+    if not C_Item.IsEquippedItem(ghLink.id) then
+        return false
+    end
+
+    -- If it's equipped, then we compare ilvl to be sure it's the same item (in case of different bonusIDs)
+
+    local inventoryType = C_Item.GetItemInventoryTypeByID(ghLink.id)
+    local equippedItemLvl = GearHelperVars.charInventory[inventoryType].iLvl
+
+    local newItemIlvl = C_Item.GetDetailedItemLevelInfo(ghLink.itemLink)
+
+    return equippedItemLvl == newItemIlvl
+end
+
 function GHItem:IsEquippableByMe()
     if (self.id == nil) then
         do
@@ -147,7 +163,7 @@ function GHItem:IsEquippableByMe()
             -- if subtype is not "Cuir", "Dague", or "Dagues" return false
             if self.subType ~= ITEM_TYPES_EQUIPPABLE_BY_CLASS[myClass].Cuir and self.subType ~= ITEM_TYPES_EQUIPPABLE_BY_CLASS[myClass].Dague and self.subType ~= ITEM_TYPES_EQUIPPABLE_BY_CLASS[myClass].Dagues then
                 return false
-            end 
+            end
         end
 
         table.foreach(

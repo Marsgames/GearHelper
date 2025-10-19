@@ -45,7 +45,7 @@ function GearHelper:IsComparedItem1HTestedAgainst2HWeapon(comparedItemEquipLoc)
 end
 
 function GearHelper:GetEquippedItems(equipLoc)
-    self:Print("GetEquippedItems - Gettin' slots ID for " .. equipLoc, "inventory")
+    self:Print("GetEquippedItems - Gettin' slots ID for " .. tostring(equipLoc), "inventory")
 
     local result = GearHelper:GetSlotsByEquipLoc(equipLoc)
 

@@ -13,16 +13,24 @@ function GHEvents:BAG_UPDATE_DELAYED()
     for i = 0, NUM_BAG_SLOTS do
         GearHelper:UpdateItemsInBags(i)
     end
+
     GearHelper:ScanCharacter()
-    GearHelper:HideUpgradeOnItemsIcons()
-    GearHelper:ShowUpgradeOnItemsIcons()
+
+    for _, frame in ContainerFrameUtil_EnumerateContainerFrames() do
+        GearHelper:HideUpgradeOnItemsIconsForContainer(frame)
+        GearHelper:ShowUpgradeOnItemsIconsForContainer(frame)
+    end
 end
 
 function GHEvents:BAG_UPDATE_COOLDOWN()
     for i = 0, NUM_BAG_SLOTS do
         GearHelper:UpdateItemsInBags(i)
     end
+
     GearHelper:ScanCharacter()
-    GearHelper:HideUpgradeOnItemsIcons()
-    GearHelper:ShowUpgradeOnItemsIcons()
+
+    for _, frame in ContainerFrameUtil_EnumerateContainerFrames() do
+        GearHelper:HideUpgradeOnItemsIconsForContainer(frame)
+        GearHelper:ShowUpgradeOnItemsIconsForContainer(frame)
+    end
 end

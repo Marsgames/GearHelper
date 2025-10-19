@@ -1,7 +1,11 @@
 function GearHelper:IsItemBetter(item)
     GearHelper:Print("IsItemBetter - " .. item.itemLink, "itemCompare")
 
-    if item.isEmpty or not item:IsEquippableByMe() or C_Item.IsEquippedItem(item.id) then
+    if item.isEmpty or not item:IsEquippableByMe() then
+        return false
+    end
+
+    if GHItem:IsEquippedItem(item) then
         return false
     end
 
@@ -12,9 +16,7 @@ function GearHelper:IsItemBetter(item)
         isBetter = true
     else
         for _, deltaScore in pairs(result.delta) do
-            if deltaScore > 0 then
-                isBetter = true
-            end
+            isBetter = deltaScore > 0
         end
     end
 
@@ -52,7 +54,7 @@ function GearHelper:CompareWithEquipped(item)
     local result = {}
     local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
     local equippedItemsScore = GearHelper:GetEquippedItemsScore(equippedItems)
-    
+
     if GearHelper:IsComparedItem1HTestedAgainst2HWeapon(item.equipLoc) then
         GearHelper:Print("Comparing a 1 Hand weapon against a 2 Hands, trying to find a pairable in bags...", "itemCompare")
         local pairableItems = {}
@@ -72,7 +74,7 @@ function GearHelper:CompareWithEquipped(item)
 
         local itemScore = item:GetScore()
         local pairableItemScore = result.combinable.item:GetScore()
-        
+
         -- TODO: Not sure at all about this
         local score = 0
         if (equippedItemsScore[0] == nil) then
@@ -83,7 +85,7 @@ function GearHelper:CompareWithEquipped(item)
             score = equippedItemsScore[0]
         end
         GearHelper:Print("Result : " .. ((itemScore + pairableItemScore) - score), "itemCompare")
-        
+
         result.combinable.combinedScoreDelta = (itemScore + pairableItemScore) - score
     end
 
