@@ -515,3 +515,15 @@ ITEM_TYPES_EQUIPPABLE_BY_CLASS = {
 ITEM_UPGRADE_TOOLTIP_BORDER = {r = 0, g = 255, b = 150}
 ITEM_DOWNGRADE_TOOLTIP_BORDER = {r = 255, g = 0, b = 0}
 ITEM_EQUAL_TOOLTIP_BORDER = FACTION_YELLOW_COLOR
+
+GearHelper.colorsName = {
+    YELLOW = "yellow",
+    LIGHTGREEN = "lightgreen",
+    GREEN = "green",
+    LIGHTRED = "lightred",
+    RED = "red",
+    PINK = "pink",
+    BETTER = "better",
+    WHITE = "white",
+    BLACK = "black"
+}

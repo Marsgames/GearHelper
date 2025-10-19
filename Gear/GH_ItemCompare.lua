@@ -1,7 +1,7 @@
 function GearHelper:IsItemBetter(item)
     GearHelper:Print("IsItemBetter - " .. item.itemLink, "itemCompare")
 
-    if item.isEmpty or not item:IsEquippableByMe() or  C_Item.IsEquippedItem(item.id) then
+    if item.isEmpty or not item:IsEquippableByMe() or C_Item.IsEquippedItem(item.id) then
         return false
     end
 

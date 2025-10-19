@@ -165,5 +165,8 @@ L["helpCW"] = "cw - Open the Custom Weights panel"
 L["helpDebug"] = "debug - Enable the debug print mode"
 L["messages"] = "Messages"
 -------------------------- CE QUI EST EN DESSOUS DE CETTE LIGNE N'EST PAS DISPO SUR CURSE ----------------------------
-
+L["slotUpgrade"] = "It's an upgrade to your %s by %.1f"
+L["slotDowngrade"] = "It's a downgrade to your %s by %.1f"
+L["pairUpgrade"] = "Paired with %s, it's an upgrade to your %s by %.1f"
+L["equalItemScore"] = "Item score is equal to your equipped item"
 ------------------------------------------------ SUPRIMER CETTE LIGNE ------------------------------------------------

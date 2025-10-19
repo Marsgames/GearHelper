@@ -124,7 +124,33 @@
         "GRAY_FONT_COLOR",
         "CALENDAR_STATUS_TENTATIVE",
         "RATED_BG_BLITZ_SIZE",
-        "NUM_CONTAINER_FRAMES"
+        "NUM_CONTAINER_FRAMES",
+        "NUM_BAG_SLOTS",
+        "INVSLOT_AMMO",
+        "INVSLOT_HEAD",
+        "INVSLOT_NECK",
+        "INVSLOT_SHOULDER",
+        "INVSLOT_BODY",
+        "INVSLOT_CHEST",
+        "INVSLOT_WAIST",
+        "INVSLOT_LEGS",
+        "INVSLOT_FEET",
+        "INVSLOT_WRIST",
+        "INVSLOT_HAND",
+        "INVSLOT_FINGER1",
+        "INVSLOT_FINGER2",
+        "INVSLOT_TRINKET1",
+        "INVSLOT_TRINKET2",
+        "INVSLOT_BACK",
+        "INVSLOT_MAINHAND",
+        "INVSLOT_OFFHAND",
+        "INVSLOT_RANGED",
+        "INVSLOT_TABARD",
+        "GetUnitName",
+        "NUM_TOTAL_EQUIPPED_BAG_SLOTS",
+        "BACKPACK_CONTAINER",
+        "Add",
+        "ITEM_MOD_MELEE_ATTACK_POWER_SHORT"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {
@@ -139,6 +165,6 @@
         "utf8": "disable"
     },
     "Lua.workspace.library": [
-        "~/.vscode/extensions/ketho.wow-api-0.17.4/Annotations"
+        "~/.vscode/extensions/ketho.wow-api-0.20.8/Annotations/Core"
     ]
 }

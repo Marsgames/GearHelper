@@ -1,3 +1,6 @@
+---Add lines on a given tooltip
+---@param tooltip table GameTooltip
+---@param linesToAdd table List of lines to add on the tooltip
 function GearHelper:AddLinesOnTooltip(tooltip, linesToAdd)
     for _, v in pairs(linesToAdd) do
         tooltip:AddLine(v)
@@ -5,6 +8,11 @@ function GearHelper:AddLinesOnTooltip(tooltip, linesToAdd)
     tooltip:AddLine(" ")
 end
 
+---Get localized slot name from its ID
+---@param slotId number Slot ID
+---@param scoreResult table Result of the score comparison --TODO: we should probably pass delta instead of the whole result
+---@param itemIdx number Index of the item (for rings/trinkets)
+---@return string Localized slot name
 function GearHelper:GetLocalizedSlotNameFromId(slotId, scoreResult, itemIdx)
     local localizedSlotName = _G[GearHelper.slotToNameMapping[slotId]]:lower()
 
@@ -17,33 +25,36 @@ function GearHelper:GetLocalizedSlotNameFromId(slotId, scoreResult, itemIdx)
     return localizedSlotName
 end
 
+---Generate tooltip settings from comparison result
+---@param result table Result of the score comparison
+---@return table Tooltip settings
 function GearHelper:GenerateTooltipSettings(result)
     local tooltipSettings = {
         lines = {},
         borderColor = nil
     }
 
-    local slotUpgrade = "It's an upgrade to your %s by %.1f"
-    local slotDowngrade = "It's a downgrade to your %s by %.1f"
-    local pairUpgrade = "Paired with %s, it's an upgrade to your %s by %.1f"
+    local slotUpgrade = self.locals["slotUpgrade"]
+    local slotDowngrade = self.locals["slotDowngrade"]
+    local pairUpgrade = self.locals["pairUpgrade"]
     local itemIdx = 1
 
     for slotId, deltaScore in pairs(result.delta) do
         local localizedSlotName = GearHelper:GetLocalizedSlotNameFromId(slotId, result, itemIdx)
 
         if result.combinable and result.combinable.combinedScoreDelta > 0 then
-            table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(string.format(pairUpgrade, result.combinable.item.name, localizedSlotName, result.combinable.combinedScoreDelta), "Better"))
+            table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(string.format(pairUpgrade, result.combinable.item.name, localizedSlotName, result.combinable.combinedScoreDelta), self.colorsName.BETTER))
             tooltipSettings.borderColor = ITEM_UPGRADE_TOOLTIP_BORDER
         elseif (deltaScore < 0) then
-            table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(string.format(slotDowngrade, localizedSlotName, deltaScore), "LightRed"))
+            table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(string.format(slotDowngrade, localizedSlotName, deltaScore), self.colorsName.LIGHTRED))
             if not tooltipSettings.borderColor then --Otherwise one item is better and we want a green border color
                 tooltipSettings.borderColor = ITEM_DOWNGRADE_TOOLTIP_BORDER
             end
         elseif (deltaScore > 0) then
-            table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(string.format(slotUpgrade, localizedSlotName, deltaScore), "Better"))
+            table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(string.format(slotUpgrade, localizedSlotName, deltaScore), self.colorsName.BETTER))
             tooltipSettings.borderColor = ITEM_UPGRADE_TOOLTIP_BORDER
         else
-            table.insert(tooltipSettings.lines, self.locals["itemEgal"])
+            table.insert(tooltipSettings.lines, self.locals["equalItemScore"])
             tooltipSettings.borderColor = ITEM_EQUAL_TOOLTIP_BORDER
         end
 

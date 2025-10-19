@@ -1,5 +1,8 @@
-local function IgnoreSpec(currentSpec)
-    -- We want to ignore initial specs
+---Check if the current specialization should be ignored
+---@param currentSpec number Current specialization ID
+---@return boolean True if the specialization should be ignored, false otherwise
+local function SpecShouldBeIgnored(currentSpec)
+    -- We want to ignore initial specs (default one when creating a new character)
 
     -- https://wowpedia.fandom.com/wiki/SpecializationID
     local ignoredSpec = {
@@ -18,14 +21,12 @@ local function IgnoreSpec(currentSpec)
         [1446] = true,
     }
 
-    if (ignoredSpec[currentSpec] ~= nil) then
-        return true
-    end
-
-    return false
+    return ignoredSpec[currentSpec] ~= nil
 end
 
-
+---Get stat value from the active template
+---@param statName string Name of the statistic
+---@return number Value of the statistic
 function GearHelper:GetStatFromActiveTemplate(statName)
     if (nil == self.db.profile.weightTemplate) then
         self:Print("WeightTemplate was nil, new value is NOX", "template")
@@ -35,7 +36,7 @@ function GearHelper:GetStatFromActiveTemplate(statName)
     if (self.db.profile.weightTemplate == "NOX" or self.db.profile.weightTemplate == "NOX_ByDefault") then
         local currentSpec = GetSpecializationInfo(GetSpecialization())
 
-        if (IgnoreSpec(currentSpec)) then
+        if (SpecShouldBeIgnored(currentSpec)) then
             return 0
         end
 
@@ -57,6 +58,10 @@ function GearHelper:GetStatFromActiveTemplate(statName)
     return 0
 end
 
+---Save stat value to the active template
+---Used to create custom templates
+---@param statName string Name of the statistic
+---@param value number Value of the statistic
 function GearHelper:SetStatToActiveTemplate(statName, value)
     if (nil == self.db.profile.weightTemplate) then
         self:Print("WeightTemplate was nil, new value is NOX", "template")
@@ -72,7 +77,7 @@ function GearHelper:SetStatToActiveTemplate(statName, value)
     end
 end
 
---All available stats in 10.0.0 builds
+--All available stats in 10.0.0 builds TODO: source?
 --[[
 [ITEM_MOD_ITEM_MOD_AGILITY_SHORT_SHORT] = "ITEM_MOD_AGILITY_SHORT";
 [ITEM_MOD_ARMOR_PENETRATION_RATING_SHORT] = "ARMOR Penetration";
@@ -148,389 +153,396 @@ local baseStatTemplates = {
     -- DEATH KNIGHT BLOOD --
     [250] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.77,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.67,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.57,
-            [ITEM_MOD_STAMINA_SHORT] = 9.07,
-            [ITEM_MOD_STRENGTH_SHORT] = 7.57,
-            [ITEM_MOD_VERSATILITY] = 6.01,
-        }
+           [ITEM_MOD_VERSATILITY] = 42.67,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 42.08,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 38.40,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 30.69,
+           [ITEM_MOD_STRENGTH_SHORT] = 29.61,
+        },
     },
     -- DEATH KNIGHT FROST --
     [251] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.02,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.06,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.02,
-            [ITEM_MOD_STRENGTH_SHORT] = 3.01,
-            [ITEM_MOD_VERSATILITY] = 3.02,
-        }
+           [ITEM_MOD_HASTE_RATING_SHORT] = 71.28,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 70.98,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 67.66,
+           [ITEM_MOD_VERSATILITY] = 66.09,
+           [ITEM_MOD_STRENGTH_SHORT] = 41.93,
+        },
     },
     -- DEATH KNIGHT UNHOLY --
     [252] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.43,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.99,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.99,
-            [ITEM_MOD_STRENGTH_SHORT] = 4.12,
-            [ITEM_MOD_VERSATILITY] = 4.73,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 100.34,
+           [ITEM_MOD_VERSATILITY] = 64.21,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 62.13,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 52.49,
+           [ITEM_MOD_STRENGTH_SHORT] = 44.71,
+        },
     },
     -- DEMON HUNTER HAVOC --
     [577] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 7.58,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 7.02,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.72,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.21,
-            [ITEM_MOD_VERSATILITY] = 7.17,
-        }
+           [ITEM_MOD_VERSATILITY] = 57.70,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 54.79,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 54.10,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 41.80,
+           [ITEM_MOD_AGILITY_SHORT] = 36.49,
+        },
     },
     -- DEMON HUNTER VENGEANCE --
     [581] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 6.15,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.59,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.05,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.05,
-            [ITEM_MOD_VERSATILITY] = 5.65,
-        }
+           [ITEM_MOD_VERSATILITY] = 30.52,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 27.60,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 25.42,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 21.90,
+           [ITEM_MOD_AGILITY_SHORT] = 18.49,
+        },
     },
     -- DRUID BALANCE --
     [102] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.51,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.3,
-            [ITEM_MOD_VERSATILITY] = 5.3,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 64.55,
+           [ITEM_MOD_VERSATILITY] = 63.05,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 57.60,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 53.45,
+           [ITEM_MOD_INTELLECT_SHORT] = 41.77,
+        },
     },
     -- DRUID FERAL --
     [103] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 7,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.5,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.5,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6,
-            [ITEM_MOD_VERSATILITY] = 5.5,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 60.60,
+           [ITEM_MOD_VERSATILITY] = 60.31,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 56.87,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 51.05,
+           [ITEM_MOD_AGILITY_SHORT] = 38.31,
+        },
     },
     -- DRUID GUARDIAN --
     [104] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 7.54,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.01,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.21,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.63,
-            [ITEM_MOD_STAMINA_SHORT] = 7.82,
-            [ITEM_MOD_VERSATILITY] = 6.04,
-        }
+           [ITEM_MOD_VERSATILITY] = 36.99,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 35.82,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 32.42,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 27.75,
+           [ITEM_MOD_AGILITY_SHORT] = 23.54,
+        },
     },
     -- DRUID RESTORATION --
     [105] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.57,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.59,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.21,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.61,
-            [ITEM_MOD_VERSATILITY] = 6.54,
-        }
+           [ITEM_MOD_INTELLECT_SHORT] = 19.00,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 15.20,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 14.80,
+           [ITEM_MOD_VERSATILITY] = 11.50,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 9.30,
+        },
+    },
+    -- EVOKER AUGMENTATION --
+    [1473] = {
+        ["NOX"] = {
+           [ITEM_MOD_INTELLECT_SHORT] = 19.00,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 15.20,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 12.80,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 10.50,
+           [ITEM_MOD_VERSATILITY] = 8.30,
+        },
     },
     -- EVOKER DEVASTATION --
     [1467] = {
         ["NOX"] = {
-            [ITEM_MOD_INTELLECT_SHORT] = 6.05,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 7.51,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.3,
-            [ITEM_MOD_VERSATILITY] = 5.3,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 53.81,
+           [ITEM_MOD_VERSATILITY] = 52.43,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 47.33,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 38.64,
+           [ITEM_MOD_INTELLECT_SHORT] = 37.91,
+        },
     },
     -- EVOKER PRESERVATION --
     [1468] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.57,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.59,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.21,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.61,
-            [ITEM_MOD_VERSATILITY] = 6.54,
-        }
+           [ITEM_MOD_INTELLECT_SHORT] = 19.00,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 15.20,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 12.80,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 11.50,
+           [ITEM_MOD_VERSATILITY] = 9.30,
+        },
     },
     -- HUNTER BEAST MASTERY --
     [253] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 7.56,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.16,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.06,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.04,
-            [ITEM_MOD_VERSATILITY] = 6.02,
-        }
+           [ITEM_MOD_HASTE_RATING_SHORT] = 83.08,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 81.60,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 80.47,
+           [ITEM_MOD_VERSATILITY] = 66.88,
+           [ITEM_MOD_AGILITY_SHORT] = 40.69,
+        },
     },
     -- HUNTER MARKSMANSHIP --
     [254] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 7,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.13,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.12,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.66,
-            [ITEM_MOD_VERSATILITY] = 4.6,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 8,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 64.49,
+           [ITEM_MOD_VERSATILITY] = 59.57,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 59.42,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 53.53,
+           [ITEM_MOD_AGILITY_SHORT] = 32.03,
+        },
     },
     -- HUNTER SURVIVAL --
     [255] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 7.54,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.54,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.04,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3,
-            [ITEM_MOD_VERSATILITY] = 4.13,
-        }
+           [ITEM_MOD_VERSATILITY] = 68.22,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 63.56,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 61.66,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 55.99,
+           [ITEM_MOD_AGILITY_SHORT] = 40.26,
+        },
     },
     -- MAGE ARCANE --
     [62] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.7,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.5,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.03,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.02,
-            [ITEM_MOD_VERSATILITY] = 4.7,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 58.66,
+           [ITEM_MOD_VERSATILITY] = 58.52,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 57.90,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 52.83,
+           [ITEM_MOD_INTELLECT_SHORT] = 41.14,
+        },
     },
     -- MAGE FIRE --
     [63] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.4,
-            [ITEM_MOD_INTELLECT_SHORT] = 6.15,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.8,
-            [ITEM_MOD_VERSATILITY] = 4.8,
-        }
+           [ITEM_MOD_HASTE_RATING_SHORT] = 67.86,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 48.84,
+           [ITEM_MOD_VERSATILITY] = 43.51,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 40.73,
+           [ITEM_MOD_INTELLECT_SHORT] = 33.82,
+        },
     },
     -- MAGE FROST --
     [64] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 7,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.56,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.55,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.01,
-            [ITEM_MOD_VERSATILITY] = 6.08,
-        }
+           [ITEM_MOD_VERSATILITY] = 64.14,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 63.32,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 47.85,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 43.69,
+           [ITEM_MOD_INTELLECT_SHORT] = 40.36,
+        },
     },
     -- MONK BREWMASTER --
     [268] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 3.9,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.06,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.3,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.56,
-            [ITEM_MOD_VERSATILITY] = 6.11,
-        }
+           [ITEM_MOD_AGILITY_SHORT] = 15.20,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 8.90,
+           [ITEM_MOD_VERSATILITY] = 8.90,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 7.50,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 6.80,
+        },
     },
     -- MONK MISTWEAVER --
     [270] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.01,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.01,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.51,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 1.51,
-            [ITEM_MOD_VERSATILITY] = 4.51,
-        }
+           [ITEM_MOD_INTELLECT_SHORT] = 19.00,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 15.20,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 12.80,
+           [ITEM_MOD_VERSATILITY] = 10.50,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 8.30,
+        },
     },
     -- MONK WINDWALKER --
     [269] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 7.57,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.3,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 1.57,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.57,
-            [ITEM_MOD_VERSATILITY] = 6.07,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 70.29,
+           [ITEM_MOD_VERSATILITY] = 70.28,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 60.29,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 51.47,
+           [ITEM_MOD_AGILITY_SHORT] = 37.09,
+        },
     },
     -- PALADIN HOLY --
     [65] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.18,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.56,
-            [ITEM_MOD_INTELLECT_SHORT] = 6.58,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.42,
-            [ITEM_MOD_VERSATILITY] = 6.22,
-        }
+           [ITEM_MOD_INTELLECT_SHORT] = 19.00,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 14.50,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 11.20,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 10.80,
+           [ITEM_MOD_VERSATILITY] = 9.50,
+        },
     },
     -- PALADIN PROTECTION --
     [66] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.85,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.07,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.26,
-            [ITEM_MOD_STRENGTH_SHORT] = 7.57,
-            [ITEM_MOD_VERSATILITY] = 5.26,
-        }
+           [ITEM_MOD_VERSATILITY] = 30.14,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 28.17,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 27.34,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 21.39,
+           [ITEM_MOD_STRENGTH_SHORT] = 19.72,
+        },
     },
     -- PALADIN RETRIBUTION --
     [70] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.59,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.12,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.11,
-            [ITEM_MOD_STRENGTH_SHORT] = 7.57,
-            [ITEM_MOD_VERSATILITY] = 4.58,
-        }
+           [ITEM_MOD_HASTE_RATING_SHORT] = 64.58,
+           [ITEM_MOD_VERSATILITY] = 62.17,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 58.86,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 56.75,
+           [ITEM_MOD_STRENGTH_SHORT] = 38.39,
+        },
     },
     -- PRIEST DISCIPLINE --
     [256] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.52,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.02,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.52,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.48,
-            [ITEM_MOD_VERSATILITY] = 4.48,
-        }
+           [ITEM_MOD_INTELLECT_SHORT] = 15.00,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 12.50,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 9.80,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 9.80,
+           [ITEM_MOD_VERSATILITY] = 8.30,
+        },
     },
     -- PRIEST HOLY --
     [257] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.72,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.11,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.52,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.11,
-            [ITEM_MOD_VERSATILITY] = 5.72,
-        }
+           [ITEM_MOD_INTELLECT_SHORT] = 19.00,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 15.20,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 12.50,
+           [ITEM_MOD_VERSATILITY] = 10.00,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 9.80,
+        },
     },
     -- PRIEST SHADOW --
     [258] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.01,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.12,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.12,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.51,
-            [ITEM_MOD_VERSATILITY] = 4.04,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 69.90,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 62.59,
+           [ITEM_MOD_VERSATILITY] = 61.14,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 58.01,
+           [ITEM_MOD_INTELLECT_SHORT] = 41.80,
+        },
     },
     -- ROGUE ASSASSINATION --
     [259] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 6.93,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.04,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.22,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.63,
-            [ITEM_MOD_VERSATILITY] = 5.45,
-        }
+           [ITEM_MOD_VERSATILITY] = 50.68,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 45.56,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 44.94,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 42.52,
+           [ITEM_MOD_AGILITY_SHORT] = 32.74,
+        },
     },
     -- ROGUE OUTLAW --
     [260] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 5.46,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.31,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.18,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.69,
-            [ITEM_MOD_VERSATILITY] = 4.72,
-        }
+           [ITEM_MOD_VERSATILITY] = 35.60,
+           [ITEM_MOD_AGILITY_SHORT] = 29.12,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 28.65,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 24.33,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 22.74,
+        },
     },
     -- ROGUE SUBTLETY --
     [261] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 5.69,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.31,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.89,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 4.72,
-            [ITEM_MOD_VERSATILITY] = 4.72,
-        }
+           [ITEM_MOD_CRIT_RATING_SHORT] = 42.93,
+           [ITEM_MOD_VERSATILITY] = 42.13,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 38.09,
+           [ITEM_MOD_AGILITY_SHORT] = 34.22,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 26.62,
+        },
     },
     -- SHAMAN ELEMENTAL --
     [262] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.05,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 4.05,
-            [ITEM_MOD_INTELLECT_SHORT] = 5.56,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.96,
-            [ITEM_MOD_VERSATILITY] = 4.05,
-        }
+           [ITEM_MOD_VERSATILITY] = 68.45,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 60.79,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 56.06,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 50.91,
+           [ITEM_MOD_INTELLECT_SHORT] = 44.87,
+        },
     },
     -- SHAMAN ENHANCEMENT --
     [263] = {
         ["NOX"] = {
-            [ITEM_MOD_AGILITY_SHORT] = 1.51,
-            [ITEM_MOD_CRIT_RATING_SHORT] = 6.51,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 7.51,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6.01,
-            [ITEM_MOD_VERSATILITY] = 6.5,
-        }
+           [ITEM_MOD_VERSATILITY] = 58.09,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 54.88,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 49.02,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 39.59,
+           [ITEM_MOD_AGILITY_SHORT] = 37.75,
+        },
     },
     -- SHAMAN RESTORATION --
     [264] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 4.08,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.67,
-            [ITEM_MOD_INTELLECT_SHORT] = 5.58,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.67,
-            [ITEM_MOD_VERSATILITY] = 4.08,
-        }
+           [ITEM_MOD_INTELLECT_SHORT] = 19.00,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 15.20,
+           [ITEM_MOD_VERSATILITY] = 13.50,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 12.80,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 9.60,
+        },
     },
     -- WARLOCK AFFLICTION --
     [265] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.1,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.01,
-            [ITEM_MOD_INTELLECT_SHORT] = 7.5,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 6,
-            [ITEM_MOD_VERSATILITY] = 3,
-        }
+           [ITEM_MOD_VERSATILITY] = 64.83,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 61.47,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 58.48,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 58.05,
+           [ITEM_MOD_INTELLECT_SHORT] = 41.29,
+        },
     },
     -- WARLOCK DEMONOLOGY --
     [266] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.51,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.92,
-            [ITEM_MOD_INTELLECT_SHORT] = 6.98,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.51,
-            [ITEM_MOD_VERSATILITY] = 5.09,
-        }
+           [ITEM_MOD_VERSATILITY] = 56.32,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 53.82,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 42.94,
+           [ITEM_MOD_INTELLECT_SHORT] = 36.27,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 31.84,
+        },
     },
     -- WARLOCK DESTRUCTION --
     [267] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.26,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 5.41,
-            [ITEM_MOD_INTELLECT_SHORT] = 6.42,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.41,
-            [ITEM_MOD_VERSATILITY] = 4.61,
-        }
+           [ITEM_MOD_VERSATILITY] = 66.18,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 64.71,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 61.74,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 59.96,
+           [ITEM_MOD_INTELLECT_SHORT] = 41.96,
+        },
     },
     -- WARRIOR ARMS --
     [71] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.29,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3.3,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 2.6,
-            [ITEM_MOD_STRENGTH_SHORT] = 2,
-            [ITEM_MOD_VERSATILITY] = 2.7,
-        }
+           [ITEM_MOD_VERSATILITY] = 59.07,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 55.51,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 53.77,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 51.61,
+           [ITEM_MOD_STRENGTH_SHORT] = 34.80,
+        },
     },
     -- WARRIOR FURY --
     [72] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 3.6,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 3,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 3.15,
-            [ITEM_MOD_STRENGTH_SHORT] = 2,
-            [ITEM_MOD_VERSATILITY] = 2.78,
-            [ITEM_MOD_DAMAGE_PER_SECOND_SHORT] = 7.5,
-        }
+           [ITEM_MOD_VERSATILITY] = 54.51,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 49.12,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 48.29,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 42.75,
+           [ITEM_MOD_STRENGTH_SHORT] = 30.45,
+        },
     },
     -- WARRIOR PROTECTION --
     [73] = {
         ["NOX"] = {
-            [ITEM_MOD_CRIT_RATING_SHORT] = 5.67,
-            [ITEM_MOD_HASTE_RATING_SHORT] = 6.08,
-            [ITEM_MOD_MASTERY_RATING_SHORT] = 5.24,
-            [ITEM_MOD_STRENGTH_SHORT] = 4.83,
-            [ITEM_MOD_VERSATILITY] = 5.67,
-        }
+           [ITEM_MOD_STRENGTH_SHORT] = 15.00,
+           [ITEM_MOD_HASTE_RATING_SHORT] = 12.50,
+           [ITEM_MOD_CRIT_RATING_SHORT] = 10.80,
+           [ITEM_MOD_VERSATILITY] = 10.50,
+           [ITEM_MOD_MASTERY_RATING_SHORT] = 8.20,
+        },
     },
 }
 
+---Load default stats template into the database
 function GearHelper:LoadBaseStatTemplates()
     GearHelper.db.global.templates = baseStatTemplates
 end
