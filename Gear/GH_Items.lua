@@ -126,6 +126,10 @@ function GHItem:IsEquippedItem(ghLink)
     -- If it's equipped, then we compare ilvl to be sure it's the same item (in case of different bonusIDs)
 
     local inventoryType = C_Item.GetItemInventoryTypeByID(ghLink.id)
+
+    if GearHelperVars.charInventory[inventoryType] == nil then
+        return false
+    end
     local equippedItemLvl = GearHelperVars.charInventory[inventoryType].iLvl
 
     local newItemIlvl = C_Item.GetDetailedItemLevelInfo(ghLink.itemLink)
