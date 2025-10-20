@@ -132,7 +132,6 @@ local function AddIconTo(frame, suffix)
     localFrame.GearHelperIconTexture:SetShown(true)
     -- localFrame:SetScript("OnUpdate", CIMIOnUpdateFuncMaker(updateIconFunc))
 
-    print("overlay added")
     return localFrame
 end
 
