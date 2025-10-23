@@ -1,15 +1,15 @@
-function GearHelper:IsItemBetter(item)
-    GearHelper:Print("IsItemBetter - " .. item.itemLink, "itemCompare")
+function GearHelper:IsItemBetter(ghItem)
+    GearHelper:Print("IsItemBetter - " .. ghItem.itemLink, "itemCompare")
 
-    if item.isEmpty or not item:IsEquippableByMe() then
+    if ghItem.isEmpty or not ghItem:IsEquippableByMe() then
         return false
     end
 
-    if GHItem:IsEquippedItem(item) then
+    if GHItem:IsEquippedItem(ghItem) then
         return false
     end
 
-    local result = self:CompareWithEquipped(item)
+    local result = self:CompareWithEquipped(ghItem)
     local isBetter = false
 
     if result.combinable and result.combinable.combinedScoreDelta > 0 then

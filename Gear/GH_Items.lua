@@ -117,24 +117,29 @@ function GHItem:GetStats()
     return self.stats
 end
 
-function GHItem:IsEquippedItem(ghLink)
+---Check if the item is currently equipped
+---Rely on C_Item.IsEquippedItem if the item is not equipped
+---BUT compare item level with equipped item if C_Item.IsEquippedItem says it's equipped
+---@param ghItem GHItem The result of GHItem:Create(itemLink)
+---@return boolean True if the item is equipped, false otherwise
+function GHItem:IsEquippedItem(ghItem)
     -- If WoW API says that it's not equipped, we are sure it's not equipped
-    if not C_Item.IsEquippedItem(ghLink.id) then
+    if not C_Item.IsEquippedItem(ghItem.id) then
         return false
     end
 
-    -- If it's equipped, then we compare ilvl to be sure it's the same item (in case of different bonusIDs)
+    local bagItem = Item:CreateFromItemLink(ghItem.itemLink)
+    local bagItemIlvl = bagItem:GetCurrentItemLevel()
+    local bagItemEquipLoc = bagItem:GetInventoryType()
 
-    local inventoryType = C_Item.GetItemInventoryTypeByID(ghLink.id)
-
-    if GearHelperVars.charInventory[inventoryType] == nil then
+    local equippedItem = Item:CreateFromEquipmentSlot(bagItemEquipLoc - 1)
+    if equippedItem:IsItemEmpty() then
         return false
     end
-    local equippedItemLvl = GearHelperVars.charInventory[inventoryType].iLvl
 
-    local newItemIlvl = C_Item.GetDetailedItemLevelInfo(ghLink.itemLink)
+    local equippedItemIlvl = equippedItem:GetCurrentItemLevel()
 
-    return equippedItemLvl == newItemIlvl
+    return bagItemIlvl == equippedItemIlvl
 end
 
 function GHItem:IsEquippableByMe()
@@ -179,22 +184,6 @@ function GHItem:IsEquippableByMe()
             end
         )
         return isEquippable
-    end
-end
-
-function GHItem:IsEquipped()
-    if not C_Item.IsEquippedItem(self.itemLink) then --Quick check, we can rely on value returned here
-        return false
-    else --However we can't rely on IsEquippedItem because it behaves weirdly on items with different bonusIDs
-        local equippedItems = GearHelper:GetEquippedItems(self.equipLoc)
-
-        for _, equippedItem in pairs(equippedItems.items) do
-            if equippedItem.itemLink == self.itemLink then
-                return true
-            end
-        end
-
-        return false
     end
 end
 

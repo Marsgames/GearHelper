@@ -99,6 +99,10 @@ local function GetNameOrID(frame)
     end
 end
 
+--- Add an upgrade icon overlay to a frame
+--- @param frame Frame The frame to add the icon to
+--- @param suffix string|nil An optional suffix to identify the frame
+--- @return Frame The created overlay frame
 local function AddIconTo(frame, suffix)
     if not frame then
         print("No frame provided to add icon")
@@ -130,11 +134,12 @@ local function AddIconTo(frame, suffix)
     localFrame.GearHelperIconTexture:SetPoint("TOPLEFT")
     localFrame.GearHelperIconTexture:SetAtlas("bags-greenarrow", true)
     localFrame.GearHelperIconTexture:SetShown(true)
-    -- localFrame:SetScript("OnUpdate", CIMIOnUpdateFuncMaker(updateIconFunc))
 
     return localFrame
 end
 
+--- Show upgrade icons on items in a container
+--- @param container ContainerFrame The container frame to show icons on
 function GearHelper:ShowUpgradeOnItemsIconsForContainer(container)
     -- Continue if there is no equiped bag
     if container == nil then
@@ -153,13 +158,11 @@ function GearHelper:ShowUpgradeOnItemsIconsForContainer(container)
         -- Ensure there is an item in the slot
         if C_Item.DoesItemExist(itemLocation) then
             local itemName = C_Item.GetItemName(itemLocation)
-            -- Ensure item is equippable (not a consumable, etc)
-            local isEquippable = C_Item.IsEquippableItem(itemName)
-            if isEquippable then
+            if itemName ~= nil then
                 -- Ensure Blizzard is returning an item link
-                local wowItemLink = C_Item.GetItemLink(itemLocation)
-                if wowItemLink then
-                    local ghItemLink = GHItem:Create(wowItemLink)
+                local bagItemWoWLink = C_Item.GetItemLink(itemLocation)
+                if bagItemWoWLink then
+                    local ghItemLink = GHItem:Create(bagItemWoWLink)
                     local suffix = GetNameOrID(slot:GetParent()) .. "." .. GetNameOrID(slot)
 
                     -- Check if the item is better than the equipped one
@@ -172,21 +175,8 @@ function GearHelper:ShowUpgradeOnItemsIconsForContainer(container)
     end
 end
 
-function GearHelper:ShowUpgradeOnItemsIcons()
-    for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-        -- self:ShowUpgradeOnItemsIconsForBag(bagId)
-    end
-
-    ContainerFrame_UpdateAll()
-end
-
-function GearHelper:HideUpgradeOnItemsIcons()
-    for bagId = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-        -- local container = ContainerFrame_GetContainerFrameFromBagID(bagId)
-        -- self:HideUpgradeOnItemsIconsForContainer(container)
-    end
-end
-
+--- Hide upgrade icons on items in a container
+--- @param container ContainerFrame The container frame to hide icons on
 function GearHelper:HideUpgradeOnItemsIconsForContainer(container)
     -- Continue if there is no equiped bag
     if container == nil then
@@ -204,6 +194,7 @@ function GearHelper:HideUpgradeOnItemsIconsForContainer(container)
     end
 end
 
+--- Hook the bag open function to show upgrade icons on items
 function GearHelper:HookBagOpen()
     for _, frame in ContainerFrameUtil_EnumerateContainerFrames() do
         hooksecurefunc(
