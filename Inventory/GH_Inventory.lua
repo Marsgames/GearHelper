@@ -51,7 +51,7 @@ function GearHelper:GetEquippedItems(equipLoc)
 
     result.items = {}
 
-    for i, slotId in ipairs(result.slots) do
+    for _, slotId in ipairs(result.slots) do
         result.items[slotId] = GearHelperVars.charInventory[slotId]
     end
 

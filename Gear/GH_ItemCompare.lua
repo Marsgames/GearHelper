@@ -16,7 +16,9 @@ function GearHelper:IsItemBetter(ghItem)
         isBetter = true
     else
         for _, deltaScore in pairs(result.delta) do
-            isBetter = deltaScore > 0
+            if not isBetter then
+                isBetter = deltaScore > 0
+            end
         end
     end
 
@@ -49,17 +51,18 @@ local function GetItemWithBestScore(itemList)
     return bestItem
 end
 
-function GearHelper:CompareWithEquipped(item)
-    GearHelper:Print("CompareWithEquipped - " .. item.itemLink, "itemCompare")
+function GearHelper:CompareWithEquipped(ghItem)
+    GearHelper:Print("CompareWithEquipped - " .. ghItem.itemLink, "itemCompare")
+
     local result = {}
-    local equippedItems = GearHelper:GetEquippedItems(item.equipLoc)
+    local equippedItems = GearHelper:GetEquippedItems(ghItem.equipLoc)
     local equippedItemsScore = GearHelper:GetEquippedItemsScore(equippedItems)
 
-    if GearHelper:IsComparedItem1HTestedAgainst2HWeapon(item.equipLoc) then
+    if GearHelper:IsComparedItem1HTestedAgainst2HWeapon(ghItem.equipLoc) then
         GearHelper:Print("Comparing a 1 Hand weapon against a 2 Hands, trying to find a pairable in bags...", "itemCompare")
         local pairableItems = {}
 
-        if INVTYPE_1H_OFFHAND[item.equipLoc] then -- Compared item is a offhand trying to find a mainhand
+        if INVTYPE_1H_OFFHAND[ghItem.equipLoc] then -- Compared item is a offhand trying to find a mainhand
             GearHelper:Print("Item is a offhand trying to find a mainhand...", "itemCompare")
             pairableItems = GearHelper:FindItemInBags(INVTYPE_1H_MAINHAND)
         else -- Compared item is a main hand trying to find an offhand
@@ -72,13 +75,13 @@ function GearHelper:CompareWithEquipped(item)
         }
         GearHelper:Print("Best item to pair is " .. result.combinable.item.itemLink, "itemCompare")
 
-        local itemScore = item:GetScore()
+        local itemScore = ghItem:GetScore()
         local pairableItemScore = result.combinable.item:GetScore()
 
         -- TODO: Not sure at all about this
         local score = 0
         if (equippedItemsScore[0] == nil) then
-            for k, v in pairs(equippedItemsScore) do
+            for _, v in pairs(equippedItemsScore) do
                 score = score + v
             end
         else
@@ -89,7 +92,7 @@ function GearHelper:CompareWithEquipped(item)
         result.combinable.combinedScoreDelta = (itemScore + pairableItemScore) - score
     end
 
-    result.comparedItemScore = item:GetScore()
+    result.comparedItemScore = ghItem:GetScore()
     result.delta = {}
     for slotId, score in pairs(equippedItemsScore) do
         result.delta[slotId] = result.comparedItemScore - score

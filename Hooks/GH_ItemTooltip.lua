@@ -15,8 +15,8 @@ function GearHelper:HookItemTooltip()
             return
         end
 
-        local item = GHItem:Create(tooltipItemLink)
-        if item.isEmpty then
+        local ghItem = GHItem:Create(tooltipItemLink)
+        if ghItem.isEmpty then
             return
         end
 
@@ -25,15 +25,15 @@ function GearHelper:HookItemTooltip()
             borderColor = nil
         }
 
-        if item:IsEquippedItem(item) then -- Item equipped, yellow overlay on tooltip
+        if GHItem:IsEquippedItem(ghItem) then -- Item equipped, yellow overlay on tooltip
             GearHelper:Print("OnToolTipSetItem - Item already equipped, applying yellow overlay", "itemTooltip")
             tooltipSettings.borderColor = ITEM_EQUAL_TOOLTIP_BORDER
             table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(GearHelper.locals["itemEquipped"], "Yellow"))
-        elseif item:IsEquippableByMe() then
+        elseif ghItem:IsEquippableByMe() then
             GearHelper:Print("OnToolTipSetItem - Item not equipped, comparing score...", "itemTooltip")
-            local result = GearHelper:CompareWithEquipped(item)
+            local result = GearHelper:CompareWithEquipped(ghItem)
             tooltipSettings = GearHelper:GenerateTooltipSettings(result)
-        elseif ShouldDisplayNotEquippable(item) then -- Item not equippable, red overlay on tooltip
+        elseif ShouldDisplayNotEquippable(ghItem) then -- Item not equippable, red overlay on tooltip
             GearHelper:Print("OnToolTipSetItem - Item not equippable, applying red overlay", "itemTooltip")
             table.insert(tooltipSettings.lines, GHToolbox:ColorizeString(GearHelper.locals["itemNotEquippable"], "LightRed"))
             tooltipSettings.borderColor = ITEM_DOWNGRADE_TOOLTIP_BORDER
@@ -42,7 +42,7 @@ function GearHelper:HookItemTooltip()
         if tooltipSettings.borderColor then
             tooltip.NineSlice:SetBorderColor(tooltipSettings.borderColor.r, tooltipSettings.borderColor.g, tooltipSettings.borderColor.b)
         end
-        tooltipSettings.lines = GHToolbox:TableConcat(tooltipSettings.lines, GearHelper:GetDropInfo(item))
+        tooltipSettings.lines = GHToolbox:TableConcat(tooltipSettings.lines, GearHelper:GetDropInfo(ghItem))
 
         GearHelper:AddLinesOnTooltip(tooltip, tooltipSettings.lines)
     end

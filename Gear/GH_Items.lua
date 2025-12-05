@@ -194,6 +194,7 @@ function GHItem:GetScore()
     if self.isEmpty then
         return 0
     end
+
     if GearHelper.db.profile.iLvlOption == true then
         if (GearHelper.db.profile.iLvlWeight == nil or GearHelper.db.profile.iLvlWeight == "") then
             GearHelper.db.profile.iLvlWeight = 10
