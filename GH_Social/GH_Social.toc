@@ -1,0 +1,22 @@
+## Interface: 120007
+## Title: GH_Social
+## Notes: Social features for GearHelper (auto-invite, whisper alert, boss tracking)
+## Author: Marsgames
+## Version: 1.0
+## DefaultState: enabled
+
+## Category: GearHelper
+
+## RequiredDeps: GH_Utils, GearHelper
+
+## X-BugReport: https://github.com/Marsgames/GearHelper/issues
+
+## SavedVariables: GH_SocialDB
+
+########## Addon ##########
+GH_Social_Core.lua
+GH_Social_Events.lua
+Events\GHS_Chat.lua
+Events\GHS_Group.lua
+GH_RaidFinder.lua
+GH_Social_Options.lua
