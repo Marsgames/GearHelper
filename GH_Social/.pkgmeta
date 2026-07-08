@@ -1,0 +1,10 @@
+package-as: GH_Social
+enable-nolib-creation: no
+
+ignore:
+ - .github
+ - .vscode
+ - .gitattributes
+ - .gitignore
+ - .luacheckrc
+ - README.md

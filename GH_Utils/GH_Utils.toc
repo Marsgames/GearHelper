@@ -7,10 +7,9 @@
 
 ## Category: GearHelper
 
-## X-BugReport: https://github.com/Marsgames/GearHelper/issues
+## RequiredDeps: Ace3
 
-########## Libs ##########
-embeds.xml
+## X-BugReport: https://github.com/Marsgames/GearHelper/issues
 
 ########## Addon Files ##########
 GH_Exceptions.lua

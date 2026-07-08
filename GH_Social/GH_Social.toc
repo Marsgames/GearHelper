@@ -1,5 +1,5 @@
 ## Interface: 120007
-## Title: GH_Social
+## Title: GearHelper_Social
 ## Notes: Social features for GearHelper (auto-invite, whisper alert, boss tracking)
 ## Author: Marsgames
 ## Version: 1.0

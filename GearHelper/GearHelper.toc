@@ -11,7 +11,7 @@
 
 ## Category: GearHelper
 
-## RequiredDeps: GH_Utils, CallbackHandler-1.0, LibBabble-Inventory-3.0, LibRealmInfo, LibStub
+## RequiredDeps: GH_Utils, LibBabble-Inventory-3.0, LibRealmInfo
 
 ## X-Author-Faction: Horde
 ## X-Author-Server: (EU) Temple-Noir
