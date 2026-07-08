@@ -8,10 +8,11 @@ import pathlib
 wowClassesUrl = "https://wowpedia.fandom.com/wiki/SpecializationID"
 noxxic_base_url = "https://www.noxxic.com/wow/guide"
 noxxic_stats_prefix = "/stat-priority/"
-
-# Get actual path
-path = pathlib.Path(__file__).parent.resolve()
-
+# get current path
+path = f"{pathlib.Path(__file__).parent.resolve()}/"
+# path = "/Users/Raph/Documents/HE/WebScraping/"
+# path = "/Users/rd-headcrab/Library/Mobile Documents/com~apple~CloudDocs/Documents/HE/WebScraping/"
+# path = ""
 linksDic = {}
 response = None
 f1_text = ""
@@ -29,8 +30,6 @@ class GHTemplateHelper:
         self.template_string = template_string
 
 def get_classes():
-    """ Populate linksDic with WoWClassSpec objects for each class/spec """
-    
     global linksDic
     
     # TODO: get classes from wowwiki to have it always up to date
@@ -43,6 +42,7 @@ def get_classes():
         
         577: WoWClassSpec("Demon-Hunter", "Havoc", 577),
         581: WoWClassSpec("Demon-Hunter", "Vengeance", 581),
+        1480: WoWClassSpec("Demon-Hunter", "Devourer", 1480),
         
         102: WoWClassSpec("Druid", "Balance", 102),
         103: WoWClassSpec("Druid", "Feral", 103),
@@ -93,8 +93,6 @@ def get_classes():
 class PawnTools:
     @staticmethod
     def clean_pawn_string(pawn_string) -> str:
-        """ Clean pawn string to have consistent keys """
-        
         pawn_string = pawn_string.replace("HasteRating", "Haste")
         pawn_string = pawn_string.replace("CritRating", "CriticalStrike")
         pawn_string = pawn_string.replace("MasteryRating", "Mastery")
@@ -105,8 +103,6 @@ class PawnTools:
 
     @staticmethod
     def pawn_dictionary_from_string(pawn_string) -> dict:
-        """ Convert pawn string to dictionary """
-        
         # '( Pawn: v1: "Blood Death Knight (Noxxic)": Class=Death Knight, Spec=Blood, Versatility=42.67, Mastery=42.08, CriticalStrike=38.40, Haste=30.69, Strength=29.61 )'
         pawn_string = PawnTools.clean_pawn_string(pawn_string)
         pawn_dict = {}
@@ -121,8 +117,6 @@ class PawnTools:
 
     @staticmethod
     def pawn_stat_converter(pawn_dict) -> dict:
-        """ Convert pawn dictionary keys to GearHelper keys """
-        
         stat_conversion = {
             "intellect": "ITEM_MOD_INTELLECT_SHORT",
             "haste": "ITEM_MOD_HASTE_RATING_SHORT",
@@ -143,8 +137,6 @@ class PawnTools:
 
     @staticmethod
     def generate_gh_template_from_pawn_dictionary(pawn_dict) -> str:
-        """ Generate GearHelper template string from pawn dictionary """
-        
         gh_string = ""
         pawn_dict = PawnTools.pawn_stat_converter(pawn_dict)
 
@@ -154,8 +146,6 @@ class PawnTools:
         return gh_string
 
 def generate_gh_template_for_class(class_spec: WoWClassSpec, templates: dict) -> str:
-    """ Generate GearHelper template for a given class/spec from multiple sources """
-    
     class_name = class_spec.class_name
     spec_name = class_spec.spec_name
     spec_id = class_spec.spec_id
@@ -172,8 +162,6 @@ def generate_gh_template_for_class(class_spec: WoWClassSpec, templates: dict) ->
     return class_template
 
 def get_noxxic_stats():
-    """ Scrape noxxic stats and create part2.txt file """
-    
     global wowClassesUrl
     global path
     global linksDic
@@ -182,7 +170,7 @@ def get_noxxic_stats():
     retry_list = []
 
     # Create a file named "part2" wich will contain noxxic stats
-    with open(f"{str(path)}/part2.txt", "w") as file:
+    with open(str(path) + "part2.txt", "w") as file:
         # foreach element in linksDic
         for spec_id, wowClassSpec in linksDic.items():
             class_name = wowClassSpec.class_name
@@ -216,35 +204,85 @@ def get_noxxic_stats():
         time.sleep(1)
 
 def create_WeightValues_file():
-    """ Create GH_Template.lua file by concatenating part1, part2 and part3 """
-    
     global path
     global f1_text
     global f2_text
 
     # Concatenate files part1, part2 and part3
     filenames = [
-        f"{str(path)}/part1.txt",
-        f"{str(path)}/part2.txt",
-        f"{str(path)}/part3.txt",
+        str(path) + "part1.txt",
+        str(path) + "part2.txt",
+        str(path) + "part3.txt",
     ]
-    with open(f"{str(path)}/GH_Template.lua", "w") as StatsActuelles:
+    with open(str(path) + "StatsActuelles.txt", "w") as StatsActuelles:
         for parts in filenames:
             with open(parts) as infile:
                 StatsActuelles.write(infile.read())
 
     # Remove file part2 (the one created with noxxic values)
-    os.remove(f"{str(path)}/part2.txt")
+    os.remove(str(path) + "part2.txt")
 
-def replace_file():
-    """ Move GH_Template.lua to ../Gear/GH_Template.lua """
-    
+    # Remove return if we want to checkdiff
+    return
+    with open(str(path) + "StatsActuelles.txt") as f1:
+        f1_text = f1.read()
+    with open(
+        "/Applications/World of Warcraft/_retail_/Interface/AddOns/GearHelper/WeightValues.lua"
+    ) as f2:
+        f2_text = f2.read()
+
+
+def CheckDiff():  # -> bool:
+    global f1_text
+    global f2_text
+
+    # Find differences
+    diffs = 0
+
+    for line in difflib.unified_diff(
+        f1_text, f2_text, fromfile="file1", tofile="file2", lineterm=""
+    ):
+        diffs += 1
+
+    # The notifier function
+    def notify(title, message):
+        # This requires a mac + terminal-notifier + the right path
+        # Do not call this function if you do not need it
+        # os.system(
+        #     'terminal-notifier -title "'
+        #     + title
+        #     + '" -message "'
+        #     + message
+        #     + '" -activate com.apple.Terminal -execute "wdiff /Applications/World\ of\ Warcraft/_retail_/Interface/AddOns/GearHelper/WeightValues.lua /Users/rd-headcrab/Documents/GH/statsAJour.txt | colordiff" -appIcon "https://media.forgecdn.net/avatars/thumbnails/54/445/64/64/636135209663914354.png"'
+        # )
+        pass
+
+    # Show notification if any diff
+    if diffs > 0:
+        # Calling the function
+        notify(title="GearHelper", message="Les stats Noxxic ont changées !!")
+        return True
+    return False
+
+
+def RemoveUnusedFiles():
     global path
 
-    source = f"{str(path)}/GH_Template.lua"
-    destination = f"{str(path.parent)}/Gear/GH_Template.lua"
-    
-    os.replace(source, destination) 
+    # Remove unused files
+    os.system(
+        f"mv -f {str(path)}StatsActuelles.txt ../Gear/GH_Template.lua"
+    )
+    os.remove(str(path) + "StatsActuelles.txt")
+    os.remove(
+        "/Applications/World of Warcraft/_retail_/Interface/AddOns/GearHelper/WeightValues.lua"
+    )
+    os.system(
+        "cp "
+        + str(path)
+        + "WeightValues.lua "
+        + '"/Applications/World of Warcraft/_retail_/Interface/AddOns/GearHelper/"'
+    )
+
 
 if "__main__" == __name__:
     # pawn_string = '( Pawn: v1: "Blood Death Knight (Noxxic)": Class=Death Knight, Spec=Blood, Versatility=42.67, MasteryRating=42.08, CritRating=38.40, HasteRating=30.69, Strength=29.61 )'
@@ -256,7 +294,8 @@ if "__main__" == __name__:
 
     get_classes()
     get_noxxic_stats()
-    create_WeightValues_file()
+    create_WeightValues_file()    
     
-    replace_file()
-    print("ok")
+    # CheckDiff()
+    # RemoveUnusedFiles()
+    print("StatsActuelles.txt is now up to date")

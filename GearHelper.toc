@@ -1,11 +1,11 @@
-## Interface: 110205
+## Interface: 120007
 ## Title: |cFF00FF00GearHelper_Core|r
 ## Notes: Un addon qui permet de choisir pour vous le stuff le plus approprié à votre classe / spé
 ## Notes-enUS: Manage your gear during your level up and after
 ### Notes-deDE: Manage your gear during your level up and after
 ## Notes-ruRU: Управляет вашими вещами во время прокачки и на максимальном уровне персонажа
 ## Author:  Marsgames & Tempaxe
-## Version: 3.3.16
+## Version: 3.3.17
 ## DefaultState: enabled
 ## IconTexture: Interface\ICONS\INV_Misc_Bag_08
 
