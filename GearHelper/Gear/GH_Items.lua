@@ -123,23 +123,23 @@ end
 ---@param ghItem GHItem The result of GHItem:Create(itemLink)
 ---@return boolean True if the item is equipped, false otherwise
 function GHItem:IsEquippedItem(ghItem)
-    -- If WoW API says that it's not equipped, we are sure it's not equipped
     if not C_Item.IsEquippedItem(ghItem.id) then
         return false
     end
 
-    local bagItem = Item:CreateFromItemLink(ghItem.itemLink)
-    local bagItemIlvl = bagItem:GetCurrentItemLevel()
-    local bagItemEquipLoc = bagItem:GetInventoryType()
-
-    local equippedItem = Item:CreateFromEquipmentSlot(bagItemEquipLoc - 1)
-    if equippedItem:IsItemEmpty() then
+    local slotInfo = GearHelper.itemSlot[ghItem.equipLoc]
+    if not slotInfo then
         return false
     end
 
-    local equippedItemIlvl = equippedItem:GetCurrentItemLevel()
+    for _, slotId in ipairs(slotInfo.slots) do
+        local equippedItem = GearHelperVars.charInventory[slotId]
+        if equippedItem and not equippedItem.isEmpty and equippedItem.iLvl == ghItem.iLvl then
+            return true
+        end
+    end
 
-    return bagItemIlvl == equippedItemIlvl
+    return false
 end
 
 function GHItem:IsEquippableByMe()

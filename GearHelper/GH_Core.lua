@@ -8,7 +8,7 @@ local function ResetProfileOnMajorUpdate()
         GearHelper:Print("Major update detected, resetting whole database...")
         GearHelper.db:ResetDB()
         print("Major update detected database has been reset. Please verify your settings.")
-        Settings.OpenToCategory("GearHelper")
+        C_Timer.After(0, function() Settings.OpenToCategory("GearHelper") end)
     end
 end
 

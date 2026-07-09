@@ -149,12 +149,13 @@ DT.userdataSymbols = {}
 local funcSyms = DT.functionSymbols
 local userSyms = DT.userdataSymbols
 
-for k,v in pairs(getfenv(0)) do
-	if (type(v) == 'function') then
-		table.insert(funcSyms, k);
-	elseif (type(v) == 'table') then
-		if (type(rawget(v,0)) == 'userdata') then
-			table.insert(userSyms, k);
-		end
-	end
-end
+-- Désactivé : getfenv(0) / rawget sur _G cause taint avec Secret Values (patch 12.0)
+-- for k,v in pairs(getfenv(0)) do
+-- 	if (type(v) == 'function') then
+-- 		table.insert(funcSyms, k);
+-- 	elseif (type(v) == 'table') then
+-- 		if (type(rawget(v,0)) == 'userdata') then
+-- 			table.insert(userSyms, k);
+-- 		end
+-- 	end
+-- end

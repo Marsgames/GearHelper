@@ -3,7 +3,7 @@
 -- waitSpeFrame:Hide()
 
 -- TODO: Split this shit too
-function GHEvents:PLAYER_ENTERING_WORLD()    
+function GHEvents:PLAYER_ENTERING_WORLD()
     local used = false
     for i = 1, NUM_CHAT_WINDOWS do
         local _, _, _, _, _, _, _, _, _, uninteractable = GetChatWindowInfo(i)
@@ -16,10 +16,10 @@ function GHEvents:PLAYER_ENTERING_WORLD()
         ReloadUI()
     end
 
-    GearHelper:BuildCWTable()
+    securecall(GearHelper.BuildCWTable, GearHelper)
 
     -- This UpdateItemsInBags is causing an issue
-    GearHelper:UpdateItemsInBags(0) -- Backpack is the only bag to not throw BAG_UPDATE on login
+    GearHelper:UpdateItemsInBags(0)
 
     GearHelper:ScanCharacter()
 end
