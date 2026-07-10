@@ -1,8 +1,8 @@
-## Interface: 120007
+## Interface: 120100
 ## Title: GearHelper Utils
 ## Notes: Lib for GearHelper addons
 ## Author: Marsgames
-## Version: 1.1
+## Version: 1.2
 ## IconTexture: Interface\ICONS\INV_Misc_EngGizmos_37
 
 ## Category: GearHelper
