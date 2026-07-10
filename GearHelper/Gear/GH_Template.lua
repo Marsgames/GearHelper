@@ -42,20 +42,16 @@ function GearHelper:GetStatFromActiveTemplate(statName)
 
         if (self.db.global.templates[currentSpec] ~= nil) then
             if (self.db.global.templates[currentSpec]["NOX"] ~= nil) then
-                if (self.db.global.templates[currentSpec]["NOX"][statName] ~= nil) then
-                    return self.db.global.templates[currentSpec]["NOX"][statName]
-                end
+                return self.db.global.templates[currentSpec]["NOX"][statName] or 0
             end
         end
     else
         if (self.db.profile.CW[self.db.profile.weightTemplate] ~= nil) then
-            if (self.db.profile.CW[self.db.profile.weightTemplate][statName] ~= nil) then
-                return self.db.profile.CW[self.db.profile.weightTemplate][statName]
-            end
+            return self.db.profile.CW[self.db.profile.weightTemplate][statName] or 0
         end
     end
 
-    return 1
+    return 0
 end
 
 ---Save stat value to the active template

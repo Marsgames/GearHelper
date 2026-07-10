@@ -16,10 +16,12 @@ function GHEvents:BAG_UPDATE_DELAYED()
 
     GearHelper:ScanCharacter()
 
-    for _, frame in ContainerFrameUtil_EnumerateContainerFrames() do
-        GearHelper:HideUpgradeOnItemsIconsForContainer(frame)
-        GearHelper:ShowUpgradeOnItemsIconsForContainer(frame)
-    end
+    C_Timer.After(0.3, function()
+        for _, frame in ContainerFrameUtil_EnumerateContainerFrames() do
+            GearHelper:HideUpgradeOnItemsIconsForContainer(frame)
+            GearHelper:ShowUpgradeOnItemsIconsForContainer(frame)
+        end
+    end)
 end
 
 function GHEvents:BAG_UPDATE_COOLDOWN()
