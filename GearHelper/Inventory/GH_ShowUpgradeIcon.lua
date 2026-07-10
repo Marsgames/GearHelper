@@ -141,33 +141,21 @@ end
 --- Show upgrade icons on items in a container
 --- @param container ContainerFrame The container frame to show icons on
 function GearHelper:ShowUpgradeOnItemsIconsForContainer(container)
-    -- Continue if there is no equiped bag
-    if container == nil then
-        print("Container doesn't exists")
-        do
-            return
-        end
-    end
+    if container == nil then return end
 
     local bagId = container:GetBagID()
-    local bagSize = C_Container.GetContainerNumSlots(container:GetBagID())
 
-    for slotId, slot in pairs(container.Items) do
-        local itemLocation = ItemLocation:CreateFromBagAndSlot(bagId, slotId)
-
-        -- Ensure there is an item in the slot
-        if C_Item.DoesItemExist(itemLocation) then
-            local itemName = C_Item.GetItemName(itemLocation)
-            if itemName ~= nil then
-                -- Ensure Blizzard is returning an item link
+    for _, slot in pairs(container.Items) do
+        if slot.hasItem == 1 then
+            local slotBagId = slot:GetBagID()
+            local slotId = slot:GetID()
+            local itemLocation = ItemLocation:CreateFromBagAndSlot(slotBagId, slotId)
+            if C_Item.DoesItemExist(itemLocation) then
                 local bagItemWoWLink = C_Item.GetItemLink(itemLocation)
                 if bagItemWoWLink then
                     local ghItemLink = GHItem:Create(bagItemWoWLink)
-                    local suffix = GetNameOrID(slot:GetParent()) .. "." .. GetNameOrID(slot)
-
-                    -- Check if the item is better than the equipped one
                     if ghItemLink and self:IsItemBetter(ghItemLink) then
-                        AddIconTo(container.Items[bagSize - slotId + 1], suffix)
+                        AddIconTo(slot, tostring(slotBagId) .. "." .. tostring(slotId))
                     end
                 end
             end
@@ -178,13 +166,7 @@ end
 --- Hide upgrade icons on items in a container
 --- @param container ContainerFrame The container frame to hide icons on
 function GearHelper:HideUpgradeOnItemsIconsForContainer(container)
-    -- Continue if there is no equiped bag
-    if container == nil then
-        print("Container doesn't exists")
-        do
-            return
-        end
-    end
+    if container == nil then return end
 
     for _, slot in pairs(container.Items) do
         if slot and slot.GearHelperOverlay then
@@ -205,6 +187,5 @@ function GearHelper:HookBagOpen()
                 GearHelper:ShowUpgradeOnItemsIconsForContainer(self)
             end
         )
-        return
     end
 end
