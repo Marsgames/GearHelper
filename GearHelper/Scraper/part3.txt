@@ -1,0 +1,5 @@
+
+---Load default stats template into the database
+function GearHelper:LoadBaseStatTemplates()
+    GearHelper.db.global.templates = baseStatTemplates
+end

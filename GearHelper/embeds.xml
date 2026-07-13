@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+  <!-- Libs Ace chargées par GH_Utils -->
+  <!-- Libs spécifiques à GearHelper -->
+  <!-- <Include file="Libs\LibBabble-Inventory-3.0\lib.xml"/> -->
+  <!-- <Script file="Libs\LibRealmInfo\LibRealmInfo.lua"/> -->
+  <GameTooltip name="ScanningTooltip" inherits="GameTooltipTemplate">
+    <Scripts>
+      <Onload>
+        self:SetOwner(WorldFrame, "ANCHOR_NONE");
+      </Onload>
+    </Scripts>
+  </GameTooltip>
+</Ui>

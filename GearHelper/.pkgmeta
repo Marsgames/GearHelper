@@ -1,0 +1,15 @@
+package-as: GearHelper
+enable-nolib-creation: no
+
+ignore:
+ - .github
+ - .vscode
+ - Scraper/
+ - .gitattributes
+ - .gitignore
+ - .luacheckrc
+ - README.md
+
+externals:
+ Libs/LibBabble-Inventory-3.0: https://repos.wowace.com/wow/libbabble-inventory-3-0/trunk
+ Libs/LibRealmInfo: https://github.com/janekjl/LibRealmInfo.git

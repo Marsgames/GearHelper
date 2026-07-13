@@ -1,0 +1,17 @@
+## Interface: 120100
+## Title: GearHelper Utils
+## Notes: Lib for GearHelper addons
+## Author: Marsgames
+## Version: 1.2
+## IconTexture: Interface\ICONS\INV_Misc_EngGizmos_37
+
+## Category: GearHelper
+
+## X-BugReport: https://github.com/Marsgames/GearHelper/issues
+
+########## Libs ##########
+embeds.xml
+
+########## Addon Files ##########
+GH_Exceptions.lua
+GH_Toolbox.lua
