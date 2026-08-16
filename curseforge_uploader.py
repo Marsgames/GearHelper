@@ -107,8 +107,12 @@ def _fetch_game_version_ids(token: str, interface: int) -> list:
     req = urllib.request.Request(
         url, headers={"X-Api-Token": token, "Accept": "application/json"}
     )
-    with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as resp:
-        versions = json.loads(resp.read())
+    try:
+        with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as resp:
+            versions = json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"CurseForge game/versions API — HTTP {e.code}: {body}")
 
     target = _interface_to_semver(interface)
     retail = [v for v in versions if v.get("gameVersionTypeID") == CF_GAME_VERSION_TYPE_RETAIL]
