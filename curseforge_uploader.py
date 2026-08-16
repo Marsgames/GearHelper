@@ -16,7 +16,7 @@ Upload a specific git tag (checks it out first):
 Dry-run (builds the zip, prints what would be uploaded, no HTTP request):
     python curseforge_uploader.py --tag 3.3.19 --dry-run
 
-CF_PUBLIC_API_TOKEN is read from the CF_PUBLIC_API_TOKEN environment variable.
+CF_API_KEY is read from the CF_API_KEY environment variable.
 """
 
 import argparse
@@ -53,10 +53,10 @@ IGNORED = {
 # ── Token ─────────────────────────────────────────────────────────────────────
 
 def _cf_token() -> str:
-    token = os.environ.get("CF_PUBLIC_API_TOKEN")
+    token = os.environ.get("CF_API_KEY")
     if not token:
         raise RuntimeError(
-            "CF_PUBLIC_API_TOKEN non configuré. "
+            "CF_API_KEY non configuré. "
             "Exporte la variable d'environnement avant de lancer le script."
         )
     return token

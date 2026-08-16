@@ -18,4 +18,4 @@ jobs:
       - name: Upload to CurseForge
         run: python curseforge_uploader.py --tag ${{ github.ref_name }}
         env:
-          CF_PUBLIC_API_TOKEN: ${{ secrets.CF_API_KEY }}
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
