@@ -11,10 +11,10 @@ end
 local function AskIfHeNeed(link, sendTo)
     local className, classFile, classID = UnitClass(sendTo)
     local itemTable = GHItem:Create(link)
-    local itemLink = itemTable["itemLink"]
+    local itemLink = itemTable["itemLink"] ~= "" and itemTable["itemLink"] or link
     local lienPerso = tostring(GHToolbox:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
 
-    -- Résoudre la locale ici, avant la popup, pour déclencher l'unpacking de LibRealmInfo
+    -- Résoudre la locale avant la popup pour déclencher l'unpacking de LibRealmInfo
     -- maintenant plutôt qu'au moment du clic sur "Oui"
     local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
     local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
@@ -27,7 +27,6 @@ local function AskIfHeNeed(link, sendTo)
         button1 = GearHelper.locals["yes"],
         button2 = GearHelper.locals["no"],
         OnAccept = function(GearHelper2, data, data2)
-            -- unitLocale est capturé dans la closure, LibRealmInfo ne sera pas rappelé
             local theSource = GearHelper.db.global.messages[unitLocale].demande4 or GearHelper.locals["demande4enUS"]
             local theSource2 = GearHelper.db.global.messages[unitLocale].demande42 or GearHelper.locals["demande4enUS2"]
             local msg = theSource .. itemLink .. theSource2 .. "?"
@@ -53,7 +52,7 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
     -- local message = message or "|cffff8000|Hitem:30212::::::::120:::::::|h[Zeub zeub]|h|r"
     local target = target or GetUnitName("player")
 
-    if (debug ~= 1) then
+    if debug ~= 1 then
         if not self.db.profile.askLootRaid or not IsTargetValid(target) or string.find(string.lower(message), "bonus") then
             return
         end
@@ -66,19 +65,15 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
         tar = GHToolbox:GetClassColor(classFile) .. tostring(target) .. "|r"
     end
 
-    local nameLink
-
     local OldSetItemRef = SetItemRef
-    if (debug == 1) then
-        AskIfHeNeed(message, target)
-    end
     function SetItemRef(link, text, button, chatFrame)
         local func = strmatch(link, "^GHWhispWhenClick:(%a+)")
         if func == "askIfHeNeed" then
             local _, nomPerso, itID, persoLink = strsplit("_", link)
             local _, theItemLink = C_Item.GetItemInfo(itID)
+            -- Fallback sur le link brut si l'item n'est pas en cache
             local itemTable = GHItem:Create(theItemLink)
-            local itLink1 = itemTable.itemLink
+            local itLink1 = itemTable.itemLink ~= "" and itemTable.itemLink or theItemLink or link
 
             AskIfHeNeed(itLink1, nomPerso)
         else
@@ -87,21 +82,13 @@ function GearHelper:CreateLinkAskIfHeNeeds(debug, message, sender, language, cha
     end
 
     for itemLink in message:gmatch("|%x+|Hitem:.-|h.-|h|r") do
-        local shouldBeCompared, err = pcall(self.ShouldBeCompared, nil, itemLink)
-        if (shouldBeCompared) then
-            local item = GHItem:Create(itemLink)
-            local quality = GHToolbox:GetQualityFromColor(item.rarity)
-
-            if quality ~= nil and quality < 5 then
-                nameLink = GHToolbox:ReturnGoodLink(itemLink, target, tar)
-                local item = GHItem:Create(itemLink)
-                local isItemBetter = self:IsItemBetter(item)
-                if (isItemBetter) then
-                    UIErrorsFrame:AddMessage(GHToolbox:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. GHToolbox:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
-                    print(GHToolbox:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. GHToolbox:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink)
-                    PlaySound(5274, "Master")
-                end
-            end
+        local item = GHItem:Create(itemLink)
+        -- En mode debug : bypass IsItemBetter pour tester le flow complet
+        if debug == 1 or (not item.isEmpty and self:IsItemBetter(item)) then
+            local nameLink = GHToolbox:ReturnGoodLink(itemLink, target, tar)
+            UIErrorsFrame:AddMessage(GHToolbox:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. GHToolbox:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink, 0.0, 1.0, 0.0)
+            print(GHToolbox:ColorizeString(self.locals["ask1"], "Yellow") .. nameLink .. GHToolbox:ColorizeString(self.locals["ask2"], "Yellow") .. itemLink)
+            PlaySound(5274, "Master")
         end
     end
 end
