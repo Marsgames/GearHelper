@@ -14,10 +14,9 @@ jobs:
           fetch-depth: 0
 
       - name: Package and upload GearHelper
-        uses: BigWigsMods/packager@v2
+        working-directory: GearHelper
+        run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/main/release.sh | bash
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
           WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: -t GearHelper
