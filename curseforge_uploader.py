@@ -24,7 +24,6 @@ import io
 import json
 import os
 import re
-import ssl
 import subprocess
 import urllib.request
 import zipfile
@@ -49,21 +48,6 @@ IGNORED = {
     # LibBabble-Inventory-3.0 et LibRealmInfo sont des RequiredDeps (addons séparés),
     # pas bundlées dans le zip.
 }
-
-
-# ── SSL ───────────────────────────────────────────────────────────────────────
-
-def _ssl_ctx() -> ssl.SSLContext:
-    try:
-        import certifi
-        return ssl.create_default_context(cafile=certifi.where())
-    except ImportError:
-        pass
-    if os.path.exists("/etc/ssl/cert.pem"):
-        return ssl.create_default_context(cafile="/etc/ssl/cert.pem")
-    return ssl.create_default_context()
-
-_SSL_CTX = _ssl_ctx()
 
 
 # ── Token ─────────────────────────────────────────────────────────────────────
@@ -108,7 +92,7 @@ def _fetch_game_version_ids(token: str, interface: int) -> list:
         url, headers={"X-Api-Token": token, "Accept": "application/json"}
     )
     try:
-        with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as resp:
+        with urllib.request.urlopen(req, timeout=10, context=None) as resp:
             versions = json.loads(resp.read())
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="replace")
@@ -228,7 +212,7 @@ def upload(tag: str = None, version_override: str = None, dry_run: bool = False)
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=30, context=_SSL_CTX) as resp:
+    with urllib.request.urlopen(req, timeout=30, context=None) as resp:
         result = json.loads(resp.read())
 
     file_id = str(result.get("id", "?"))
