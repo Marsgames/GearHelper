@@ -50,9 +50,7 @@ local ghOptionsTable = {
             type = "group",
             inline = true,
             hidden = function()
-                if UnitName("player") ~= "Marsgames" and UnitName("player") ~= "Tempaxe" and UnitName("player") ~= "Niisha" then
-                    return true
-                end
+                return not GearHelper:IsAdmin()
             end,
             args = {
                 debug = {
@@ -207,7 +205,7 @@ local ghOptionsTable = {
                     end,
                     style = "dropdown",
                     width = "double"
-                },
+                }
             }
         }
     }
@@ -1224,20 +1222,20 @@ local debugOptionTable = {
             set = function(_, val)
                 GearHelper.db.profile.debug.template = val
             end
-        },
+        }
     }
 }
 
 function GHOptions:GenerateOptions()
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable, "ghOption")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("GearHelper", ghOptionsTable)
     LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["customWeights"], GearHelper.cwTable)
-    GearHelper.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
-    GearHelper.cwFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["customWeights"], GearHelper.locals["customWeights"], "GearHelper")
+    GearHelper.optionsFrame, GearHelper.optionsCategoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GearHelper")
+    GearHelper.cwFrame, GearHelper.cwCategoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["customWeights"], GearHelper.locals["customWeights"], "GearHelper")
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable(GearHelper.locals["messages"], GHOptions:GenerateMessagesTable())
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions(GearHelper.locals["messages"], GearHelper.locals["messages"], "GearHelper")
 
-    if GearHelper.db.profile.debug then
+    if GearHelper:IsAdmin() then
         LibStub("AceConfig-3.0"):RegisterOptionsTable("Debug Options", debugOptionTable)
         LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Debug Options", "Debug Options", "GearHelper")
     end

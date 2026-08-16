@@ -13,17 +13,21 @@ local function AskIfHeNeed(link, sendTo)
     local itemTable = GHItem:Create(link)
     local itemLink = itemTable["itemLink"]
     local lienPerso = tostring(GHToolbox:GetClassColor(classFile)) .. tostring(sendTo) .. "|r"
+
+    -- Résoudre la locale ici, avant la popup, pour déclencher l'unpacking de LibRealmInfo
+    -- maintenant plutôt qu'au moment du clic sur "Oui"
+    local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
+    local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
+    if unitLocale == nil then
+        unitLocale = "enUS"
+    end
+
     StaticPopupDialogs["AskIfHeNeed"] = {
         text = GearHelper.locals["demande1"] .. lienPerso .. GearHelper.locals["demande2"] .. itemLink .. " ?",
         button1 = GearHelper.locals["yes"],
         button2 = GearHelper.locals["no"],
         OnAccept = function(GearHelper2, data, data2)
-            local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
-            local _, _, _, _, unitLocale = LibRealmInfo:GetRealmInfoByUnit(sendTo)
-            if unitLocale == nil then
-                unitLocale = "enUS"
-            end
-
+            -- unitLocale est capturé dans la closure, LibRealmInfo ne sera pas rappelé
             local theSource = GearHelper.db.global.messages[unitLocale].demande4 or GearHelper.locals["demande4enUS"]
             local theSource2 = GearHelper.db.global.messages[unitLocale].demande42 or GearHelper.locals["demande4enUS2"]
             local msg = theSource .. itemLink .. theSource2 .. "?"
@@ -31,8 +35,8 @@ local function AskIfHeNeed(link, sendTo)
             local rep2 = GearHelper.db.global.messages[unitLocale].rep2 or ""
             local msgRep = rep .. GearHelper.locals["maLangue" .. unitLocale] .. rep2
 
-            SendChatMessage(msg, "WHISPER", "Common", sendTo)
-            SendChatMessage(msgRep, "WHISPER", "Common", sendTo)
+            SendChatMessage(msg, "WHISPER", nil, sendTo)
+            SendChatMessage(msgRep, "WHISPER", nil, sendTo)
             StaticPopup_Hide("AskIfHeNeed")
         end,
         timeout = 0,

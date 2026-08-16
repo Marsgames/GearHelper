@@ -1,5 +1,16 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("GearHelper")
 
+GearHelper.admins = {
+    ["Marsgames"]   = true,
+    ["Tempaxe"]     = true,
+    ["Niisha"]      = true,
+    ["Kyrastrasza"] = true,
+}
+
+function GearHelper:IsAdmin()
+    return GearHelper.admins[UnitName("player")] == true
+end
+
 GearHelper.defaultSettings = {
     profile = {
         addonEnabled = true,
